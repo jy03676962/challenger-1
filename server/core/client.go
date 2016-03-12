@@ -1,5 +1,7 @@
 package core
 
+// the skeleton of this file is borrowed from https://github.com/golang-samples/websocket
+
 import (
   "fmt"
   "io"
@@ -13,14 +15,14 @@ const channelBufSize = 100
 var maxId int = 0
 
 type Client struct {
-  id     int
-  ws     *websocket.Conn
-  server *Server
-  ch     chan map[string]interface{}
-  doneCh chan bool
+  id       int
+  username string
+  ws       *websocket.Conn
+  server   *Server
+  ch       chan map[string]interface{}
+  doneCh   chan bool
 }
 
-// Create new chat client.
 func NewClient(ws *websocket.Conn, server *Server) *Client {
 
   if ws == nil {
@@ -35,11 +37,19 @@ func NewClient(ws *websocket.Conn, server *Server) *Client {
   ch := make(chan map[string]interface{}, channelBufSize)
   doneCh := make(chan bool)
 
-  return &Client{maxId, ws, server, ch, doneCh}
+  return &Client{maxId, "", ws, server, ch, doneCh}
 }
 
 func (c *Client) Conn() *websocket.Conn {
   return c.ws
+}
+
+func (c *Client) SetUsername(name string) {
+  c.username = name
+}
+
+func (c *Client) GetUsername() string {
+  return c.username
 }
 
 func (c *Client) Write(msg map[string]interface{}) {

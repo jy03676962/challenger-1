@@ -1,11 +1,5 @@
 package core
 
-type Room struct {
-  MaxNum int      `json:"max"`
-  Hoster string   `json:"hoster"`
-  Member []string `json:"member"`
-}
-
 type ArenaPosition struct {
   X int
   Y int
@@ -20,22 +14,25 @@ type ArenaWall struct {
 
 type W ArenaWall
 
-type GameVar struct {
-  ArenaWidth    int     `json:"arenaWidth"`    // 场地宽度
-  ArenaHeight   int     `json:"arenaHeight"`   // 场地高度
-  ArenaCellSize int     `json:"arenaCellSize"` // 场地格子大小
-  ArenaBorder   int     `json:"arenaBorder"`   // 场地边框宽度
-  Warmup        float32 `json:"warmup"`        // 预热时间
-  ArenaWallList []W     `json:"walls"`         // 墙列表
-  ArenaEntrance P       `json:"arenaEntrance"` //场地入口
+type MatchOptions struct {
+  ArenaWidth    int     `json:"arenaWidth"`
+  ArenaHeight   int     `json:"arenaHeight"`
+  ArenaCellSize int     `json:"arenaCellSize"`
+  ArenaBorder   int     `json:"arenaBorder"`
+  Warmup        float32 `json:"warmup"`
+  ArenaWallList []W     `json:"walls"`
+  ArenaEntrance P       `json:"arenaEntrance"`
+  // web side only options
+  Web_ArenaScale float32 `json:"webScale"`
 }
 
-func DefaultGameVar() *GameVar {
-  v := GameVar{}
+func DefaultMatchOptions() *MatchOptions {
+  v := MatchOptions{}
   v.ArenaWidth = 8
   v.ArenaHeight = 6
-  v.ArenaCellSize = 99
-  v.ArenaBorder = 15
+  v.ArenaCellSize = 140
+  v.ArenaBorder = 24
+  v.Web_ArenaScale = 0.5
   w := []W{
     W{P{4, 0}, P{5, 0}},
     W{P{1, 0}, P{1, 1}},

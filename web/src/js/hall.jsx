@@ -1,15 +1,13 @@
 import React from 'react';
 import {observer} from 'mobx-react'
-import CSSModules from 'react-css-modules'
-import styles from '~/styles/base.css'
 
 const Hall = observer(React.createClass({
   render: function() {
     var content
-    if (this.props.game.room) {
-      content = <RoomView game={this.props.game} actionFunc={this.joinOrStart} />
+    if (this.props.game.match) {
+      content = <MatchView game={this.props.game} actionFunc={this.joinOrStart} />
     } else {
-      content = <button onClick={this.createRoom}>创建房间</button>
+      content = <button onClick={this.createMatch}>创建房间</button>
     }
     return (
       <div>
@@ -18,37 +16,49 @@ const Hall = observer(React.createClass({
       </div>
     );
   },
-  createRoom: function(e) {
-    this.props.game.createRoom()
+  createMatch: function(e) {
+    this.props.game.createMatch()
   },
-  joinOrStart: function(e) {
-    if (this.props.game.room.hoster == this.props.game.playerName) {
-      this.props.game.startGame()
-    } else {
-      this.props.game.joinRoom()
-    }
-  }
 }));
 
-const RoomView = CSSModules(observer(
-  ({game, actionFunc}) => {
-    let room = game.room
-    let joined = room.member.indexOf(game.playerName) >= 0
-    let button = null
+const MatchView = observer(React.createClass({
+  render: function() {
+    let match = this.props.game.match
+    let joined = match.member.indexOf(this.props.game.playerName) >= 0
+    let actionComponent = null
     if (joined) {
-      if (room.hoster == game.playerName) {
-        button = <li><button onClick={actionFunc}>开始</button></li>
+      if (match.hoster == this.props.game.playerName) {
+        actionComponent =
+        <div>
+        <button onClick={this.startFunMode}>开始娱乐模式</button>
+        <button onClick={this.startSurvivalMode}>开始生存模式</button>
+        </div>
       }
     } else {
-      button = <li><button onClick={actionFunc}>加入</button></li>
+      actionComponent = <button onClick={this.joinMatch}>加入</button>
     }
     return(
-    <ul styleName='menu'>
-    <li style={{color:"red"}}>{room.hoster}</li>
-    <li>{room.member.length + "/" + room.max}</li>
-    {button}
-    </ul>
-    )
-}), styles)
+      <div>
+      <div style={{color:"red"}}>{"房主:" + match.hoster}</div>
+      {
+        match.member.map((name) =>{
+          return <div style={{color:"green"}} key={"player:"+name}>{name}</div>
+        })
+      }
+      {actionComponent}
+      </div>
+      )
+  },
+  startFunMode: function(e) {
+    this.props.game.startMatch("f")
+  },
+  startSurvivalMode: function(e) {
+    this.props.game.startMatch("s")
+  },
+  joinMatch: function(e) {
+    this.props.game.joinMatch()
+  },
+
+}))
 
 export default Hall

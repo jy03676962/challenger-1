@@ -1,12 +1,10 @@
 package core
 
+// the skeleton of this file is borrowed from https://github.com/golang-samples/websocket
+
 import (
   "golang.org/x/net/websocket"
   "log"
-)
-
-const (
-  ROOM_CAPACITY = 4
 )
 
 type Server struct {
@@ -16,8 +14,7 @@ type Server struct {
   sendAllCh chan map[string]interface{}
   doneCh    chan bool
   errCh     chan error
-  room      *Room
-  arg       *GameVar
+  match     *Match
 }
 
 func NewServer() *Server {
@@ -27,7 +24,6 @@ func NewServer() *Server {
   sendAllCh := make(chan map[string]interface{})
   doneCh := make(chan bool)
   errCh := make(chan error)
-  arg := DefaultGameVar()
 
   return &Server{
     clients,
@@ -37,7 +33,6 @@ func NewServer() *Server {
     doneCh,
     errCh,
     nil,
-    arg,
   }
 }
 
@@ -63,42 +58,56 @@ func (s *Server) Err(err error) {
 
 func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
   cmd := msg["cmd"].(string)
+  name := ""
+  if msg["name"] != nil {
+    name = msg["name"].(string)
+  }
   switch cmd {
   case "login":
     data := make(map[string]interface{})
     data["cmd"] = "login"
-    if s.room != nil {
-      data["room"] = s.room
+    c.SetUsername(name)
+    // if we have a match then tell client
+    if s.match != nil {
+      data["match"] = s.match
     }
     c.Write(data)
-  case "createRoom":
-    newRoom := Room{}
-    newRoom.Hoster = msg["name"].(string)
-    newRoom.MaxNum = ROOM_CAPACITY
-    newRoom.Member = make([]string, 0)
-    newRoom.Member = append(newRoom.Member, newRoom.Hoster)
-    s.room = &newRoom
+  case "createMatch":
+    newMatch := NewMatch()
+    newMatch.Hoster = name
+    newMatch.AddMember(name)
+    s.match = newMatch
     data := make(map[string]interface{})
-    data["cmd"] = "roomChanged"
-    data["room"] = &newRoom
-    data["arg"] = s.arg
+    data["cmd"] = "matchChanged"
+    data["match"] = newMatch
     s.sendAll(data)
-  case "joinRoom":
-    if s.room != nil && len(s.room.Member) < s.room.MaxNum {
-      s.room.Member = append(s.room.Member, msg["name"].(string))
-      data := make(map[string]interface{})
-      data["cmd"] = "roomChanged"
-      data["room"] = s.room
-      data["arg"] = s.arg
-      s.sendAll(data)
+  case "joinMatch":
+    if s.match != nil {
+      if s.match.AddMember(name) {
+        data := make(map[string]interface{})
+        data["cmd"] = "matchChanged"
+        data["match"] = s.match
+        s.sendAll(data)
+      }
     }
-  case "startGame":
+  case "startMatch":
+    s.match.Start()
     data := make(map[string]interface{})
-    data["cmd"] = "gameStarted"
+    data["cmd"] = "matchChanged"
+    data["match"] = s.match
     s.sendAll(data)
   default:
     c.Write(msg)
   }
+}
+
+func (s *Server) getClient(name string) *Client {
+  for _, c := range s.clients {
+    if c.GetUsername() == name {
+      return c
+    }
+  }
+  return nil
 }
 
 func (s *Server) sendAll(msg map[string]interface{}) {

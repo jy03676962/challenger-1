@@ -1,9 +1,21 @@
-import {observable} from 'mobx'
+import {observable, computed} from 'mobx'
 import {wsAddressWithPath} from '~/js/util.jsx'
 
 class Game {
-  @observable stage
-  @observable room
+  @observable match
+  @observable playerName
+
+  @computed get stage() {
+    if (!this.playerName) {
+      return "login"
+    }
+    if (!this.match || this.match.stage == "before") {
+      return "hall"
+    }
+    if (this.match && this.match.stage == "ongoing") {
+      return "arena"
+    }
+  }
 
   constructor() {
     this._reset()
@@ -11,9 +23,8 @@ class Game {
 
   _reset() {
     this.playerName = ""
-    this.stage = "login"
     this.sock = null
-    this.room = null
+    this.match = null
     this.arg = null
   }
 
@@ -47,30 +58,31 @@ class Game {
     }
   }
 
-  joinRoom() {
+  joinMatch() {
     if (this.sock) {
       let data = {
-        cmd: "joinRoom",
+        cmd: "joinMatch",
         name: this.playerName
       }
       this.sock.send(JSON.stringify(data))
     }
   }
 
-  createRoom() {
+  createMatch() {
     if (this.sock) {
       let data = {
-        cmd: "createRoom",
+        cmd: "createMatch",
         name: this.playerName
       }
       this.sock.send(JSON.stringify(data))
     }
   }
 
-  startGame() {
+  startMatch(mode) {
     if (this.sock) {
       let data = {
-        cmd: "startGame",
+        cmd: "startMatch",
+        mode: mode,
       }
       this.sock.send(JSON.stringify(data))
     }
@@ -80,19 +92,12 @@ class Game {
     let data = JSON.parse(msg)
     switch (data.cmd) {
       case "login":
-      if ("room" in data) {
-        this.room = data.room
-      }
-      this.stage = "hall"
-      break
-      case "roomChanged":
-      if ("room" in data) {
-        this.room = data.room
-        this.arg = data.arg
+      if ("match" in data) {
+        this.match = data.match
       }
       break
-      case "gameStarted":
-      this.stage = "arena"
+      case "matchChanged":
+      this.match = data.match
       break
     }
   }
