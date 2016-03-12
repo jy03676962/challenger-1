@@ -1,0 +1,13 @@
+{
+  "folders":
+  [
+    {
+      "path": ".",
+      "folder_exclude_patterns": ["web/node_modules", "web/.git", "server/.git", "server/web"]
+    }
+  ],
+  "settings":
+  {
+    "tab_size": 2,
+  },
+}
