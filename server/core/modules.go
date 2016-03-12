@@ -34,7 +34,7 @@ func DefaultGameVar() *GameVar {
   v.ArenaWidth = 8
   v.ArenaHeight = 6
   v.ArenaCellSize = 60
-  v.ArenaBorder = 4
+  v.ArenaBorder = 6
   w := []W{
     W{P{4, 0}, P{5, 0}},
     W{P{1, 0}, P{1, 1}},
