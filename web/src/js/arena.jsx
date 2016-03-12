@@ -5,6 +5,11 @@ const Arena = observer(React.createClass({
   render() {
     let opt = this.props.game.match.mapOptions
     let arenaWidth = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaWidth * opt.webScale
+    let infoStyle = {
+      width: arenaWidth + "px",
+      height: "80px",
+      margin: "auto",
+    }
     let bgStyle = {
       width: arenaWidth + "px",
       fontSize: "0",
@@ -19,10 +24,19 @@ const Arena = observer(React.createClass({
     }
     return (
       <div>
+      <ArenaInfoBar rootStyle={infoStyle}/>
       <ArenaBackground opt={opt} rootStyle={bgStyle} />
       <ArenaGround opt={opt} rootStyle={gStyle} />
       </div>
-    );
+    )
+  }
+}))
+
+const ArenaInfoBar = observer(React.createClass({
+  render() {
+    return (
+      <div style={this.props.rootStyle}></div>
+      )
   }
 }))
 
