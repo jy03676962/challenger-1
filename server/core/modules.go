@@ -27,3 +27,8 @@ type ArenaWall struct {
 }
 
 type W ArenaWall
+
+type SocketEvent struct {
+  SocketMessage map[string]interface{}
+  Client        *Client
+}

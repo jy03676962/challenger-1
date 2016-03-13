@@ -1,15 +1,14 @@
 package core
 
 type MatchOptions struct {
-  ArenaWidth    int     `json:"arenaWidth"`
-  ArenaHeight   int     `json:"arenaHeight"`
-  ArenaCellSize int     `json:"arenaCellSize"`
-  ArenaBorder   int     `json:"arenaBorder"`
-  Warmup        int     `json:"warmup"`
-  WallRects     []Rect  `json:"walls"`
-  ArenaEntrance P       `json:"arenaEntrance"`
-  PlayerSize    float32 `json:"playerSize"`
-  // web side only options
+  ArenaWidth     int     `json:"arenaWidth"`
+  ArenaHeight    int     `json:"arenaHeight"`
+  ArenaCellSize  int     `json:"arenaCellSize"`
+  ArenaBorder    int     `json:"arenaBorder"`
+  Warmup         int     `json:"warmup"`
+  WallRects      []Rect  `json:"walls"`
+  ArenaEntrance  P       `json:"arenaEntrance"`
+  PlayerSize     float32 `json:"playerSize"`
   Web_ArenaScale float32 `json:"webScale"`
   // private
   playerSpeed   float32
