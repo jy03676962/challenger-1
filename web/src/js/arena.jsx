@@ -59,16 +59,21 @@ const ArenaInfoBar = observer(React.createClass({
 
 const ArenaBackground = ({opt, rootStyle}) => {
   let size = opt.arenaCellSize * opt.webScale + "px"
-  let cellStyle = {
-    width: size,
-    height: size,
-    display: "inline-block",
-    border: opt.arenaBorder / 2 * opt.webScale + "px solid #CCCCCC",
-    backgroundColor: "#669900",
-  }
   let elements = []
   for (let i = 0; i < opt.arenaHeight; i++) {
     for (let j = 0; j < opt.arenaWidth; j++) {
+      let cellStyle = {
+        width: size,
+        height: size,
+        display: "inline-block",
+        border: opt.arenaBorder / 2 * opt.webScale + "px solid #CCCCCC",
+        backgroundColor: "#669900",
+      }
+      if (j == opt.arenaEntrance.X && i == opt.arenaEntrance.Y) {
+        cellStyle.backgroundColor = "#008000"
+      } else {
+        cellStyle.backgroundColor= "#669900"
+      }
       elements.push(<div style={cellStyle} key={"cell:"+i * opt.arenaWidth + j}></div>)
     }
   }
