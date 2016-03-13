@@ -1,5 +1,9 @@
 package core
 
+import (
+  "math"
+)
+
 type StrSlice []string
 
 func (s StrSlice) Pos(value string) int {
@@ -9,4 +13,8 @@ func (s StrSlice) Pos(value string) int {
     }
   }
   return -1
+}
+
+func MinMaxFloat32(v float32, min float32, max float32) float32 {
+  return float32(math.Min(math.Max(float64(v), float64(min)), float64(max)))
 }

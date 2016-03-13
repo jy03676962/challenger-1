@@ -7,7 +7,7 @@ const Arena = observer(React.createClass({
     let opt = this.props.game.options
     let arenaWidth = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaWidth * opt.webScale
     let arenaHeight = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaHeight * opt.webScale
-    const infoHeight = 80
+    const infoHeight = 40
     let infoStyle = {
       width: arenaWidth + "px",
       height: infoHeight + "px",

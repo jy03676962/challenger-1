@@ -15,7 +15,7 @@ const Player = observer(React.createClass({
       arrowX = (size - arrowSize) / 2
       arrowY = 0
       break
-      case "left":
+      case "right":
       degree = 90
       arrowX = size - arrowSize
       arrowY = (size - arrowSize) / 2
@@ -25,7 +25,7 @@ const Player = observer(React.createClass({
       arrowX = (size - arrowSize) / 2
       arrowY = size -arrowSize
       break
-      case "right":
+      case "left":
       degree = 270
       arrowX = 0
       arrowY = (size - arrowSize) / 2
@@ -45,24 +45,27 @@ const Player = observer(React.createClass({
       position: "absolute",
       width: bodySize + "px",
       height: bodySize + "px",
+      lineHeight: bodySize + "px",
       top: arrowSize + "px",
       left: arrowSize + "px",
+      color: "black",
+      fontSize: "20px",
     }
     let imgStyle = {
       display: "block",
       position: "absolute",
       width: arrowSize + "px",
       height: arrowSize + "px",
-      transform: `rotate(${degree})`,
+      transform: `rotate(${degree}deg)`,
       top: arrowY + "px",
       left: arrowX + "px",
     }
     return (
       <div style={style}>
       <div style={bodyStyle}>
-      {player.name}
+      {player.name.substring(0, 1)}
       </div>
-      <img style={imgStyle} src={require('../assets/arrow.jpg')} />
+      <img style={imgStyle} src={require('../assets/arrow.png')} />
       </div>
     );
   }

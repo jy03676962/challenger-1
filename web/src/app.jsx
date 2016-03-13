@@ -29,7 +29,18 @@ const App = CSSModules(observer(React.createClass({
   }
 })), styles);
 
+var game = new Game()
+
+document.onkeydown = function(e) {
+  game.onKeyDown(e)
+};
+
+document.onkeyup = function(e) {
+  game.onKeyUp(e)
+}
+
 render((
-  <App game={new Game()}>
+  <App game={game}>
   </App>
 ), document.getElementById('root'));
+

@@ -75,6 +75,23 @@ func (m *Match) AddMember(name string) bool {
   return true
 }
 
+func (m *Match) PlayerMove(name string, dir string) {
+  for _, player := range m.Member {
+    if player.Name == name {
+      player.moving = true
+      player.Direction = dir
+    }
+  }
+}
+
+func (m *Match) PlayerStop(name string) {
+  for _, player := range m.Member {
+    if player.Name == name {
+      player.moving = false
+    }
+  }
+}
+
 func (m *Match) RemoveMember(name string) bool {
   if len(name) == 0 {
     return false
@@ -117,6 +134,32 @@ func (m *Match) gameLoop() {
       }
       m.matchCh <- "tick"
     case <-tickChan:
+      for _, player := range m.Member {
+        if player.moving {
+          delta := 1.0 / 30 * m.options.playerSpeed
+          var dx, dy float32
+          switch player.Direction {
+          case "up":
+            dx = 0
+            dy = -delta
+          case "right":
+            dx = delta
+            dy = 0
+          case "down":
+            dx = 0
+            dy = delta
+          case "left":
+            dx = -delta
+            dy = 0
+          }
+          minXY := (float32(m.options.ArenaBorder) + m.options.PlayerSize) / 2
+          maxX := float32((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaWidth) - minXY
+          maxY := float32((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaHeight) - minXY
+          x := MinMaxFloat32(player.Pos.X+dx, minXY, maxX)
+          y := MinMaxFloat32(player.Pos.Y+dy, minXY, maxY)
+          player.Pos = RP{x, y}
+        }
+      }
       m.TimeElapsed = time.Since(m.StartAt).Seconds()
       m.matchCh <- "tick"
     }

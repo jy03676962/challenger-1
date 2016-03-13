@@ -11,6 +11,8 @@ type MatchOptions struct {
   PlayerSize    float32 `json:"playerSize"`
   // web side only options
   Web_ArenaScale float32 `json:"webScale"`
+  // private
+  playerSpeed float32
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -54,6 +56,7 @@ func DefaultMatchOptions() *MatchOptions {
     W{P{5, 5}, P{6, 5}},
   }
   v.ArenaWallList = w
+  v.playerSpeed = 200
   return &v
 }
 

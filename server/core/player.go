@@ -5,6 +5,7 @@ type Player struct {
   Color     string `json:"color"`
   Pos       RP     `json:"pos"`
   Direction string `json:"dir"` // values:up,right,down,left
+  moving    bool
 }
 
 func NewPlayer(name string) *Player {
@@ -13,5 +14,6 @@ func NewPlayer(name string) *Player {
     "",
     RP{0, 0},
     "up",
+    false,
   }
 }

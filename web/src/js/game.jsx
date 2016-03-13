@@ -28,6 +28,7 @@ class Game {
     this.match = null
     this.arg = null
     this.options = null
+    this.currentKey = 0
   }
 
   connectServer(playerName) {
@@ -105,6 +106,52 @@ class Game {
       case "matchTick":
       this.match = data.match
       break
+    }
+  }
+
+  onKeyDown(e) {
+    if (this.stage != "arena") {
+      return
+    }
+    var code = e.keyCode ? e.keyCode : e.which;
+    let dir
+    switch(code) {
+      case 37: //left
+      dir = "left"
+      break
+      case 38:
+      dir = "up"
+      break
+      case 39:
+      dir = "right"
+      break
+      case 40:
+      dir = "down"
+      break
+    }
+    if (dir) {
+      this.currentKey = code
+      let data = {
+        cmd: "playerMove",
+        dir: dir,
+        name: this.playerName,
+      }
+      this.sock.send(JSON.stringify(data))
+    }
+  }
+
+  onKeyUp(e) {
+    if (this.stage != "arena") {
+      return
+    }
+    var code = e.keyCode ? e.keyCode : e.which;
+    if (this.currentKey == code) {
+      this.currentKey = 0
+      let data = {
+        cmd: "playerStop",
+        name: this.playerName,
+      }
+      this.sock.send(JSON.stringify(data))
     }
   }
 }

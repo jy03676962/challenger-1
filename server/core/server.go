@@ -105,6 +105,10 @@ func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
     data["match"] = s.match
     data["options"] = s.match.GetOptions()
     s.sendAll(data)
+  case "playerMove":
+    s.match.PlayerMove(name, msg["dir"].(string))
+  case "playerStop":
+    s.match.PlayerStop(name)
   default:
     c.Write(msg)
   }
