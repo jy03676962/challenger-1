@@ -4,7 +4,11 @@ import (
   "time"
 )
 
-const MATCH_CAPACITY = 4
+var COLOR_ARRAY [4]string
+
+const (
+  MATCH_CAPACITY = 4
+)
 
 /*
  * A Room object just hold a preparing state of a match,
@@ -15,7 +19,7 @@ const MATCH_CAPACITY = 4
 type Match struct {
   Capacity    int       `json:"capacity"`
   Hoster      string    `json:"hoster"`
-  Member      StrSlice  `json:"member"`
+  Member      []*Player `json:"member"`
   Stage       string    `json:"stage"`
   StartAt     time.Time `json:"startAt"`
   TimeElapsed float64   `json:"elasped"`
@@ -26,12 +30,13 @@ type Match struct {
 }
 
 func NewMatch(matchCh chan string) *Match {
+  COLOR_ARRAY = [...]string{"red", "yellow", "green", "blue"}
   options := DefaultMatchOptions()
   messageCh := make(chan string)
   return &Match{
     MATCH_CAPACITY,
     "",
-    make(StrSlice, 0),
+    make([]*Player, 0),
     "before",
     time.Now(),
     0,
@@ -53,8 +58,37 @@ func (m *Match) AddMember(name string) bool {
   if m.IsFull() {
     return false
   }
-  m.Member = append(m.Member, name)
+  player := NewPlayer(name)
+  for _, color := range COLOR_ARRAY {
+    used := false
+    for _, member := range m.Member {
+      if member.Color == color {
+        used = true
+      }
+    }
+    if !used {
+      player.Color = color
+      break
+    }
+  }
+  m.Member = append(m.Member, player)
   return true
+}
+
+func (m *Match) RemoveMember(name string) bool {
+  if len(name) == 0 {
+    return false
+  }
+  if m.Hoster == name {
+    m.Hoster = ""
+  }
+  for p, v := range m.Member {
+    if v.Name == name {
+      m.Member = append(m.Member[:p], m.Member[p+1:]...)
+      return true
+    }
+  }
+  return false
 }
 
 func (m *Match) IsFull() bool {
@@ -65,6 +99,9 @@ func (m *Match) Start() {
   // TODO: init match and start
   m.Stage = "warmup"
   m.StartAt = time.Now()
+  for _, member := range m.Member {
+    member.Pos = m.options.RealPosition(m.options.ArenaEntrance)
+  }
   go m.tickWarmup(m.options.Warmup)
   go m.gameLoop()
 }

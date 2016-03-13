@@ -44,7 +44,7 @@ class Game {
       this._reset()
     }
     sock.onmessage = (e) => {
-      console.log("message received: " + e.data)
+      // console.log("message received: " + e.data)
       this.onMessage(e.data)
     }
     this.sock = sock

@@ -149,11 +149,11 @@ func (s *Server) Start() {
 
     case c := <-s.delCh:
       log.Println("Delete client")
-      if name := c.GetUsername(); len(name) > 0 && s.match != nil {
+      if name := c.GetUsername(); s.match != nil {
         if s.match.Hoster == name {
           s.match = nil
-        } else if pos := s.match.Member.Pos(name); pos >= 0 {
-          s.match.Member = append(s.match.Member[:pos], s.match.Member[pos+1:]...)
+        } else {
+          s.match.RemoveMember(name)
         }
       }
       delete(s.clients, c.id)

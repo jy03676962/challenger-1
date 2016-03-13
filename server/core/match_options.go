@@ -1,27 +1,14 @@
 package core
 
-type ArenaPosition struct {
-  X int
-  Y int
-}
-
-type P ArenaPosition
-
-type ArenaWall struct {
-  P1 P
-  P2 P
-}
-
-type W ArenaWall
-
 type MatchOptions struct {
-  ArenaWidth    int `json:"arenaWidth"`
-  ArenaHeight   int `json:"arenaHeight"`
-  ArenaCellSize int `json:"arenaCellSize"`
-  ArenaBorder   int `json:"arenaBorder"`
-  Warmup        int `json:"warmup"`
-  ArenaWallList []W `json:"walls"`
-  ArenaEntrance P   `json:"arenaEntrance"`
+  ArenaWidth    int     `json:"arenaWidth"`
+  ArenaHeight   int     `json:"arenaHeight"`
+  ArenaCellSize int     `json:"arenaCellSize"`
+  ArenaBorder   int     `json:"arenaBorder"`
+  Warmup        int     `json:"warmup"`
+  ArenaWallList []W     `json:"walls"`
+  ArenaEntrance P       `json:"arenaEntrance"`
+  PlayerSize    float32 `json:"playerSize"`
   // web side only options
   Web_ArenaScale float32 `json:"webScale"`
 }
@@ -32,6 +19,9 @@ func DefaultMatchOptions() *MatchOptions {
   v.ArenaHeight = 6
   v.ArenaCellSize = 140
   v.ArenaBorder = 24
+  v.Warmup = 20
+  v.ArenaEntrance = P{0, 4}
+  v.PlayerSize = 50
   v.Web_ArenaScale = 0.5
   w := []W{
     W{P{4, 0}, P{5, 0}},
@@ -64,7 +54,12 @@ func DefaultMatchOptions() *MatchOptions {
     W{P{5, 5}, P{6, 5}},
   }
   v.ArenaWallList = w
-  v.ArenaEntrance = P{4, 0}
-  v.Warmup = 20
   return &v
+}
+
+func (m *MatchOptions) RealPosition(p P) RP {
+  rp := RP{}
+  rp.X = float32((m.ArenaCellSize + m.ArenaBorder)) * (float32(p.X) + 0.5)
+  rp.Y = float32((m.ArenaCellSize + m.ArenaBorder)) * (float32(p.Y) + 0.5)
+  return rp
 }
