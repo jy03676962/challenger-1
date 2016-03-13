@@ -8,10 +8,14 @@ type MatchOptions struct {
   Warmup         int     `json:"warmup"`
   WallRects      []Rect  `json:"walls"`
   ArenaEntrance  P       `json:"arenaEntrance"`
-  PlayerSize     float32 `json:"playerSize"`
-  Web_ArenaScale float32 `json:"webScale"`
+  ArenaExit      P       `json:"arenaExit"`
+  PlayerSize     float64 `json:"playerSize"`
+  Web_ArenaScale float64 `json:"webScale"`
+  ButtonRects    []Rect  `json:"buttons"`
+  ButtonWidth    float64 `json:"buttonWidth"`
+  ButtonHeight   float64 `json:"buttonHeight"`
   // private
-  playerSpeed   float32
+  playerSpeed   float64
   arenaWallList []W
 }
 
@@ -23,7 +27,10 @@ func DefaultMatchOptions() *MatchOptions {
   v.ArenaBorder = 24
   v.Warmup = 20
   v.ArenaEntrance = P{0, 4}
+  v.ArenaExit = P{6, 0}
   v.PlayerSize = 50
+  v.ButtonWidth = 60
+  v.ButtonHeight = 30
   v.Web_ArenaScale = 0.5
   w := []W{
     W{P{4, 0}, P{5, 0}},
@@ -58,6 +65,7 @@ func DefaultMatchOptions() *MatchOptions {
   v.arenaWallList = w
   v.playerSpeed = 200
   v.buildWallRects()
+  v.buildButtons()
   return &v
 }
 
@@ -81,6 +89,95 @@ func (m *MatchOptions) buildWallRects() {
   }
 }
 
+func (m *MatchOptions) buildButtons() {
+  m.ButtonRects = make([]Rect, 0)
+  // top and bottom wall
+  c := m.ArenaCellSize
+  b := m.ArenaBorder
+  bw := m.ButtonWidth
+  bh := m.ButtonHeight
+  var x, y, w, h float64
+  for i := 0; i < m.ArenaWidth; i++ {
+    if m.ArenaEntrance.Y == 0 && i == m.ArenaEntrance.X {
+      continue
+    }
+    if m.ArenaExit.Y == 0 && i == m.ArenaExit.X {
+      continue
+    }
+    x = float64(c+b)*(float64(i)+0.5) - 0.5*bw
+    y = float64(b) * 0.5
+    w = bw
+    h = bh
+    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+  }
+  for i := 0; i < m.ArenaWidth; i++ {
+    if m.ArenaEntrance.Y == m.ArenaHeight-1 && i == m.ArenaEntrance.X {
+      continue
+    }
+    if m.ArenaExit.Y == m.ArenaHeight-1 && i == m.ArenaExit.X {
+      continue
+    }
+    x = float64(c+b)*(float64(i)+0.5) - 0.5*bw
+    y = float64((c+b)*m.ArenaHeight) - 0.5*float64(b) - bh
+    w = bw
+    h = bh
+    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+  }
+  // left and right wall
+  for i := 0; i < m.ArenaHeight; i++ {
+    if m.ArenaEntrance.X == 0 && i == m.ArenaEntrance.Y {
+      continue
+    }
+    if m.ArenaExit.X == 0 && i == m.ArenaExit.Y {
+      continue
+    }
+    x = float64(b) * 0.5
+    y = float64(c+b)*(float64(i)+0.5) - 0.5*bw
+    w = bh
+    h = bw
+    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+  }
+  for i := 0; i < m.ArenaHeight; i++ {
+    if m.ArenaEntrance.X == m.ArenaHeight-1 && i == m.ArenaEntrance.Y {
+      continue
+    }
+    if m.ArenaExit.X == m.ArenaHeight-1 && i == m.ArenaExit.Y {
+      continue
+    }
+    x = float64((c+b)*m.ArenaWidth) - 0.5*float64(b) - bh
+    y = float64(c+b)*(float64(i)+0.5) - 0.5*bw
+    w = bh
+    h = bw
+    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+  }
+  // inner wall
+  for idx, rect := range m.WallRects {
+    wall := m.arenaWallList[idx]
+    horizontal := wall.P1.X == wall.P2.X
+    if horizontal {
+      w = bw
+      h = bh
+      x = rect.X + float64(b) + 0.5*(float64(c)-bw)
+      // above
+      y = rect.Y - bh
+      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+      // below
+      y = rect.Y + bh
+      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+    } else {
+      w = bh
+      h = bw
+      y = rect.Y + float64(b) + 0.5*(float64(c)-bw)
+      // left
+      x = rect.X - bh
+      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+      // right
+      x = rect.X + bh
+      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+    }
+  }
+}
+
 func (m *MatchOptions) Collide(r *Rect) bool {
   for _, rect := range m.WallRects {
     if r.X < rect.X+rect.W &&
@@ -95,7 +192,7 @@ func (m *MatchOptions) Collide(r *Rect) bool {
 
 func (m *MatchOptions) RealPosition(p P) RP {
   rp := RP{}
-  rp.X = float32((m.ArenaCellSize + m.ArenaBorder)) * (float32(p.X) + 0.5)
-  rp.Y = float32((m.ArenaCellSize + m.ArenaBorder)) * (float32(p.Y) + 0.5)
+  rp.X = float64((m.ArenaCellSize + m.ArenaBorder)) * (float64(p.X) + 0.5)
+  rp.Y = float64((m.ArenaCellSize + m.ArenaBorder)) * (float64(p.Y) + 0.5)
   return rp
 }

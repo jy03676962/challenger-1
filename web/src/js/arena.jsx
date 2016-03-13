@@ -71,6 +71,8 @@ const ArenaBackground = ({opt, rootStyle}) => {
       }
       if (j == opt.arenaEntrance.X && i == opt.arenaEntrance.Y) {
         cellStyle.backgroundColor = "#008000"
+      } else if (j == opt.arenaExit.X && i == opt.arenaExit.Y) {
+        cellStyle.backgroundColor = "#00c864"
       } else {
         cellStyle.backgroundColor= "#669900"
       }
@@ -87,6 +89,17 @@ const ArenaBackground = ({opt, rootStyle}) => {
       height: wall.H * opt.webScale + "px",
     }
     elements.push(<div style={wallStyle} key={"wall:" + index}></div>)
+  }
+  for (let [index, button] of opt.buttons.entries()) {
+    let buttonStyle = {
+      position: "absolute",
+      backgroundColor: "#ffff66",
+      left: button.X * opt.webScale + "px",
+      top: button.Y * opt.webScale + "px",
+      width: button.W * opt.webScale + "px",
+      height: button.H * opt.webScale + "px",
+    }
+    elements.push(<div style={buttonStyle} key={"button:" + index}></div>)
   }
   return (
   <div style={rootStyle}>

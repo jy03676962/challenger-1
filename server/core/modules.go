@@ -8,8 +8,8 @@ type ArenaPosition struct {
 type P ArenaPosition
 
 type RealPosition struct {
-  X float32
-  Y float32
+  X float64
+  Y float64
 }
 
 type RP RealPosition

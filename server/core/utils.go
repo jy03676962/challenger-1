@@ -15,8 +15,8 @@ func (s StrSlice) Pos(value string) int {
   return -1
 }
 
-func MinMaxFloat32(v float32, min float32, max float32) float32 {
-  return float32(math.Min(math.Max(float64(v), float64(min)), float64(max)))
+func MinMaxfloat64(v float64, min float64, max float64) float64 {
+  return float64(math.Min(math.Max(float64(v), float64(min)), float64(max)))
 }
 
 func MinInt(x, y int) int {

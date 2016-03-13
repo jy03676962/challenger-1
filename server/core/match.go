@@ -30,7 +30,7 @@ type Match struct {
 }
 
 func NewMatch(matchCh chan string) *Match {
-  COLOR_ARRAY = [...]string{"red", "yellow", "green", "blue"}
+  COLOR_ARRAY = [...]string{"#ff0000", "#cc0000", "#990000", "#ff9966"}
   options := DefaultMatchOptions()
   messageCh := make(chan string)
   return &Match{
@@ -137,7 +137,7 @@ func (m *Match) gameLoop() {
       for _, player := range m.Member {
         if player.moving {
           delta := 1.0 / 30 * m.options.playerSpeed
-          var dx, dy float32
+          var dx, dy float64
           switch player.Direction {
           case "up":
             dx = 0
@@ -152,11 +152,11 @@ func (m *Match) gameLoop() {
             dx = -delta
             dy = 0
           }
-          minXY := (float32(m.options.ArenaBorder) + m.options.PlayerSize) / 2
-          maxX := float32((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaWidth) - minXY
-          maxY := float32((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaHeight) - minXY
-          x := MinMaxFloat32(player.Pos.X+dx, minXY, maxX)
-          y := MinMaxFloat32(player.Pos.Y+dy, minXY, maxY)
+          minXY := (float64(m.options.ArenaBorder) + m.options.PlayerSize) / 2
+          maxX := float64((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaWidth) - minXY
+          maxY := float64((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaHeight) - minXY
+          x := MinMaxfloat64(player.Pos.X+dx, minXY, maxX)
+          y := MinMaxfloat64(player.Pos.Y+dy, minXY, maxY)
           rect := Rect{
             float64(x) - float64(m.options.PlayerSize)/2,
             float64(y) - float64(m.options.PlayerSize)/2,
