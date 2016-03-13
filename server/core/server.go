@@ -149,7 +149,21 @@ func (s *Server) Start() {
 
     case c := <-s.delCh:
       log.Println("Delete client")
+      if name := c.GetUsername(); len(name) > 0 && s.match != nil {
+        if s.match.Hoster == name {
+          s.match = nil
+        } else if pos := s.match.Member.Pos(name); pos >= 0 {
+          s.match.Member = append(s.match.Member[:pos], s.match.Member[pos+1:]...)
+        }
+      }
       delete(s.clients, c.id)
+      data := make(map[string]interface{})
+      data["cmd"] = "matchChanged"
+      data["match"] = s.match
+      if s.match != nil {
+        data["options"] = s.match.GetOptions()
+      }
+      s.sendAll(data)
 
     case msg := <-s.sendAllCh:
       s.sendAll(msg)

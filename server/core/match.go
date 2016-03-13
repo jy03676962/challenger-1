@@ -15,7 +15,7 @@ const MATCH_CAPACITY = 4
 type Match struct {
   Capacity    int       `json:"capacity"`
   Hoster      string    `json:"hoster"`
-  Member      []string  `json:"member"`
+  Member      StrSlice  `json:"member"`
   Stage       string    `json:"stage"`
   StartAt     time.Time `json:"startAt"`
   TimeElapsed float64   `json:"elasped"`
@@ -31,7 +31,7 @@ func NewMatch(matchCh chan string) *Match {
   return &Match{
     MATCH_CAPACITY,
     "",
-    make([]string, 0),
+    make(StrSlice, 0),
     "before",
     time.Now(),
     0,
