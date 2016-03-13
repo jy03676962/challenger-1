@@ -13,6 +13,7 @@ type MatchOptions struct {
   Web_ArenaScale float32 `json:"webScale"`
   // private
   playerSpeed float32
+  wallRects   []Rect
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -57,7 +58,40 @@ func DefaultMatchOptions() *MatchOptions {
   }
   v.ArenaWallList = w
   v.playerSpeed = 200
+  v.buildWallRects()
   return &v
+}
+
+func (m *MatchOptions) buildWallRects() {
+  m.wallRects = make([]Rect, 0)
+  for _, wall := range m.ArenaWallList {
+    horizontal := wall.P1.X == wall.P2.X
+    var w, h, x, y float64
+    if horizontal {
+      w = float64(m.ArenaCellSize + 2*m.ArenaBorder)
+      h = float64(m.ArenaBorder)
+      x = float64(wall.P1.X*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+      y = float64(MaxInt(wall.P1.Y, wall.P2.Y)*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+    } else {
+      w = float64(m.ArenaBorder)
+      h = float64(m.ArenaCellSize + 2*m.ArenaBorder)
+      y = float64(wall.P1.Y*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+      x = float64(MaxInt(wall.P1.X, wall.P2.X)*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+    }
+    m.wallRects = append(m.wallRects, Rect{x, y, w, h})
+  }
+}
+
+func (m *MatchOptions) Collide(r *Rect) bool {
+  for _, rect := range m.wallRects {
+    if r.X < rect.X+rect.W &&
+      r.X+r.W > rect.X &&
+      r.Y < rect.Y+rect.H &&
+      r.H+r.Y > rect.Y {
+      return true
+    }
+  }
+  return false
 }
 
 func (m *MatchOptions) RealPosition(p P) RP {

@@ -157,7 +157,15 @@ func (m *Match) gameLoop() {
           maxY := float32((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaHeight) - minXY
           x := MinMaxFloat32(player.Pos.X+dx, minXY, maxX)
           y := MinMaxFloat32(player.Pos.Y+dy, minXY, maxY)
-          player.Pos = RP{x, y}
+          rect := Rect{
+            float64(x) - float64(m.options.PlayerSize)/2,
+            float64(y) - float64(m.options.PlayerSize)/2,
+            float64(m.options.PlayerSize),
+            float64(m.options.PlayerSize),
+          }
+          if !m.options.Collide(&rect) {
+            player.Pos = RP{x, y}
+          }
         }
       }
       m.TimeElapsed = time.Since(m.StartAt).Seconds()

@@ -41,7 +41,7 @@ const Player = observer(React.createClass({
     let bodyStyle = {
       textAlign: "center",
       backgroundColor: player.color,
-      borderRadius: bodySize / 2 + "px",
+      // borderRadius: bodySize / 2 + "px",
       position: "absolute",
       width: bodySize + "px",
       height: bodySize + "px",
