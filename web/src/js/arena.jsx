@@ -3,12 +3,13 @@ import {observer} from 'mobx-react'
 
 const Arena = observer(React.createClass({
   render() {
-    let opt = this.props.game.match.mapOptions
+    let opt = this.props.game.options
     let arenaWidth = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaWidth * opt.webScale
     let infoStyle = {
       width: arenaWidth + "px",
       height: "80px",
       margin: "auto",
+      textAlign: "center",
     }
     let bgStyle = {
       width: arenaWidth + "px",
@@ -24,7 +25,7 @@ const Arena = observer(React.createClass({
     }
     return (
       <div>
-      <ArenaInfoBar rootStyle={infoStyle}/>
+      <ArenaInfoBar game={this.props.game} rootStyle={infoStyle}/>
       <ArenaBackground opt={opt} rootStyle={bgStyle} />
       <ArenaGround opt={opt} rootStyle={gStyle} />
       </div>
@@ -34,8 +35,16 @@ const Arena = observer(React.createClass({
 
 const ArenaInfoBar = observer(React.createClass({
   render() {
+    let game = this.props.game
+    let content
+    if (game.match.stage == "warmup") {
+      let second = (game.options.warmup - game.match.elasped).toFixed(1)
+      content = `准备中,还剩${second}`
+    } else {
+      content = `游戏开始`
+    }
     return (
-      <div style={this.props.rootStyle}></div>
+      <div style={this.props.rootStyle}>{content}</div>
       )
   }
 }))
@@ -69,8 +78,6 @@ const ArenaBackground = ({opt, rootStyle}) => {
       t = wall.P1.Y * (opt.arenaCellSize + opt.arenaBorder) - opt.arenaBorder / 2
       l = Math.max(wall.P1.X, wall.P2.X) * (opt.arenaCellSize + opt.arenaBorder) - opt.arenaBorder / 2
     }
-    // vertical is {{top, left}, {height, width}}
-    // horizontal is {left, top}, {width, height}}
     let wallStyle = {
       position: "absolute",
       backgroundColor: "blue",

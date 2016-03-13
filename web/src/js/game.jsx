@@ -4,6 +4,7 @@ import {wsAddressWithPath} from '~/js/util.jsx'
 class Game {
   @observable match
   @observable playerName
+  @observable options
 
   @computed get stage() {
     if (!this.playerName) {
@@ -12,7 +13,7 @@ class Game {
     if (!this.match || this.match.stage == "before") {
       return "hall"
     }
-    if (this.match && this.match.stage == "ongoing") {
+    if (this.match && (this.match.stage == "ongoing" || this.match.stage == "warmup")) {
       return "arena"
     }
   }
@@ -26,6 +27,7 @@ class Game {
     this.sock = null
     this.match = null
     this.arg = null
+    this.options = null
   }
 
   connectServer(playerName) {
@@ -97,6 +99,10 @@ class Game {
       }
       break
       case "matchChanged":
+      this.match = data.match
+      this.options = data.options
+      break
+      case "matchTick":
       this.match = data.match
       break
     }

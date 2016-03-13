@@ -77,7 +77,6 @@ func (c *Client) listenWrite() {
     select {
 
     case msg := <-c.ch:
-      log.Println("Send:", msg)
       websocket.JSON.Send(c.ws, msg)
 
     case <-c.doneCh:
@@ -106,7 +105,7 @@ func (c *Client) listenRead() {
       } else if err != nil {
         c.server.Err(err)
       } else {
-        c.server.handleMessage(msg.(map[string]interface{}), c)
+        c.server.messageCh <- &SocketEvent{msg.(map[string]interface{}), c}
       }
     }
   }

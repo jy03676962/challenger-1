@@ -15,13 +15,13 @@ type ArenaWall struct {
 type W ArenaWall
 
 type MatchOptions struct {
-  ArenaWidth    int     `json:"arenaWidth"`
-  ArenaHeight   int     `json:"arenaHeight"`
-  ArenaCellSize int     `json:"arenaCellSize"`
-  ArenaBorder   int     `json:"arenaBorder"`
-  Warmup        float32 `json:"warmup"`
-  ArenaWallList []W     `json:"walls"`
-  ArenaEntrance P       `json:"arenaEntrance"`
+  ArenaWidth    int `json:"arenaWidth"`
+  ArenaHeight   int `json:"arenaHeight"`
+  ArenaCellSize int `json:"arenaCellSize"`
+  ArenaBorder   int `json:"arenaBorder"`
+  Warmup        int `json:"warmup"`
+  ArenaWallList []W `json:"walls"`
+  ArenaEntrance P   `json:"arenaEntrance"`
   // web side only options
   Web_ArenaScale float32 `json:"webScale"`
 }
@@ -65,5 +65,6 @@ func DefaultMatchOptions() *MatchOptions {
   }
   v.ArenaWallList = w
   v.ArenaEntrance = P{4, 0}
+  v.Warmup = 20
   return &v
 }

@@ -15,6 +15,8 @@ type Server struct {
   doneCh    chan bool
   errCh     chan error
   match     *Match
+  messageCh chan *SocketEvent
+  matchCh   chan string
 }
 
 func NewServer() *Server {
@@ -24,6 +26,8 @@ func NewServer() *Server {
   sendAllCh := make(chan map[string]interface{})
   doneCh := make(chan bool)
   errCh := make(chan error)
+  messageCh := make(chan *SocketEvent)
+  matchCh := make(chan string)
 
   return &Server{
     clients,
@@ -33,6 +37,8 @@ func NewServer() *Server {
     doneCh,
     errCh,
     nil,
+    messageCh,
+    matchCh,
   }
 }
 
@@ -73,13 +79,14 @@ func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
     }
     c.Write(data)
   case "createMatch":
-    newMatch := NewMatch()
+    newMatch := NewMatch(s.matchCh)
     newMatch.Hoster = name
     newMatch.AddMember(name)
     s.match = newMatch
     data := make(map[string]interface{})
     data["cmd"] = "matchChanged"
     data["match"] = newMatch
+    data["options"] = s.match.GetOptions()
     s.sendAll(data)
   case "joinMatch":
     if s.match != nil {
@@ -87,6 +94,7 @@ func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
         data := make(map[string]interface{})
         data["cmd"] = "matchChanged"
         data["match"] = s.match
+        data["options"] = s.match.GetOptions()
         s.sendAll(data)
       }
     }
@@ -95,6 +103,7 @@ func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
     data := make(map[string]interface{})
     data["cmd"] = "matchChanged"
     data["match"] = s.match
+    data["options"] = s.match.GetOptions()
     s.sendAll(data)
   default:
     c.Write(msg)
@@ -143,12 +152,21 @@ func (s *Server) Start() {
       delete(s.clients, c.id)
 
     case msg := <-s.sendAllCh:
-      log.Println("Send all:", msg)
       s.sendAll(msg)
 
     case err := <-s.errCh:
       log.Println("Error:", err.Error())
 
+    case msgEvent := <-s.messageCh:
+      s.handleMessage(msgEvent.SocketMessage, msgEvent.Client)
+
+    case msg := <-s.matchCh:
+      if msg == "tick" {
+        data := make(map[string]interface{})
+        data["cmd"] = "matchTick"
+        data["match"] = s.match
+        s.sendAll(data)
+      }
     case <-s.doneCh:
       return
     }
