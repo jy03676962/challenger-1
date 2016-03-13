@@ -73,26 +73,13 @@ const ArenaBackground = ({opt, rootStyle}) => {
     }
   }
   for (let [index, wall] of opt.walls.entries()) {
-    let horizontal = wall.P1.X == wall.P2.X
-    let w, h, l, t
-    if (horizontal) {
-      w = opt.arenaCellSize + 2 * opt.arenaBorder
-      h = opt.arenaBorder
-      l = wall.P1.X * (opt.arenaCellSize + opt.arenaBorder) - opt.arenaBorder / 2
-      t = Math.max(wall.P1.Y, wall.P2.Y) * (opt.arenaCellSize + opt.arenaBorder) - opt.arenaBorder / 2
-    } else {
-      w = opt.arenaBorder
-      h = opt.arenaCellSize + 2 * opt.arenaBorder
-      t = wall.P1.Y * (opt.arenaCellSize + opt.arenaBorder) - opt.arenaBorder / 2
-      l = Math.max(wall.P1.X, wall.P2.X) * (opt.arenaCellSize + opt.arenaBorder) - opt.arenaBorder / 2
-    }
     let wallStyle = {
       position: "absolute",
       backgroundColor: "blue",
-      left: l * opt.webScale + "px",
-      top: t * opt.webScale + "px",
-      width: w * opt.webScale + "px",
-      height: h * opt.webScale + "px",
+      left: wall.X * opt.webScale + "px",
+      top: wall.Y * opt.webScale + "px",
+      width: wall.W * opt.webScale + "px",
+      height: wall.H * opt.webScale + "px",
     }
     elements.push(<div style={wallStyle} key={"wall:" + index}></div>)
   }
