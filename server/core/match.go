@@ -1,7 +1,10 @@
 package core
 
 import (
+  // "fmt"
   "math"
+  "math/rand"
+  "strconv"
   "time"
 )
 
@@ -16,20 +19,26 @@ const (
  * Stage is before, warmup, ongoing, after
  */
 type Match struct {
-  Capacity    int       `json:"capacity"`
-  Hoster      string    `json:"hoster"`
-  Member      []*Player `json:"member"`
-  Stage       string    `json:"stage"`
-  StartAt     time.Time `json:"startAt"`
-  TimeElapsed float64   `json:"elasped"`
-  Rampage     bool      `json:"rampage"`
-  Mode        int       `json:"mode"`
-  Gold        float64   `json:"gold"`
-  Energy      float64   `json:"energy"`
+  Capacity      int             `json:"capacity"`
+  Hoster        string          `json:"hoster"`
+  Member        []*Player       `json:"member"`
+  Stage         string          `json:"stage"`
+  StartAt       time.Time       `json:"startAt"`
+  TimeElapsed   float64         `json:"elasped"`
+  RampageTime   time.Time       `json:"rampageTime"`
+  RampageRemain float64         `json:"rampageRemain"`
+  Rampage       bool            `json:"rampage"`
+  Mode          int             `json:"mode"`
+  Gold          float64         `json:"gold"`
+  Energy        float64         `json:"energy"`
+  LiveButtons   map[string]bool `json:"liveButtons"`
   // private
-  messageCh chan string
-  matchCh   chan string
-  options   *MatchOptions
+  messageCh     chan string
+  matchCh       chan string
+  options       *MatchOptions
+  backupButtons []string
+  buttonDoneCh  chan struct{}
+  buttonCh      chan string
 }
 
 func NewMatch(matchCh chan string) *Match {
@@ -44,6 +53,8 @@ func NewMatch(matchCh chan string) *Match {
   m.Mode = 0
   m.messageCh = make(chan string)
   m.matchCh = matchCh
+  m.buttonDoneCh = make(chan struct{})
+  m.buttonCh = make(chan string, 20)
   m.options = DefaultMatchOptions()
   return &m
 }
@@ -112,20 +123,103 @@ func (m *Match) Start(mode int) {
   if m.Mode == 2 {
     m.Gold = m.options.Mode2InitGold[len(m.Member)-1]
   }
+  m.resetButtons()
   go m.tickWarmup(m.options.Warmup)
   go m.gameLoop()
+}
+
+func (m *Match) useButton(btn string) {
+  delete(m.LiveButtons, btn)
+  if m.Rampage {
+    return
+  }
+  i := rand.Intn(len(m.backupButtons))
+  key := m.backupButtons[i]
+  m.backupButtons[i] = btn
+  t := m.options.buttonHideTime[m.Mode-1]
+  go func() {
+    c := time.After(time.Second * time.Duration(t))
+    select {
+    case <-c:
+      m.buttonCh <- key
+    case <-m.buttonDoneCh:
+    }
+  }()
+}
+
+func (m *Match) resetButtons() {
+  for _, player := range m.Member {
+    player.Button = ""
+    player.lastButton = ""
+    player.ButtonLevel = 0
+    player.ButtonTime = 0
+  }
+  l := len(m.options.Buttons)
+  list := rand.Perm(l)
+  n := m.options.initButtonNum[len(m.Member)-1]
+  m.LiveButtons = make(map[string]bool)
+  m.backupButtons = make([]string, l-n)
+  for i, v := range list {
+    id := strconv.Itoa(v)
+    if i < n {
+      m.LiveButtons[id] = true
+    } else {
+      m.backupButtons[i-n] = id
+    }
+  }
+}
+
+func (m *Match) enterRampage() {
+  close(m.buttonDoneCh)
+  m.buttonCh = make(chan string, 20)
+  m.buttonDoneCh = make(chan struct{})
+  for i := 0; i < len(m.options.Buttons); i++ {
+    k := strconv.Itoa(i)
+    m.LiveButtons[k] = true
+  }
+  m.backupButtons = nil
+  m.Rampage = true
+  m.RampageTime = time.Now()
+  m.Energy = 0
+  t := m.options.rampageTime[m.Mode-1]
+  go func() {
+    c := time.After(time.Duration(t) * time.Second)
+    select {
+    case <-c:
+      m.messageCh <- "RampageEnd"
+    }
+  }()
+}
+
+func (m *Match) leaveRampage() {
+  m.resetButtons()
+  m.Rampage = false
+}
+
+func (m *Match) tick() {
+  m.TimeElapsed = time.Since(m.StartAt).Seconds()
+  if m.Rampage {
+    elapsed := time.Since(m.RampageTime).Seconds()
+    m.RampageRemain = m.options.rampageTime[m.Mode-1] - elapsed
+  }
+  m.matchCh <- "tick"
 }
 
 func (m *Match) gameLoop() {
   tickChan := time.Tick(33 * time.Millisecond)
   for {
     select {
-    case message := <-m.messageCh:
-      switch message {
+    case msg := <-m.messageCh:
+      switch msg {
       case "WarmupEnd":
         m.Stage = "ongoing"
+      case "RampageEnd":
+        m.leaveRampage()
       }
-      m.matchCh <- "tick"
+      m.tick()
+    case btn := <-m.buttonCh:
+      m.LiveButtons[btn] = true
+      m.tick()
     case <-tickChan:
       for _, player := range m.Member {
         if player.moving {
@@ -160,11 +254,14 @@ func (m *Match) gameLoop() {
             player.Pos = RP{x, y}
           }
           if player.Button != "" {
-            m.Gold += m.options.GoldBonus[m.Mode-1]
+            if player.ButtonLevel > 0 {
+              m.Gold += m.options.GoldBonus[m.Mode-1]
+            }
             if !m.Rampage {
               delta := m.options.energyBonus[player.ButtonLevel][len(m.Member)-1]
               m.Energy = math.Min(m.options.MaxEnergy, m.Energy+delta)
             }
+            m.useButton(player.Button)
             player.lastButton = player.Button
             player.Button = ""
             player.ButtonTime = 0
@@ -175,14 +272,20 @@ func (m *Match) gameLoop() {
             player.ButtonTime += 1.0 / 30
             t := player.ButtonTime
             level := 0
-            if t < m.options.T1 {
-              level = 0
-            } else if t < m.options.T2 {
-              level = 1
-            } else if t < m.options.T3 {
-              level = 2
+            if m.Rampage {
+              if t > m.options.TRampage {
+                level = 1
+              }
             } else {
-              level = 3
+              if t < m.options.T1 {
+                level = 0
+              } else if t < m.options.T2 {
+                level = 1
+              } else if t < m.options.T3 {
+                level = 2
+              } else {
+                level = 3
+              }
             }
             player.ButtonLevel = level
           } else {
@@ -209,7 +312,7 @@ func (m *Match) gameLoop() {
           }
         }
       }
-      if m.Energy >= m.options.MaxEnergy {
+      if !m.Rampage && m.Energy >= m.options.MaxEnergy {
         if len(m.Member) == 1 {
           m.enterRampage()
         } else {
@@ -229,14 +332,9 @@ func (m *Match) gameLoop() {
           }
         }
       }
-      m.TimeElapsed = time.Since(m.StartAt).Seconds()
-      m.matchCh <- "tick"
+      m.tick()
     }
   }
-}
-
-func (m *Match) enterRampage() {
-  m.Rampage = true
 }
 
 func (m *Match) tickWarmup(timeout int) {

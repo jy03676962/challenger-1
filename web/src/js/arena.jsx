@@ -58,6 +58,10 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       let left = (opt.warmup - game.match.elasped).toFixed(1)
       msg = "预热阶段"
       timeText = `还剩${left}秒`
+    } else if (match.rampage) {
+      msg = "暴走阶段"
+      let left = match.rampageRemain.toFixed(1)
+      timeText = `还剩${left}秒`
     } else {
       msg = "游戏阶段"
       if (match.mode == 1) {
@@ -71,6 +75,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let energyText = `能量(${match.energy.toFixed(1)}/${opt.maxEnergy}):`
     let energyTextColor, energyBarColor
     if (match.rampage) {
+      p = "100%"
       energyTextColor = "red"
       energyBarColor = "red"
     } else {
@@ -142,15 +147,17 @@ const ArenaButtonLayer = observer(React.createClass({
     return (
       <div style={this.props.rootStyle}>
       {
-        opt.buttons.map((button) => {
-          let color = Scheme.buttonInit
+        opt.buttons.filter((button) =>{
+          return (button.id in match.liveButtons)
+        }).map((button) => {
+          let color = match.rampage ? Scheme.buttonRampage : Scheme.buttonInit
           let border = null
-          if (match.rampage) {
-            color = Scheme.buttonRampage
-          } else {
-            for (let player of match.member) {
-              if (player.button == button.id) {
-                border = `2px solid ${Scheme.buttonPressing}`
+          for (let player of match.member) {
+            if (player.button == button.id) {
+              border = `2px solid ${Scheme.buttonPressing}`
+              if (match.rampage) {
+                color = Scheme.buttonRampageLevel[player.buttonLevel]
+              } else {
                 color = Scheme.buttonLevel[player.buttonLevel]
               }
             }

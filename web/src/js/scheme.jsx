@@ -8,9 +8,11 @@ const Scheme = {
   buttonLevel:[
   "#FFFF22", "#FFB000", "#FF6600", "#FFB000"
   ],
+  buttonRampage: "#FF9999",
+  buttonRampageLevel:[
+  "#FF5599", "#FF00ff"
+  ],
   buttonPressing: "#9900FF",
-  buttonRampage: "#FF6699",
-  buttonTRampagePressing: "#FF0099",
   players:[
   "#ff0000", "#cc0000", "#990000", "#ff9966"
   ]

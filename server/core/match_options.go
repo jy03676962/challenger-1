@@ -30,9 +30,12 @@ type MatchOptions struct {
   WallRects []Rect    `json:"walls"`
   Buttons   []*Button `json:"buttons"`
   // private
-  playerSpeed   float64
-  arenaWallList []W
-  energyBonus   [4][4]float64
+  playerSpeed    float64
+  arenaWallList  []W
+  energyBonus    [4][4]float64
+  initButtonNum  [4]int
+  buttonHideTime [2]float64
+  rampageTime    [2]float64
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -65,6 +68,9 @@ func DefaultMatchOptions() *MatchOptions {
     {40, 32, 24, 16},
     {30, 24, 18, 12},
   }
+  v.initButtonNum = [4]int{20, 30, 40, 50}
+  v.buttonHideTime = [2]float64{6, 6}
+  v.rampageTime = [2]float64{20, 20}
   v.buildWallPoints()
   v.buildWallRects()
   v.buildButtons()
