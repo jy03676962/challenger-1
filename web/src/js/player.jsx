@@ -1,9 +1,11 @@
 import React from 'react';
 import {observer} from 'mobx-react'
+import Scheme from '~/js/scheme.jsx'
 
 const Player = observer(React.createClass({
   render() {
     const arrowSize = 5
+    let idx = this.props.idx
     let player = this.props.player
     let scale = this.props.options.webScale
     let bodySize = this.props.options.playerSize * scale
@@ -40,8 +42,7 @@ const Player = observer(React.createClass({
     }
     let bodyStyle = {
       textAlign: "center",
-      backgroundColor: player.color,
-      // borderRadius: bodySize / 2 + "px",
+      backgroundColor: Scheme.players[idx],
       position: "absolute",
       width: bodySize + "px",
       height: bodySize + "px",

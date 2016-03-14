@@ -4,8 +4,6 @@ import (
   "time"
 )
 
-var COLOR_ARRAY [4]string
-
 const (
   MATCH_CAPACITY = 4
 )
@@ -17,12 +15,14 @@ const (
  * Stage is before, warmup, ongoing, after
  */
 type Match struct {
-  Capacity    int       `json:"capacity"`
-  Hoster      string    `json:"hoster"`
-  Member      []*Player `json:"member"`
-  Stage       string    `json:"stage"`
-  StartAt     time.Time `json:"startAt"`
-  TimeElapsed float64   `json:"elasped"`
+  Capacity    int            `json:"capacity"`
+  Hoster      string         `json:"hoster"`
+  Member      []*Player      `json:"member"`
+  Stage       string         `json:"stage"`
+  StartAt     time.Time      `json:"startAt"`
+  TimeElapsed float64        `json:"elasped"`
+  Rampage     bool           `json:"rampage"`
+  ButtonState map[string]int `json:"buttonState"`
   // private
   messageCh chan string
   matchCh   chan string
@@ -30,9 +30,9 @@ type Match struct {
 }
 
 func NewMatch(matchCh chan string) *Match {
-  COLOR_ARRAY = [...]string{"#ff0000", "#cc0000", "#990000", "#ff9966"}
   options := DefaultMatchOptions()
   messageCh := make(chan string)
+  bs := make(map[string]int)
   return &Match{
     MATCH_CAPACITY,
     "",
@@ -40,6 +40,8 @@ func NewMatch(matchCh chan string) *Match {
     "before",
     time.Now(),
     0,
+    false,
+    bs,
     messageCh,
     matchCh,
     options,
@@ -59,18 +61,6 @@ func (m *Match) AddMember(name string) bool {
     return false
   }
   player := NewPlayer(name)
-  for _, color := range COLOR_ARRAY {
-    used := false
-    for _, member := range m.Member {
-      if member.Color == color {
-        used = true
-      }
-    }
-    if !used {
-      player.Color = color
-      break
-    }
-  }
   m.Member = append(m.Member, player)
   return true
 }

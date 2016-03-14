@@ -1,19 +1,27 @@
 package core
 
+import (
+  "strconv"
+)
+
 type MatchOptions struct {
-  ArenaWidth     int     `json:"arenaWidth"`
-  ArenaHeight    int     `json:"arenaHeight"`
-  ArenaCellSize  int     `json:"arenaCellSize"`
-  ArenaBorder    int     `json:"arenaBorder"`
-  Warmup         int     `json:"warmup"`
-  WallRects      []Rect  `json:"walls"`
-  ArenaEntrance  P       `json:"arenaEntrance"`
-  ArenaExit      P       `json:"arenaExit"`
-  PlayerSize     float64 `json:"playerSize"`
-  Web_ArenaScale float64 `json:"webScale"`
-  ButtonRects    []Rect  `json:"buttons"`
-  ButtonWidth    float64 `json:"buttonWidth"`
-  ButtonHeight   float64 `json:"buttonHeight"`
+  ArenaWidth     int       `json:"arenaWidth"`
+  ArenaHeight    int       `json:"arenaHeight"`
+  ArenaCellSize  int       `json:"arenaCellSize"`
+  ArenaBorder    int       `json:"arenaBorder"`
+  Warmup         int       `json:"warmup"`
+  ArenaEntrance  P         `json:"arenaEntrance"`
+  ArenaExit      P         `json:"arenaExit"`
+  PlayerSize     float64   `json:"playerSize"`
+  Web_ArenaScale float64   `json:"webScale"`
+  ButtonWidth    float64   `json:"buttonWidth"`
+  ButtonHeight   float64   `json:"buttonHeight"`
+  T1             float64   `json:"t1"`
+  T2             float64   `json:"t2"`
+  T3             float64   `json:"t3"`
+  TRampage       float64   `json:"tRampage"`
+  WallRects      []Rect    `json:"walls"`
+  Buttons        []*Button `json:"buttons"`
   // private
   playerSpeed   float64
   arenaWallList []W
@@ -29,10 +37,22 @@ func DefaultMatchOptions() *MatchOptions {
   v.ArenaEntrance = P{0, 4}
   v.ArenaExit = P{6, 0}
   v.PlayerSize = 50
+  v.Web_ArenaScale = 0.5
   v.ButtonWidth = 60
   v.ButtonHeight = 30
-  v.Web_ArenaScale = 0.5
-  w := []W{
+  v.T1 = 2
+  v.T2 = 2.2
+  v.T3 = 2.5
+  v.TRampage = 1
+  v.playerSpeed = 200
+  v.buildWallPoints()
+  v.buildWallRects()
+  v.buildButtons()
+  return &v
+}
+
+func (m *MatchOptions) buildWallPoints() {
+  m.arenaWallList = []W{
     W{P{4, 0}, P{5, 0}},
     W{P{1, 0}, P{1, 1}},
     W{P{6, 0}, P{6, 1}},
@@ -62,11 +82,6 @@ func DefaultMatchOptions() *MatchOptions {
     W{P{2, 5}, P{3, 5}},
     W{P{5, 5}, P{6, 5}},
   }
-  v.arenaWallList = w
-  v.playerSpeed = 200
-  v.buildWallRects()
-  v.buildButtons()
-  return &v
 }
 
 func (m *MatchOptions) buildWallRects() {
@@ -90,13 +105,18 @@ func (m *MatchOptions) buildWallRects() {
 }
 
 func (m *MatchOptions) buildButtons() {
-  m.ButtonRects = make([]Rect, 0)
+  m.Buttons = make([]*Button, 0)
   // top and bottom wall
   c := m.ArenaCellSize
   b := m.ArenaBorder
   bw := m.ButtonWidth
   bh := m.ButtonHeight
   var x, y, w, h float64
+  id := 0
+  app := func() {
+    m.Buttons = append(m.Buttons, &Button{strconv.Itoa(id), Rect{x, y, w, h}})
+    id = id + 1
+  }
   for i := 0; i < m.ArenaWidth; i++ {
     if m.ArenaEntrance.Y == 0 && i == m.ArenaEntrance.X {
       continue
@@ -108,7 +128,7 @@ func (m *MatchOptions) buildButtons() {
     y = float64(b) * 0.5
     w = bw
     h = bh
-    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+    app()
   }
   for i := 0; i < m.ArenaWidth; i++ {
     if m.ArenaEntrance.Y == m.ArenaHeight-1 && i == m.ArenaEntrance.X {
@@ -121,7 +141,7 @@ func (m *MatchOptions) buildButtons() {
     y = float64((c+b)*m.ArenaHeight) - 0.5*float64(b) - bh
     w = bw
     h = bh
-    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+    app()
   }
   // left and right wall
   for i := 0; i < m.ArenaHeight; i++ {
@@ -135,7 +155,7 @@ func (m *MatchOptions) buildButtons() {
     y = float64(c+b)*(float64(i)+0.5) - 0.5*bw
     w = bh
     h = bw
-    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+    app()
   }
   for i := 0; i < m.ArenaHeight; i++ {
     if m.ArenaEntrance.X == m.ArenaHeight-1 && i == m.ArenaEntrance.Y {
@@ -148,7 +168,7 @@ func (m *MatchOptions) buildButtons() {
     y = float64(c+b)*(float64(i)+0.5) - 0.5*bw
     w = bh
     h = bw
-    m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+    app()
   }
   // inner wall
   for idx, rect := range m.WallRects {
@@ -160,20 +180,20 @@ func (m *MatchOptions) buildButtons() {
       x = rect.X + float64(b) + 0.5*(float64(c)-bw)
       // above
       y = rect.Y - bh
-      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+      app()
       // below
       y = rect.Y + bh
-      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+      app()
     } else {
       w = bh
       h = bw
       y = rect.Y + float64(b) + 0.5*(float64(c)-bw)
       // left
       x = rect.X - bh
-      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+      app()
       // right
       x = rect.X + bh
-      m.ButtonRects = append(m.ButtonRects, Rect{x, y, w, h})
+      app()
     }
   }
 }

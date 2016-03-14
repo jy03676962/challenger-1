@@ -1,6 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react'
 import Player from '~/js/player.jsx'
+import Scheme from '~/js/scheme.jsx'
 
 const Arena = observer(React.createClass({
   render() {
@@ -19,7 +20,7 @@ const Arena = observer(React.createClass({
       fontSize: "0",
       margin: "auto",
       position: "relative",
-      border: opt.arenaBorder / 2 * opt.webScale + "px solid blue"
+      border: opt.arenaBorder / 2 * opt.webScale + "px solid " + Scheme.wall
     }
     let gStyle = {
       position: "absolute",
@@ -29,12 +30,13 @@ const Arena = observer(React.createClass({
       margin: "auto",
       width: arenaWidth + "px",
       height: arenaHeight + "px",
-      border: opt.arenaBorder / 2 * opt.webScale + "px solid blue"
+      border: opt.arenaBorder / 2 * opt.webScale + "px solid " + Scheme.wall
     }
     return (
       <div style={{position:"relative"}}>
       <ArenaInfoBar game={this.props.game} rootStyle={infoStyle}/>
       <ArenaBackground opt={opt} rootStyle={bgStyle} />
+      <ArenaButtonLayer game={this.props.game} rootStyle={gStyle} />
       <ArenaGround game={this.props.game} rootStyle={gStyle} />
       </div>
     )
@@ -66,15 +68,15 @@ const ArenaBackground = ({opt, rootStyle}) => {
         width: size,
         height: size,
         display: "inline-block",
-        border: opt.arenaBorder / 2 * opt.webScale + "px solid #CCCCCC",
-        backgroundColor: "#669900",
+        border: opt.arenaBorder / 2 * opt.webScale + "px solid " + Scheme.border,
+        backgroundColor: Scheme.normalTile
       }
       if (j == opt.arenaEntrance.X && i == opt.arenaEntrance.Y) {
-        cellStyle.backgroundColor = "#008000"
+        cellStyle.backgroundColor = Scheme.entranceTile
       } else if (j == opt.arenaExit.X && i == opt.arenaExit.Y) {
-        cellStyle.backgroundColor = "#00c864"
+        cellStyle.backgroundColor = Scheme.exitTile
       } else {
-        cellStyle.backgroundColor= "#669900"
+        cellStyle.backgroundColor= Scheme.normalTile
       }
       elements.push(<div style={cellStyle} key={"cell:"+i * opt.arenaWidth + j}></div>)
     }
@@ -82,24 +84,13 @@ const ArenaBackground = ({opt, rootStyle}) => {
   for (let [index, wall] of opt.walls.entries()) {
     let wallStyle = {
       position: "absolute",
-      backgroundColor: "blue",
+      backgroundColor: Scheme.wall,
       left: wall.X * opt.webScale + "px",
       top: wall.Y * opt.webScale + "px",
       width: wall.W * opt.webScale + "px",
       height: wall.H * opt.webScale + "px",
     }
     elements.push(<div style={wallStyle} key={"wall:" + index}></div>)
-  }
-  for (let [index, button] of opt.buttons.entries()) {
-    let buttonStyle = {
-      position: "absolute",
-      backgroundColor: "#ffff66",
-      left: button.X * opt.webScale + "px",
-      top: button.Y * opt.webScale + "px",
-      width: button.W * opt.webScale + "px",
-      height: button.H * opt.webScale + "px",
-    }
-    elements.push(<div style={buttonStyle} key={"button:" + index}></div>)
   }
   return (
   <div style={rootStyle}>
@@ -108,6 +99,40 @@ const ArenaBackground = ({opt, rootStyle}) => {
   );
 }
 
+const ArenaButtonLayer = observer(React.createClass({
+  render() {
+    let match = this.props.game.match
+    let opt = this.props.game.options
+    return (
+      <div style={this.props.rootStyle}>
+      {
+        opt.buttons.map((button) => {
+          let color = Scheme.buttonT0
+          if (match.rampage) {
+            color = Scheme.buttonRampage
+          } else {
+            let t = match.buttonState[button.id]
+            if (typeof t != "undefined") {
+              color = Scheme[`buttonT${t}`]
+            }
+          }
+          let r = button.r
+          let buttonStyle = {
+            position: "absolute",
+            backgroundColor: color,
+            left: r.X * opt.webScale + "px",
+            top: r.Y * opt.webScale + "px",
+            width: r.W * opt.webScale + "px",
+            height: r.H * opt.webScale + "px",
+          }
+          return <div style={buttonStyle} key={"button:" + button.id}></div>
+        })
+      }
+      </div>
+      )
+  }
+}))
+
 const ArenaGround = observer(React.createClass({
   render() {
     let match = this.props.game.match
@@ -115,8 +140,8 @@ const ArenaGround = observer(React.createClass({
     return (
       <div style={this.props.rootStyle}>
       {
-        match.member.map((member) => {
-          return <Player player={member} options={opt} key={member.name}/>
+        match.member.map((member, idx) => {
+          return <Player player={member} options={opt} key={member.name} idx={idx}/>
         })
       }
       </div>

@@ -32,3 +32,8 @@ type SocketEvent struct {
   SocketMessage map[string]interface{}
   Client        *Client
 }
+
+type Button struct {
+  Id string `json:"id"`
+  R  Rect   `json:"r"`
+}
