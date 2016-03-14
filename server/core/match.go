@@ -33,6 +33,7 @@ type Match struct {
   Energy        float64         `json:"energy"`
   LiveButtons   map[string]bool `json:"liveButtons"`
   RampageCount  int             `json:"rampageCount"`
+  Combo         int             `json:"combo"`
   // private
   messageCh     chan string
   matchCh       chan string
@@ -41,6 +42,7 @@ type Match struct {
   buttonDoneCh  chan struct{}
   buttonCh      chan string
   closeCh       <-chan struct{}
+  lastHitTime   time.Time
 }
 
 func NewMatch(matchCh chan string) *Match {
@@ -59,6 +61,7 @@ func NewMatch(matchCh chan string) *Match {
   m.buttonCh = make(chan string, 20)
   m.options = DefaultMatchOptions()
   m.RampageCount = 0
+  m.lastHitTime = time.Unix(0, 0)
   return &m
 }
 
@@ -191,6 +194,8 @@ func (m *Match) enterRampage() {
   m.RampageTime = time.Now()
   m.Energy = 0
   m.RampageCount += 1
+  m.Combo = 0
+  m.lastHitTime = time.Unix(0, 0)
   t := m.options.rampageTime[m.Mode-1]
   go func() {
     c := time.After(time.Duration(t) * time.Second)
@@ -316,9 +321,30 @@ func (m *Match) gameLoop() {
             if player.ButtonLevel > 0 {
               m.Gold += m.options.GoldBonus[m.Mode-1]
               player.Gold += 1
+              if !m.Rampage {
+                sec := time.Since(m.lastHitTime).Seconds()
+                m.lastHitTime = time.Now()
+                var max float64
+                if m.Combo == 0 {
+                  max = m.options.firstComboInterval[len(m.Member)-1]
+                } else {
+                  max = m.options.firstComboInterval[len(m.Member)-1]
+                }
+                if sec <= max {
+                  m.Combo += 1
+                } else {
+                  m.Combo = 0
+                }
+              }
             }
             if !m.Rampage {
-              delta := m.options.energyBonus[player.ButtonLevel][len(m.Member)-1]
+              extra := 0.0
+              if m.Combo == 1 {
+                extra = m.options.firstComboExtra
+              } else if m.Combo > 1 {
+                extra = m.options.comboExtra
+              }
+              delta := m.options.energyBonus[player.ButtonLevel][len(m.Member)-1] + extra
               m.Energy = math.Min(m.options.MaxEnergy, m.Energy+delta)
               player.LevelData[player.ButtonLevel] += 1
               player.Energy += delta

@@ -88,6 +88,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       <div styleName="message">{msg}</div>
       <div styleName="timer">{timeText}</div>
       </div>
+      <div styleName="centerBar">{`当前连击${match.combo}`}</div>
       <div styleName="rightBar">
       <div styleName="gold">{goldText}</div>
       <div styleName="energyBg">

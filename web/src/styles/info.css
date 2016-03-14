@@ -7,6 +7,14 @@
   float: right;
 }
 
+.centerBar {
+  float: left;
+  text-align: center;
+  color: green;
+  height: 60px;
+  line-height: 60px;
+}
+
 .message {
   font-size: 14px;
   text-align: center;

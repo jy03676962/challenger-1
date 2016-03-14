@@ -30,12 +30,16 @@ type MatchOptions struct {
   WallRects []Rect    `json:"walls"`
   Buttons   []*Button `json:"buttons"`
   // private
-  playerSpeed    float64
-  arenaWallList  []W
-  energyBonus    [4][4]float64
-  initButtonNum  [4]int
-  buttonHideTime [2]float64
-  rampageTime    [2]float64
+  playerSpeed        float64
+  arenaWallList      []W
+  energyBonus        [4][4]float64
+  initButtonNum      [4]int
+  buttonHideTime     [2]float64
+  rampageTime        [2]float64
+  firstComboInterval [4]float64
+  comboInterval      [4]float64
+  firstComboExtra    float64
+  comboExtra         float64
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -60,8 +64,8 @@ func DefaultMatchOptions() *MatchOptions {
   v.TouchPunish = [2]float64{30, 10}
   v.Mode2InitGold = [4]float64{60, 90, 120, 150}
   v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
-  v.MaxEnergy = 100
-  v.Mode1TotalTime = 15
+  v.MaxEnergy = 1000
+  v.Mode1TotalTime = 300
   v.energyBonus = [4][4]float64{
     {0, 0, 0, 0},
     {50, 40, 30, 20},
@@ -71,6 +75,10 @@ func DefaultMatchOptions() *MatchOptions {
   v.initButtonNum = [4]int{20, 30, 40, 50}
   v.buttonHideTime = [2]float64{6, 6}
   v.rampageTime = [2]float64{20, 20}
+  v.firstComboInterval = [4]float64{5, 4, 3, 2}
+  v.comboInterval = [4]float64{3, 3, 2, 2}
+  v.firstComboExtra = 30
+  v.comboExtra = 15
   v.buildWallPoints()
   v.buildWallRects()
   v.buildButtons()
