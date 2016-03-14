@@ -4,11 +4,10 @@ const Scheme = {
   normalTile: "#669900",
   entranceTile: "#008000",
   exitTile: "#00C864",
-  buttonT0: "#CCCC99",
-  buttonT1: "#FFFF22",
-  buttonT2: "#FFB000",
-  buttonT3: "#FF6600",
-  buttonT4: "#FFB000",
+  buttonInit: "#CCCC99",
+  buttonLevel:[
+  "#FFFF22", "#FFB000", "#FF6600", "#FFB000"
+  ],
   buttonPressing: "#9900FF",
   buttonTRampage: "#FF6699",
   buttonTRampagePressing: "#FF0099",

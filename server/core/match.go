@@ -1,7 +1,6 @@
 package core
 
 import (
-  "fmt"
   "time"
 )
 
@@ -109,6 +108,9 @@ func (m *Match) Start(mode int) {
   for _, member := range m.Member {
     member.Pos = m.options.RealPosition(m.options.ArenaEntrance)
   }
+  if m.Mode == 2 {
+    m.Gold = m.options.Mode2InitGold[len(m.Member)-1]
+  }
   go m.tickWarmup(m.options.Warmup)
   go m.gameLoop()
 }
@@ -156,13 +158,36 @@ func (m *Match) gameLoop() {
           if !m.options.CollideWall(&rect) {
             player.Pos = RP{x, y}
           }
-          player.lastButton = player.Button
-          player.Button = ""
-          player.ButtonTime = 0
+          if player.Button != "" {
+            m.Gold += m.options.GoldBonus[m.Mode-1]
+            if !m.Rampage {
+              delta := m.options.energyBonus[player.ButtonLevel][len(m.Member)-1]
+              m.Energy += delta
+              if m.Energy >= m.options.MaxEnergy {
+                m.Rampage = true
+                m.Energy = m.options.MaxEnergy
+              }
+            }
+            player.lastButton = player.Button
+            player.Button = ""
+            player.ButtonTime = 0
+            player.ButtonLevel = 0
+          }
         } else if m.Stage == "ongoing" {
           if player.Button != "" {
             player.ButtonTime += 1.0 / 30
-            fmt.Println(player.ButtonTime)
+            t := player.ButtonTime
+            level := 0
+            if t < m.options.T1 {
+              level = 0
+            } else if t < m.options.T2 {
+              level = 1
+            } else if t < m.options.T3 {
+              level = 2
+            } else {
+              level = 3
+            }
+            player.ButtonLevel = level
           } else {
             rect := Rect{
               float64(player.Pos.X) - float64(m.options.PlayerSize)/2,

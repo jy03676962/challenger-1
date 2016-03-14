@@ -68,6 +68,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let gold = match.gold.toFixed(0)
     let goldText = `当前金币: ${gold}`
     let p = (match.energy / opt.maxEnergy) * 100 + "%"
+    let energyText = `能量(${match.energy.toFixed(1)}/${opt.maxEnergy}):`
     return (
       <div style={this.props.rootStyle}>
       <div styleName="leftBar">
@@ -79,7 +80,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       <div styleName="energyBg">
       <div styleName="energy" style={{width:p}}></div>
       </div>
-      <div styleName="energyText">能量: </div>
+      <div styleName="energyText">{energyText}</div>
       </div>
       </div>
       )
@@ -134,7 +135,7 @@ const ArenaButtonLayer = observer(React.createClass({
       <div style={this.props.rootStyle}>
       {
         opt.buttons.map((button) => {
-          let color = Scheme.buttonT0
+          let color = Scheme.buttonInit
           let border = null
           if (match.rampage) {
             color = Scheme.buttonRampage
@@ -142,16 +143,7 @@ const ArenaButtonLayer = observer(React.createClass({
             for (let player of match.member) {
               if (player.button == button.id) {
                 border = `2px solid ${Scheme.buttonPressing}`
-                console.log(player.buttonTime)
-                if (player.buttonTime < opt.t1) {
-                  color = Scheme.buttonT1
-                } else if (player.buttonTime < opt.t2) {
-                  color = Scheme.buttonT2
-                } else if (player.buttonTime < opt.t3) {
-                  color = Scheme.buttonT3
-                } else {
-                  color = Scheme.buttonT4
-                }
+                color = Scheme.buttonLevel[player.buttonLevel]
               }
             }
           }

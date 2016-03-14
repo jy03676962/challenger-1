@@ -20,7 +20,7 @@ type MatchOptions struct {
   T2                float64    `json:"t2"`
   T3                float64    `json:"t3"`
   TRampage          float64    `json:"tRampage"`
-  ButtonBonus       [2]float64 `json:"buttonBonus"`
+  GoldBonus         [2]float64 `json:"buttonBonus"`
   TouchPunish       [2]float64 `json:"touchPunish"`
   Mode2InitGold     [4]float64 `json:"mode2InitGold"`
   Mode2GoldDropRate [4]float64 `json:"mode2GoldDropRate"`
@@ -32,6 +32,7 @@ type MatchOptions struct {
   // private
   playerSpeed   float64
   arenaWallList []W
+  energyBonus   [4][4]float64
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -52,12 +53,18 @@ func DefaultMatchOptions() *MatchOptions {
   v.T3 = 2.5
   v.TRampage = 1
   v.playerSpeed = 200
-  v.ButtonBonus = [2]float64{1, 1}
+  v.GoldBonus = [2]float64{1, 1}
   v.TouchPunish = [2]float64{30, 10}
   v.Mode2InitGold = [4]float64{60, 90, 120, 150}
   v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
   v.MaxEnergy = 1000
   v.Mode1TotalTime = 300
+  v.energyBonus = [4][4]float64{
+    {0, 0, 0, 0},
+    {50, 40, 30, 20},
+    {40, 32, 24, 16},
+    {30, 24, 18, 12},
+  }
   v.buildWallPoints()
   v.buildWallRects()
   v.buildButtons()
