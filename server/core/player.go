@@ -7,19 +7,27 @@ type Player struct {
   Button      string  `json:"button"`
   ButtonTime  float64 `json:"buttonTime"`
   ButtonLevel int     `json:"buttonLevel"`
+  Gold        float64 `json:"gold"`
+  Energy      float64 `json:"energy"`
+  LevelData   [4]int  `json:"levelData"`
+  HitCount    int     `json:"hitCount"`
   moving      bool
   lastButton  string
 }
 
 func NewPlayer(name string) *Player {
-  return &Player{
-    name,
-    RP{0, 0},
-    "up",
-    "",
-    0,
-    0,
-    false,
-    "",
-  }
+  p := Player{}
+  p.Name = name
+  p.Pos = RP{0, 0}
+  p.Direction = "up"
+  p.Button = ""
+  p.ButtonTime = 0
+  p.ButtonLevel = 0
+  p.Gold = 0
+  p.Energy = 0
+  p.LevelData = [4]int{0, 0, 0, 0}
+  p.HitCount = 0
+  p.moving = false
+  p.lastButton = ""
+  return &p
 }

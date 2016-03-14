@@ -3,6 +3,7 @@ import {render} from 'react-dom'
 import Login from '~/js/login.jsx'
 import Hall from '~/js/hall.jsx'
 import Arena from '~/js/arena.jsx'
+import Board from '~/js/board.jsx'
 import Game from '~/js/game.jsx'
 import {observer} from 'mobx-react'
 import CSSModules from 'react-css-modules'
@@ -22,6 +23,8 @@ const App = CSSModules(observer(React.createClass({
       case 'arena':
       element = <Arena game={game} />
       break
+      case 'board':
+      element = <Board game={game} />
     }
     return (
       <div id='app' styleName='base-div'>{element}</div>

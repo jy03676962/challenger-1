@@ -16,6 +16,9 @@ class Game {
     if (this.match && (this.match.stage == "ongoing" || this.match.stage == "warmup")) {
       return "arena"
     }
+    if (this.match && this.match.stage == "after") {
+      return "board"
+    }
   }
 
   constructor() {
@@ -104,6 +107,9 @@ class Game {
       this.options = data.options
       break
       case "matchTick":
+      this.match = data.match
+      break
+      case "matchEnd":
       this.match = data.match
       break
     }

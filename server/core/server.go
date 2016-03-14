@@ -150,7 +150,6 @@ func (s *Server) OnConnected(ws *websocket.Conn) {
 func (s *Server) Start() {
   for {
     select {
-
     case c := <-s.addCh:
       log.Println("Added new client")
       s.clients[c.id] = c
@@ -159,12 +158,15 @@ func (s *Server) Start() {
     case c := <-s.delCh:
       log.Println("Delete client")
       if name := c.GetUsername(); s.match != nil {
-        if s.match.Hoster == name {
-          s.match = nil
-        } else {
-          s.match.RemoveMember(name)
+        if s.match.IsRunning() {
+          close(s.closeCh)
+        } else if s.match.Stage != "after" {
+          if s.match.Hoster == name {
+            s.match = nil
+          } else {
+            s.match.RemoveMember(name)
+          }
         }
-        close(s.closeCh)
       }
       delete(s.clients, c.id)
       data := make(map[string]interface{})
@@ -188,6 +190,12 @@ func (s *Server) Start() {
       if msg == "tick" {
         data := make(map[string]interface{})
         data["cmd"] = "matchTick"
+        data["match"] = s.match
+        s.sendAll(data)
+      } else if msg == "matchEnd" {
+        close(s.closeCh)
+        data := make(map[string]interface{})
+        data["cmd"] = "matchEnd"
         data["match"] = s.match
         s.sendAll(data)
       }

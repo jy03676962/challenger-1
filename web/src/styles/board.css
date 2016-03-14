@@ -1,0 +1,8 @@
+@import './global.css';
+table {
+  width: 100%;
+}
+
+.player {
+  margin-top: 30px;
+}

@@ -32,6 +32,7 @@ type Match struct {
   Gold          float64         `json:"gold"`
   Energy        float64         `json:"energy"`
   LiveButtons   map[string]bool `json:"liveButtons"`
+  RampageCount  int             `json:"rampageCount"`
   // private
   messageCh     chan string
   matchCh       chan string
@@ -57,6 +58,7 @@ func NewMatch(matchCh chan string) *Match {
   m.buttonDoneCh = make(chan struct{})
   m.buttonCh = make(chan string, 20)
   m.options = DefaultMatchOptions()
+  m.RampageCount = 0
   return &m
 }
 
@@ -112,6 +114,10 @@ func (m *Match) RemoveMember(name string) bool {
 
 func (m *Match) IsFull() bool {
   return len(m.Member) == m.Capacity
+}
+
+func (m *Match) IsRunning() bool {
+  return m.Stage == "ongoing" || m.Stage == "warmup"
 }
 
 func (m *Match) Start(mode int, closeCh <-chan struct{}) {
@@ -184,6 +190,7 @@ func (m *Match) enterRampage() {
   m.Rampage = true
   m.RampageTime = time.Now()
   m.Energy = 0
+  m.RampageCount += 1
   t := m.options.rampageTime[m.Mode-1]
   go func() {
     c := time.After(time.Duration(t) * time.Second)
@@ -198,6 +205,11 @@ func (m *Match) enterRampage() {
 func (m *Match) leaveRampage() {
   m.resetButtons()
   m.Rampage = false
+}
+
+func (m *Match) endMatch() {
+  m.Stage = "after"
+  m.matchCh <- "matchEnd"
 }
 
 func (m *Match) tick() {
@@ -219,8 +231,21 @@ func (m *Match) gameLoop() {
       switch msg {
       case "WarmupEnd":
         m.Stage = "ongoing"
+        if m.Mode == 1 {
+          go func() {
+            c := time.After(time.Duration(m.options.Mode1TotalTime) * time.Second)
+            select {
+            case <-c:
+              m.messageCh <- "MatchEnd"
+            case <-m.closeCh:
+            }
+          }()
+        }
       case "RampageEnd":
         m.leaveRampage()
+      case "MatchEnd":
+        m.endMatch()
+        return
       }
       m.tick()
     case btn := <-m.buttonCh:
@@ -262,10 +287,13 @@ func (m *Match) gameLoop() {
           if player.Button != "" {
             if player.ButtonLevel > 0 {
               m.Gold += m.options.GoldBonus[m.Mode-1]
+              player.Gold += 1
             }
             if !m.Rampage {
               delta := m.options.energyBonus[player.ButtonLevel][len(m.Member)-1]
               m.Energy = math.Min(m.options.MaxEnergy, m.Energy+delta)
+              player.LevelData[player.ButtonLevel] += 1
+              player.Energy += delta
             }
             m.useButton(player.Button)
             player.lastButton = player.Button

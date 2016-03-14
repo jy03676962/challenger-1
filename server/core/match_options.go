@@ -61,7 +61,7 @@ func DefaultMatchOptions() *MatchOptions {
   v.Mode2InitGold = [4]float64{60, 90, 120, 150}
   v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
   v.MaxEnergy = 100
-  v.Mode1TotalTime = 300
+  v.Mode1TotalTime = 15
   v.energyBonus = [4][4]float64{
     {0, 0, 0, 0},
     {50, 40, 30, 20},
