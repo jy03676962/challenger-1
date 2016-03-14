@@ -108,17 +108,30 @@ const ArenaButtonLayer = observer(React.createClass({
       {
         opt.buttons.map((button) => {
           let color = Scheme.buttonT0
+          let border = null
           if (match.rampage) {
             color = Scheme.buttonRampage
           } else {
-            let t = match.buttonState[button.id]
-            if (typeof t != "undefined") {
-              color = Scheme[`buttonT${t}`]
+            for (let player of match.member) {
+              if (player.button == button.id) {
+                border = `2px solid ${Scheme.buttonPressing}`
+                console.log(player.buttonTime)
+                if (player.buttonTime < opt.t1) {
+                  color = Scheme.buttonT1
+                } else if (player.buttonTime < opt.t2) {
+                  color = Scheme.buttonT2
+                } else if (player.buttonTime < opt.t3) {
+                  color = Scheme.buttonT3
+                } else {
+                  color = Scheme.buttonT4
+                }
+              }
             }
           }
           let r = button.r
           let buttonStyle = {
             position: "absolute",
+            border: border,
             backgroundColor: color,
             left: r.X * opt.webScale + "px",
             top: r.Y * opt.webScale + "px",

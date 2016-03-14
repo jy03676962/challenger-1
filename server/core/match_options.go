@@ -198,16 +198,41 @@ func (m *MatchOptions) buildButtons() {
   }
 }
 
-func (m *MatchOptions) Collide(r *Rect) bool {
+func (m *MatchOptions) CollideWall(r *Rect) bool {
   for _, rect := range m.WallRects {
-    if r.X < rect.X+rect.W &&
-      r.X+r.W > rect.X &&
-      r.Y < rect.Y+rect.H &&
-      r.H+r.Y > rect.Y {
+    if m.Collide(r, &rect) {
       return true
     }
   }
   return false
+}
+
+func (m *MatchOptions) Collide(r1 *Rect, r2 *Rect) bool {
+  if r1.X < r2.X+r2.W &&
+    r1.X+r1.W > r2.X &&
+    r1.Y < r2.Y+r2.H &&
+    r1.H+r1.Y > r2.Y {
+    return true
+  }
+  return false
+}
+
+func (m *MatchOptions) PressingButtons(r *Rect) []string {
+  ret := make([]string, 2)
+  i := 0
+  for _, btn := range m.Buttons {
+    if m.Collide(r, &btn.R) {
+      ret[i] = btn.Id
+      i += 1
+      if i == 2 {
+        return ret
+      }
+    }
+  }
+  if i == 0 {
+    return nil
+  }
+  return ret
 }
 
 func (m *MatchOptions) RealPosition(p P) RP {

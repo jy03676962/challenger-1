@@ -1,6 +1,7 @@
 package core
 
 import (
+  "fmt"
   "time"
 )
 
@@ -15,14 +16,13 @@ const (
  * Stage is before, warmup, ongoing, after
  */
 type Match struct {
-  Capacity    int            `json:"capacity"`
-  Hoster      string         `json:"hoster"`
-  Member      []*Player      `json:"member"`
-  Stage       string         `json:"stage"`
-  StartAt     time.Time      `json:"startAt"`
-  TimeElapsed float64        `json:"elasped"`
-  Rampage     bool           `json:"rampage"`
-  ButtonState map[string]int `json:"buttonState"`
+  Capacity    int       `json:"capacity"`
+  Hoster      string    `json:"hoster"`
+  Member      []*Player `json:"member"`
+  Stage       string    `json:"stage"`
+  StartAt     time.Time `json:"startAt"`
+  TimeElapsed float64   `json:"elasped"`
+  Rampage     bool      `json:"rampage"`
   // private
   messageCh chan string
   matchCh   chan string
@@ -32,7 +32,6 @@ type Match struct {
 func NewMatch(matchCh chan string) *Match {
   options := DefaultMatchOptions()
   messageCh := make(chan string)
-  bs := make(map[string]int)
   return &Match{
     MATCH_CAPACITY,
     "",
@@ -41,7 +40,6 @@ func NewMatch(matchCh chan string) *Match {
     time.Now(),
     0,
     false,
-    bs,
     messageCh,
     matchCh,
     options,
@@ -153,8 +151,37 @@ func (m *Match) gameLoop() {
             float64(m.options.PlayerSize),
             float64(m.options.PlayerSize),
           }
-          if !m.options.Collide(&rect) {
+          if !m.options.CollideWall(&rect) {
             player.Pos = RP{x, y}
+          }
+          player.lastButton = player.Button
+          player.Button = ""
+          player.ButtonTime = 0
+        } else {
+          if player.Button != "" {
+            player.ButtonTime += 1.0 / 30
+            fmt.Println(player.ButtonTime)
+          } else {
+            rect := Rect{
+              float64(player.Pos.X) - float64(m.options.PlayerSize)/2,
+              float64(player.Pos.Y) - float64(m.options.PlayerSize)/2,
+              float64(m.options.PlayerSize),
+              float64(m.options.PlayerSize),
+            }
+            buttons := m.options.PressingButtons(&rect)
+            if buttons != nil {
+              var id string
+              if len(buttons[1]) > 0 {
+                if buttons[0] == player.lastButton {
+                  id = buttons[1]
+                } else {
+                  id = buttons[0]
+                }
+              } else {
+                id = buttons[0]
+              }
+              player.Button = id
+            }
           }
         }
       }

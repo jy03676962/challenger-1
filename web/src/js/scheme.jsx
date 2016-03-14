@@ -5,10 +5,12 @@ const Scheme = {
   entranceTile: "#008000",
   exitTile: "#00C864",
   buttonT0: "#CCCC99",
-  buttonT1: "#FFFF99",
-  buttonT2: "#FFFF66",
-  buttonT3: "#FFFF33",
-  buttonTRampage: "#FFFF00",
+  buttonT1: "#FFFF22",
+  buttonT2: "#FFB000",
+  buttonT3: "#FF6600",
+  buttonT4: "#FFB000",
+  buttonPressing: "#9900FF",
+  buttonTRampage: "#FF4499",
   players:[
   "#ff0000", "#cc0000", "#990000", "#ff9966"
   ]
