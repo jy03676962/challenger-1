@@ -196,7 +196,10 @@ func (m *Match) enterRampage() {
     c := time.After(time.Duration(t) * time.Second)
     select {
     case <-c:
-      m.messageCh <- "RampageEnd"
+      select {
+      case m.messageCh <- "RampageEnd":
+      case <-m.closeCh:
+      }
     case <-m.closeCh:
     }
   }()
@@ -236,8 +239,27 @@ func (m *Match) gameLoop() {
             c := time.After(time.Duration(m.options.Mode1TotalTime) * time.Second)
             select {
             case <-c:
-              m.messageCh <- "MatchEnd"
+              select {
+              case m.messageCh <- "MatchEnd":
+              case <-m.closeCh:
+              }
             case <-m.closeCh:
+            }
+          }()
+        } else {
+          go func() {
+            c := time.Tick(time.Second)
+            for {
+              select {
+              case <-c:
+                select {
+                case m.messageCh <- "DropGold":
+                case <-m.closeCh:
+                  return
+                }
+              case <-m.closeCh:
+                return
+              }
             }
           }()
         }
@@ -246,6 +268,12 @@ func (m *Match) gameLoop() {
       case "MatchEnd":
         m.endMatch()
         return
+      case "DropGold":
+        g := m.options.Mode2GoldDropRate[len(m.Member)-1]
+        m.Gold -= g
+        if m.Gold <= 0 {
+          m.endMatch()
+        }
       }
       m.tick()
     case btn := <-m.buttonCh:
@@ -375,7 +403,10 @@ func (m *Match) tickWarmup(timeout int) {
   c := time.After(time.Duration(timeout) * time.Second)
   select {
   case <-c:
-    m.messageCh <- "WarmupEnd"
+    select {
+    case m.messageCh <- "WarmupEnd":
+    case <-m.closeCh:
+    }
   case <-m.closeCh:
   }
 }
