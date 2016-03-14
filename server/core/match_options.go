@@ -5,23 +5,30 @@ import (
 )
 
 type MatchOptions struct {
-  ArenaWidth     int       `json:"arenaWidth"`
-  ArenaHeight    int       `json:"arenaHeight"`
-  ArenaCellSize  int       `json:"arenaCellSize"`
-  ArenaBorder    int       `json:"arenaBorder"`
-  Warmup         int       `json:"warmup"`
-  ArenaEntrance  P         `json:"arenaEntrance"`
-  ArenaExit      P         `json:"arenaExit"`
-  PlayerSize     float64   `json:"playerSize"`
-  Web_ArenaScale float64   `json:"webScale"`
-  ButtonWidth    float64   `json:"buttonWidth"`
-  ButtonHeight   float64   `json:"buttonHeight"`
-  T1             float64   `json:"t1"`
-  T2             float64   `json:"t2"`
-  T3             float64   `json:"t3"`
-  TRampage       float64   `json:"tRampage"`
-  WallRects      []Rect    `json:"walls"`
-  Buttons        []*Button `json:"buttons"`
+  ArenaWidth        int        `json:"arenaWidth"`
+  ArenaHeight       int        `json:"arenaHeight"`
+  ArenaCellSize     int        `json:"arenaCellSize"`
+  ArenaBorder       int        `json:"arenaBorder"`
+  Warmup            int        `json:"warmup"`
+  ArenaEntrance     P          `json:"arenaEntrance"`
+  ArenaExit         P          `json:"arenaExit"`
+  PlayerSize        float64    `json:"playerSize"`
+  Web_ArenaScale    float64    `json:"webScale"`
+  ButtonWidth       float64    `json:"buttonWidth"`
+  ButtonHeight      float64    `json:"buttonHeight"`
+  T1                float64    `json:"t1"`
+  T2                float64    `json:"t2"`
+  T3                float64    `json:"t3"`
+  TRampage          float64    `json:"tRampage"`
+  ButtonBonus       [2]float64 `json:"buttonBonus"`
+  TouchPunish       [2]float64 `json:"touchPunish"`
+  Mode2InitGold     [4]float64 `json:"mode2InitGold"`
+  Mode2GoldDropRate [4]float64 `json:"mode2GoldDropRate"`
+  MaxEnergy         float64    `json:"maxEnergy"`
+  Mode1TotalTime    float64    `json:"mode1TotalTime"`
+
+  WallRects []Rect    `json:"walls"`
+  Buttons   []*Button `json:"buttons"`
   // private
   playerSpeed   float64
   arenaWallList []W
@@ -45,6 +52,12 @@ func DefaultMatchOptions() *MatchOptions {
   v.T3 = 2.5
   v.TRampage = 1
   v.playerSpeed = 200
+  v.ButtonBonus = [2]float64{1, 1}
+  v.TouchPunish = [2]float64{30, 10}
+  v.Mode2InitGold = [4]float64{60, 90, 120, 150}
+  v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
+  v.MaxEnergy = 1000
+  v.Mode1TotalTime = 300
   v.buildWallPoints()
   v.buildWallRects()
   v.buildButtons()

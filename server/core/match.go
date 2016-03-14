@@ -23,6 +23,9 @@ type Match struct {
   StartAt     time.Time `json:"startAt"`
   TimeElapsed float64   `json:"elasped"`
   Rampage     bool      `json:"rampage"`
+  Mode        int       `json:"mode"`
+  Gold        float64   `json:"gold"`
+  Energy      float64   `json:"energy"`
   // private
   messageCh chan string
   matchCh   chan string
@@ -30,20 +33,19 @@ type Match struct {
 }
 
 func NewMatch(matchCh chan string) *Match {
-  options := DefaultMatchOptions()
-  messageCh := make(chan string)
-  return &Match{
-    MATCH_CAPACITY,
-    "",
-    make([]*Player, 0),
-    "before",
-    time.Now(),
-    0,
-    false,
-    messageCh,
-    matchCh,
-    options,
-  }
+  m := Match{}
+  m.Capacity = MATCH_CAPACITY
+  m.Hoster = ""
+  m.Member = make([]*Player, 0)
+  m.Stage = "before"
+  m.StartAt = time.Now()
+  m.TimeElapsed = 0
+  m.Rampage = false
+  m.Mode = 0
+  m.messageCh = make(chan string)
+  m.matchCh = matchCh
+  m.options = DefaultMatchOptions()
+  return &m
 }
 
 func (m *Match) GetMessageCh() chan string {
@@ -100,8 +102,8 @@ func (m *Match) IsFull() bool {
   return len(m.Member) == m.Capacity
 }
 
-func (m *Match) Start() {
-  // TODO: init match and start
+func (m *Match) Start(mode int) {
+  m.Mode = mode
   m.Stage = "warmup"
   m.StartAt = time.Now()
   for _, member := range m.Member {

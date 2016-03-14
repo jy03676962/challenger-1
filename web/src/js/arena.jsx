@@ -2,18 +2,23 @@ import React from 'react';
 import {observer} from 'mobx-react'
 import Player from '~/js/player.jsx'
 import Scheme from '~/js/scheme.jsx'
+import styles from '~/styles/info.css'
+import CSSModules from 'react-css-modules'
 
 const Arena = observer(React.createClass({
   render() {
     let opt = this.props.game.options
     let arenaWidth = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaWidth * opt.webScale
     let arenaHeight = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaHeight * opt.webScale
-    const infoHeight = 40
+    const infoHeight = 60
     let infoStyle = {
-      width: arenaWidth + "px",
+      marginTop: "10px",
+      width: arenaWidth + opt.arenaBorder * opt.webScale + "px",
       height: infoHeight + "px",
-      margin: "auto",
+      marginLeft: "auto",
+      marginRight: "auto",
       textAlign: "center",
+      backgroundColor: "#CCCCCC"
     }
     let bgStyle = {
       width: arenaWidth + "px",
@@ -43,21 +48,43 @@ const Arena = observer(React.createClass({
   }
 }))
 
-const ArenaInfoBar = observer(React.createClass({
+const ArenaInfoBar = CSSModules(observer(React.createClass({
   render() {
     let game = this.props.game
-    let content
+    let opt = game.options
+    let match = game.match
+    let msg, timeText
     if (game.match.stage == "warmup") {
-      let second = (game.options.warmup - game.match.elasped).toFixed(1)
-      content = `准备中,还剩${second}`
+      let left = (opt.warmup - game.match.elasped).toFixed(1)
+      msg = "预热阶段"
+      timeText = `还剩${left}秒`
     } else {
-      content = `游戏开始`
+      msg = "游戏阶段"
+      if (match.mode == 1) {
+        let left = (opt.warmup + opt.mode1TotalTime - match.elasped).toFixed(1)
+        timeText = `还剩${left}秒`
+      }
     }
+    let gold = match.gold.toFixed(0)
+    let goldText = `当前金币: ${gold}`
+    let p = (match.energy / opt.maxEnergy) * 100 + "%"
     return (
-      <div style={this.props.rootStyle}>{content}</div>
+      <div style={this.props.rootStyle}>
+      <div styleName="leftBar">
+      <div styleName="message">{msg}</div>
+      <div styleName="timer">{timeText}</div>
+      </div>
+      <div styleName="rightBar">
+      <div styleName="gold">{goldText}</div>
+      <div styleName="energyBg">
+      <div styleName="energy" style={{width:p}}></div>
+      </div>
+      <div styleName="energyText">能量: </div>
+      </div>
+      </div>
       )
   }
-}))
+})), styles)
 
 const ArenaBackground = ({opt, rootStyle}) => {
   let size = opt.arenaCellSize * opt.webScale + "px"

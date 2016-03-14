@@ -10,7 +10,8 @@ const Scheme = {
   buttonT3: "#FF6600",
   buttonT4: "#FFB000",
   buttonPressing: "#9900FF",
-  buttonTRampage: "#FF4499",
+  buttonTRampage: "#FF6699",
+  buttonTRampagePressing: "#FF0099",
   players:[
   "#ff0000", "#cc0000", "#990000", "#ff9966"
   ]

@@ -85,7 +85,7 @@ class Game {
     if (this.sock) {
       let data = {
         cmd: "startMatch",
-        mode: mode,
+        mode: mode + "",
       }
       this.sock.send(JSON.stringify(data))
     }

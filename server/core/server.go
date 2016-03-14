@@ -5,6 +5,7 @@ package core
 import (
   "golang.org/x/net/websocket"
   "log"
+  "strconv"
 )
 
 type Server struct {
@@ -99,7 +100,8 @@ func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
       }
     }
   case "startMatch":
-    s.match.Start()
+    mode, _ := strconv.Atoi(msg["mode"].(string))
+    s.match.Start(mode)
     data := make(map[string]interface{})
     data["cmd"] = "matchChanged"
     data["match"] = s.match

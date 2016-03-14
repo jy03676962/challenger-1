@@ -52,10 +52,10 @@ const MatchView = observer(React.createClass({
       )
   },
   startFunMode: function(e) {
-    this.props.game.startMatch("f")
+    this.props.game.startMatch(1)
   },
   startSurvivalMode: function(e) {
-    this.props.game.startMatch("s")
+    this.props.game.startMatch(2)
   },
   joinMatch: function(e) {
     this.props.game.joinMatch()
