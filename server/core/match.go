@@ -159,7 +159,7 @@ func (m *Match) gameLoop() {
           player.lastButton = player.Button
           player.Button = ""
           player.ButtonTime = 0
-        } else {
+        } else if m.Stage == "ongoing" {
           if player.Button != "" {
             player.ButtonTime += 1.0 / 30
             fmt.Println(player.ButtonTime)
