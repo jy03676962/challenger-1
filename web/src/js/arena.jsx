@@ -69,6 +69,14 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let goldText = `当前金币: ${gold}`
     let p = (match.energy / opt.maxEnergy) * 100 + "%"
     let energyText = `能量(${match.energy.toFixed(1)}/${opt.maxEnergy}):`
+    let energyTextColor, energyBarColor
+    if (match.rampage) {
+      energyTextColor = "red"
+      energyBarColor = "red"
+    } else {
+      energyTextColor = "black"
+      energyBarColor = "#66CC00"
+    }
     return (
       <div style={this.props.rootStyle}>
       <div styleName="leftBar">
@@ -78,9 +86,9 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       <div styleName="rightBar">
       <div styleName="gold">{goldText}</div>
       <div styleName="energyBg">
-      <div styleName="energy" style={{width:p}}></div>
+      <div styleName="energy" style={{width:p, backgroundColor:energyBarColor}}></div>
       </div>
-      <div styleName="energyText">{energyText}</div>
+      <div styleName="energyText" style={{color:energyTextColor}}>{energyText}</div>
       </div>
       </div>
       )

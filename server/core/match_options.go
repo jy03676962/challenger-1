@@ -41,7 +41,7 @@ func DefaultMatchOptions() *MatchOptions {
   v.ArenaHeight = 6
   v.ArenaCellSize = 140
   v.ArenaBorder = 24
-  v.Warmup = 20
+  v.Warmup = 2
   v.ArenaEntrance = P{0, 4}
   v.ArenaExit = P{6, 0}
   v.PlayerSize = 50
@@ -57,7 +57,7 @@ func DefaultMatchOptions() *MatchOptions {
   v.TouchPunish = [2]float64{30, 10}
   v.Mode2InitGold = [4]float64{60, 90, 120, 150}
   v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
-  v.MaxEnergy = 1000
+  v.MaxEnergy = 100
   v.Mode1TotalTime = 300
   v.energyBonus = [4][4]float64{
     {0, 0, 0, 0},
@@ -257,7 +257,25 @@ func (m *MatchOptions) PressingButtons(r *Rect) []string {
 
 func (m *MatchOptions) RealPosition(p P) RP {
   rp := RP{}
-  rp.X = float64((m.ArenaCellSize + m.ArenaBorder)) * (float64(p.X) + 0.5)
-  rp.Y = float64((m.ArenaCellSize + m.ArenaBorder)) * (float64(p.Y) + 0.5)
+  rp.X = float64(m.ArenaCellSize+m.ArenaBorder) * (float64(p.X) + 0.5)
+  rp.Y = float64(m.ArenaCellSize+m.ArenaBorder) * (float64(p.Y) + 0.5)
   return rp
+}
+
+func (m *MatchOptions) TilePosition(rp RP) (P, bool) {
+  u := float64(m.ArenaCellSize + m.ArenaBorder)
+  f := func(a float64) (int, bool) {
+    i := 0
+    for a >= u {
+      a -= u
+      i += 1
+    }
+    if (a >= float64(m.ArenaBorder/2)) && (a <= float64(m.ArenaBorder/2+m.ArenaCellSize)) {
+      return i, true
+    }
+    return i, false
+  }
+  xI, xBool := f(rp.X)
+  yI, yBool := f(rp.Y)
+  return P{xI, yI}, xBool && yBool
 }

@@ -1,6 +1,7 @@
 package core
 
 import (
+  "math"
   "time"
 )
 
@@ -162,11 +163,7 @@ func (m *Match) gameLoop() {
             m.Gold += m.options.GoldBonus[m.Mode-1]
             if !m.Rampage {
               delta := m.options.energyBonus[player.ButtonLevel][len(m.Member)-1]
-              m.Energy += delta
-              if m.Energy >= m.options.MaxEnergy {
-                m.Rampage = true
-                m.Energy = m.options.MaxEnergy
-              }
+              m.Energy = math.Min(m.options.MaxEnergy, m.Energy+delta)
             }
             player.lastButton = player.Button
             player.Button = ""
@@ -212,10 +209,34 @@ func (m *Match) gameLoop() {
           }
         }
       }
+      if m.Energy >= m.options.MaxEnergy {
+        if len(m.Member) == 1 {
+          m.enterRampage()
+        } else {
+          together := true
+          p, pBool := m.options.TilePosition(m.Member[0].Pos)
+          if pBool {
+            for i := 1; i < len(m.Member); i++ {
+              pp, ppBool := m.options.TilePosition(m.Member[i].Pos)
+              if !ppBool || pp.X != p.X || pp.Y != p.Y {
+                together = false
+                break
+              }
+            }
+            if together {
+              m.enterRampage()
+            }
+          }
+        }
+      }
       m.TimeElapsed = time.Since(m.StartAt).Seconds()
       m.matchCh <- "tick"
     }
   }
+}
+
+func (m *Match) enterRampage() {
+  m.Rampage = true
 }
 
 func (m *Match) tickWarmup(timeout int) {
