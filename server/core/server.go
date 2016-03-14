@@ -18,6 +18,7 @@ type Server struct {
   match     *Match
   messageCh chan *SocketEvent
   matchCh   chan string
+  closeCh   chan struct{}
 }
 
 func NewServer() *Server {
@@ -40,6 +41,7 @@ func NewServer() *Server {
     nil,
     messageCh,
     matchCh,
+    nil,
   }
 }
 
@@ -101,7 +103,8 @@ func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
     }
   case "startMatch":
     mode, _ := strconv.Atoi(msg["mode"].(string))
-    s.match.Start(mode)
+    s.closeCh = make(chan struct{})
+    s.match.Start(mode, s.closeCh)
     data := make(map[string]interface{})
     data["cmd"] = "matchChanged"
     data["match"] = s.match
@@ -161,6 +164,7 @@ func (s *Server) Start() {
         } else {
           s.match.RemoveMember(name)
         }
+        close(s.closeCh)
       }
       delete(s.clients, c.id)
       data := make(map[string]interface{})

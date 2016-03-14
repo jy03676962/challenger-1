@@ -39,6 +39,7 @@ type Match struct {
   backupButtons []string
   buttonDoneCh  chan struct{}
   buttonCh      chan string
+  closeCh       <-chan struct{}
 }
 
 func NewMatch(matchCh chan string) *Match {
@@ -113,9 +114,10 @@ func (m *Match) IsFull() bool {
   return len(m.Member) == m.Capacity
 }
 
-func (m *Match) Start(mode int) {
+func (m *Match) Start(mode int, closeCh <-chan struct{}) {
   m.Mode = mode
   m.Stage = "warmup"
+  m.closeCh = closeCh
   m.StartAt = time.Now()
   for _, member := range m.Member {
     member.Pos = m.options.RealPosition(m.options.ArenaEntrance)
@@ -143,6 +145,7 @@ func (m *Match) useButton(btn string) {
     case <-c:
       m.buttonCh <- key
     case <-m.buttonDoneCh:
+    case <-m.closeCh:
     }
   }()
 }
@@ -187,6 +190,7 @@ func (m *Match) enterRampage() {
     select {
     case <-c:
       m.messageCh <- "RampageEnd"
+    case <-m.closeCh:
     }
   }()
 }
@@ -209,6 +213,8 @@ func (m *Match) gameLoop() {
   tickChan := time.Tick(33 * time.Millisecond)
   for {
     select {
+    case <-m.closeCh:
+      return
     case msg := <-m.messageCh:
       switch msg {
       case "WarmupEnd":
@@ -338,6 +344,10 @@ func (m *Match) gameLoop() {
 }
 
 func (m *Match) tickWarmup(timeout int) {
-  time.Sleep(time.Duration(timeout) * time.Second)
-  m.messageCh <- "WarmupEnd"
+  c := time.After(time.Duration(timeout) * time.Second)
+  select {
+  case <-c:
+    m.messageCh <- "WarmupEnd"
+  case <-m.closeCh:
+  }
 }
