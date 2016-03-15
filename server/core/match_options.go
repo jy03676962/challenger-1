@@ -1,6 +1,7 @@
 package core
 
 import (
+  // "fmt"
   "strconv"
 )
 
@@ -30,16 +31,25 @@ type MatchOptions struct {
   WallRects []Rect    `json:"walls"`
   Buttons   []*Button `json:"buttons"`
   // private
-  playerSpeed        float64
-  arenaWallList      []W
-  energyBonus        [4][4]float64
-  initButtonNum      [4]int
-  buttonHideTime     [2]float64
-  rampageTime        [2]float64
-  firstComboInterval [4]float64
-  comboInterval      [4]float64
-  firstComboExtra    float64
-  comboExtra         float64
+  playerSpeed          float64
+  arenaWallList        []W
+  energyBonus          [4][4]float64
+  initButtonNum        [4]int
+  buttonHideTime       [2]float64
+  rampageTime          [2]float64
+  firstComboInterval   [4]float64
+  comboInterval        [4]float64
+  firstComboExtra      float64
+  comboExtra           float64
+  laserSpeed           float64
+  laserSpeedup         float64
+  energySpeedup        float64
+  laserAppearTime      float64
+  laserPauseTime       float64
+  tileAdjacency        map[int][]int
+  playerInvincibleTime float64
+  mode1TouchPunish     float64
+  mode2TouchPunish     float64
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -66,6 +76,11 @@ func DefaultMatchOptions() *MatchOptions {
   v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
   v.MaxEnergy = 1000
   v.Mode1TotalTime = 300
+  v.laserSpeed = 0.5
+  v.laserSpeedup = 0.05
+  v.energySpeedup = 200
+  v.laserAppearTime = 3
+  v.laserPauseTime = 10
   v.energyBonus = [4][4]float64{
     {0, 0, 0, 0},
     {50, 40, 30, 20},
@@ -79,10 +94,49 @@ func DefaultMatchOptions() *MatchOptions {
   v.comboInterval = [4]float64{3, 3, 2, 2}
   v.firstComboExtra = 30
   v.comboExtra = 15
+  v.playerInvincibleTime = 3
+  v.mode1TouchPunish = .3
+  v.mode2TouchPunish = 10
   v.buildWallPoints()
   v.buildWallRects()
   v.buildButtons()
+  v.buildAdjacency()
   return &v
+}
+
+func (m *MatchOptions) buildAdjacency() {
+  adj := make(map[int][]int)
+  w, h := m.ArenaWidth, m.ArenaHeight
+  adjacentWith := func(a int, b int) bool {
+    if b < 0 || b >= w*h {
+      return false
+    }
+    if a%w == 0 && b == a-1 || b%w == 0 && a == b-1 {
+      return false
+    }
+    for _, wall := range m.arenaWallList {
+      p1 := m.TilePosToInt(wall.P1)
+      p2 := m.TilePosToInt(wall.P2)
+      if a == p1 && b == p2 || a == p2 && b == p1 {
+        return false
+      }
+    }
+    return true
+  }
+  for i := 0; i < w*h; i++ {
+    adj[i] = make([]int, 0)
+    left := i - 1
+    right := i + 1
+    top := i - w
+    bottom := i + w
+    list := [4]int{left, right, top, bottom}
+    for _, j := range list {
+      if adjacentWith(i, j) {
+        adj[i] = append(adj[i], j)
+      }
+    }
+  }
+  m.tileAdjacency = adj
 }
 
 func (m *MatchOptions) buildWallPoints() {
@@ -292,4 +346,18 @@ func (m *MatchOptions) TilePosition(rp RP) (P, bool) {
   xI, xBool := f(rp.X)
   yI, yBool := f(rp.Y)
   return P{xI, yI}, xBool && yBool
+}
+
+func (m *MatchOptions) TilePosToInt(p P) int {
+  return p.X + p.Y*m.ArenaWidth
+}
+
+func (m *MatchOptions) IntToTile(i int) P {
+  return P{i % m.ArenaWidth, i / m.ArenaWidth}
+}
+
+func (m *MatchOptions) LaserSpeed(energy float64) float64 {
+  level := int(energy / m.energySpeedup)
+  speed := m.laserSpeed - float64(level)*m.laserSpeedup
+  return float64(m.ArenaCellSize) / 10 / speed
 }

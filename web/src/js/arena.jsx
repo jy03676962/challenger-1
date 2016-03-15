@@ -1,6 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react'
 import Player from '~/js/player.jsx'
+import Laser from '~/js/laser.jsx'
 import Scheme from '~/js/scheme.jsx'
 import styles from '~/styles/info.css'
 import CSSModules from 'react-css-modules'
@@ -185,13 +186,18 @@ const ArenaGround = observer(React.createClass({
   render() {
     let match = this.props.game.match
     let opt = this.props.game.options
+    let objects = []
+    match.member.forEach(function(member, idx) {
+      objects.push(<Player player={member} options={opt} key={"player:"+idx} idx={idx}/>)
+    })
+    if (match.lasers) {
+      match.lasers.forEach(function(laser, idx) {
+        objects.push(<Laser laser={laser} options={opt} key={"laser:"+idx}/>)
+      })
+    }
     return (
       <div style={this.props.rootStyle}>
-      {
-        match.member.map((member, idx) => {
-          return <Player player={member} options={opt} key={member.name} idx={idx}/>
-        })
-      }
+      {objects}
       </div>
       )
   }

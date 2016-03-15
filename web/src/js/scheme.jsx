@@ -15,7 +15,9 @@ const Scheme = {
   buttonPressing: "#9900FF",
   players:[
   "#ff0000", "#cc0000", "#990000", "#ff9966"
-  ]
+  ],
+  laserPause:"#FFCC00",
+  laserNormal:"#33FF33",
 }
 
 export default Scheme

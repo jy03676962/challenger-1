@@ -1,7 +1,6 @@
 package core
 
 import (
-  // "fmt"
   "math"
   "math/rand"
   "strconv"
@@ -34,6 +33,7 @@ type Match struct {
   LiveButtons   map[string]bool `json:"liveButtons"`
   RampageCount  int             `json:"rampageCount"`
   Combo         int             `json:"combo"`
+  Lasers        []*Laser        `json:"lasers"`
   // private
   messageCh     chan string
   matchCh       chan string
@@ -139,6 +139,17 @@ func (m *Match) Start(mode int, closeCh <-chan struct{}) {
   go m.gameLoop()
 }
 
+func (m *Match) generateLasers() {
+  m.Lasers = make([]*Laser, len(m.Member))
+  l := rand.Perm(m.options.ArenaWidth * m.options.ArenaHeight)
+  for i, player := range m.Member {
+    loc := l[i]
+    p := P{loc % m.options.ArenaWidth, loc / m.options.ArenaWidth}
+    m.Lasers[i] = NewLaser(p, player, m)
+    m.Lasers[i].Pause(m.options.laserAppearTime)
+  }
+}
+
 func (m *Match) useButton(btn string) {
   delete(m.LiveButtons, btn)
   if m.Rampage {
@@ -183,11 +194,16 @@ func (m *Match) resetButtons() {
 
 func (m *Match) enterRampage() {
   close(m.buttonDoneCh)
+  t := m.options.rampageTime[m.Mode-1]
   m.buttonCh = make(chan string, 20)
   m.buttonDoneCh = make(chan struct{})
   for i := 0; i < len(m.options.Buttons); i++ {
     k := strconv.Itoa(i)
     m.LiveButtons[k] = true
+  }
+  for _, laser := range m.Lasers {
+    laser.IsPause = true
+    laser.pauseTime = t
   }
   m.backupButtons = nil
   m.Rampage = true
@@ -196,7 +212,6 @@ func (m *Match) enterRampage() {
   m.RampageCount += 1
   m.Combo = 0
   m.lastHitTime = time.Unix(0, 0)
-  t := m.options.rampageTime[m.Mode-1]
   go func() {
     c := time.After(time.Duration(t) * time.Second)
     select {
@@ -239,6 +254,7 @@ func (m *Match) gameLoop() {
       switch msg {
       case "WarmupEnd":
         m.Stage = "ongoing"
+        m.generateLasers()
         if m.Mode == 1 {
           go func() {
             c := time.After(time.Duration(m.options.Mode1TotalTime) * time.Second)
@@ -285,9 +301,17 @@ func (m *Match) gameLoop() {
       m.LiveButtons[btn] = true
       m.tick()
     case <-tickChan:
+      dt := 1.0 / 30
       for _, player := range m.Member {
+        if player.IsInvincible {
+          player.invincibleTime -= dt
+          if player.invincibleTime <= 0 {
+            player.IsInvincible = false
+            player.invincibleTime = 0
+          }
+        }
         if player.moving {
-          delta := 1.0 / 30 * m.options.playerSpeed
+          delta := dt * m.options.playerSpeed
           var dx, dy float64
           switch player.Direction {
           case "up":
@@ -308,11 +332,12 @@ func (m *Match) gameLoop() {
           maxY := float64((m.options.ArenaBorder+m.options.ArenaCellSize)*m.options.ArenaHeight) - minXY
           x := MinMaxfloat64(player.Pos.X+dx, minXY, maxX)
           y := MinMaxfloat64(player.Pos.Y+dy, minXY, maxY)
+          size := float64(m.options.PlayerSize)
           rect := Rect{
-            float64(x) - float64(m.options.PlayerSize)/2,
-            float64(y) - float64(m.options.PlayerSize)/2,
-            float64(m.options.PlayerSize),
-            float64(m.options.PlayerSize),
+            float64(x) - size/2,
+            float64(y) - size/2,
+            size,
+            size,
           }
           if !m.options.CollideWall(&rect) {
             player.Pos = RP{x, y}
@@ -357,7 +382,7 @@ func (m *Match) gameLoop() {
           }
         } else if m.Stage == "ongoing" {
           if player.Button != "" {
-            player.ButtonTime += 1.0 / 30
+            player.ButtonTime += dt
             t := player.ButtonTime
             level := 0
             if m.Rampage {
@@ -399,6 +424,9 @@ func (m *Match) gameLoop() {
             }
           }
         }
+      }
+      for _, laser := range m.Lasers {
+        laser.Move(dt)
       }
       if !m.Rampage && m.Energy >= m.options.MaxEnergy {
         if len(m.Member) == 1 {
