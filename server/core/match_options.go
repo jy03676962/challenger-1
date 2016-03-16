@@ -75,8 +75,8 @@ func DefaultMatchOptions() *MatchOptions {
   v.Mode2InitGold = [4]float64{60, 90, 120, 150}
   v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
   v.MaxEnergy = 1000
-  v.Mode1TotalTime = 300
-  v.laserSpeed = 0.5
+  v.Mode1TotalTime = 60
+  v.laserSpeed = 0.25
   v.laserSpeedup = 0.05
   v.energySpeedup = 200
   v.laserAppearTime = 3

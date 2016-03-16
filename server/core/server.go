@@ -66,6 +66,7 @@ func (s *Server) Err(err error) {
 }
 
 func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
+  log.Printf("Received message: %v\n", msg)
   cmd := msg["cmd"].(string)
   name := ""
   if msg["name"] != nil {
@@ -160,7 +161,8 @@ func (s *Server) Start() {
       if name := c.GetUsername(); s.match != nil {
         if s.match.IsRunning() {
           close(s.closeCh)
-        } else if s.match.Stage != "after" {
+        }
+        if s.match.Stage != "after" {
           if s.match.Hoster == name {
             s.match = nil
           } else {

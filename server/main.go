@@ -7,6 +7,8 @@ import (
   // mw "github.com/labstack/echo/middleware"
 )
 
+const HOST string = "172.16.10.59"
+
 func main() {
   fmt.Println("start echo")
   srv := core.NewServer()
@@ -18,5 +20,5 @@ func main() {
     srv.OnConnected(c.Socket())
     return
   })
-  e.Run(":3030")
+  e.Run(HOST + ":3030")
 }
