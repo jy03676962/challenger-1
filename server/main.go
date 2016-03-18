@@ -1,24 +1,25 @@
 package main
 
 import (
-  "./core"
-  "fmt"
-  "github.com/labstack/echo"
-  // mw "github.com/labstack/echo/middleware"
+	"challenger/server/core"
+	"fmt"
+	"github.com/labstack/echo"
+	st "github.com/labstack/echo/engine/standard"
+	mw "github.com/labstack/echo/middleware"
+	"golang.org/x/net/websocket"
 )
 
-const HOST string = "172.16.10.59"
+//const HOST string = "172.16.10.59"
+const HOST string = "localhost"
 
 func main() {
-  fmt.Println("start echo")
-  srv := core.NewServer()
-  go srv.Start()
-  e := echo.New()
-  e.Index("public/index.html")
-  e.Static("/", "public")
-  e.WebSocket("/ws", func(c *echo.Context) (err error) {
-    srv.OnConnected(c.Socket())
-    return
-  })
-  e.Run(HOST + ":3030")
+	fmt.Println("start echo")
+	srv := core.NewServer()
+	go srv.Start()
+	e := echo.New()
+	e.Use(mw.Static("public"))
+	e.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
+		srv.OnConnected(ws)
+	})))
+	e.Run(st.New(HOST + ":3030"))
 }

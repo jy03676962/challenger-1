@@ -1,40 +1,40 @@
 package main
 
 import (
-  "bufio"
-  "fmt"
-  "net"
-  "os"
-  "strings"
-  "sync"
-  "time"
+	"bufio"
+	"fmt"
+	"net"
+	"os"
+	"strings"
+	"sync"
+	"time"
 )
 
 const (
-  HOST_PORT = "8989"
-  // GUEST_PORT = "8989"
+	HOST_PORT = "8989"
+	// GUEST_PORT = "8989"
 )
 
 type DeviceData struct {
-  dict map[string]*net.UDPAddr
-  conn *net.UDPConn
-  lock *sync.RWMutex
+	dict map[string]*net.UDPAddr
+	conn *net.UDPConn
+	lock *sync.RWMutex
 }
 
 func main() {
-  defer func() {
-    if err := recover(); err != nil {
-      fmt.Printf("Exception: %v\n", err)
-    }
-  }()
-  cmdChan := make(chan string, 1)
-  go start_udp_server(cmdChan)
-  // go start_mock_udp_client()
-  for {
-    reader := bufio.NewReader(os.Stdin)
-    text, _ := reader.ReadString('\n')
-    cmdChan <- strings.Trim(text, "\n")
-  }
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Printf("Exception: %v\n", err)
+		}
+	}()
+	cmdChan := make(chan string, 1)
+	go start_udp_server(cmdChan)
+	// go start_mock_udp_client()
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		text, _ := reader.ReadString('\n')
+		cmdChan <- strings.Trim(text, "\n")
+	}
 
 }
 
@@ -76,70 +76,70 @@ func main() {
 // }
 
 func start_udp_server(cmdChan chan string) {
-  d := DeviceData{}
-  d.dict = make(map[string]*net.UDPAddr)
-  d.lock = new(sync.RWMutex)
-  go start_listen_cmd(cmdChan, &d)
-  start_listen_UDP(&d)
+	d := DeviceData{}
+	d.dict = make(map[string]*net.UDPAddr)
+	d.lock = new(sync.RWMutex)
+	go start_listen_cmd(cmdChan, &d)
+	start_listen_UDP(&d)
 }
 
 func start_listen_cmd(cmdChan chan string, d *DeviceData) {
-  for {
-    select {
-    case message := <-cmdChan:
-      fmt.Printf("Got cmd:%v, len:%v\n", message, len(message))
-      if len(message) > 6 {
-        deviceId := message[3:6]
-        var conn *net.UDPConn
-        d.lock.RLock()
-        addr, prs := d.dict[deviceId]
-        if prs {
-          conn = d.conn
-        }
-        d.lock.RUnlock()
-        if conn != nil && addr != nil {
-          _, err := conn.WriteToUDP([]byte(message), addr)
-          if err != nil {
-            fmt.Println("write to client error", err)
-          } else {
-            fmt.Println(time.Now().String(), "send cmd to client:", message)
-          }
-        }
-      }
-    }
-  }
+	for {
+		select {
+		case message := <-cmdChan:
+			fmt.Printf("Got cmd:%v, len:%v\n", message, len(message))
+			if len(message) > 6 {
+				deviceId := message[3:6]
+				var conn *net.UDPConn
+				d.lock.RLock()
+				addr, prs := d.dict[deviceId]
+				if prs {
+					conn = d.conn
+				}
+				d.lock.RUnlock()
+				if conn != nil && addr != nil {
+					_, err := conn.WriteToUDP([]byte(message), addr)
+					if err != nil {
+						fmt.Println("write to client error", err)
+					} else {
+						fmt.Println(time.Now().String(), "send cmd to client:", message)
+					}
+				}
+			}
+		}
+	}
 }
 
 func start_listen_UDP(d *DeviceData) {
-  UDPAddress, err := net.ResolveUDPAddr("udp", "192.168.188.5:"+HOST_PORT)
-  if err != nil {
-    fmt.Println("Resolve Server Local Adress Error", err.Error())
-    os.Exit(1)
-  }
-  UDPConn, err := net.ListenUDP("udp", UDPAddress)
-  if err != nil {
-    fmt.Println("Listen UDP Error", err.Error())
-    os.Exit(1)
-  }
-  d.lock.Lock()
-  d.conn = UDPConn
-  d.lock.Unlock()
-  defer UDPConn.Close()
-  buf := make([]byte, 1024)
-  for {
-    n, addr, err := UDPConn.ReadFromUDP(buf)
-    message := string(buf[0:n])
-    if !strings.HasPrefix(message, "HBT") {
-      fmt.Println(time.Now().String(), "server received", message, "from", addr)
-    }
-    if err != nil {
-      fmt.Println("Read Error", err)
-    }
-    if len(message) >= 6 {
-      deviceId := message[3:6]
-      d.lock.Lock()
-      d.dict[deviceId] = addr
-      d.lock.Unlock()
-    }
-  }
+	UDPAddress, err := net.ResolveUDPAddr("udp", "192.168.188.5:"+HOST_PORT)
+	if err != nil {
+		fmt.Println("Resolve Server Local Adress Error", err.Error())
+		os.Exit(1)
+	}
+	UDPConn, err := net.ListenUDP("udp", UDPAddress)
+	if err != nil {
+		fmt.Println("Listen UDP Error", err.Error())
+		os.Exit(1)
+	}
+	d.lock.Lock()
+	d.conn = UDPConn
+	d.lock.Unlock()
+	defer UDPConn.Close()
+	buf := make([]byte, 1024)
+	for {
+		n, addr, err := UDPConn.ReadFromUDP(buf)
+		message := string(buf[0:n])
+		if !strings.HasPrefix(message, "HBT") {
+			fmt.Println(time.Now().String(), "server received", message, "from", addr)
+		}
+		if err != nil {
+			fmt.Println("Read Error", err)
+		}
+		if len(message) >= 6 {
+			deviceId := message[3:6]
+			d.lock.Lock()
+			d.dict[deviceId] = addr
+			d.lock.Unlock()
+		}
+	}
 }
