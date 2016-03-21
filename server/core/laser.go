@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -143,7 +142,6 @@ func (l *Laser) Tick(dt float64) {
 				punish = l.getOpt().mode2TouchPunish
 			}
 			l.match.Gold = math.Max(l.match.Gold-punish, 0)
-			fmt.Printf("punish:%v, gold:%v\n", punish, l.match.Gold)
 			player.Gold -= punish
 		}
 	}

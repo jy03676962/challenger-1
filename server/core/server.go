@@ -61,6 +61,7 @@ func (s *Server) handleSocketOutput(e *SocketOutput) {
 		log.Printf("add client:%v\n", e.ID)
 		s.clients[e.ID] = e.Client
 	case S_Del:
+		delete(s.clients, e.ID)
 		hm := NewHubMap()
 		hm.SetCmd("disconnect")
 		hm.Set("cid", e.ID)
