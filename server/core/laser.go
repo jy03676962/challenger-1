@@ -36,7 +36,11 @@ func (l *Laser) Pause(t float64) {
 	l.pauseTime = math.Max(t, l.pauseTime)
 }
 
-func (l *Laser) Move(dt float64) {
+func (l *Laser) IsFollow(name string) bool {
+	return l.player.Name == name
+}
+
+func (l *Laser) Tick(dt float64) {
 	if l.IsPause {
 		l.pauseTime -= dt
 		if l.pauseTime <= 0 {
@@ -123,15 +127,14 @@ func (l *Laser) Move(dt float64) {
 	}
 	shouldPause := false
 	for _, player := range l.match.Member {
-		if player.IsInvincible {
+		if player.InvincibleTime > 0 {
 			continue
 		}
 		playerSize := float64(l.getOpt().PlayerSize)
 		playerRect := Rect{player.Pos.X - playerSize/2, player.Pos.Y - playerSize/2, playerSize, playerSize}
 		if l.getOpt().Collide(&rect, &playerRect) {
 			shouldPause = true
-			player.IsInvincible = true
-			player.invincibleTime = l.getOpt().playerInvincibleTime
+			player.InvincibleTime = l.getOpt().playerInvincibleTime
 			player.HitCount += 1
 			var punish float64
 			if l.match.Mode == 1 {
@@ -172,5 +175,5 @@ func (l *Laser) FindPath() {
 }
 
 func (l *Laser) getOpt() *MatchOptions {
-	return l.match.options
+	return l.match.Options
 }

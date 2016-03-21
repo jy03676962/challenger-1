@@ -15,7 +15,7 @@ const HOST string = "localhost"
 func main() {
 	fmt.Println("start echo")
 	srv := core.NewServer()
-	go srv.Start()
+	go srv.Run()
 	e := echo.New()
 	e.Use(mw.Static("public"))
 	e.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {

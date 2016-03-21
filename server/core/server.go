@@ -1,208 +1,106 @@
 package core
 
-// the skeleton of this file is borrowed from https://github.com/golang-samples/websocket
-
 import (
 	"golang.org/x/net/websocket"
+
 	"log"
-	"strconv"
 )
 
 type Server struct {
-	clients   map[int]*Client
-	addCh     chan *Client
-	delCh     chan *Client
-	sendAllCh chan map[string]interface{}
-	doneCh    chan bool
-	errCh     chan error
-	match     *Match
-	messageCh chan *SocketEvent
-	matchCh   chan string
-	closeCh   chan struct{}
+	*Hub
+	clients map[int]*Client
+	match   *Match
 }
 
 func NewServer() *Server {
-	clients := make(map[int]*Client)
-	addCh := make(chan *Client)
-	delCh := make(chan *Client)
-	sendAllCh := make(chan map[string]interface{})
-	doneCh := make(chan bool)
-	errCh := make(chan error)
-	messageCh := make(chan *SocketEvent)
-	matchCh := make(chan string)
-
-	return &Server{
-		clients,
-		addCh,
-		delCh,
-		sendAllCh,
-		doneCh,
-		errCh,
-		nil,
-		messageCh,
-		matchCh,
-		nil,
-	}
+	s := Server{}
+	s.Hub = NewHub()
+	s.clients = make(map[int]*Client)
+	s.match = NewMatch(s.Hub)
+	return &s
 }
 
-func (s *Server) Add(c *Client) {
-	s.addCh <- c
-}
-
-func (s *Server) Del(c *Client) {
-	s.delCh <- c
-}
-
-func (s *Server) SendAll(msg map[string]interface{}) {
-	s.sendAllCh <- msg
-}
-
-func (s *Server) Done() {
-	s.doneCh <- true
-}
-
-func (s *Server) Err(err error) {
-	s.errCh <- err
-}
-
-func (s *Server) handleMessage(msg map[string]interface{}, c *Client) {
-	log.Printf("Received message: %v\n", msg)
-	cmd := msg["cmd"].(string)
-	name := ""
-	if msg["name"] != nil {
-		name = msg["name"].(string)
-	}
-	switch cmd {
-	case "login":
-		data := make(map[string]interface{})
-		data["cmd"] = "login"
-		c.SetUsername(name)
-		// if we have a match then tell client
-		if s.match != nil {
-			data["match"] = s.match
-		}
-		c.Write(data)
-	case "createMatch":
-		newMatch := NewMatch(s.matchCh)
-		newMatch.Hoster = name
-		newMatch.AddMember(name)
-		s.match = newMatch
-		data := make(map[string]interface{})
-		data["cmd"] = "matchChanged"
-		data["match"] = newMatch
-		data["options"] = s.match.GetOptions()
-		s.sendAll(data)
-	case "joinMatch":
-		if s.match != nil {
-			if s.match.AddMember(name) {
-				data := make(map[string]interface{})
-				data["cmd"] = "matchChanged"
-				data["match"] = s.match
-				data["options"] = s.match.GetOptions()
-				s.sendAll(data)
-			}
-		}
-	case "startMatch":
-		mode, _ := strconv.Atoi(msg["mode"].(string))
-		s.closeCh = make(chan struct{})
-		s.match.Start(mode, s.closeCh)
-		data := make(map[string]interface{})
-		data["cmd"] = "matchChanged"
-		data["match"] = s.match
-		data["options"] = s.match.GetOptions()
-		s.sendAll(data)
-	case "playerMove":
-		s.match.PlayerMove(name, msg["dir"].(string))
-	case "playerStop":
-		s.match.PlayerStop(name)
-	default:
-		c.Write(msg)
-	}
-}
-
-func (s *Server) getClient(name string) *Client {
-	for _, c := range s.clients {
-		if c.GetUsername() == name {
-			return c
-		}
-	}
-	return nil
-}
-
-func (s *Server) sendAll(msg map[string]interface{}) {
-	for _, c := range s.clients {
-		c.Write(msg)
-	}
-}
-
-func (s *Server) OnConnected(ws *websocket.Conn) {
-	defer func() {
-		err := ws.Close()
-		if err != nil {
-			s.errCh <- err
-		}
-	}()
-
-	client := NewClient(ws, s)
-	s.Add(client)
-	client.Listen()
-}
-
-func (s *Server) Start() {
+func (s *Server) Run() {
+	go s.match.Run()
 	for {
 		select {
-		case c := <-s.addCh:
-			log.Println("Added new client")
-			s.clients[c.id] = c
-			log.Println("Now", len(s.clients), "clients connected.")
-
-		case c := <-s.delCh:
-			log.Println("Delete client")
-			if name := c.GetUsername(); s.match != nil {
-				if s.match.IsRunning() {
-					close(s.closeCh)
-				}
-				if s.match.Stage != "after" {
-					if s.match.Hoster == name {
-						s.match = nil
-					} else {
-						s.match.RemoveMember(name)
-					}
-				}
-			}
-			delete(s.clients, c.id)
-			data := make(map[string]interface{})
-			data["cmd"] = "matchChanged"
-			data["match"] = s.match
-			if s.match != nil {
-				data["options"] = s.match.GetOptions()
-			}
-			s.sendAll(data)
-
-		case msg := <-s.sendAllCh:
-			s.sendAll(msg)
-
-		case err := <-s.errCh:
-			log.Println("Error:", err.Error())
-
-		case msgEvent := <-s.messageCh:
-			s.handleMessage(msgEvent.SocketMessage, msgEvent.Client)
-
-		case msg := <-s.matchCh:
-			if msg == "tick" {
-				data := make(map[string]interface{})
-				data["cmd"] = "matchTick"
-				data["match"] = s.match
-				s.sendAll(data)
-			} else if msg == "matchEnd" {
-				close(s.closeCh)
-				data := make(map[string]interface{})
-				data["cmd"] = "matchEnd"
-				data["match"] = s.match
-				s.sendAll(data)
-			}
-		case <-s.doneCh:
+		case output := <-s.SocketOutputCh:
+			s.handleSocketOutput(output)
+		case input := <-s.SocketInputCh:
+			s.handleSocketInput(input)
+		case msg := <-s.MatchOutputCh:
+			s.handleMatchOutput(msg)
+		case <-s.ServerQuitCh:
 			return
 		}
+	}
+}
+func (s *Server) OnConnected(ws *websocket.Conn) {
+	client := NewClient(ws, s)
+	client.Listen()
+}
+func (s *Server) handleMatchOutput(msg *HubMap) {
+	s.sendAll(msg)
+}
+
+func (s *Server) handleSocketInput(i *SocketInput) {
+	if i.Broadcast {
+		for _, client := range s.clients {
+			client.Write(i.SocketMessage)
+		}
+	} else {
+		if client, ok := s.clients[i.DestID]; ok {
+			client.Write(i.SocketMessage)
+		}
+	}
+}
+
+func (s *Server) handleSocketOutput(e *SocketOutput) {
+	switch e.Type {
+	case S_Add:
+		log.Printf("add client:%v\n", e.ID)
+		s.clients[e.ID] = e.Client
+	case S_Del:
+		hm := NewHubMap()
+		hm.SetCmd("disconnect")
+		hm.Set("cid", e.ID)
+		s.MatchInputCh <- hm
+	case S_Msg:
+		s.handleSocketMessage(e)
+	case S_Err:
+		log.Println("Error:", e.Error.Error())
+	}
+}
+
+func (s *Server) handleSocketMessage(e *SocketOutput) {
+	msg := e.SocketMessage
+	if msg.GetCmd() == "login" {
+		data := NewHubMap()
+		data.SetCmd("options")
+		data.Set("options", s.Options)
+		s.send(data, e.ID)
+	}
+	s.MatchInputCh <- msg
+}
+
+func (s *Server) sendAll(msg *HubMap) {
+	input := SocketInput{}
+	input.SocketMessage = msg
+	input.Broadcast = true
+	go s.doSend(&input)
+}
+
+func (s *Server) send(msg *HubMap, cid int) {
+	input := SocketInput{}
+	input.SocketMessage = msg
+	input.Broadcast = false
+	input.DestID = cid
+	go s.doSend(&input)
+}
+
+func (s *Server) doSend(input *SocketInput) {
+	select {
+	case s.SocketInputCh <- input:
+	case <-s.ServerQuitCh:
 	}
 }

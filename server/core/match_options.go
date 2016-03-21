@@ -10,7 +10,7 @@ type MatchOptions struct {
 	ArenaHeight       int        `json:"arenaHeight"`
 	ArenaCellSize     int        `json:"arenaCellSize"`
 	ArenaBorder       int        `json:"arenaBorder"`
-	Warmup            int        `json:"warmup"`
+	Warmup            float64    `json:"warmup"`
 	ArenaEntrance     P          `json:"arenaEntrance"`
 	ArenaExit         P          `json:"arenaExit"`
 	PlayerSize        float64    `json:"playerSize"`
@@ -31,25 +31,26 @@ type MatchOptions struct {
 	WallRects []Rect    `json:"walls"`
 	Buttons   []*Button `json:"buttons"`
 	// private
-	playerSpeed          float64
-	arenaWallList        []W
-	energyBonus          [4][4]float64
-	initButtonNum        [4]int
-	buttonHideTime       [2]float64
-	rampageTime          [2]float64
-	firstComboInterval   [4]float64
-	comboInterval        [4]float64
-	firstComboExtra      float64
-	comboExtra           float64
-	laserSpeed           float64
-	laserSpeedup         float64
-	energySpeedup        float64
-	laserAppearTime      float64
-	laserPauseTime       float64
-	tileAdjacency        map[int][]int
-	playerInvincibleTime float64
-	mode1TouchPunish     float64
-	mode2TouchPunish     float64
+	playerSpeed           float64
+	arenaWallList         []W
+	energyBonus           [4][4]float64
+	initButtonNum         [4]int
+	buttonHideTime        [2]float64
+	rampageTime           [2]float64
+	firstComboInterval    [4]float64
+	comboInterval         [4]float64
+	firstComboExtra       float64
+	comboExtra            float64
+	laserSpeed            float64
+	laserSpeedup          float64
+	energySpeedup         float64
+	laserAppearTime       float64
+	laserPauseTime        float64
+	tileAdjacency         map[int][]int
+	playerInvincibleTime  float64
+	mode1TouchPunish      float64
+	mode2TouchPunish      float64
+	mode2GoldDropInterval float64
 }
 
 func DefaultMatchOptions() *MatchOptions {
@@ -74,7 +75,7 @@ func DefaultMatchOptions() *MatchOptions {
 	v.TouchPunish = [2]float64{30, 10}
 	v.Mode2InitGold = [4]float64{60, 90, 120, 150}
 	v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
-	v.MaxEnergy = 1000
+	v.MaxEnergy = 100
 	v.Mode1TotalTime = 60
 	v.laserSpeed = 0.25
 	v.laserSpeedup = 0.05
@@ -97,6 +98,7 @@ func DefaultMatchOptions() *MatchOptions {
 	v.playerInvincibleTime = 3
 	v.mode1TouchPunish = .3
 	v.mode2TouchPunish = 10
+	v.mode2GoldDropInterval = 1
 	v.buildWallPoints()
 	v.buildWallRects()
 	v.buildButtons()

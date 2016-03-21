@@ -55,18 +55,21 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let opt = game.options
     let match = game.match
     let msg, timeText
-    if (game.match.stage == "warmup") {
-      let left = (opt.warmup - game.match.elasped).toFixed(1)
+    let player = game.match.member.filter((m)=>{
+      return m.name == game.playerName
+    })[0]
+    if (match.stage == "warmup") {
+      let left = match.warmupTime.toFixed(1)
       msg = "预热阶段"
       timeText = `还剩${left}秒`
-    } else if (match.rampage) {
+    } else if (match.rampageTime > 0) {
       msg = "暴走阶段"
-      let left = match.rampageRemain.toFixed(1)
+      let left = match.rampageTime.toFixed(1)
       timeText = `还剩${left}秒`
     } else {
       msg = "游戏阶段"
       if (match.mode == 1) {
-        let left = (opt.warmup + opt.mode1TotalTime - match.elasped).toFixed(1)
+        let left = (match.totalTime).toFixed(1)
         timeText = `还剩${left}秒`
       }
     }
@@ -75,7 +78,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let p = (match.energy / opt.maxEnergy) * 100 + "%"
     let energyText = `能量(${match.energy.toFixed(1)}/${opt.maxEnergy}):`
     let energyTextColor, energyBarColor
-    if (match.rampage) {
+    if (match.rampageTime > 0) {
       p = "100%"
       energyTextColor = "red"
       energyBarColor = "red"
@@ -89,7 +92,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       <div styleName="message">{msg}</div>
       <div styleName="timer">{timeText}</div>
       </div>
-      <div styleName="centerBar">{`当前连击${match.combo}`}</div>
+      <div styleName="centerBar">{`当前连击${player.combo}`}</div>
       <div styleName="rightBar">
       <div styleName="gold">{goldText}</div>
       <div styleName="energyBg">
@@ -150,14 +153,14 @@ const ArenaButtonLayer = observer(React.createClass({
       <div style={this.props.rootStyle}>
       {
         opt.buttons.filter((button) =>{
-          return (button.id in match.liveButtons)
+          return match.onButtons && (button.id in match.onButtons)
         }).map((button) => {
-          let color = match.rampage ? Scheme.buttonRampage : Scheme.buttonInit
+          let color = match.rampageTime > 0 ? Scheme.buttonRampage : Scheme.buttonInit
           let border = null
           for (let player of match.member) {
             if (player.button == button.id) {
               border = `2px solid ${Scheme.buttonPressing}`
-              if (match.rampage) {
+              if (match.rampageTime > 0) {
                 color = Scheme.buttonRampageLevel[player.buttonLevel]
               } else {
                 color = Scheme.buttonLevel[player.buttonLevel]

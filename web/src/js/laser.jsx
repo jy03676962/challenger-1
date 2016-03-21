@@ -8,7 +8,6 @@ const Laser = observer(React.createClass({
     let opt = this.props.options
     let scale = opt.webScale
     let size = opt.arenaCellSize * scale
-    console.log(laser.pos)
     let style = {
       position: "absolute",
       width: size + "px",

@@ -48,7 +48,6 @@ class Game {
       this._reset()
     }
     sock.onmessage = (e) => {
-      // console.log("message received: " + e.data)
       this.onMessage(e.data)
     }
     this.sock = sock
@@ -88,7 +87,7 @@ class Game {
     if (this.sock) {
       let data = {
         cmd: "startMatch",
-        mode: mode + "",
+        mode: mode,
       }
       this.sock.send(JSON.stringify(data))
     }
@@ -97,21 +96,12 @@ class Game {
   onMessage(msg) {
     let data = JSON.parse(msg)
     switch (data.cmd) {
-      case "login":
-      if ("match" in data) {
-        this.match = data.match
-      }
-      break
-      case "matchChanged":
-      this.match = data.match
-      this.options = data.options
-      break
-      case "matchTick":
-      this.match = data.match
-      break
-      case "matchEnd":
-      this.match = data.match
-      break
+      case "options":
+          this.options = data.options
+          break
+      case "sync":
+          this.match = data.match
+          break
     }
   }
 

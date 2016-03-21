@@ -1,112 +1,118 @@
 package core
 
-// the skeleton of this file is borrowed from https://github.com/golang-samples/websocket
-
 import (
 	"fmt"
-	"io"
-	"log"
-
 	"golang.org/x/net/websocket"
+	"io"
 )
+
+var _ = fmt.Printf
 
 const channelBufSize = 100
 
 var maxId int = 0
 
 type Client struct {
-	id       int
-	username string
-	ws       *websocket.Conn
-	server   *Server
-	ch       chan map[string]interface{}
-	doneCh   chan bool
+	*Hub
+	id     int
+	ws     *websocket.Conn
+	server *Server
+	ch     chan *HubMap
+	doneCh chan struct{}
 }
 
 func NewClient(ws *websocket.Conn, server *Server) *Client {
 
-	if ws == nil {
-		panic("ws cannot be nil")
-	}
-
-	if server == nil {
-		panic("server cannot be nil")
-	}
-
 	maxId++
-	ch := make(chan map[string]interface{}, channelBufSize)
-	doneCh := make(chan bool)
+	ch := make(chan *HubMap, channelBufSize)
+	doneCh := make(chan struct{})
 
-	return &Client{maxId, "", ws, server, ch, doneCh}
+	return &Client{server.Hub, maxId, ws, server, ch, doneCh}
 }
 
-func (c *Client) Conn() *websocket.Conn {
-	return c.ws
-}
-
-func (c *Client) SetUsername(name string) {
-	c.username = name
-}
-
-func (c *Client) GetUsername() string {
-	return c.username
-}
-
-func (c *Client) Write(msg map[string]interface{}) {
+func (c *Client) Write(msg *HubMap) {
 	select {
 	case c.ch <- msg:
 	default:
-		c.server.Del(c)
-		err := fmt.Errorf("client %d is disconnected.", c.id)
-		c.server.Err(err)
+		c.del()
 	}
 }
 
-func (c *Client) Done() {
-	c.doneCh <- true
-}
-
 func (c *Client) Listen() {
-	go c.listenWrite()
-	c.listenRead()
+	if c.add() {
+		go c.listenWrite()
+		c.listenRead()
+		c.ws.Close()
+	}
 }
 
 func (c *Client) listenWrite() {
-	log.Println("Listening write to client")
 	for {
 		select {
-
 		case msg := <-c.ch:
-			websocket.JSON.Send(c.ws, msg)
-
+			websocket.JSON.Send(c.ws, msg.Data())
 		case <-c.doneCh:
-			c.server.Del(c)
-			c.doneCh <- true
+			c.del()
 			return
 		}
 	}
 }
 
 func (c *Client) listenRead() {
-	log.Println("Listening read from client")
 	for {
-		select {
-
-		case <-c.doneCh:
-			c.server.Del(c)
-			c.doneCh <- true
+		var msg interface{}
+		err := websocket.JSON.Receive(c.ws, &msg)
+		if err == io.EOF {
+			close(c.doneCh)
 			return
-
-		default:
-			var msg interface{}
-			err := websocket.JSON.Receive(c.ws, &msg)
-			if err == io.EOF {
-				c.doneCh <- true
-			} else if err != nil {
-				c.server.Err(err)
-			} else {
-				c.server.messageCh <- &SocketEvent{msg.(map[string]interface{}), c}
-			}
+		} else if err != nil {
+			c.err(err)
+		} else {
+			c.msg(msg)
 		}
+	}
+}
+
+func (c *Client) add() bool {
+	e := SocketOutput{}
+	e.Type = S_Add
+	e.ID = c.id
+	e.Client = c
+	return c.send(&e)
+}
+
+func (c *Client) msg(msg interface{}) bool {
+	e := SocketOutput{}
+	e.Type = S_Msg
+	e.ID = c.id
+	e.Client = c
+	e.SocketMessage = NewHubMapWithData(msg.(map[string]interface{}))
+	e.SocketMessage.Set("cid", c.id)
+	return c.send(&e)
+}
+
+func (c *Client) del() bool {
+	e := SocketOutput{}
+	e.Type = S_Del
+	e.ID = c.id
+	e.Client = c
+	return c.send(&e)
+}
+
+func (c *Client) err(err error) bool {
+	e := SocketOutput{}
+	e.Type = S_Err
+	e.ID = c.id
+	e.Error = err
+	e.Client = c
+	return c.send(&e)
+}
+
+func (c *Client) send(output *SocketOutput) bool {
+	select {
+	case c.SocketOutputCh <- output:
+		return true
+	case <-c.ServerQuitCh:
+		return false
 	}
 }

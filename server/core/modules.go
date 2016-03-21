@@ -28,9 +28,27 @@ type ArenaWall struct {
 
 type W ArenaWall
 
-type SocketEvent struct {
-	SocketMessage map[string]interface{}
+type SocketEventType int
+
+const (
+	S_Add SocketEventType = iota
+	S_Del SocketEventType = 1 << iota
+	S_Msg
+	S_Err
+)
+
+type SocketOutput struct {
 	Client        *Client
+	ID            int
+	Type          SocketEventType
+	Error         error
+	SocketMessage *HubMap
+}
+
+type SocketInput struct {
+	Broadcast     bool
+	DestID        int
+	SocketMessage *HubMap
 }
 
 type Button struct {

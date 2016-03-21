@@ -24,12 +24,13 @@ const Hall = observer(React.createClass({
 const MatchView = observer(React.createClass({
   render: function() {
     let match = this.props.game.match
+    let hoster = match.member[0].name
     let joined = match.member.filter((member) => {
       return member.name == this.props.game.playerName
     }).length > 0
     let actionComponent = null
     if (joined) {
-      if (match.hoster == this.props.game.playerName) {
+      if (hoster == this.props.game.playerName) {
         actionComponent =
         <div>
         <button onClick={this.startFunMode}>开始娱乐模式</button>
@@ -41,7 +42,7 @@ const MatchView = observer(React.createClass({
     }
     return(
       <div>
-      <div style={{color:"red"}}>{"房主:" + match.hoster}</div>
+      <div style={{color:"red"}}>{"房主:" + hoster}</div>
       {
         match.member.map((member) =>{
           return <div style={{color:"green"}} key={"player:"+member.name}>{member.name}</div>
