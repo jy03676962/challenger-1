@@ -11,12 +11,6 @@ const (
 	MATCH_CAPACITY = 4
 )
 
-/*
- * A Room object just hold a preparing state of a match,
- * Hoster: decide which client can fire off the match for web side
- * Member: all paticipants
- * Stage is before, warmup, ongoing, after
- */
 type Match struct {
 	*Hub         `json:"-"`
 	Capacity     int             `json:"capacity"`
