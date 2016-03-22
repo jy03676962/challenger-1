@@ -7,7 +7,7 @@ class Game {
   @observable options
 
   @computed get stage() {
-    if (!this.playerName) {
+    if (!this.playerName || this.match == null || this.match.member == null || this.match.member.length == 0) {
       return "login"
     }
     if (!this.match || this.match.stage == "before") {
@@ -88,6 +88,15 @@ class Game {
       let data = {
         cmd: "startMatch",
         mode: mode,
+      }
+      this.sock.send(JSON.stringify(data))
+    }
+  }
+
+  resetMatch() {
+    if (this.sock) {
+      let data = {
+        cmd: "resetMatch"
       }
       this.sock.send(JSON.stringify(data))
     }

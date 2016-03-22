@@ -55,9 +55,13 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let opt = game.options
     let match = game.match
     let msg, timeText
-    let player = game.match.member.filter((m)=>{
-      return m.name == game.playerName
-    })[0]
+    let player = null
+    for (let p of game.match.member) {
+      if (p.name == game.playerName) {
+        player = p
+      }
+    }
+    let combo = player ? player.combo : 0
     if (match.stage == "warmup") {
       let left = match.warmupTime.toFixed(1)
       msg = "预热阶段"
@@ -92,7 +96,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       <div styleName="message">{msg}</div>
       <div styleName="timer">{timeText}</div>
       </div>
-      <div styleName="centerBar">{`当前连击${player.combo}`}</div>
+      <div styleName="centerBar">{`当前连击${combo}`}</div>
       <div styleName="rightBar">
       <div styleName="gold">{goldText}</div>
       <div styleName="energyBg">

@@ -1,11 +1,14 @@
 package core
 
 import (
+	"log"
 	"math"
 	"math/rand"
 	"strconv"
 	"time"
 )
+
+var _ = log.Printf
 
 const (
 	MATCH_CAPACITY = 4
@@ -156,6 +159,24 @@ func (m *Match) sync() {
 	}
 }
 
+func (m *Match) reset() {
+	m.Member = make([]*Player, 0)
+	m.Stage = "before"
+	m.TotalTime = 0
+	m.Elasped = 0
+	m.WarmupTime = 0
+	m.RampageTime = 0
+	m.Mode = 0
+	m.Gold = 0
+	m.Energy = 0
+	m.OnButtons = nil
+	m.RampageCount = 0
+	m.Lasers = nil
+	m.offButtons = nil
+	m.hiddenButtons = nil
+	m.goldDropTime = 0
+}
+
 func (m *Match) handleInputs() bool {
 	hasInputs := false
 	for {
@@ -207,6 +228,8 @@ func (m *Match) handleInput(input *HubMap) {
 	case "disconnect":
 		cid := input.Get("cid").(int)
 		m.removePlayer(cid)
+	case "resetMatch":
+		m.reset()
 	}
 }
 
@@ -242,6 +265,9 @@ func (m *Match) removePlayer(cid int) {
 		if idx >= 0 {
 			m.Lasers = append(m.Lasers[:idx], m.Lasers[idx+1:]...)
 		}
+	}
+	if len(m.Member) == 0 {
+		m.reset()
 	}
 }
 

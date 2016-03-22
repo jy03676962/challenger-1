@@ -13,6 +13,7 @@ const App = CSSModules(observer(React.createClass({
   render() {
     var element
     const game = this.props.game
+    console.log("game stage is " + game.stage)
     switch (game.stage) {
       case 'login':
       element = <Login game={game} />
@@ -25,10 +26,25 @@ const App = CSSModules(observer(React.createClass({
       break
       case 'board':
       element = <Board game={game} />
+      break
+    }
+    let resetStyle = {
+      position:"fixed",
+      top: "0",
+      right: "0",
+      border: "2px solid black",
+      cursor: "pointer",
+      zIndex: "1",
     }
     return (
-      <div id='app' styleName='base-div'>{element}</div>
+      <div id='app' styleName='base-div'>
+        <div onClick={this.reset} style={resetStyle}>重置游戏</div>
+        {element}
+      </div>
     )
+  },
+  reset: function(e) {
+    this.props.game.resetMatch()
   }
 })), styles);
 
