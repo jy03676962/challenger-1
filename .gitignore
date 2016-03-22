@@ -1,7 +1,6 @@
 /web/node_modules
 /web/npm-debug.log
 /web/dist
-/server/vendor
 /server/public
 /server/server
 *.sublime-workspace
