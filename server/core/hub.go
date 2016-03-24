@@ -52,21 +52,27 @@ func (hm *HubMap) SetCmd(v string) {
 }
 
 type Hub struct {
-	MatchInputCh   chan *HubMap
-	MatchOutputCh  chan *HubMap
-	ServerQuitCh   chan struct{}
-	SocketOutputCh chan *SocketOutput
-	SocketInputCh  chan *SocketInput
-	Options        *MatchOptions
+	MatchInputCh    chan *HubMap
+	ServerQuitCh    chan struct{}
+	SocketOutputCh  chan *SocketOutput
+	SocketInputCh   chan *SocketInput
+	TCPOutputCh     chan *TCPOutput
+	TCPInputCh      chan *TCPInput
+	TCPServerQuitCh chan struct{}
+	MainQuitCh      chan struct{}
+	Options         *MatchOptions
 }
 
 func NewHub() *Hub {
 	hub := Hub{}
 	hub.MatchInputCh = make(chan *HubMap)
-	hub.MatchOutputCh = make(chan *HubMap)
 	hub.ServerQuitCh = make(chan struct{})
 	hub.SocketOutputCh = make(chan *SocketOutput)
 	hub.SocketInputCh = make(chan *SocketInput)
+	hub.TCPInputCh = make(chan *TCPInput)
+	hub.TCPOutputCh = make(chan *TCPOutput)
+	hub.TCPServerQuitCh = make(chan struct{})
+	hub.MainQuitCh = make(chan struct{})
 	hub.Options = DefaultMatchOptions()
 	return &hub
 }

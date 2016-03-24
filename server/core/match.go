@@ -49,7 +49,7 @@ func (m *Match) Run() {
 	tickChan := time.Tick(dt)
 	for {
 		select {
-		case <-m.ServerQuitCh:
+		case <-m.MainQuitCh:
 			return
 		case <-tickChan:
 			isRunning := m.isRunning()
@@ -153,8 +153,12 @@ func (m *Match) sync() {
 	data := NewHubMap()
 	data.SetCmd("sync")
 	data.Set("match", m)
+	s := SocketInput{}
+	s.Broadcast = true
+	s.Group = SG_Game
+	s.SocketMessage = data
 	select {
-	case m.MatchOutputCh <- data:
+	case m.SocketInputCh <- &s:
 	case <-m.ServerQuitCh:
 	}
 }

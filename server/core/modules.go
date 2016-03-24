@@ -37,9 +37,17 @@ const (
 	S_Err
 )
 
+type SocketGroupType int
+
+const (
+	SG_Game SocketGroupType = iota
+	SG_Api  SocketGroupType = 1 << iota
+)
+
 type SocketOutput struct {
 	Client        *Client
 	ID            int
+	Group         SocketGroupType
 	Type          SocketEventType
 	Error         error
 	SocketMessage *HubMap
@@ -48,7 +56,20 @@ type SocketOutput struct {
 type SocketInput struct {
 	Broadcast     bool
 	DestID        int
+	Group         SocketGroupType
 	SocketMessage *HubMap
+}
+
+type TCPOutput struct {
+	Client  *TCPClient
+	Addr    string
+	Type    SocketEventType
+	Message *HubMap
+	Error   error
+}
+
+type TCPInput struct {
+	Message *HubMap
 }
 
 type Button struct {
