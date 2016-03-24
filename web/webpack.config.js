@@ -18,9 +18,14 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: 'index.ejs',
+      template: 'src/assets/index.ejs',
       inject: 'body',
       filename: '../index.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/assets/api.ejs',
+      inject: 'body',
+      filename: '../api.html'
     }),
     new CleanWebpackPlugin(['dist'])
   ],
