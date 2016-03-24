@@ -61,5 +61,7 @@ document.onkeyup = function(e) {
 render((
   <App game={game}>
   </App>
-), document.getElementById('root'));
+), document.getElementById('root'), function(){
+  console.log("render root")
+});
 

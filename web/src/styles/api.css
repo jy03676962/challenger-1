@@ -1,0 +1,12 @@
+@import './global.css';
+
+div.root {
+
+}
+
+div.block {
+  background-color:#C1C1C1;
+}
+
+div.block button {
+}

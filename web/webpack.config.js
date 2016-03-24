@@ -5,26 +5,25 @@ var CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
   devtool: 'eval',
-  entry: [
-    // 'webpack-dev-server/client?http://localhost:3000',
-    // 'webpack/hot/only-dev-server',
-    './src/app.jsx'
-  ],
+  entry: {
+    app:'./src/app.jsx',
+    api:'./src/api.jsx',
+  },
   output: {
     path: path.join(__dirname, 'dist/js'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     publicPath: '/js/'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/assets/index.ejs',
-      inject: 'body',
+      inject: false,
       filename: '../index.html'
     }),
     new HtmlWebpackPlugin({
       template: 'src/assets/api.ejs',
-      inject: 'body',
+      inject: false,
       filename: '../api.html'
     }),
     new CleanWebpackPlugin(['dist'])
