@@ -1,5 +1,5 @@
-import {observable, computed} from 'mobx'
-import {wsAddressWithPath} from '~/js/util.jsx'
+import { observable, computed } from 'mobx'
+import { wsAddressWithPath } from '~/js/util.jsx'
 
 class Game {
   @observable match
@@ -8,16 +8,16 @@ class Game {
 
   @computed get stage() {
     if (!this.playerName || this.match == null || this.match.member == null || this.match.member.length == 0) {
-      return "login"
+      return 'login'
     }
-    if (!this.match || this.match.stage == "before") {
-      return "hall"
+    if (!this.match || this.match.stage == 'before') {
+      return 'hall'
     }
-    if (this.match && (this.match.stage == "ongoing" || this.match.stage == "warmup")) {
-      return "arena"
+    if (this.match && (this.match.stage == 'ongoing' || this.match.stage == 'warmup')) {
+      return 'arena'
     }
-    if (this.match && this.match.stage == "after") {
-      return "board"
+    if (this.match && this.match.stage == 'after') {
+      return 'board'
     }
   }
 
@@ -26,7 +26,7 @@ class Game {
   }
 
   _reset() {
-    this.playerName = ""
+    this.playerName = ''
     this.sock = null
     this.match = null
     this.arg = null
@@ -37,14 +37,14 @@ class Game {
   connectServer(playerName) {
     let uri = wsAddressWithPath('ws')
     let sock = new WebSocket(uri)
-    console.log('socket is '+uri)
+    console.log('socket is ' + uri)
     this.playerName = playerName
     sock.onopen = () => {
-      console.log("connected to " + uri)
+      console.log('connected to ' + uri)
       this.login(playerName)
     }
     sock.onclose = (e) => {
-      console.log("connection closed (" + e.code + ")")
+      console.log('connection closed (' + e.code + ')')
       this._reset()
     }
     sock.onmessage = (e) => {
@@ -56,7 +56,7 @@ class Game {
   login(playerName) {
     if (this.sock) {
       let data = {
-        cmd: "login",
+        cmd: 'login',
         name: playerName
       }
       this.sock.send(JSON.stringify(data))
@@ -66,7 +66,7 @@ class Game {
   joinMatch() {
     if (this.sock) {
       let data = {
-        cmd: "joinMatch",
+        cmd: 'joinMatch',
         name: this.playerName
       }
       this.sock.send(JSON.stringify(data))
@@ -76,7 +76,7 @@ class Game {
   createMatch() {
     if (this.sock) {
       let data = {
-        cmd: "createMatch",
+        cmd: 'createMatch',
         name: this.playerName
       }
       this.sock.send(JSON.stringify(data))
@@ -86,7 +86,7 @@ class Game {
   startMatch(mode) {
     if (this.sock) {
       let data = {
-        cmd: "startMatch",
+        cmd: 'startMatch',
         mode: mode,
       }
       this.sock.send(JSON.stringify(data))
@@ -96,7 +96,7 @@ class Game {
   resetMatch() {
     if (this.sock) {
       let data = {
-        cmd: "resetMatch"
+        cmd: 'resetMatch'
       }
       this.sock.send(JSON.stringify(data))
     }
@@ -105,39 +105,39 @@ class Game {
   onMessage(msg) {
     let data = JSON.parse(msg)
     switch (data.cmd) {
-      case "options":
-          this.options = data.options
-          break
-      case "sync":
-          this.match = data.match
-          break
+      case 'options':
+        this.options = data.options
+        break
+      case 'sync':
+        this.match = data.match
+        break
     }
   }
 
   onKeyDown(e) {
-    if (this.stage != "arena") {
+    if (this.stage != 'arena') {
       return
     }
     var code = e.keyCode ? e.keyCode : e.which;
     let dir
-    switch(code) {
+    switch (code) {
       case 37: //left
-      dir = "left"
-      break
+        dir = 'left'
+        break
       case 38:
-      dir = "up"
-      break
+        dir = 'up'
+        break
       case 39:
-      dir = "right"
-      break
+        dir = 'right'
+        break
       case 40:
-      dir = "down"
-      break
+        dir = 'down'
+        break
     }
     if (dir) {
       this.currentKey = code
       let data = {
-        cmd: "playerMove",
+        cmd: 'playerMove',
         dir: dir,
         name: this.playerName,
       }
@@ -146,14 +146,14 @@ class Game {
   }
 
   onKeyUp(e) {
-    if (this.stage != "arena") {
+    if (this.stage != 'arena') {
       return
     }
     var code = e.keyCode ? e.keyCode : e.which;
     if (this.currentKey == code) {
       this.currentKey = 0
       let data = {
-        cmd: "playerStop",
+        cmd: 'playerStop',
         name: this.playerName,
       }
       this.sock.send(JSON.stringify(data))

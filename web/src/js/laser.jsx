@@ -1,5 +1,5 @@
 import React from 'react';
-import {observer} from 'mobx-react'
+import { observer } from 'mobx-react'
 import Scheme from '~/js/scheme.jsx'
 
 const Laser = observer(React.createClass({
@@ -9,11 +9,11 @@ const Laser = observer(React.createClass({
     let scale = opt.webScale
     let size = opt.arenaCellSize * scale
     let style = {
-      position: "absolute",
-      width: size + "px",
-      height: size + "px",
-      top: laser.pos.Y * scale - size / 2 + "px",
-      left: laser.pos.X * scale - size / 2 + "px",
+      position: 'absolute',
+      width: size + 'px',
+      height: size + 'px',
+      top: laser.pos.Y * scale - size / 2 + 'px',
+      left: laser.pos.X * scale - size / 2 + 'px',
       backgroundColor: laser.isPause ? Scheme.laserPause : Scheme.laserNormal
     }
     return (
@@ -23,4 +23,3 @@ const Laser = observer(React.createClass({
 }))
 
 export default Laser
-

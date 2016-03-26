@@ -1,5 +1,5 @@
 import React from 'react';
-import {observer} from 'mobx-react'
+import { observer } from 'mobx-react'
 import CSSModules from 'react-css-modules'
 import styles from '~/styles/board.css'
 
@@ -13,18 +13,18 @@ const Board = CSSModules(observer(React.createClass({
       <tr>
       <th>游戏模式</th>
       <th>游戏人数</th>
-      <th>{match.mode == 1 ? "金币总数" : "游戏时长"}</th>
+      <th>{match.mode == 1 ? '金币总数' : '游戏时长'}</th>
       <th>暴走次数</th>
       </tr>
       <tr>
-      <td>{match.mode == 1 ? "赏金模式" : "生存模式"}</td>
+      <td>{match.mode == 1 ? '赏金模式' : '生存模式'}</td>
       <td>{match.member.length}</td>
       <td>{match.mode == 1 ? match.gold : match.elasped}</td>
       <td>{match.rampageCount}</td>
       </tr>
       </tbody>
       </table>
-      <table styleName="player">
+      <table styleName='player'>
       <tbody>
       <tr>
       <th>玩家</th>

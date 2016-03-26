@@ -13,7 +13,7 @@ const App = CSSModules(observer(React.createClass({
   render() {
     var element
     const game = this.props.game
-    console.log("game stage is " + game.stage)
+    console.log('game stage is ' + game.stage)
     switch (game.stage) {
       case 'login':
         element = <Login game={game} />
@@ -29,12 +29,12 @@ const App = CSSModules(observer(React.createClass({
         break
     }
     let resetStyle = {
-      position: "fixed",
-      top: "0",
-      right: "0",
-      border: "2px solid black",
-      cursor: "pointer",
-      zIndex: "1",
+      position: 'fixed',
+      top: '0',
+      right: '0',
+      border: '2px solid black',
+      cursor: 'pointer',
+      zIndex: '1',
     }
     return (
       <div id='app' styleName='base-div'>
@@ -62,5 +62,5 @@ render((
   <App game={game}>
   </App>
 ), document.getElementById('root'), function() {
-  console.log("render root")
+  console.log('render root')
 });

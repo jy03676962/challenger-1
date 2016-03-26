@@ -1,5 +1,5 @@
 import React from 'react';
-import {observer} from 'mobx-react'
+import { observer } from 'mobx-react'
 import Player from '~/js/player.jsx'
 import Laser from '~/js/laser.jsx'
 import Scheme from '~/js/scheme.jsx'
@@ -13,33 +13,33 @@ const Arena = observer(React.createClass({
     let arenaHeight = (opt.arenaCellSize + opt.arenaBorder) * opt.arenaHeight * opt.webScale
     const infoHeight = 60
     let infoStyle = {
-      marginTop: "10px",
-      width: arenaWidth + opt.arenaBorder * opt.webScale + "px",
-      height: infoHeight + "px",
-      marginLeft: "auto",
-      marginRight: "auto",
-      textAlign: "center",
-      backgroundColor: "#CCCCCC"
+      marginTop: '10px',
+      width: arenaWidth + opt.arenaBorder * opt.webScale + 'px',
+      height: infoHeight + 'px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      textAlign: 'center',
+      backgroundColor: '#CCCCCC'
     }
     let bgStyle = {
-      width: arenaWidth + "px",
-      fontSize: "0",
-      margin: "auto",
-      position: "relative",
-      border: opt.arenaBorder / 2 * opt.webScale + "px solid " + Scheme.wall
+      width: arenaWidth + 'px',
+      fontSize: '0',
+      margin: 'auto',
+      position: 'relative',
+      border: opt.arenaBorder / 2 * opt.webScale + 'px solid ' + Scheme.wall
     }
     let gStyle = {
-      position: "absolute",
-      top: infoHeight + "px",
-      left: "0",
-      right: "0",
-      margin: "auto",
-      width: arenaWidth + "px",
-      height: arenaHeight + "px",
-      border: opt.arenaBorder / 2 * opt.webScale + "px solid " + Scheme.wall
+      position: 'absolute',
+      top: infoHeight + 'px',
+      left: '0',
+      right: '0',
+      margin: 'auto',
+      width: arenaWidth + 'px',
+      height: arenaHeight + 'px',
+      border: opt.arenaBorder / 2 * opt.webScale + 'px solid ' + Scheme.wall
     }
     return (
-      <div style={{position:"relative"}}>
+      <div style={{position:'relative'}}>
       <ArenaInfoBar game={this.props.game} rootStyle={infoStyle}/>
       <ArenaBackground opt={opt} rootStyle={bgStyle} />
       <ArenaButtonLayer game={this.props.game} rootStyle={gStyle} />
@@ -62,16 +62,16 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       }
     }
     let combo = player ? player.combo : 0
-    if (match.stage == "warmup") {
+    if (match.stage == 'warmup') {
       let left = match.warmupTime.toFixed(1)
-      msg = "预热阶段"
+      msg = '预热阶段'
       timeText = `还剩${left}秒`
     } else if (match.rampageTime > 0) {
-      msg = "暴走阶段"
+      msg = '暴走阶段'
       let left = match.rampageTime.toFixed(1)
       timeText = `还剩${left}秒`
     } else {
-      msg = "游戏阶段"
+      msg = '游戏阶段'
       if (match.mode == 1) {
         let left = (match.totalTime).toFixed(1)
         timeText = `还剩${left}秒`
@@ -79,46 +79,46 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     }
     let gold = match.gold.toFixed(0)
     let goldText = `当前金币: ${gold}`
-    let p = (match.energy / opt.maxEnergy) * 100 + "%"
+    let p = (match.energy / opt.maxEnergy) * 100 + '%'
     let energyText = `能量(${match.energy.toFixed(1)}/${opt.maxEnergy}):`
     let energyTextColor, energyBarColor
     if (match.rampageTime > 0) {
-      p = "100%"
-      energyTextColor = "red"
-      energyBarColor = "red"
+      p = '100%'
+      energyTextColor = 'red'
+      energyBarColor = 'red'
     } else {
-      energyTextColor = "black"
-      energyBarColor = "#66CC00"
+      energyTextColor = 'black'
+      energyBarColor = '#66CC00'
     }
     return (
       <div style={this.props.rootStyle}>
-      <div styleName="leftBar">
-      <div styleName="message">{msg}</div>
-      <div styleName="timer">{timeText}</div>
+      <div styleName='leftBar'>
+      <div styleName='message'>{msg}</div>
+      <div styleName='timer'>{timeText}</div>
       </div>
-      <div styleName="centerBar">{`当前连击${combo}`}</div>
-      <div styleName="rightBar">
-      <div styleName="gold">{goldText}</div>
-      <div styleName="energyBg">
-      <div styleName="energy" style={{width:p, backgroundColor:energyBarColor}}></div>
+      <div styleName='centerBar'>{`当前连击${combo}`}</div>
+      <div styleName='rightBar'>
+      <div styleName='gold'>{goldText}</div>
+      <div styleName='energyBg'>
+      <div styleName='energy' style={{width:p, backgroundColor:energyBarColor}}></div>
       </div>
-      <div styleName="energyText" style={{color:energyTextColor}}>{energyText}</div>
+      <div styleName='energyText' style={{color:energyTextColor}}>{energyText}</div>
       </div>
       </div>
-      )
+    )
   }
 })), styles)
 
-const ArenaBackground = ({opt, rootStyle}) => {
-  let size = opt.arenaCellSize * opt.webScale + "px"
+const ArenaBackground = ({ opt, rootStyle }) => {
+  let size = opt.arenaCellSize * opt.webScale + 'px'
   let elements = []
   for (let i = 0; i < opt.arenaHeight; i++) {
     for (let j = 0; j < opt.arenaWidth; j++) {
       let cellStyle = {
         width: size,
         height: size,
-        display: "inline-block",
-        border: opt.arenaBorder / 2 * opt.webScale + "px solid " + Scheme.border,
+        display: 'inline-block',
+        border: opt.arenaBorder / 2 * opt.webScale + 'px solid ' + Scheme.border,
         backgroundColor: Scheme.normalTile
       }
       if (j == opt.arenaEntrance.X && i == opt.arenaEntrance.Y) {
@@ -126,24 +126,24 @@ const ArenaBackground = ({opt, rootStyle}) => {
       } else if (j == opt.arenaExit.X && i == opt.arenaExit.Y) {
         cellStyle.backgroundColor = Scheme.exitTile
       } else {
-        cellStyle.backgroundColor= Scheme.normalTile
+        cellStyle.backgroundColor = Scheme.normalTile
       }
-      elements.push(<div style={cellStyle} key={"cell:"+i * opt.arenaWidth + j}></div>)
+      elements.push(<div style={cellStyle} key={'cell:'+i * opt.arenaWidth + j}></div>)
     }
   }
   for (let [index, wall] of opt.walls.entries()) {
     let wallStyle = {
-      position: "absolute",
+      position: 'absolute',
       backgroundColor: Scheme.wall,
-      left: wall.X * opt.webScale + "px",
-      top: wall.Y * opt.webScale + "px",
-      width: wall.W * opt.webScale + "px",
-      height: wall.H * opt.webScale + "px",
+      left: wall.X * opt.webScale + 'px',
+      top: wall.Y * opt.webScale + 'px',
+      width: wall.W * opt.webScale + 'px',
+      height: wall.H * opt.webScale + 'px',
     }
-    elements.push(<div style={wallStyle} key={"wall:" + index}></div>)
+    elements.push(<div style={wallStyle} key={'wall:' + index}></div>)
   }
   return (
-  <div style={rootStyle}>
+    <div style={rootStyle}>
   {elements}
   </div>
   );
@@ -173,19 +173,19 @@ const ArenaButtonLayer = observer(React.createClass({
           }
           let r = button.r
           let buttonStyle = {
-            position: "absolute",
+            position: 'absolute',
             border: border,
             backgroundColor: color,
-            left: r.X * opt.webScale + "px",
-            top: r.Y * opt.webScale + "px",
-            width: r.W * opt.webScale + "px",
-            height: r.H * opt.webScale + "px",
+            left: r.X * opt.webScale + 'px',
+            top: r.Y * opt.webScale + 'px',
+            width: r.W * opt.webScale + 'px',
+            height: r.H * opt.webScale + 'px',
           }
-          return <div style={buttonStyle} key={"button:" + button.id}></div>
+          return <div style={buttonStyle} key={'button:' + button.id}></div>
         })
       }
       </div>
-      )
+    )
   }
 }))
 
@@ -195,18 +195,18 @@ const ArenaGround = observer(React.createClass({
     let opt = this.props.game.options
     let objects = []
     match.member.forEach(function(member, idx) {
-      objects.push(<Player player={member} options={opt} key={"player:"+idx} idx={idx}/>)
+      objects.push(<Player player={member} options={opt} key={'player:'+idx} idx={idx}/>)
     })
     if (match.lasers) {
       match.lasers.forEach(function(laser, idx) {
-        objects.push(<Laser laser={laser} options={opt} key={"laser:"+idx}/>)
+        objects.push(<Laser laser={laser} options={opt} key={'laser:'+idx}/>)
       })
     }
     return (
       <div style={this.props.rootStyle}>
       {objects}
       </div>
-      )
+    )
   }
 }))
 
