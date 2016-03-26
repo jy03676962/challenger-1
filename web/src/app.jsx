@@ -1,11 +1,11 @@
 import React from 'react'
-import {render} from 'react-dom'
+import { render } from 'react-dom'
 import Login from '~/js/login.jsx'
 import Hall from '~/js/hall.jsx'
 import Arena from '~/js/arena.jsx'
 import Board from '~/js/board.jsx'
 import Game from '~/js/game.jsx'
-import {observer} from 'mobx-react'
+import { observer } from 'mobx-react'
 import CSSModules from 'react-css-modules'
 import styles from '~/styles/base.css'
 
@@ -16,20 +16,20 @@ const App = CSSModules(observer(React.createClass({
     console.log("game stage is " + game.stage)
     switch (game.stage) {
       case 'login':
-      element = <Login game={game} />
-      break
+        element = <Login game={game} />
+        break
       case 'hall':
-      element = <Hall game={game} />
-      break
+        element = <Hall game={game} />
+        break
       case 'arena':
-      element = <Arena game={game} />
-      break
+        element = <Arena game={game} />
+        break
       case 'board':
-      element = <Board game={game} />
-      break
+        element = <Board game={game} />
+        break
     }
     let resetStyle = {
-      position:"fixed",
+      position: "fixed",
       top: "0",
       right: "0",
       border: "2px solid black",
@@ -61,7 +61,6 @@ document.onkeyup = function(e) {
 render((
   <App game={game}>
   </App>
-), document.getElementById('root'), function(){
+), document.getElementById('root'), function() {
   console.log("render root")
 });
-
