@@ -1,15 +1,15 @@
 import React from 'react'
-import {render} from 'react-dom'
-import {observable, computed} from 'mobx'
-import {observer} from 'mobx-react'
+import { render } from 'react-dom'
+import { observable, computed } from 'mobx'
+import { observer } from 'mobx-react'
 import CSSModules from 'react-css-modules'
 import styles from '~/styles/api.css'
-import {wsAddressWithPath} from '~/js/util.jsx'
+import { wsAddressWithPath } from '~/js/util.jsx'
 
 class Api {
-  @observable state
-  @observable addr
-  @observable log
+  @ observable state
+  @ observable addr
+  @ observable log
   constructor() {
     this._reset()
   }
@@ -29,7 +29,7 @@ class Api {
     }
     let uri = wsAddressWithPath('api')
     let sock = new WebSocket(uri)
-    console.log('socket is '+uri)
+    console.log('socket is ' + uri)
     this.state = "connecting..."
     sock.onopen = () => {
       console.log("connected to " + uri)
@@ -47,16 +47,16 @@ class Api {
   onMessage(msg) {
     console.log("got socket message: " + msg)
     let data = JSON.parse(msg)
-    switch(data.cmd) {
+    switch (data.cmd) {
       case "addTCP":
         this.addr = data.addr
-        this.log = `新连接: ${this.addr}\n`+this.log
+        this.log = `新连接: ${this.addr}\n` + this.log
         break
       case "delTCP":
         this._reset()
         break
       case "errTCP":
-        this.log = `错误: ${data.msg}\n`+this.log
+        this.log = `错误: ${data.msg}\n` + this.log
         break
       default:
         this.addr = data.addr
@@ -134,70 +134,63 @@ const ApiView = CSSModules(observer(React.createClass({
   },
   connect: function(e) {
     this.props.api.connect()
-    
+
   },
   ledCtrl: function(e) {
     let d = {
-      cmd:"led_ctrl",
-      led:[
-        {
-          wall:this.refs.wall.value,
-          led_t:this.refs.led_t.value,
-          mode:this.refs.mm.value
-        }
-      ]
+      cmd: "led_ctrl",
+      led: [{
+        wall: this.refs.wall.value,
+        led_t: this.refs.led_t.value,
+        mode: this.refs.mm.value
+      }]
     }
     this.props.api.send(d)
   },
   btnCtrl: function(e) {
     let d = {
-      cmd:"btn_ctrl",
-      useful:this.refs.btn.checked ? "1":"0"
+      cmd: "btn_ctrl",
+      useful: this.refs.btn.checked ? "1" : "0"
     }
     this.props.api.send(d)
   },
   musicCtrl: function(e) {
     let d = {
-      cmd:"mp3_ctrl",
-      music:this.refs.music.value
+      cmd: "mp3_ctrl",
+      music: this.refs.music.value
     }
     this.props.api.send(d)
   },
   lightCtrl: function(e) {
     let d = {
-      cmd:"light_ctrl",
-      light_mode:this.refs.light.value
+      cmd: "light_ctrl",
+      light_mode: this.refs.light.value
     }
     this.props.api.send(d)
   },
   modeCtrl: function(e) {
     let d = {
-      cmd:"mode_change",
-      mode:this.refs.mode.value
+      cmd: "mode_change",
+      mode: this.refs.mode.value
     }
     this.props.api.send(d)
   },
   scoreCtrl: function(e) {
     let d = {
-      cmd:"init_score",
-      score:[
-        {
-          status:"T1",
-          "time":this.refs.t1.value
-        },
-        {
-          status:"T2",
-          "time":this.refs.t2.value
-        },
-        {
-          status:"T3",
-          "time":this.refs.t3.value
-        },
-        {
-          status:"TR",
-          "time":this.refs.tr.value
-        },
-      ]
+      cmd: "init_score",
+      score: [{
+        status: "T1",
+        "time": this.refs.t1.value
+      }, {
+        status: "T2",
+        "time": this.refs.t2.value
+      }, {
+        status: "T3",
+        "time": this.refs.t3.value
+      }, {
+        status: "TR",
+        "time": this.refs.tr.value
+      }, ]
     }
     this.props.api.send(d)
   },
@@ -208,6 +201,6 @@ var api = new Api()
 render((
   <ApiView api={api}>
   </ApiView>
-), document.getElementById('api'), function(){
+), document.getElementById('api'), function() {
   console.log("render api")
 });
