@@ -1,5 +1,6 @@
 @import './global.css';
- div.root {} div.left {
+div.root {}
+div.left {
   float: left;
   width: 50%;
 }
