@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"log"
 	"net"
 	"os"
 	"strings"
@@ -24,7 +24,7 @@ type DeviceData struct {
 func main() {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Printf("Exception: %v\n", err)
+			log.Printf("Exception: %v\n", err)
 		}
 	}()
 	cmdChan := make(chan string, 1)
@@ -87,7 +87,7 @@ func start_listen_cmd(cmdChan chan string, d *DeviceData) {
 	for {
 		select {
 		case message := <-cmdChan:
-			fmt.Printf("Got cmd:%v, len:%v\n", message, len(message))
+			log.Printf("Got cmd:%v, len:%v\n", message, len(message))
 			if len(message) > 6 {
 				deviceId := message[3:6]
 				var conn *net.UDPConn
@@ -100,9 +100,9 @@ func start_listen_cmd(cmdChan chan string, d *DeviceData) {
 				if conn != nil && addr != nil {
 					_, err := conn.WriteToUDP([]byte(message), addr)
 					if err != nil {
-						fmt.Println("write to client error", err)
+						log.Println("write to client error", err)
 					} else {
-						fmt.Println(time.Now().String(), "send cmd to client:", message)
+						log.Println(time.Now().String(), "send cmd to client:", message)
 					}
 				}
 			}
@@ -113,12 +113,12 @@ func start_listen_cmd(cmdChan chan string, d *DeviceData) {
 func start_listen_UDP(d *DeviceData) {
 	UDPAddress, err := net.ResolveUDPAddr("udp", "192.168.188.5:"+HOST_PORT)
 	if err != nil {
-		fmt.Println("Resolve Server Local Adress Error", err.Error())
+		log.Println("Resolve Server Local Adress Error", err.Error())
 		os.Exit(1)
 	}
 	UDPConn, err := net.ListenUDP("udp", UDPAddress)
 	if err != nil {
-		fmt.Println("Listen UDP Error", err.Error())
+		log.Println("Listen UDP Error", err.Error())
 		os.Exit(1)
 	}
 	d.lock.Lock()
@@ -130,10 +130,10 @@ func start_listen_UDP(d *DeviceData) {
 		n, addr, err := UDPConn.ReadFromUDP(buf)
 		message := string(buf[0:n])
 		if !strings.HasPrefix(message, "HBT") {
-			fmt.Println(time.Now().String(), "server received", message, "from", addr)
+			log.Println(time.Now().String(), "server received", message, "from", addr)
 		}
 		if err != nil {
-			fmt.Println("Read Error", err)
+			log.Println("Read Error", err)
 		}
 		if len(message) >= 6 {
 			deviceId := message[3:6]

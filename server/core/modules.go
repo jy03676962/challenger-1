@@ -62,6 +62,7 @@ type SocketInput struct {
 
 type TCPOutput struct {
 	Client  *TCPClient
+	ID      string
 	Addr    string
 	Type    SocketEventType
 	Message *HubMap

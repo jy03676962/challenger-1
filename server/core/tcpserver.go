@@ -67,11 +67,11 @@ func (s *TCPServer) handleTCPOutput(output *TCPOutput) {
 	switch output.Type {
 	case S_Add:
 		log.Printf("add client:%v\n", output.Addr)
-		s.clients[output.Addr] = output.Client
+		s.clients[output.ID] = output.Client
 		s.sendAdd(output.Addr)
 	case S_Del:
 		log.Printf("del client:%v\n", output.Addr)
-		delete(s.clients, output.Addr)
+		delete(s.clients, output.ID)
 		s.sendDel(output.Addr)
 	case S_Msg:
 		s.handleTCPMessage(output)

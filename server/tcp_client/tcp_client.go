@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"strings"
@@ -12,7 +13,7 @@ import (
 func main() {
 	conn, err := net.Dial("tcp", "localhost:4040")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(1)
 	}
 	ch := make(chan string)
@@ -28,7 +29,7 @@ func main() {
 			m := map[string]string{"cmd": "upload_score", "score": "A"}
 			b, err := json.Marshal(m)
 			if err != nil {
-				fmt.Println("got error:", err.Error())
+				log.Println("got error:", err.Error())
 			}
 			s = string(b)
 		case "1":
@@ -51,18 +52,18 @@ func read(conn net.Conn, ch chan string) {
 	for {
 		b, err := r.ReadByte()
 		if err != nil {
-			fmt.Println("err:", err.Error())
+			log.Println("err:", err.Error())
 			os.Exit(1)
 		}
 		if b != 60 {
-			fmt.Println("hardware message must start with <")
+			log.Println("hardware message must start with <")
 			os.Exit(1)
 		}
 		msg := make([]byte, 0)
 		for {
 			b, err := r.ReadByte()
 			if err != nil {
-				fmt.Println("err:", err.Error())
+				log.Println("err:", err.Error())
 				os.Exit(1)
 			}
 			if b == 62 {
@@ -71,18 +72,18 @@ func read(conn net.Conn, ch chan string) {
 			msg = append(msg, b)
 		}
 		if len(msg) == 0 {
-			fmt.Println("got empty hardware message")
+			log.Println("got empty hardware message")
 			os.Exit(1)
 		}
 		msgStr := string(msg)
-		fmt.Println("got message: ", msgStr)
+		log.Println("got message: ", msgStr)
 	}
 }
 
 func write(conn net.Conn, ch chan string) {
 	for {
 		s := <-ch
-		fmt.Println("will send:", s)
+		log.Println("will send:", s)
 		fmt.Fprintf(conn, "<"+s+">")
 	}
 }

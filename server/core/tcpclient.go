@@ -3,6 +3,7 @@ package core
 import (
 	"bufio"
 	"encoding/json"
+	"github.com/satori/go.uuid"
 	"io"
 	"log"
 	"net"
@@ -13,6 +14,7 @@ var _ = log.Printf
 
 type TCPClient struct {
 	*Hub
+	id     string
 	conn   *net.TCPConn
 	reader *bufio.Reader
 	server *TCPServer
@@ -25,12 +27,17 @@ func NewTCPClient(conn *net.TCPConn, server *TCPServer) *TCPClient {
 	reader := bufio.NewReader(conn)
 	ch := make(chan *HubMap, channelBufSize)
 	doneCh := make(chan struct{})
+	id := uuid.NewV4().String()
 
-	return &TCPClient{server.Hub, conn, reader, server, ch, doneCh}
+	return &TCPClient{server.Hub, id, conn, reader, server, ch, doneCh}
 }
 
 func (c *TCPClient) Addr() string {
 	return c.conn.RemoteAddr().String()
+}
+
+func (c *TCPClient) ID() string {
+	return c.id
 }
 
 func (c *TCPClient) Write(msg *HubMap) {
@@ -73,6 +80,7 @@ func (c *TCPClient) listenRead() {
 				return
 			} else if err != nil {
 				c.err(err)
+				close(c.doneCh)
 			} else if msg != nil {
 				c.msg(msg)
 			}
@@ -82,6 +90,7 @@ func (c *TCPClient) listenRead() {
 
 func (c *TCPClient) add() bool {
 	e := TCPOutput{}
+	e.ID = c.ID()
 	e.Type = S_Add
 	e.Client = c
 	e.Addr = c.Addr()
@@ -90,6 +99,7 @@ func (c *TCPClient) add() bool {
 
 func (c *TCPClient) msg(msg *HubMap) bool {
 	e := TCPOutput{}
+	e.ID = c.ID()
 	e.Type = S_Msg
 	e.Client = c
 	e.Message = msg
@@ -99,6 +109,7 @@ func (c *TCPClient) msg(msg *HubMap) bool {
 
 func (c *TCPClient) del() bool {
 	e := TCPOutput{}
+	e.ID = c.ID()
 	e.Type = S_Del
 	e.Client = c
 	e.Addr = c.Addr()
@@ -107,6 +118,7 @@ func (c *TCPClient) del() bool {
 
 func (c *TCPClient) err(err error) bool {
 	e := TCPOutput{}
+	e.ID = c.ID()
 	e.Type = S_Err
 	e.Client = c
 	e.Addr = c.Addr()
