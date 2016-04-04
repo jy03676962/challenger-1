@@ -10,6 +10,8 @@
 		700C2F6C1CAD063B00E50049 /* ReplaceSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */; };
 		700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */; };
 		700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */; };
+		7095462C1CB237AD003A9065 /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462B1CB237AD003A9065 /* AutoKeyboardScrollView.framework */; };
+		7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462D1CB24211003A9065 /* HEXColor.framework */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
 		709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 709E979F1CAA850B00A6F1F2 /* Assets.xcassets */; };
@@ -21,6 +23,8 @@
 		700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplaceSegue.swift; sourceTree = "<group>"; };
 		700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLBaseViewController.swift; sourceTree = "<group>"; };
 		700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7095462B1CB237AD003A9065 /* AutoKeyboardScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AutoKeyboardScrollView.framework; path = ../Carthage/Build/iOS/AutoKeyboardScrollView.framework; sourceTree = "<group>"; };
+		7095462D1CB24211003A9065 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		709E979A1CAA850B00A6F1F2 /* StatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewController.swift; sourceTree = "<group>"; };
@@ -36,6 +40,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				709E97B61CAABAFF00A6F1F2 /* Masonry.framework in Frameworks */,
+				7095462C1CB237AD003A9065 /* AutoKeyboardScrollView.framework in Frameworks */,
+				7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +83,8 @@
 		709E97AC1CAA8C9F00A6F1F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7095462D1CB24211003A9065 /* HEXColor.framework */,
+				7095462B1CB237AD003A9065 /* AutoKeyboardScrollView.framework */,
 				709E97B51CAABAFF00A6F1F2 /* Masonry.framework */,
 			);
 			name = Frameworks;
@@ -157,6 +165,8 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Masonry.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/AutoKeyboardScrollView.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
 			);
 			outputPaths = (
 			);

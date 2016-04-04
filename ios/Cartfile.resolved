@@ -1,1 +1,3 @@
-github "SnapKit/Masonry" "v0.6.4"
+github "honghaoz/AutoKeyboardScrollView" "1.4.1"
+github "SnapKit/Masonry" "v1.0.0"
+github "yeahdongcn/UIColor-Hex-Swift" "2.1"

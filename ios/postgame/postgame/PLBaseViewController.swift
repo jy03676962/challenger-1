@@ -8,6 +8,7 @@
 
 import UIKit
 import Masonry
+import HEXColor
 
 class PLBaseViewController: UIViewController {
 
