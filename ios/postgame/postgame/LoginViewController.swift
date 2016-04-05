@@ -27,6 +27,12 @@ class LoginViewController: PLBaseViewController {
 		}
 	}
 
+	func login() {
+	}
+
+	func skip() {
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupViews()
@@ -85,6 +91,8 @@ class LoginViewController: PLBaseViewController {
 		skipButton.setImage(UIImage(named: "SkipButtonEnabled"), forState: .Normal)
 		skipButton.setImage(UIImage(named: "SkipButtonDisabled"), forState: .Disabled)
 		loginButton.enabled = false
+		loginButton.addTarget(self, action: #selector(LoginViewController.login), forControlEvents: .TouchUpInside)
+		skipButton.addTarget(self, action: #selector(LoginViewController.skip), forControlEvents: .TouchUpInside)
 
 		// contraints
 		scrollView.mas_makeConstraints({ m in

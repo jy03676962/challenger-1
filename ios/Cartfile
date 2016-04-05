@@ -1,3 +1,4 @@
 github "SnapKit/Masonry"
 github "honghaoz/AutoKeyboardScrollView"
 github "yeahdongcn/UIColor-Hex-Swift" >= 2.1
+github "Alamofire/Alamofire" ~> 3.0
