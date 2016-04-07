@@ -1,4 +1,4 @@
-github "Alamofire/Alamofire" "3.3.0"
-github "honghaoz/AutoKeyboardScrollView" "1.4.1"
+github "Alamofire/Alamofire" "3.3.1"
+github "honghaoz/AutoKeyboardScrollView" "1.4.2"
 github "SnapKit/Masonry" "v1.0.0"
 github "yeahdongcn/UIColor-Hex-Swift" "2.1"

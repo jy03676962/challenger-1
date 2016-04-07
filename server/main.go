@@ -34,11 +34,13 @@ func main() {
 	go api.Run()
 	e := echo.New()
 	e.Use(mw.Static("public"))
+	e.Use(mw.Logger())
 	e.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		srv.OnConnected(ws)
 	})))
 	e.Get("/api", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		srv.OnApiConnected(ws)
 	})))
+	core.SetupRoute(e)
 	e.Run(st.New(HOST))
 }

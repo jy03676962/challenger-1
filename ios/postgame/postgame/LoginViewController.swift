@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Alamofire
 import AutoKeyboardScrollView
 
-class LoginViewController: PLBaseViewController {
+class LoginViewController: PLBaseViewController, UIGestureRecognizerDelegate {
 
 	var usernameTextField: UITextField?
 	var passwordTextField: UITextField?
@@ -28,9 +29,18 @@ class LoginViewController: PLBaseViewController {
 	}
 
 	func login() {
+		let parameters: [String: AnyObject] = [
+			"username": usernameTextField!.text!,
+			"password": passwordTextField!.text!
+		]
+		Alamofire.request(.POST, "\(Constants.host)/login", parameters: parameters)
+			.responseJSON { response in
+				print(response)
+		}
 	}
 
 	func skip() {
+		print("skip")
 	}
 
 	override func viewDidLoad() {
@@ -56,21 +66,20 @@ class LoginViewController: PLBaseViewController {
 
 	private func setupViews() {
 		let textFieldHeight: CGFloat = 35
+		let xOffsetButton: CGFloat = 10
 		let minMargin: CGFloat = 140.0
 		let buttonSize = UIImage(named: "LoginButtonEnabled")!.size
 		let scrollView = AutoKeyboardScrollView()
 		let usernameTextField = UITextField()
 		let passwordTextField = UITextField()
-		let buttonContainer = UIView()
 		let loginButton = UIButton()
 		let skipButton = UIButton()
 		scrollView.backgroundColor = UIColor.clearColor()
 		view.addSubview(scrollView)
 		scrollView.contentView.addSubview(usernameTextField)
 		scrollView.contentView.addSubview(passwordTextField)
-		scrollView.contentView.addSubview(buttonContainer)
-		buttonContainer.addSubview(loginButton)
-		buttonContainer.addSubview(skipButton)
+		scrollView.contentView.addSubview(loginButton)
+		scrollView.contentView.addSubview(skipButton)
 		func styleTextField(tf: UITextField, ph: String) -> () {
 			tf.layer.borderColor = UIColor(rgba: "#4B6C87").CGColor
 			tf.layer.borderWidth = 1
@@ -86,13 +95,11 @@ class LoginViewController: PLBaseViewController {
 		styleTextField(usernameTextField, ph: "账号")
 		styleTextField(passwordTextField, ph: "密码")
 		passwordTextField.secureTextEntry = true
-		loginButton.setImage(UIImage(named: "LoginButtonEnabled"), forState: .Normal)
-		loginButton.setImage(UIImage(named: "LoginButtonDisabled"), forState: .Disabled)
-		skipButton.setImage(UIImage(named: "SkipButtonEnabled"), forState: .Normal)
-		skipButton.setImage(UIImage(named: "SkipButtonDisabled"), forState: .Disabled)
+		loginButton.setBackgroundImage(UIImage(named: "LoginButtonEnabled"), forState: .Normal)
+		loginButton.setBackgroundImage(UIImage(named: "LoginButtonDisabled"), forState: .Disabled)
+		skipButton.setBackgroundImage(UIImage(named: "SkipButtonEnabled"), forState: .Normal)
+		skipButton.setBackgroundImage(UIImage(named: "SkipButtonDisabled"), forState: .Disabled)
 		loginButton.enabled = false
-		loginButton.addTarget(self, action: #selector(LoginViewController.login), forControlEvents: .TouchUpInside)
-		skipButton.addTarget(self, action: #selector(LoginViewController.skip), forControlEvents: .TouchUpInside)
 
 		// contraints
 		scrollView.mas_makeConstraints({ m in
@@ -115,23 +122,21 @@ class LoginViewController: PLBaseViewController {
 		passwordTextField.mas_makeConstraints({ m in
 			m.top.equalTo()(usernameTextField.mas_bottom)
 		})
-		buttonContainer.mas_makeConstraints({ m in
-			m.centerX.equalTo()(scrollView)
-			m.top.equalTo()(passwordTextField.mas_bottom).with().offset()(50)
-		})
 		loginButton.mas_makeConstraints({ m in
-			m.top.equalTo()(buttonContainer)
-			m.left.equalTo()(buttonContainer)
+			m.top.equalTo()(passwordTextField.mas_bottom).offset()(50)
+			m.right.equalTo()(scrollView.mas_centerX).offset()(-10)
 			m.width.equalTo()(buttonSize.width)
 			m.height.equalTo()(buttonSize.height)
 		})
 		skipButton.mas_makeConstraints({ m in
-			m.left.equalTo()(loginButton.mas_right).with().offset()(15)
-			m.top.equalTo()(buttonContainer)
-			m.right.equalTo()(buttonContainer)
+			m.top.equalTo()(loginButton)
+			m.left.equalTo()(scrollView.mas_centerX).offset()(10)
 			m.width.equalTo()(buttonSize.width)
 			m.height.equalTo()(buttonSize.height)
 		})
+
+		loginButton.addTarget(self, action: #selector(LoginViewController.login), forControlEvents: .TouchUpInside)
+		skipButton.addTarget(self, action: #selector(LoginViewController.skip), forControlEvents: .TouchUpInside)
 
 		self.usernameTextField = usernameTextField
 		self.passwordTextField = passwordTextField
