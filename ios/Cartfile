@@ -3,3 +3,4 @@ github "honghaoz/AutoKeyboardScrollView"
 github "yeahdongcn/UIColor-Hex-Swift" >= 2.1
 github "Alamofire/Alamofire" ~> 3.0
 github "DaveWoodCom/XCGLogger" ~> 3.3
+github "SVProgressHUD/SVProgressHUD"

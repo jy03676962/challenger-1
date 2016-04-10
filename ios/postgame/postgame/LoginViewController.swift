@@ -10,17 +10,13 @@ import UIKit
 import Alamofire
 import AutoKeyboardScrollView
 
-class LoginViewController: PLBaseViewController, UIGestureRecognizerDelegate {
+class LoginViewController: PLBaseViewController {
 
 	var usernameTextField: UITextField?
 	var passwordTextField: UITextField?
 	var loginButton: UIButton?
 
-	override func backgroundImage() -> UIImage? {
-		return UIImage(named: "GlobalBackground")
-	}
-
-	func textFiledChanged(textField: UITextField) {
+	func formChanged(textField: UITextField) {
 		if usernameTextField?.text?.characters.count > 0 && passwordTextField?.text?.characters.count > 0 {
 			self.loginButton?.enabled = true
 		} else {
@@ -35,23 +31,23 @@ class LoginViewController: PLBaseViewController, UIGestureRecognizerDelegate {
 		]
 		Alamofire.request(.POST, "\(Constants.host)/login", parameters: parameters)
 			.responseJSON { response in
-				print(response)
+				if let JSON = response.result.value {
+					log.debug("\(JSON["username"]) has logined")
+				}
 		}
 	}
 
 	func skip() {
-		log.verbose("skip login")
+		log.debug("skip login")
 	}
+}
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		setupViews()
-	}
+// MARK: UIViewController
+extension LoginViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		navigationController?.navigationBar.hidden = true
-		let selector = #selector(LoginViewController.textFiledChanged)
+		let selector = #selector(LoginViewController.formChanged(_:))
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: UITextFieldTextDidChangeNotification, object: nil)
 	}
 
@@ -60,8 +56,9 @@ class LoginViewController: PLBaseViewController, UIGestureRecognizerDelegate {
 		NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: nil)
 	}
 
-	override func prefersStatusBarHidden() -> Bool {
-		return true
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		setupViews()
 	}
 
 	private func setupViews() {

@@ -324,6 +324,7 @@
 				);
 				INFOPLIST_FILE = postgame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.postgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
