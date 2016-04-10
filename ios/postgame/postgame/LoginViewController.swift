@@ -40,7 +40,7 @@ class LoginViewController: PLBaseViewController, UIGestureRecognizerDelegate {
 	}
 
 	func skip() {
-		print("skip")
+		log.verbose("skip login")
 	}
 
 	override func viewDidLoad() {
