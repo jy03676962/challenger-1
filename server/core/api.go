@@ -13,6 +13,7 @@ func SetupRoute(e *echo.Echo) {
 }
 
 func login(c echo.Context) error {
+	log.Printf("username:%v\n", c.FormParams())
 	info := make(map[string]string)
 	info["name"] = "tassar"
 	return c.JSON(http.StatusOK, info)

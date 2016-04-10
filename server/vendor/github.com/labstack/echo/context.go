@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"io"
 	"mime"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path"
@@ -51,11 +52,26 @@ type (
 		// ParamNames returns path parameter names.
 		ParamNames() []string
 
-		// Query returns query parameter by name.
-		Query(string) string
+		// QueryParam returns the query param for the provided name. It is an alias
+		// for `engine.URL#QueryParam()`.
+		QueryParam(string) string
 
-		// Form returns form parameter by name.
-		Form(string) string
+		// QueryParam returns the query parameters as map. It is an alias for `engine.URL#QueryParams()`.
+		QueryParams() map[string][]string
+
+		// FormValue returns the form field value for the provided name. It is an
+		// alias for `engine.Request#FormValue()`.
+		FormValue(string) string
+
+		// FormParams returns the form parameters as map. It is an alias for `engine.Request#FormParams()`.
+		FormParams() map[string][]string
+
+		// FormFile returns the multipart form file for the provided name. It is an
+		// alias for `engine.Request#FormFile()`.
+		FormFile(string) (*multipart.FileHeader, error)
+
+		// MultipartForm returns the multipart form. It is an alias for `engine.Request#MultipartForm()`.
+		MultipartForm() (*multipart.Form, error)
 
 		// Get retrieves data from the context.
 		Get(string) interface{}
@@ -63,8 +79,8 @@ type (
 		// Set saves data in the context.
 		Set(string, interface{})
 
-		// Bind binds the request body into provided type `i`. The default binder does
-		// it based on Content-Type header.
+		// Bind binds the request body into provided type `i`. The default binder
+		// does it based on Content-Type header.
 		Bind(interface{}) error
 
 		// Render renders a template with data and sends a text/html response with status
@@ -96,9 +112,9 @@ type (
 		// File sends a response with the content of the file.
 		File(string) error
 
-		// Attachment sends a response from `io.Reader` as attachment, prompting client
-		// to save the file.
-		Attachment(io.Reader, string) error
+		// Attachment sends a response from `io.ReaderSeeker` as attachment, prompting
+		// client to save the file.
+		Attachment(io.ReadSeeker, string) error
 
 		// NoContent sends a response with no body and a status code.
 		NoContent(int) error
@@ -109,14 +125,16 @@ type (
 		// Error invokes the registered HTTP error handler. Generally used by middleware.
 		Error(err error)
 
-		// Handler implements `Handler` interface.
-		Handle(Context) error
-
 		// Logger returns the `Logger` instance.
 		Logger() *log.Logger
 
 		// Echo returns the `Echo` instance.
 		Echo() *Echo
+
+		// ServeContent sends static content from `io.Reader` and handles caching
+		// via `If-Modified-Since` request header. It automatically sets `Content-Type`
+		// and `Last-Modified` response headers.
+		ServeContent(io.ReadSeeker, string, time.Time) error
 
 		// Object returns the `context` instance.
 		Object() *context
@@ -135,7 +153,7 @@ type (
 		pvalues    []string
 		query      url.Values
 		store      store
-		handler    Handler
+		handler    HandlerFunc
 		echo       *Echo
 	}
 
@@ -147,10 +165,10 @@ const (
 )
 
 // NewContext creates a Context object.
-func NewContext(req engine.Request, res engine.Response, e *Echo) Context {
+func NewContext(rq engine.Request, rs engine.Response, e *Echo) Context {
 	return &context{
-		request:  req,
-		response: res,
+		request:  rq,
+		response: rs,
 		echo:     e,
 		pvalues:  make([]string, *e.maxParam),
 		store:    make(store),
@@ -180,10 +198,6 @@ func (c *context) Err() error {
 
 func (c *context) Value(key interface{}) interface{} {
 	return c.netContext.Value(key)
-}
-
-func (c *context) Handle(ctx Context) error {
-	return c.handler.Handle(ctx)
 }
 
 func (c *context) Request() engine.Request {
@@ -221,12 +235,28 @@ func (c *context) ParamNames() []string {
 	return c.pnames
 }
 
-func (c *context) Query(name string) string {
-	return c.request.URL().QueryValue(name)
+func (c *context) QueryParam(name string) string {
+	return c.request.URL().QueryParam(name)
 }
 
-func (c *context) Form(name string) string {
+func (c *context) QueryParams() map[string][]string {
+	return c.request.URL().QueryParams()
+}
+
+func (c *context) FormValue(name string) string {
 	return c.request.FormValue(name)
+}
+
+func (c *context) FormParams() map[string][]string {
+	return c.request.FormParams()
+}
+
+func (c *context) FormFile(name string) (*multipart.FileHeader, error) {
+	return c.request.FormFile(name)
+}
+
+func (c *context) MultipartForm() (*multipart.Form, error) {
+	return c.request.MultipartForm()
 }
 
 func (c *context) Set(key string, val interface{}) {
@@ -252,21 +282,21 @@ func (c *context) Render(code int, name string, data interface{}) (err error) {
 	if err = c.echo.renderer.Render(buf, name, data, c); err != nil {
 		return
 	}
-	c.response.Header().Set(ContentType, TextHTMLCharsetUTF8)
+	c.response.Header().Set(HeaderContentType, MIMETextHTMLCharsetUTF8)
 	c.response.WriteHeader(code)
 	_, err = c.response.Write(buf.Bytes())
 	return
 }
 
 func (c *context) HTML(code int, html string) (err error) {
-	c.response.Header().Set(ContentType, TextHTMLCharsetUTF8)
+	c.response.Header().Set(HeaderContentType, MIMETextHTMLCharsetUTF8)
 	c.response.WriteHeader(code)
 	_, err = c.response.Write([]byte(html))
 	return
 }
 
 func (c *context) String(code int, s string) (err error) {
-	c.response.Header().Set(ContentType, TextPlainCharsetUTF8)
+	c.response.Header().Set(HeaderContentType, MIMETextPlainCharsetUTF8)
 	c.response.WriteHeader(code)
 	_, err = c.response.Write([]byte(s))
 	return
@@ -284,7 +314,7 @@ func (c *context) JSON(code int, i interface{}) (err error) {
 }
 
 func (c *context) JSONBlob(code int, b []byte) (err error) {
-	c.response.Header().Set(ContentType, ApplicationJSONCharsetUTF8)
+	c.response.Header().Set(HeaderContentType, MIMEApplicationJSONCharsetUTF8)
 	c.response.WriteHeader(code)
 	_, err = c.response.Write(b)
 	return
@@ -295,7 +325,7 @@ func (c *context) JSONP(code int, callback string, i interface{}) (err error) {
 	if err != nil {
 		return err
 	}
-	c.response.Header().Set(ContentType, ApplicationJavaScriptCharsetUTF8)
+	c.response.Header().Set(HeaderContentType, MIMEApplicationJavaScriptCharsetUTF8)
 	c.response.WriteHeader(code)
 	if _, err = c.response.Write([]byte(callback + "(")); err != nil {
 		return
@@ -319,7 +349,7 @@ func (c *context) XML(code int, i interface{}) (err error) {
 }
 
 func (c *context) XMLBlob(code int, b []byte) (err error) {
-	c.response.Header().Set(ContentType, ApplicationXMLCharsetUTF8)
+	c.response.Header().Set(HeaderContentType, MIMEApplicationXMLCharsetUTF8)
 	c.response.WriteHeader(code)
 	if _, err = c.response.Write([]byte(xml.Header)); err != nil {
 		return
@@ -329,9 +359,7 @@ func (c *context) XMLBlob(code int, b []byte) (err error) {
 }
 
 func (c *context) File(file string) error {
-	root, file := filepath.Split(file)
-	fs := http.Dir(root)
-	f, err := fs.Open(file)
+	f, err := os.Open(file)
 	if err != nil {
 		return ErrNotFound
 	}
@@ -340,19 +368,18 @@ func (c *context) File(file string) error {
 	fi, _ := f.Stat()
 	if fi.IsDir() {
 		file = path.Join(file, "index.html")
-		f, err = fs.Open(file)
+		f, err = os.Open(file)
 		if err != nil {
 			return ErrNotFound
 		}
 		fi, _ = f.Stat()
 	}
-
-	return ServeContent(c.Request(), c.Response(), f, fi)
+	return c.ServeContent(f, fi.Name(), fi.ModTime())
 }
 
-func (c *context) Attachment(r io.Reader, name string) (err error) {
-	c.response.Header().Set(ContentType, detectContentType(name))
-	c.response.Header().Set(ContentDisposition, "attachment; filename="+name)
+func (c *context) Attachment(r io.ReadSeeker, name string) (err error) {
+	c.response.Header().Set(HeaderContentType, ContentTypeByExtension(name))
+	c.response.Header().Set(HeaderContentDisposition, "attachment; filename="+name)
 	c.response.WriteHeader(http.StatusOK)
 	_, err = io.Copy(c.response, r)
 	return
@@ -367,7 +394,7 @@ func (c *context) Redirect(code int, url string) error {
 	if code < http.StatusMultipleChoices || code > http.StatusTemporaryRedirect {
 		return ErrInvalidRedirectCode
 	}
-	c.response.Header().Set(Location, url)
+	c.response.Header().Set(HeaderLocation, url)
 	c.response.WriteHeader(code)
 	return nil
 }
@@ -388,27 +415,37 @@ func (c *context) Object() *context {
 	return c
 }
 
-// ServeContent sends a response from `io.Reader`. It automatically sets the `Content-Type`
-// and `Last-Modified` headers.
-func ServeContent(req engine.Request, res engine.Response, f http.File, fi os.FileInfo) error {
-	res.Header().Set(ContentType, detectContentType(fi.Name()))
-	res.Header().Set(LastModified, fi.ModTime().UTC().Format(http.TimeFormat))
-	res.WriteHeader(http.StatusOK)
-	_, err := io.Copy(res, f)
+func (c *context) ServeContent(content io.ReadSeeker, name string, modtime time.Time) error {
+	rq := c.Request()
+	rs := c.Response()
+
+	if t, err := time.Parse(http.TimeFormat, rq.Header().Get(HeaderIfModifiedSince)); err == nil && modtime.Before(t.Add(1*time.Second)) {
+		rs.Header().Del(HeaderContentType)
+		rs.Header().Del(HeaderContentLength)
+		return c.NoContent(http.StatusNotModified)
+	}
+
+	rs.Header().Set(HeaderContentType, ContentTypeByExtension(name))
+	rs.Header().Set(HeaderLastModified, modtime.UTC().Format(http.TimeFormat))
+	rs.WriteHeader(http.StatusOK)
+	_, err := io.Copy(rs, content)
 	return err
 }
 
-func detectContentType(name string) (t string) {
+// ContentTypeByExtension returns the MIME type associated with the file based on
+// its extension. It returns `application/octet-stream` incase MIME type is not
+// found.
+func ContentTypeByExtension(name string) (t string) {
 	if t = mime.TypeByExtension(filepath.Ext(name)); t == "" {
-		t = OctetStream
+		t = MIMEOctetStream
 	}
 	return
 }
 
-func (c *context) Reset(req engine.Request, res engine.Response) {
+func (c *context) Reset(rq engine.Request, rs engine.Response) {
 	c.netContext = nil
-	c.request = req
-	c.response = res
+	c.request = rq
+	c.response = rs
 	c.query = nil
 	c.store = nil
 	c.handler = notFoundHandler

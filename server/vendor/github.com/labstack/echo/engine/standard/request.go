@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/engine"
+	"github.com/labstack/gommon/log"
 )
 
 type (
@@ -14,17 +15,18 @@ type (
 		*http.Request
 		url    engine.URL
 		header engine.Header
+		logger *log.Logger
 	}
 )
 
-// TLS implements `engine.Request#TLS` function.
-func (r *Request) TLS() bool {
+// IsTLS implements `engine.Request#TLS` function.
+func (r *Request) IsTLS() bool {
 	return r.Request.TLS != nil
 }
 
 // Scheme implements `engine.Request#Scheme` function.
 func (r *Request) Scheme() string {
-	if r.TLS() {
+	if r.IsTLS() {
 		return "https"
 	}
 	return "http"
@@ -56,6 +58,11 @@ func (r *Request) Header() engine.Header {
 // func ProtoMinor() int {
 // 	return r.request.ProtoMinor()
 // }
+
+// ContentLength implements `engine.Request#ContentLength` function.
+func (r *Request) ContentLength() int {
+	return int(r.Request.ContentLength)
+}
 
 // UserAgent implements `engine.Request#UserAgent` function.
 func (r *Request) UserAgent() string {
@@ -92,6 +99,14 @@ func (r *Request) FormValue(name string) string {
 	return r.Request.FormValue(name)
 }
 
+// FormParams implements `engine.Request#FormParams` function.
+func (r *Request) FormParams() map[string][]string {
+	if err := r.ParseForm(); err != nil {
+		r.logger.Error(err)
+	}
+	return map[string][]string(r.Request.PostForm)
+}
+
 // FormFile implements `engine.Request#FormFile` function.
 func (r *Request) FormFile(name string) (*multipart.FileHeader, error) {
 	_, fh, err := r.Request.FormFile(name)
@@ -100,12 +115,12 @@ func (r *Request) FormFile(name string) (*multipart.FileHeader, error) {
 
 // MultipartForm implements `engine.Request#MultipartForm` function.
 func (r *Request) MultipartForm() (*multipart.Form, error) {
-	err := r.Request.ParseMultipartForm(32 << 20) // 32 MB
+	err := r.ParseMultipartForm(32 << 20) // 32 MB
 	return r.Request.MultipartForm, err
 }
 
-func (r *Request) reset(req *http.Request, h engine.Header, u engine.URL) {
-	r.Request = req
+func (r *Request) reset(rq *http.Request, h engine.Header, u engine.URL) {
+	r.Request = rq
 	r.header = h
 	r.url = u
 }

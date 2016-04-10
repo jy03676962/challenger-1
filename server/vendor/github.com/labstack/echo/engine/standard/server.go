@@ -20,43 +20,49 @@ type (
 	}
 
 	pool struct {
-		request  sync.Pool
-		response sync.Pool
-		header   sync.Pool
-		url      sync.Pool
+		request         sync.Pool
+		response        sync.Pool
+		responseAdapter sync.Pool
+		header          sync.Pool
+		url             sync.Pool
 	}
 )
 
-// New returns an instance of `standard.Server` with provided listen address.
+// New returns `standard.Server` with provided listen address.
 func New(addr string) *Server {
 	c := engine.Config{Address: addr}
-	return NewFromConfig(c)
+	return WithConfig(c)
 }
 
-// NewFromTLS returns an instance of `standard.Server` from TLS config.
-func NewFromTLS(addr, certfile, keyfile string) *Server {
+// WithTLS returns `standard.Server` with TLS config.
+func WithTLS(addr, certfile, keyfile string) *Server {
 	c := engine.Config{
 		Address:     addr,
 		TLSCertfile: certfile,
 		TLSKeyfile:  keyfile,
 	}
-	return NewFromConfig(c)
+	return WithConfig(c)
 }
 
-// NewFromConfig returns an instance of `standard.Server` from config.
-func NewFromConfig(c engine.Config) (s *Server) {
+// WithConfig returns `standard.Server` with config.
+func WithConfig(c engine.Config) (s *Server) {
 	s = &Server{
 		Server: new(http.Server),
 		config: c,
 		pool: &pool{
 			request: sync.Pool{
 				New: func() interface{} {
-					return &Request{}
+					return &Request{logger: s.logger}
 				},
 			},
 			response: sync.Pool{
 				New: func() interface{} {
 					return &Response{logger: s.logger}
+				},
+			},
+			responseAdapter: sync.Pool{
+				New: func() interface{} {
+					return &responseAdapter{}
 				},
 			},
 			header: sync.Pool{
@@ -70,7 +76,7 @@ func NewFromConfig(c engine.Config) (s *Server) {
 				},
 			},
 		},
-		handler: engine.HandlerFunc(func(req engine.Request, res engine.Response) {
+		handler: engine.HandlerFunc(func(rq engine.Request, rs engine.Response) {
 			s.logger.Error("handler not set, use `SetHandler()` to set it.")
 		}),
 		logger: log.New("echo"),
@@ -113,56 +119,51 @@ func (s *Server) startCustomListener() error {
 // ServeHTTP implements `http.Handler` interface.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Request
-	req := s.pool.request.Get().(*Request)
-	reqHdr := s.pool.header.Get().(*Header)
-	reqURL := s.pool.url.Get().(*URL)
-	reqHdr.reset(r.Header)
-	reqURL.reset(r.URL)
-	req.reset(r, reqHdr, reqURL)
+	rq := s.pool.request.Get().(*Request)
+	rqHdr := s.pool.header.Get().(*Header)
+	rqURL := s.pool.url.Get().(*URL)
+	rqHdr.reset(r.Header)
+	rqURL.reset(r.URL)
+	rq.reset(r, rqHdr, rqURL)
 
 	// Response
-	res := s.pool.response.Get().(*Response)
-	resHdr := s.pool.header.Get().(*Header)
-	resHdr.reset(w.Header())
-	res.reset(w, resHdr)
+	rs := s.pool.response.Get().(*Response)
+	rsAdpt := s.pool.responseAdapter.Get().(*responseAdapter)
+	rsAdpt.reset(w, rs)
+	rsHdr := s.pool.header.Get().(*Header)
+	rsHdr.reset(w.Header())
+	rs.reset(w, rsAdpt, rsHdr)
 
-	s.handler.ServeHTTP(req, res)
+	s.handler.ServeHTTP(rq, rs)
 
-	s.pool.request.Put(req)
-	s.pool.header.Put(reqHdr)
-	s.pool.url.Put(reqURL)
-	s.pool.response.Put(res)
-	s.pool.header.Put(resHdr)
+	// Return to pool
+	s.pool.request.Put(rq)
+	s.pool.header.Put(rqHdr)
+	s.pool.url.Put(rqURL)
+	s.pool.response.Put(rs)
+	s.pool.header.Put(rsHdr)
 }
 
 // WrapHandler wraps `http.Handler` into `echo.HandlerFunc`.
 func WrapHandler(h http.Handler) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		w := &responseAdapter{
-			ResponseWriter: c.Response().(*Response).ResponseWriter,
-			writer:         c.Response(),
-		}
-		r := c.Request().(*Request).Request
-		h.ServeHTTP(w, r)
+		rq := c.Request().(*Request)
+		rs := c.Response().(*Response)
+		h.ServeHTTP(rs.ResponseWriter, rq.Request)
 		return nil
 	}
 }
 
 // WrapMiddleware wraps `func(http.Handler) http.Handler` into `echo.MiddlewareFunc`
 func WrapMiddleware(m func(http.Handler) http.Handler) echo.MiddlewareFunc {
-	return func(next echo.Handler) echo.Handler {
-		return echo.HandlerFunc(func(c echo.Context) (err error) {
-			req := c.Request().(*Request)
-			res := c.Response().(*Response)
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) (err error) {
+			rq := c.Request().(*Request)
+			rs := c.Response().(*Response)
 			m(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				res.ResponseWriter = &responseAdapter{
-					ResponseWriter: res.ResponseWriter,
-					writer:         c.Response(),
-				}
-				req.Request = r
-				err = next.Handle(c)
-			})).ServeHTTP(res.ResponseWriter, req.Request)
+				err = next(c)
+			})).ServeHTTP(rs.ResponseWriter, rq.Request)
 			return
-		})
+		}
 	}
 }

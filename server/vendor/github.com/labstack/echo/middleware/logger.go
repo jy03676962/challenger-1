@@ -10,28 +10,31 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/color"
-	"github.com/mattn/go-isatty"
+	isatty "github.com/mattn/go-isatty"
 	"github.com/valyala/fasttemplate"
 )
 
 type (
-	// LoggerConfig defines config for logger middleware.
-	//
+	// LoggerConfig defines the config for logger middleware.
 	LoggerConfig struct {
-		// Format is the log format.
+		// Format is the log format which can be constructed using the following tags:
 		//
-		// Example "${remote_id} ${status}"
-		// Available tags:
 		// - time_rfc3339
 		// - remote_ip
+		// - uri
 		// - method
 		// - path
 		// - status
 		// - response_time
 		// - response_size
+		//
+		// Example "${remote_id} ${status}"
+		//
+		// Optional with default value as `DefaultLoggerConfig.Format`.
 		Format string
 
-		// Output is the writer where logs are written. Default is `os.Stdout`.
+		// Output is the writer where logs are written.
+		// Optional with default value as os.Stdout.
 		Output io.Writer
 
 		template *fasttemplate.Template
@@ -42,7 +45,8 @@ type (
 var (
 	// DefaultLoggerConfig is the default logger middleware config.
 	DefaultLoggerConfig = LoggerConfig{
-		Format: "time=${time_rfc3339}, remote_ip=${remote_ip}, method=${method}, path=${path}, status=${status}, response_time=${response_time}, response_size=${response_size} bytes\n",
+		Format: "time=${time_rfc3339}, remote_ip=${remote_ip}, method=${method}, " +
+			"uri=${uri}, status=${status}, took=${response_time}, sent=${response_size} bytes\n",
 		color:  color.New(),
 		Output: os.Stdout,
 	}
@@ -50,77 +54,81 @@ var (
 
 // Logger returns a middleware that logs HTTP requests.
 func Logger() echo.MiddlewareFunc {
-	return LoggerFromConfig(DefaultLoggerConfig)
+	return LoggerWithConfig(DefaultLoggerConfig)
 }
 
-// LoggerFromConfig returns a logger middleware from config.
+// LoggerWithConfig returns a logger middleware from config.
 // See `Logger()`.
-func LoggerFromConfig(config LoggerConfig) echo.MiddlewareFunc {
+func LoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
+	// Defaults
+	if config.Format == "" {
+		config.Format = DefaultLoggerConfig.Format
+	}
+	if config.Output == nil {
+		config.Output = DefaultLoggerConfig.Output
+	}
+
 	config.template = fasttemplate.New(config.Format, "${", "}")
 	config.color = color.New()
 	if w, ok := config.Output.(*os.File); ok && !isatty.IsTerminal(w.Fd()) {
 		config.color.Disable()
 	}
 
-	return func(next echo.Handler) echo.Handler {
-		return echo.HandlerFunc(func(c echo.Context) (err error) {
-			req := c.Request()
-			res := c.Response()
-			remoteAddr := req.RemoteAddress()
-
-			if ip := req.Header().Get(echo.XRealIP); ip != "" {
-				remoteAddr = ip
-			} else if ip = req.Header().Get(echo.XForwardedFor); ip != "" {
-				remoteAddr = ip
-			} else {
-				remoteAddr, _, _ = net.SplitHostPort(remoteAddr)
-			}
-
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) (err error) {
+			rq := c.Request()
+			rs := c.Response()
 			start := time.Now()
-			if err := next.Handle(c); err != nil {
+			if err = next(c); err != nil {
 				c.Error(err)
 			}
 			stop := time.Now()
-			method := []byte(req.Method())
-			path := req.URL().Path()
-			if path == "" {
-				path = "/"
-			}
-			took := stop.Sub(start)
-			size := strconv.FormatInt(res.Size(), 10)
-
-			n := res.Status()
-			status := color.Green(n)
-			switch {
-			case n >= 500:
-				status = color.Red(n)
-			case n >= 400:
-				status = color.Yellow(n)
-			case n >= 300:
-				status = color.Cyan(n)
-			}
 
 			_, err = config.template.ExecuteFunc(config.Output, func(w io.Writer, tag string) (int, error) {
 				switch tag {
 				case "time_rfc3339":
 					return w.Write([]byte(time.Now().Format(time.RFC3339)))
 				case "remote_ip":
-					return w.Write([]byte(remoteAddr))
+					ra := rq.RemoteAddress()
+					if ip := rq.Header().Get(echo.HeaderXRealIP); ip != "" {
+						ra = ip
+					} else if ip = rq.Header().Get(echo.HeaderXForwardedFor); ip != "" {
+						ra = ip
+					} else {
+						ra, _, _ = net.SplitHostPort(ra)
+					}
+					return w.Write([]byte(ra))
+				case "uri":
+					return w.Write([]byte(rq.URI()))
 				case "method":
-					return w.Write(method)
+					return w.Write([]byte(rq.Method()))
 				case "path":
-					return w.Write([]byte(path))
+					p := rq.URL().Path()
+					if p == "" {
+						p = "/"
+					}
+					return w.Write([]byte(p))
 				case "status":
-					return w.Write([]byte(status))
+					n := rs.Status()
+					s := color.Green(n)
+					switch {
+					case n >= 500:
+						s = color.Red(n)
+					case n >= 400:
+						s = color.Yellow(n)
+					case n >= 300:
+						s = color.Cyan(n)
+					}
+					return w.Write([]byte(s))
 				case "response_time":
-					return w.Write([]byte(took.String()))
+					return w.Write([]byte(stop.Sub(start).String()))
 				case "response_size":
-					return w.Write([]byte(size))
+					return w.Write([]byte(strconv.FormatInt(rs.Size(), 10)))
 				default:
 					return w.Write([]byte(fmt.Sprintf("[unknown tag %s]", tag)))
 				}
 			})
 			return
-		})
+		}
 	}
 }

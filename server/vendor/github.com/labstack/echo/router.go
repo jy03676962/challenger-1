@@ -21,15 +21,15 @@ type (
 	kind          uint8
 	children      []*node
 	methodHandler struct {
-		connect Handler
-		delete  Handler
-		get     Handler
-		head    Handler
-		options Handler
-		patch   Handler
-		post    Handler
-		put     Handler
-		trace   Handler
+		connect HandlerFunc
+		delete  HandlerFunc
+		get     HandlerFunc
+		head    HandlerFunc
+		options HandlerFunc
+		patch   HandlerFunc
+		post    HandlerFunc
+		put     HandlerFunc
+		trace   HandlerFunc
 	}
 )
 
@@ -50,23 +50,8 @@ func NewRouter(e *Echo) *Router {
 	}
 }
 
-// Handle implements `echo.Middleware` which makes router a middleware.
-func (r *Router) Handle(next Handler) Handler {
-	return HandlerFunc(func(c Context) error {
-		method := c.Request().Method()
-		path := c.Request().URL().Path()
-		r.Find(method, path, c)
-		return next.Handle(c)
-	})
-}
-
-// Priority is super secret.
-func (r *Router) Priority() int {
-	return 0
-}
-
 // Add registers a new route for method and path with matching handler.
-func (r *Router) Add(method, path string, h Handler, e *Echo) {
+func (r *Router) Add(method, path string, h HandlerFunc, e *Echo) {
 	ppath := path        // Pristine path
 	pnames := []string{} // Param names
 
@@ -98,7 +83,7 @@ func (r *Router) Add(method, path string, h Handler, e *Echo) {
 	r.insert(method, path, h, skind, ppath, pnames, e)
 }
 
-func (r *Router) insert(method, path string, h Handler, t kind, ppath string, pnames []string, e *Echo) {
+func (r *Router) insert(method, path string, h HandlerFunc, t kind, ppath string, pnames []string, e *Echo) {
 	// Adjust max param
 	l := len(pnames)
 	if *e.maxParam < l {
@@ -229,7 +214,7 @@ func (n *node) findChildByKind(t kind) *node {
 	return nil
 }
 
-func (n *node) addHandler(method string, h Handler) {
+func (n *node) addHandler(method string, h HandlerFunc) {
 	switch method {
 	case GET:
 		n.methodHandler.get = h
@@ -252,7 +237,7 @@ func (n *node) addHandler(method string, h Handler) {
 	}
 }
 
-func (n *node) findHandler(method string) Handler {
+func (n *node) findHandler(method string) HandlerFunc {
 	switch method {
 	case GET:
 		return n.methodHandler.get
@@ -277,7 +262,7 @@ func (n *node) findHandler(method string) Handler {
 	}
 }
 
-func (n *node) check405() HandlerFunc {
+func (n *node) checkMethodNotAllowed() HandlerFunc {
 	for _, m := range methods {
 		if h := n.findHandler(m); h != nil {
 			return methodNotAllowedHandler
@@ -406,23 +391,26 @@ func (r *Router) Find(method, path string, context Context) {
 	}
 
 End:
+	ctx.handler = cn.findHandler(method)
 	ctx.path = cn.ppath
 	ctx.pnames = cn.pnames
-	ctx.handler = cn.findHandler(method)
 
 	// NOTE: Slow zone...
 	if ctx.handler == nil {
-		ctx.handler = cn.check405()
+		ctx.handler = cn.checkMethodNotAllowed()
 
 		// Dig further for any, might have an empty value for *, e.g.
 		// serving a directory. Issue #207.
 		if cn = cn.findChildByKind(akind); cn == nil {
 			return
 		}
-		ctx.pvalues[len(cn.pnames)-1] = ""
 		if ctx.handler = cn.findHandler(method); ctx.handler == nil {
-			ctx.handler = cn.check405()
+			ctx.handler = cn.checkMethodNotAllowed()
 		}
+		ctx.path = cn.ppath
+		ctx.pnames = cn.pnames
+		ctx.pvalues[len(cn.pnames)-1] = ""
 	}
+
 	return
 }

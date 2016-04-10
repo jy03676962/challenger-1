@@ -7,8 +7,9 @@ import (
 )
 
 type (
-	// BasicAuthConfig defines config for HTTP basic auth middleware.
+	// BasicAuthConfig defines the config for HTTP basic auth middleware.
 	BasicAuthConfig struct {
+		// AuthFunc is the function to validate basic auth credentials.
 		AuthFunc BasicAuthFunc
 	}
 
@@ -32,15 +33,15 @@ var (
 func BasicAuth(f BasicAuthFunc) echo.MiddlewareFunc {
 	c := DefaultBasicAuthConfig
 	c.AuthFunc = f
-	return BasicAuthFromConfig(c)
+	return BasicAuthWithConfig(c)
 }
 
-// BasicAuthFromConfig returns an HTTP basic auth middleware from config.
+// BasicAuthWithConfig returns an HTTP basic auth middleware from config.
 // See `BasicAuth()`.
-func BasicAuthFromConfig(config BasicAuthConfig) echo.MiddlewareFunc {
-	return func(next echo.Handler) echo.Handler {
-		return echo.HandlerFunc(func(c echo.Context) error {
-			auth := c.Request().Header().Get(echo.Authorization)
+func BasicAuthWithConfig(config BasicAuthConfig) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			auth := c.Request().Header().Get(echo.HeaderAuthorization)
 			l := len(basic)
 
 			if len(auth) > l+1 && auth[:l] == basic {
@@ -51,14 +52,14 @@ func BasicAuthFromConfig(config BasicAuthConfig) echo.MiddlewareFunc {
 						if cred[i] == ':' {
 							// Verify credentials
 							if config.AuthFunc(cred[:i], cred[i+1:]) {
-								return next.Handle(c)
+								return next(c)
 							}
 						}
 					}
 				}
 			}
-			c.Response().Header().Set(echo.WWWAuthenticate, basic+" realm=Restricted")
+			c.Response().Header().Set(echo.HeaderWWWAuthenticate, basic+" realm=Restricted")
 			return echo.ErrUnauthorized
-		})
+		}
 	}
 }

@@ -20,12 +20,20 @@ func (u *URL) SetPath(path string) {
 	u.URL.Path = path
 }
 
-// QueryValue implements `engine.URL#QueryValue` function.
-func (u *URL) QueryValue(name string) string {
+// QueryParam implements `engine.URL#QueryParam` function.
+func (u *URL) QueryParam(name string) string {
 	if u.query == nil {
 		u.query = u.Query()
 	}
 	return u.query.Get(name)
+}
+
+// QueryParams implements `engine.URL#QueryParams` function.
+func (u *URL) QueryParams() map[string][]string {
+	if u.query == nil {
+		u.query = u.Query()
+	}
+	return map[string][]string(u.query)
 }
 
 // QueryString implements `engine.URL#QueryString` function.
