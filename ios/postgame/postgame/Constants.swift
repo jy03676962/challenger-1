@@ -8,6 +8,11 @@
 
 import Foundation
 
-struct Constants {
+struct  PLConstants {
 	static let host = "http://localhost:3030"
+	static let usualFont = "Alien League Bold"
+}
+
+enum GameMode: Int {
+	case Fun = 1, Survival
 }

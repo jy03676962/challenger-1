@@ -10,6 +10,7 @@
 		700C2F6C1CAD063B00E50049 /* ReplaceSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */; };
 		700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */; };
 		700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */; };
+		700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */; };
 		7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462D1CB24211003A9065 /* HEXColor.framework */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
@@ -20,12 +21,15 @@
 		70B0EAFD1CB67667000560D9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B0EAFC1CB67667000560D9 /* Constants.swift */; };
 		70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */; };
 		70B0EB051CBA7384000560D9 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB041CBA7384000560D9 /* XCGLogger.framework */; };
+		70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */; };
+		70CBBFF71CBE8F0100008C5D /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplaceSegue.swift; sourceTree = "<group>"; };
 		700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLBaseViewController.swift; sourceTree = "<group>"; };
 		700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTableViewCell.swift; sourceTree = "<group>"; };
 		7095462D1CB24211003A9065 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -38,6 +42,8 @@
 		70B0EAFC1CB67667000560D9 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AutoKeyboardScrollView.framework; path = ../Carthage/Build/iOS/AutoKeyboardScrollView.framework; sourceTree = "<group>"; };
 		70B0EB041CBA7384000560D9 /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = ../Carthage/Build/iOS/XCGLogger.framework; sourceTree = "<group>"; };
+		70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = ../Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
+		70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +53,7 @@
 			files = (
 				70B0EAFB1CB3C1D8000560D9 /* Alamofire.framework in Frameworks */,
 				70B0EB051CBA7384000560D9 /* XCGLogger.framework in Frameworks */,
+				70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */,
 				70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */,
 				709E97B61CAABAFF00A6F1F2 /* Masonry.framework in Frameworks */,
 				7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */,
@@ -76,6 +83,7 @@
 		709E97971CAA850B00A6F1F2 /* postgame */ = {
 			isa = PBXGroup;
 			children = (
+				70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */,
 				709E97981CAA850B00A6F1F2 /* AppDelegate.swift */,
 				709E979A1CAA850B00A6F1F2 /* StatViewController.swift */,
 				709E979F1CAA850B00A6F1F2 /* Assets.xcassets */,
@@ -85,6 +93,7 @@
 				700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */,
 				700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */,
 				70B0EAFC1CB67667000560D9 /* Constants.swift */,
+				700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */,
 			);
 			path = postgame;
 			sourceTree = "<group>";
@@ -92,6 +101,7 @@
 		709E97AC1CAA8C9F00A6F1F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */,
 				70B0EB041CBA7384000560D9 /* XCGLogger.framework */,
 				70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */,
 				70B0EAFA1CB3C1D8000560D9 /* Alamofire.framework */,
@@ -135,6 +145,7 @@
 				TargetAttributes = {
 					709E97941CAA850B00A6F1F2 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 96HSW2ZXJP;
 					};
 				};
 			};
@@ -163,6 +174,7 @@
 			files = (
 				709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */,
 				709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */,
+				70CBBFF71CBE8F0100008C5D /* alienleaguebold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +192,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AutoKeyboardScrollView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XCGLogger.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework",
 			);
 			outputPaths = (
 			);
@@ -211,6 +224,7 @@
 				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
 				700C2F6C1CAD063B00E50049 /* ReplaceSegue.swift in Sources */,
+				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
 				700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */,
 				700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */,
 				70B0EAFD1CB67667000560D9 /* Constants.swift in Sources */,
@@ -318,6 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: xin xu (9YZZUBJ3ZD)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -325,7 +340,7 @@
 				INFOPLIST_FILE = postgame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.postgame;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.postgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -334,13 +349,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: xin xu (96HSW2ZXJP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: xin xu (96HSW2ZXJP)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = postgame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.postgame;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.postgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

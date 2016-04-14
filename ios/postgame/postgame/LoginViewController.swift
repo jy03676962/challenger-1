@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import AutoKeyboardScrollView
+import SVProgressHUD
 
 class LoginViewController: PLBaseViewController {
 
@@ -29,8 +30,10 @@ class LoginViewController: PLBaseViewController {
 			"username": usernameTextField!.text!,
 			"password": passwordTextField!.text!
 		]
-		Alamofire.request(.POST, "\(Constants.host)/login", parameters: parameters)
+		SVProgressHUD.show()
+		Alamofire.request(.POST, "\(PLConstants.host)/login", parameters: parameters)
 			.responseJSON { response in
+				SVProgressHUD.dismiss()
 				if let JSON = response.result.value {
 					log.debug("\(JSON["username"]) has logined")
 				}
@@ -39,6 +42,10 @@ class LoginViewController: PLBaseViewController {
 
 	func skip() {
 		log.debug("skip login")
+		var controllerStack = navigationController!.viewControllers;
+		let vc = StatViewController()
+		controllerStack[controllerStack.count - 1] = vc
+		navigationController?.setViewControllers(controllerStack, animated: true)
 	}
 }
 
@@ -80,8 +87,10 @@ extension LoginViewController {
 		func styleTextField(tf: UITextField, ph: String) -> () {
 			tf.layer.borderColor = UIColor(rgba: "#4B6C87").CGColor
 			tf.layer.borderWidth = 1
+			tf.font = UIFont(name: PLConstants.usualFont, size: 20)
 			tf.attributedPlaceholder = NSAttributedString(string: ph,
-				attributes: [NSForegroundColorAttributeName: UIColor(rgba: "#424242"),])
+				attributes: [NSForegroundColorAttributeName: UIColor(rgba: "#424242"),
+			])
 			tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
 			tf.leftViewMode = .Always
 			tf.clearButtonMode = .Always

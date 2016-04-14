@@ -6,6 +6,7 @@
 *.sublime-workspace
 .DS_Store
 *.zip
-*.log
 Carthage
 xcuserdata/
+log/
+games/
