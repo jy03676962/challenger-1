@@ -11,6 +11,9 @@
 		700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */; };
 		700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */; };
 		700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */; };
+		700E0DB21CBFF07200411559 /* CustomNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DB11CBFF07200411559 /* CustomNotification.swift */; };
+		700E0DB41CBFF11700411559 /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DB31CBFF11700411559 /* WsClient.swift */; };
+		700E0DB61CBFF50300411559 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700E0DB51CBFF50300411559 /* Starscream.framework */; };
 		7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462D1CB24211003A9065 /* HEXColor.framework */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
@@ -30,6 +33,9 @@
 		700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLBaseViewController.swift; sourceTree = "<group>"; };
 		700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTableViewCell.swift; sourceTree = "<group>"; };
+		700E0DB11CBFF07200411559 /* CustomNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNotification.swift; sourceTree = "<group>"; };
+		700E0DB31CBFF11700411559 /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
+		700E0DB51CBFF50300411559 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = ../Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		7095462D1CB24211003A9065 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +59,7 @@
 			files = (
 				70B0EAFB1CB3C1D8000560D9 /* Alamofire.framework in Frameworks */,
 				70B0EB051CBA7384000560D9 /* XCGLogger.framework in Frameworks */,
+				700E0DB61CBFF50300411559 /* Starscream.framework in Frameworks */,
 				70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */,
 				70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */,
 				709E97B61CAABAFF00A6F1F2 /* Masonry.framework in Frameworks */,
@@ -94,6 +101,8 @@
 				700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */,
 				70B0EAFC1CB67667000560D9 /* Constants.swift */,
 				700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */,
+				700E0DB11CBFF07200411559 /* CustomNotification.swift */,
+				700E0DB31CBFF11700411559 /* WsClient.swift */,
 			);
 			path = postgame;
 			sourceTree = "<group>";
@@ -101,6 +110,7 @@
 		709E97AC1CAA8C9F00A6F1F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				700E0DB51CBFF50300411559 /* Starscream.framework */,
 				70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */,
 				70B0EB041CBA7384000560D9 /* XCGLogger.framework */,
 				70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */,
@@ -193,6 +203,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/AutoKeyboardScrollView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XCGLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
 			);
 			outputPaths = (
 			);
@@ -226,6 +237,8 @@
 				700C2F6C1CAD063B00E50049 /* ReplaceSegue.swift in Sources */,
 				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
 				700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */,
+				700E0DB41CBFF11700411559 /* WsClient.swift in Sources */,
+				700E0DB21CBFF07200411559 /* CustomNotification.swift in Sources */,
 				700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */,
 				70B0EAFD1CB67667000560D9 /* Constants.swift in Sources */,
 			);

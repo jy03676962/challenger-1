@@ -44,6 +44,11 @@ func (s *Server) OnApiConnected(ws *websocket.Conn) {
 	client.Listen()
 }
 
+func (s *Server) OnClientConnected(ws *websocket.Conn) {
+	client := NewClient(ws, s, SG_Client)
+	client.Listen()
+}
+
 func (s *Server) handleSocketInput(i *SocketInput) {
 	var it map[int]*Client
 	if i.Group == SG_Game {

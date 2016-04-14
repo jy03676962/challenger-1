@@ -40,8 +40,9 @@ const (
 type SocketGroupType int
 
 const (
-	SG_Game SocketGroupType = iota
-	SG_Api  SocketGroupType = 1 << iota
+	SG_Game   SocketGroupType = iota
+	SG_Api    SocketGroupType = 1 << iota
+	SG_Client SocketGroupType = 2 << iota
 )
 
 type SocketOutput struct {

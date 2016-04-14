@@ -41,6 +41,9 @@ func main() {
 	e.Get("/api", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		srv.OnApiConnected(ws)
 	})))
+	e.Get("/client", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
+		srv.OnClientConnected(ws)
+	})))
 	core.SetupRoute(e)
 	e.Run(st.New(HOST))
 }

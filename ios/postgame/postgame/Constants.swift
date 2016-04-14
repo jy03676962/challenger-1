@@ -8,9 +8,20 @@
 
 import Foundation
 
-struct  PLConstants {
-	static let host = "http://localhost:3030"
+struct PLConstants {
+	static let host = "localhost:3030"
 	static let usualFont = "Alien League Bold"
+	static func getHost() -> String {
+		var result: String
+		if let h = NSUserDefaults.standardUserDefaults().stringForKey("host") {
+			result = h
+		}
+		result = host
+		if !result.hasPrefix("http:") {
+			result = "http://" + result
+		}
+		return result
+	}
 }
 
 enum GameMode: Int {
