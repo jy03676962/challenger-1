@@ -90,8 +90,10 @@ func (s *Server) handleSocketOutput(e *SocketOutput) {
 	case S_Msg:
 		if e.Group == SG_Game {
 			s.handleGameSocketMessage(e)
-		} else {
+		} else if e.Group == SG_Api {
 			s.handleApiSocketMessage(e)
+		} else if e.Group == SG_Client {
+			s.handleClientSocketMessage(e)
 		}
 	case S_Err:
 		log.Println("Error:", e.Error.Error())
@@ -110,14 +112,19 @@ func (s *Server) handleGameSocketMessage(e *SocketOutput) {
 }
 
 func (s *Server) handleApiSocketMessage(e *SocketOutput) {
-	i := TCPInput{}
-	i.Message = e.SocketMessage
+	i := TCPInput{Message: e.SocketMessage}
 	go func() {
 		select {
 		case s.TCPInputCh <- &i:
 		case <-s.TCPServerQuitCh:
 		}
 	}()
+}
+
+func (s *Server) handleClientSocketMessage(e *SocketOutput) {
+	msg := e.SocketMessage
+	if msg.GetCmd() == "query" {
+	}
 }
 
 func (s *Server) sendAll(msg *HubMap) {

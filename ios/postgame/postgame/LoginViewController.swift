@@ -40,19 +40,25 @@ class LoginViewController: PLBaseViewController {
 		}
 	}
 
-	func changeHost() {
-		let alert = UIAlertController(title: "设置HOST", message: nil, preferredStyle: .Alert)
+	func config() {
+		let alert = UIAlertController(title: "设置", message: nil, preferredStyle: .Alert)
 		alert.addTextFieldWithConfigurationHandler { (textfield) in
 			textfield.placeholder = "输入HOST"
+		}
+		alert.addTextFieldWithConfigurationHandler { textfield in
+			textfield.placeholder = "输入编号"
 		}
 		let cancelAction = UIAlertAction(title: "取消", style: .Cancel, handler: nil)
 		alert.addAction(cancelAction)
 		weak var weakAlert = alert
 		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
-			let tf = weakAlert?.textFields![0]
-			if let host = tf?.text {
+			if let host = weakAlert?.textFields![0].text {
 				NSUserDefaults.standardUserDefaults().setObject(host, forKey: "host")
 				NSNotificationCenter.defaultCenter().postNotificationKey(.HostChanged, object: nil)
+			}
+			if let num = weakAlert?.textFields![1].text {
+				let id = Int(num) ?? 0
+				NSUserDefaults.standardUserDefaults().setInteger(id, forKey: "id")
 			}
 		}
 		alert.addAction(doneAction)
@@ -97,14 +103,14 @@ extension LoginViewController {
 		let passwordTextField = UITextField()
 		let loginButton = UIButton()
 		let skipButton = UIButton()
-		let changeHostView = UIView()
+		let configView = UIView()
 		scrollView.backgroundColor = UIColor.clearColor()
 		view.addSubview(scrollView)
 		scrollView.contentView.addSubview(usernameTextField)
 		scrollView.contentView.addSubview(passwordTextField)
 		scrollView.contentView.addSubview(loginButton)
 		scrollView.contentView.addSubview(skipButton)
-		view.addSubview(changeHostView)
+		view.addSubview(configView)
 		func styleTextField(tf: UITextField, ph: String) -> () {
 			tf.layer.borderColor = UIColor(rgba: "#4B6C87").CGColor
 			tf.layer.borderWidth = 1
@@ -162,7 +168,7 @@ extension LoginViewController {
 			m.height.equalTo()(buttonSize.height)
 		})
 
-		changeHostView.mas_makeConstraints({ m in
+		configView.mas_makeConstraints({ m in
 			m.right.equalTo()(self.view.mas_right)
 			m.top.equalTo()(self.view.mas_top)
 			m.width.equalTo()(60)
@@ -172,9 +178,9 @@ extension LoginViewController {
 		loginButton.addTarget(self, action: #selector(LoginViewController.login), forControlEvents: .TouchUpInside)
 		skipButton.addTarget(self, action: #selector(LoginViewController.skip), forControlEvents: .TouchUpInside)
 
-		let gesture = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.changeHost))
+		let gesture = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.config))
 		gesture.numberOfTapsRequired = 2
-		changeHostView.addGestureRecognizer(gesture)
+		configView.addGestureRecognizer(gesture)
 
 		self.usernameTextField = usernameTextField
 		self.passwordTextField = passwordTextField

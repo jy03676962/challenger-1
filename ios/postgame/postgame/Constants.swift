@@ -12,15 +12,13 @@ struct PLConstants {
 	static let host = "localhost:3030"
 	static let usualFont = "Alien League Bold"
 	static func getHost() -> String {
-		var result: String
 		if let h = NSUserDefaults.standardUserDefaults().stringForKey("host") {
-			result = h
+			return h
 		}
-		result = host
-		if !result.hasPrefix("http:") {
-			result = "http://" + result
-		}
-		return result
+		return host
+	}
+	static func getWsAddress() -> String {
+		return "ws://" + getHost() + "/client"
 	}
 }
 

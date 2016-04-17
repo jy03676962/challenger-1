@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		navi.navigationBarHidden = true
 		self.window?.rootViewController = navi
 		self.window?.makeKeyAndVisible()
+		WsClient.singleton.connect()
 		return true
 	}
 

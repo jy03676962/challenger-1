@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		700C2F6C1CAD063B00E50049 /* ReplaceSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */; };
 		700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */; };
 		700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */; };
 		700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */; };
@@ -29,7 +28,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplaceSegue.swift; sourceTree = "<group>"; };
 		700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLBaseViewController.swift; sourceTree = "<group>"; };
 		700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTableViewCell.swift; sourceTree = "<group>"; };
@@ -96,7 +94,6 @@
 				709E979F1CAA850B00A6F1F2 /* Assets.xcassets */,
 				709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */,
 				709E97A41CAA850B00A6F1F2 /* Info.plist */,
-				700C2F6B1CAD063B00E50049 /* ReplaceSegue.swift */,
 				700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */,
 				700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */,
 				70B0EAFC1CB67667000560D9 /* Constants.swift */,
@@ -234,7 +231,6 @@
 			files = (
 				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
-				700C2F6C1CAD063B00E50049 /* ReplaceSegue.swift in Sources */,
 				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
 				700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */,
 				700E0DB41CBFF11700411559 /* WsClient.swift in Sources */,
