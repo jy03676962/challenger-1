@@ -49,9 +49,11 @@ class LoginViewController: UIViewController {
 		alert.addAction(doneAction)
 		presentViewController(alert, animated: true, completion: nil)
 	}
+
 	@IBAction func usernameEditEnd(sender: UITextField) {
 		passwordTextField.becomeFirstResponder()
 	}
+
 	@IBAction func passwordEditEnd(sender: UITextField) {
 		login()
 	}

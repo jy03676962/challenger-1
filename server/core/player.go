@@ -11,7 +11,7 @@ type Player struct {
 	Button         string  `json:"button"`
 	ButtonTime     float64 `json:"buttonTime"`
 	ButtonLevel    int     `json:"buttonLevel"`
-	Gold           float64 `json:"gold"`
+	Gold           int     `json:"gold"`
 	Energy         float64 `json:"energy"`
 	LevelData      [4]int  `json:"levelData"`
 	HitCount       int     `json:"hitCount"`

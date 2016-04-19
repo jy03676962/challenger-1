@@ -135,13 +135,13 @@ func (l *Laser) Tick(dt float64) {
 			shouldPause = true
 			player.InvincibleTime = l.getOpt().playerInvincibleTime
 			player.HitCount += 1
-			var punish float64
+			var punish int
 			if l.match.Mode == 1 {
-				punish = l.match.Gold * l.getOpt().mode1TouchPunish
+				punish = int(float64(l.match.Gold) * l.getOpt().mode1TouchPunish)
 			} else {
 				punish = l.getOpt().mode2TouchPunish
 			}
-			l.match.Gold = math.Max(l.match.Gold-punish, 0)
+			l.match.Gold = MaxInt(l.match.Gold-punish, 0)
 			player.Gold -= punish
 		}
 	}

@@ -24,7 +24,7 @@ type Match struct {
 	WarmupTime   float64         `json:"warmupTime"`
 	RampageTime  float64         `json:"rampageTime"`
 	Mode         int             `json:"mode"`
-	Gold         float64         `json:"gold"`
+	Gold         int             `json:"gold"`
 	Energy       float64         `json:"energy"`
 	OnButtons    map[string]bool `json:"onButtons"`
 	RampageCount int             `json:"rampageCount"`

@@ -20,10 +20,10 @@ type MatchOptions struct {
 	T2                float64    `json:"t2"`
 	T3                float64    `json:"t3"`
 	TRampage          float64    `json:"tRampage"`
-	GoldBonus         [2]float64 `json:"buttonBonus"`
+	GoldBonus         [2]int     `json:"buttonBonus"`
 	TouchPunish       [2]float64 `json:"touchPunish"`
-	Mode2InitGold     [4]float64 `json:"mode2InitGold"`
-	Mode2GoldDropRate [4]float64 `json:"mode2GoldDropRate"`
+	Mode2InitGold     [4]int     `json:"mode2InitGold"`
+	Mode2GoldDropRate [4]int     `json:"mode2GoldDropRate"`
 	MaxEnergy         float64    `json:"maxEnergy"`
 	Mode1TotalTime    float64    `json:"mode1TotalTime"`
 
@@ -48,7 +48,7 @@ type MatchOptions struct {
 	tileAdjacency         map[int][]int
 	playerInvincibleTime  float64
 	mode1TouchPunish      float64
-	mode2TouchPunish      float64
+	mode2TouchPunish      int
 	mode2GoldDropInterval float64
 }
 
@@ -70,10 +70,10 @@ func DefaultMatchOptions() *MatchOptions {
 	v.T3 = 2.5
 	v.TRampage = 1
 	v.playerSpeed = 200
-	v.GoldBonus = [2]float64{1, 1}
+	v.GoldBonus = [2]int{1, 1}
 	v.TouchPunish = [2]float64{30, 10}
-	v.Mode2InitGold = [4]float64{60, 90, 120, 150}
-	v.Mode2GoldDropRate = [4]float64{2, 3, 4, 5}
+	v.Mode2InitGold = [4]int{60, 90, 120, 150}
+	v.Mode2GoldDropRate = [4]int{2, 3, 4, 5}
 	v.MaxEnergy = 100
 	v.Mode1TotalTime = 60
 	v.laserSpeed = 0.25
