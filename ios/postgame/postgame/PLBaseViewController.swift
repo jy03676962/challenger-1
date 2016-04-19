@@ -12,9 +12,11 @@ import HEXColor
 
 class PLBaseViewController: UIViewController {
 
+	var backgroundImageName: String = "GlobalBackground"
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		if let image = self.backgroundImage() {
+		if let image = UIImage(named: backgroundImageName) {
 			let imageView = UIImageView()
 			imageView.image = image
 			view.insertSubview(imageView, atIndex: 0)
@@ -26,9 +28,5 @@ class PLBaseViewController: UIViewController {
 
 	override func prefersStatusBarHidden() -> Bool {
 		return true
-	}
-
-	func backgroundImage() -> UIImage? {
-		return UIImage(named: "GlobalBackground")
 	}
 }

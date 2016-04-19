@@ -8,11 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */; };
-		700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */; };
 		700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */; };
 		700E0DB21CBFF07200411559 /* CustomNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DB11CBFF07200411559 /* CustomNotification.swift */; };
 		700E0DB41CBFF11700411559 /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DB31CBFF11700411559 /* WsClient.swift */; };
 		700E0DB61CBFF50300411559 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700E0DB51CBFF50300411559 /* Starscream.framework */; };
+		700E0DB81CC38EA900411559 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 700E0DB71CC38EA900411559 /* LoginViewController.xib */; };
+		700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBA1CC3936200411559 /* LoginTextField.swift */; };
+		700E0DBE1CC3966500411559 /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBD1CC3966500411559 /* UIView+IBInspectable.swift */; };
+		700E0DC21CC6266200411559 /* UIViewController+PL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DC11CC6266200411559 /* UIViewController+PL.swift */; };
 		7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462D1CB24211003A9065 /* HEXColor.framework */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
@@ -24,16 +27,20 @@
 		70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */; };
 		70B0EB051CBA7384000560D9 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB041CBA7384000560D9 /* XCGLogger.framework */; };
 		70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */; };
+		70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */; };
 		70CBBFF71CBE8F0100008C5D /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLBaseViewController.swift; sourceTree = "<group>"; };
-		700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTableViewCell.swift; sourceTree = "<group>"; };
 		700E0DB11CBFF07200411559 /* CustomNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNotification.swift; sourceTree = "<group>"; };
 		700E0DB31CBFF11700411559 /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
 		700E0DB51CBFF50300411559 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = ../Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
+		700E0DB71CC38EA900411559 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		700E0DBA1CC3936200411559 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
+		700E0DBD1CC3966500411559 /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
+		700E0DC11CC6266200411559 /* UIViewController+PL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+PL.swift"; sourceTree = "<group>"; };
 		7095462D1CB24211003A9065 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -47,6 +54,7 @@
 		70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AutoKeyboardScrollView.framework; path = ../Carthage/Build/iOS/AutoKeyboardScrollView.framework; sourceTree = "<group>"; };
 		70B0EB041CBA7384000560D9 /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = ../Carthage/Build/iOS/XCGLogger.framework; sourceTree = "<group>"; };
 		70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = ../Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
+		70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,6 +76,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		700E0DB91CC3920200411559 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				700E0DBA1CC3936200411559 /* LoginTextField.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		700E0DBC1CC3963300411559 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				700E0DBD1CC3966500411559 /* UIView+IBInspectable.swift */,
+				700E0DC11CC6266200411559 /* UIViewController+PL.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		709E978C1CAA850B00A6F1F2 = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +113,8 @@
 		709E97971CAA850B00A6F1F2 /* postgame */ = {
 			isa = PBXGroup;
 			children = (
+				700E0DBC1CC3963300411559 /* Extensions */,
+				700E0DB91CC3920200411559 /* Views */,
 				70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */,
 				709E97981CAA850B00A6F1F2 /* AppDelegate.swift */,
 				709E979A1CAA850B00A6F1F2 /* StatViewController.swift */,
@@ -95,7 +122,8 @@
 				709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */,
 				709E97A41CAA850B00A6F1F2 /* Info.plist */,
 				700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */,
-				700C2F6F1CAD0BFA00E50049 /* LoginViewController.swift */,
+				70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */,
+				700E0DB71CC38EA900411559 /* LoginViewController.xib */,
 				70B0EAFC1CB67667000560D9 /* Constants.swift */,
 				700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */,
 				700E0DB11CBFF07200411559 /* CustomNotification.swift */,
@@ -179,6 +207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				700E0DB81CC38EA900411559 /* LoginViewController.xib in Resources */,
 				709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */,
 				709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */,
 				70CBBFF71CBE8F0100008C5D /* alienleaguebold.ttf in Resources */,
@@ -229,14 +258,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */,
+				700E0DC21CC6266200411559 /* UIViewController+PL.swift in Sources */,
 				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
+				700E0DBE1CC3966500411559 /* UIView+IBInspectable.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
 				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
-				700C2F701CAD0BFA00E50049 /* LoginViewController.swift in Sources */,
 				700E0DB41CBFF11700411559 /* WsClient.swift in Sources */,
 				700E0DB21CBFF07200411559 /* CustomNotification.swift in Sources */,
 				700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */,
 				70B0EAFD1CB67667000560D9 /* Constants.swift in Sources */,
+				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
