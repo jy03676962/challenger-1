@@ -78,19 +78,3 @@ type Button struct {
 	Id string `json:"id"`
 	R  Rect   `json:"r"`
 }
-
-type PlayerData struct {
-	Name   string  `json:"name"`
-	Gold   int     `json:"gold"`
-	Energy float64 `json:"energy"`
-	Combo  int     `json:"combo"`
-	Grade  string  `json:"grade"`
-	Level  int     `json:"level"`
-}
-
-type MatchData struct {
-	Mode    int           `json:"mode"`
-	Elasped float64       `json:"elasped"`
-	Gold    float64       `json:"gold"`
-	Member  []*PlayerData `json:"member"`
-}

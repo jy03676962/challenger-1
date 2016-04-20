@@ -147,6 +147,7 @@ func (m *Match) checkRampage(sec float64) {
 
 func (m *Match) enterAfter() {
 	m.Stage = "after"
+	m.Hub.Db.saveMatch(m)
 }
 
 func (m *Match) sync() {
@@ -359,6 +360,7 @@ func (m *Match) consumeButton(btn string, player *Player) {
 			extra := 0.0
 			if player.Combo == 1 {
 				extra = m.Options.firstComboExtra
+				player.ComboCount += 1
 			} else if player.Combo > 1 {
 				extra = m.Options.comboExtra
 			}

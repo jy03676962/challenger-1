@@ -61,6 +61,7 @@ type Hub struct {
 	TCPServerQuitCh chan struct{}
 	MainQuitCh      chan struct{}
 	Options         *MatchOptions
+	Db              *DB
 }
 
 func NewHub() *Hub {

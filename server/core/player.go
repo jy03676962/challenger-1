@@ -15,8 +15,10 @@ type Player struct {
 	Energy         float64 `json:"energy"`
 	LevelData      [4]int  `json:"levelData"`
 	HitCount       int     `json:"hitCount"`
+	LostGold       int     `json:"lostgold"`
 	InvincibleTime float64 `json:"invincibleTime"`
 	Combo          int     `json:"combo"`
+	ComboCount     int     `json:"comboCount"`
 
 	moving      bool
 	lastButton  string

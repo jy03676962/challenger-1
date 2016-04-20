@@ -143,6 +143,7 @@ func (l *Laser) Tick(dt float64) {
 			}
 			l.match.Gold = MaxInt(l.match.Gold-punish, 0)
 			player.Gold -= punish
+			player.LostGold += punish
 		}
 	}
 	if shouldPause {

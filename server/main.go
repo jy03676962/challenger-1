@@ -15,6 +15,7 @@ import (
 
 const API string = "localhost:4040"
 const HOST string = "localhost:3030"
+const DB_PATH string = "./challenger.db"
 
 func main() {
 	logfileName := "log/" + time.Now().Local().Format("2006-01-02-15-04-05") + ".log"
@@ -23,8 +24,15 @@ func main() {
 		fmt.Println("error open log file", err)
 		os.Exit(1)
 	}
+	db := core.NewDb()
+	err := db.connect()
+	if err != nil {
+		fmt.Println("error open database", err)
+		os.Exit(1)
+	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 	hub := core.NewHub()
+	hub.Db = db
 	log.Println("start listen websocket:", HOST)
 	srv := core.NewServer(hub)
 	api := core.NewTCPServer(API, hub)
