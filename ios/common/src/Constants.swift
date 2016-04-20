@@ -17,8 +17,11 @@ struct PLConstants {
 		}
 		return host
 	}
-	static func getWsAddress() -> String {
+	static func getClientWsAddress() -> String {
 		return "ws://" + getHost() + "/client"
+	}
+	static func getAdminWsAddress() -> String {
+		return "ws://" + getHost() + "/admin"
 	}
 }
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import EasyPeasy
 import UIKit
 /*
  Pulupulu iOS项目中UIViewController的常用方法
@@ -21,9 +22,7 @@ extension UIViewController {
 			}
 			imageView!.image = image
 			view.insertSubview(imageView!, atIndex: 0)
-			imageView!.mas_makeConstraints { make in
-				make.edges.equalTo()(self.view)
-			}
+			imageView! <- Edges()
 		}
 	}
 }

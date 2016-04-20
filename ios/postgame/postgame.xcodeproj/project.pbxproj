@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */; };
 		700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */; };
-		700E0DB21CBFF07200411559 /* CustomNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DB11CBFF07200411559 /* CustomNotification.swift */; };
-		700E0DB41CBFF11700411559 /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DB31CBFF11700411559 /* WsClient.swift */; };
 		700E0DB61CBFF50300411559 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700E0DB51CBFF50300411559 /* Starscream.framework */; };
 		700E0DB81CC38EA900411559 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 700E0DB71CC38EA900411559 /* LoginViewController.xib */; };
 		700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBA1CC3936200411559 /* LoginTextField.swift */; };
@@ -21,21 +18,20 @@
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
 		709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 709E979F1CAA850B00A6F1F2 /* Assets.xcassets */; };
 		709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */; };
-		709E97B61CAABAFF00A6F1F2 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 709E97B51CAABAFF00A6F1F2 /* Masonry.framework */; };
 		70B0EAFB1CB3C1D8000560D9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EAFA1CB3C1D8000560D9 /* Alamofire.framework */; };
-		70B0EAFD1CB67667000560D9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B0EAFC1CB67667000560D9 /* Constants.swift */; };
 		70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */; };
 		70B0EB051CBA7384000560D9 /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB041CBA7384000560D9 /* XCGLogger.framework */; };
 		70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */; };
+		70B4DADF1CC7B2F800159C81 /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70B4DADA1CC7B2F800159C81 /* alienleaguebold.ttf */; };
+		70B4DAE01CC7B2F800159C81 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DADC1CC7B2F800159C81 /* Constants.swift */; };
+		70B4DAE11CC7B2F800159C81 /* CustomNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */; };
+		70B4DAE21CC7B2F800159C81 /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DADE1CC7B2F800159C81 /* WsClient.swift */; };
+		70B4DAFC1CC7B8F700159C81 /* EasyPeasy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B4DAFB1CC7B8F700159C81 /* EasyPeasy.framework */; };
 		70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */; };
-		70CBBFF71CBE8F0100008C5D /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLBaseViewController.swift; sourceTree = "<group>"; };
 		700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTableViewCell.swift; sourceTree = "<group>"; };
-		700E0DB11CBFF07200411559 /* CustomNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNotification.swift; sourceTree = "<group>"; };
-		700E0DB31CBFF11700411559 /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
 		700E0DB51CBFF50300411559 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = ../Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		700E0DB71CC38EA900411559 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		700E0DBA1CC3936200411559 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
@@ -48,14 +44,16 @@
 		709E979F1CAA850B00A6F1F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		709E97A21CAA850B00A6F1F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		709E97A41CAA850B00A6F1F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		709E97B51CAABAFF00A6F1F2 /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = ../Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 		70B0EAFA1CB3C1D8000560D9 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
-		70B0EAFC1CB67667000560D9 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AutoKeyboardScrollView.framework; path = ../Carthage/Build/iOS/AutoKeyboardScrollView.framework; sourceTree = "<group>"; };
 		70B0EB041CBA7384000560D9 /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = ../Carthage/Build/iOS/XCGLogger.framework; sourceTree = "<group>"; };
 		70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = ../Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
+		70B4DADA1CC7B2F800159C81 /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
+		70B4DADC1CC7B2F800159C81 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNotification.swift; sourceTree = "<group>"; };
+		70B4DADE1CC7B2F800159C81 /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
+		70B4DAFB1CC7B8F700159C81 /* EasyPeasy.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EasyPeasy.framework; path = ../Carthage/Build/iOS/EasyPeasy.framework; sourceTree = "<group>"; };
 		70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,9 +64,9 @@
 				70B0EAFB1CB3C1D8000560D9 /* Alamofire.framework in Frameworks */,
 				70B0EB051CBA7384000560D9 /* XCGLogger.framework in Frameworks */,
 				700E0DB61CBFF50300411559 /* Starscream.framework in Frameworks */,
+				70B4DAFC1CC7B8F700159C81 /* EasyPeasy.framework in Frameworks */,
 				70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */,
 				70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */,
-				709E97B61CAABAFF00A6F1F2 /* Masonry.framework in Frameworks */,
 				7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,21 +111,17 @@
 		709E97971CAA850B00A6F1F2 /* postgame */ = {
 			isa = PBXGroup;
 			children = (
+				70B4DAD81CC7B2F800159C81 /* common */,
 				700E0DBC1CC3963300411559 /* Extensions */,
 				700E0DB91CC3920200411559 /* Views */,
-				70CBBFF61CBE8F0100008C5D /* alienleaguebold.ttf */,
 				709E97981CAA850B00A6F1F2 /* AppDelegate.swift */,
 				709E979A1CAA850B00A6F1F2 /* StatViewController.swift */,
 				709E979F1CAA850B00A6F1F2 /* Assets.xcassets */,
 				709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */,
 				709E97A41CAA850B00A6F1F2 /* Info.plist */,
-				700C2F6D1CAD089000E50049 /* PLBaseViewController.swift */,
 				70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */,
 				700E0DB71CC38EA900411559 /* LoginViewController.xib */,
-				70B0EAFC1CB67667000560D9 /* Constants.swift */,
 				700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */,
-				700E0DB11CBFF07200411559 /* CustomNotification.swift */,
-				700E0DB31CBFF11700411559 /* WsClient.swift */,
 			);
 			path = postgame;
 			sourceTree = "<group>";
@@ -135,15 +129,43 @@
 		709E97AC1CAA8C9F00A6F1F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				70B4DAFB1CC7B8F700159C81 /* EasyPeasy.framework */,
 				700E0DB51CBFF50300411559 /* Starscream.framework */,
 				70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */,
 				70B0EB041CBA7384000560D9 /* XCGLogger.framework */,
 				70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */,
 				70B0EAFA1CB3C1D8000560D9 /* Alamofire.framework */,
 				7095462D1CB24211003A9065 /* HEXColor.framework */,
-				709E97B51CAABAFF00A6F1F2 /* Masonry.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		70B4DAD81CC7B2F800159C81 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				70B4DAD91CC7B2F800159C81 /* res */,
+				70B4DADB1CC7B2F800159C81 /* src */,
+			);
+			name = common;
+			path = ../../common;
+			sourceTree = "<group>";
+		};
+		70B4DAD91CC7B2F800159C81 /* res */ = {
+			isa = PBXGroup;
+			children = (
+				70B4DADA1CC7B2F800159C81 /* alienleaguebold.ttf */,
+			);
+			path = res;
+			sourceTree = "<group>";
+		};
+		70B4DADB1CC7B2F800159C81 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				70B4DADC1CC7B2F800159C81 /* Constants.swift */,
+				70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */,
+				70B4DADE1CC7B2F800159C81 /* WsClient.swift */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,10 +229,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70B4DADF1CC7B2F800159C81 /* alienleaguebold.ttf in Resources */,
 				700E0DB81CC38EA900411559 /* LoginViewController.xib in Resources */,
 				709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */,
 				709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */,
-				70CBBFF71CBE8F0100008C5D /* alienleaguebold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +245,7 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Masonry.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/EasyPeasy.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AutoKeyboardScrollView.framework",
@@ -263,12 +285,11 @@
 				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
 				700E0DBE1CC3966500411559 /* UIView+IBInspectable.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
+				70B4DAE11CC7B2F800159C81 /* CustomNotification.swift in Sources */,
 				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
-				700E0DB41CBFF11700411559 /* WsClient.swift in Sources */,
-				700E0DB21CBFF07200411559 /* CustomNotification.swift in Sources */,
-				700C2F6E1CAD089000E50049 /* PLBaseViewController.swift in Sources */,
-				70B0EAFD1CB67667000560D9 /* Constants.swift in Sources */,
+				70B4DAE21CC7B2F800159C81 /* WsClient.swift in Sources */,
 				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
+				70B4DAE01CC7B2F800159C81 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +400,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = postgame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.postgame;
@@ -397,6 +419,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = postgame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.postgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";

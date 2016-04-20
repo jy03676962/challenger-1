@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import AutoKeyboardScrollView
 import SVProgressHUD
+import EasyPeasy
 
 class LoginViewController: UIViewController {
 
@@ -103,12 +104,8 @@ extension LoginViewController {
 		scrollView.userInteractionEnabled = true
 		scrollView.bounces = true
 		scrollView.scrollEnabled = true
-		scrollView.mas_makeConstraints({ m in
-			m.edges.equalTo()(self.view)
-		})
-		wrapperView.mas_makeConstraints({ m in
-			m.edges.equalTo()(scrollView)
-		})
+		scrollView <- Edges()
+		wrapperView <- Edges()
 		scrollView.setTextMargin(175, forTextField: usernameTextField)
 		scrollView.setTextMargin(140, forTextField: passwordTextField)
 	}

@@ -11,11 +11,11 @@ import Starscream
 
 class WsClient {
 	static let singleton = WsClient()
-	private var socket: WebSocket
-	private var currentAddress: String
+	private var socket: WebSocket?
+	private var currentAddress: String?
 
 	@objc func onHostChanged(notif: NSNotification) {
-		socket.disconnect()
+		socket!.disconnect()
 	}
 
 	func onConnect() {
@@ -25,10 +25,10 @@ class WsClient {
 	func onDisconnect(error: NSError?) {
 		log.debug("socket disconnected:\(error?.localizedDescription)")
 		if error == nil {
-			socket.connect()
+			socket!.connect()
 		} else {
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), {
-				self.socket.connect()
+				self.socket!.connect()
 			})
 		}
 	}
@@ -38,21 +38,21 @@ class WsClient {
 	}
 
 	private init() {
-		currentAddress = PLConstants.getWsAddress()
-		socket = WebSocket(url: NSURL(string: currentAddress)!)
-		socket.onConnect = {
+	}
+
+	func connect(address: String) {
+		currentAddress = address
+		socket = WebSocket(url: NSURL(string: currentAddress!)!)
+		socket!.onConnect = {
 			self.onConnect()
 		}
-		socket.onDisconnect = { error in
+		socket!.onDisconnect = { error in
 			self.onDisconnect(error)
 		}
-		socket.onText = { text in
+		socket!.onText = { text in
 			self.onText(text)
 		}
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.onHostChanged(_:)), key: .HostChanged)
-	}
-
-	func connect() {
-		socket.connect()
+		socket!.connect()
 	}
 }
