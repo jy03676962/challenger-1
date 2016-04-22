@@ -25,7 +25,7 @@ func main() {
 		os.Exit(1)
 	}
 	db := core.NewDb()
-	err := db.connect()
+	err = db.Connect()
 	if err != nil {
 		fmt.Println("error open database", err)
 		os.Exit(1)

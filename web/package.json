@@ -52,6 +52,7 @@
   "dependencies": {
     "mobx": "^2.0.1",
     "mobx-react": "^3.0.1",
+    "npm-zepto": "^1.1.7",
     "react": "^0.14.6",
     "react-css-modules": "^3.7.5",
     "react-dom": "^0.14.6",

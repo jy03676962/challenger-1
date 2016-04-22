@@ -1,0 +1,5 @@
+@import './global.css';
+.root {
+  margin-top: 200px;
+  text-align: center;
+}

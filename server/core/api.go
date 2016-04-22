@@ -4,19 +4,29 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 var _ = log.Printf
 
 func SetupRoute(e *echo.Echo) {
-	e.Post("/login", echo.HandlerFunc(login))
-	e.Post("/latest", echo.HandlerFunc(latest))
+	e.Post("/api/addteam", echo.HandlerFunc(addTeam))
+	e.Post("/api/resetqueue", echo.HandlerFunc(resetQueue))
 }
 
-func login(c echo.Context) error {
-	return c.JSON(http.StatusOK, c.FormParams())
+func addTeam(c echo.Context) error {
+	count, _ := strconv.Atoi(c.Param("count"))
+	t, err := AddTeam(count)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, t)
 }
 
-func latest(c echo.Context) error {
-	return nil
+func resetQueue(c echo.Context) error {
+	err := ResetQueue()
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, nil)
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {observer} from 'mobx-react'
+import { observer } from 'mobx-react'
 
 const Hall = observer(React.createClass({
   render: function() {
@@ -32,7 +32,7 @@ const MatchView = observer(React.createClass({
     if (joined) {
       if (hoster == this.props.game.playerName) {
         actionComponent =
-        <div>
+          <div>
         <button onClick={this.startFunMode}>开始娱乐模式</button>
         <button onClick={this.startSurvivalMode}>开始生存模式</button>
         </div>
@@ -40,17 +40,17 @@ const MatchView = observer(React.createClass({
     } else {
       actionComponent = <button onClick={this.joinMatch}>加入</button>
     }
-    return(
+    return (
       <div>
-      <div style={{color:"red"}}>{"房主:" + hoster}</div>
+      <div style={{color:'red'}}>{'房主:' + hoster}</div>
       {
         match.member.map((member) =>{
-          return <div style={{color:"green"}} key={"player:"+member.name}>{member.name}</div>
+          return <div style={{color:'green'}} key={'player:'+member.name}>{member.name}</div>
         })
       }
       {actionComponent}
       </div>
-      )
+    )
   },
   startFunMode: function(e) {
     this.props.game.startMatch(1)

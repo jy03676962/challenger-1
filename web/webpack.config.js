@@ -6,8 +6,9 @@ var CleanWebpackPlugin = require('clean-webpack-plugin')
 module.exports = {
   devtool: 'eval',
   entry: {
-    app:'./src/app.jsx',
-    api:'./src/api.jsx',
+    app: './src/app.jsx',
+    api: './src/api.jsx',
+    front: './src/front.jsx',
   },
   output: {
     path: path.join(__dirname, 'dist/js'),
@@ -26,6 +27,11 @@ module.exports = {
       inject: false,
       filename: '../api.html'
     }),
+    new HtmlWebpackPlugin({
+      template: 'src/assets/front.ejs',
+      inject: false,
+      filename: '../front.html'
+    }),
     new CleanWebpackPlugin(['dist'])
   ],
   module: {
@@ -42,7 +48,7 @@ module.exports = {
       include: path.join(__dirname, 'src/styles')
     }, {
       test: /\.(png|jpg|gif)$/,
-      loader: "file-loader?name=../img/img-[hash:6].[ext]"
+      loader: 'file-loader?name=../img/img-[hash:6].[ext]'
     }]
   }
 };

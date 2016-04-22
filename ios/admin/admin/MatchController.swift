@@ -12,5 +12,6 @@ class MatchController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		setBackgroundImage("GlobalBackground")
 	}
 }

@@ -11,12 +11,12 @@
 		700E0DB61CBFF50300411559 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 700E0DB51CBFF50300411559 /* Starscream.framework */; };
 		700E0DB81CC38EA900411559 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 700E0DB71CC38EA900411559 /* LoginViewController.xib */; };
 		700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBA1CC3936200411559 /* LoginTextField.swift */; };
-		700E0DBE1CC3966500411559 /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBD1CC3966500411559 /* UIView+IBInspectable.swift */; };
-		700E0DC21CC6266200411559 /* UIViewController+PL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DC11CC6266200411559 /* UIViewController+PL.swift */; };
+		7079BC4F1CC9242F005878AE /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC4D1CC9242F005878AE /* UIView+IBInspectable.swift */; };
+		7079BC501CC9242F005878AE /* UIViewController+PL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC4E1CC9242F005878AE /* UIViewController+PL.swift */; };
+		7079BC571CC924CC005878AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7079BC561CC924CC005878AE /* Assets.xcassets */; };
 		7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462D1CB24211003A9065 /* HEXColor.framework */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
-		709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 709E979F1CAA850B00A6F1F2 /* Assets.xcassets */; };
 		709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */; };
 		70B0EAFB1CB3C1D8000560D9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EAFA1CB3C1D8000560D9 /* Alamofire.framework */; };
 		70B0EB011CB69FB3000560D9 /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB001CB69FB3000560D9 /* AutoKeyboardScrollView.framework */; };
@@ -35,13 +35,13 @@
 		700E0DB51CBFF50300411559 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = ../Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		700E0DB71CC38EA900411559 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		700E0DBA1CC3936200411559 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
-		700E0DBD1CC3966500411559 /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
-		700E0DC11CC6266200411559 /* UIViewController+PL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+PL.swift"; sourceTree = "<group>"; };
+		7079BC4D1CC9242F005878AE /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
+		7079BC4E1CC9242F005878AE /* UIViewController+PL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+PL.swift"; sourceTree = "<group>"; };
+		7079BC561CC924CC005878AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7095462D1CB24211003A9065 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		709E979A1CAA850B00A6F1F2 /* StatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewController.swift; sourceTree = "<group>"; };
-		709E979F1CAA850B00A6F1F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		709E97A21CAA850B00A6F1F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		709E97A41CAA850B00A6F1F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70B0EAFA1CB3C1D8000560D9 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
@@ -82,11 +82,11 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		700E0DBC1CC3963300411559 /* Extensions */ = {
+		7079BC4C1CC9242F005878AE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				700E0DBD1CC3966500411559 /* UIView+IBInspectable.swift */,
-				700E0DC11CC6266200411559 /* UIViewController+PL.swift */,
+				7079BC4D1CC9242F005878AE /* UIView+IBInspectable.swift */,
+				7079BC4E1CC9242F005878AE /* UIViewController+PL.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -112,11 +112,9 @@
 			isa = PBXGroup;
 			children = (
 				70B4DAD81CC7B2F800159C81 /* common */,
-				700E0DBC1CC3963300411559 /* Extensions */,
 				700E0DB91CC3920200411559 /* Views */,
 				709E97981CAA850B00A6F1F2 /* AppDelegate.swift */,
 				709E979A1CAA850B00A6F1F2 /* StatViewController.swift */,
-				709E979F1CAA850B00A6F1F2 /* Assets.xcassets */,
 				709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */,
 				709E97A41CAA850B00A6F1F2 /* Info.plist */,
 				70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */,
@@ -153,6 +151,7 @@
 		70B4DAD91CC7B2F800159C81 /* res */ = {
 			isa = PBXGroup;
 			children = (
+				7079BC561CC924CC005878AE /* Assets.xcassets */,
 				70B4DADA1CC7B2F800159C81 /* alienleaguebold.ttf */,
 			);
 			path = res;
@@ -161,6 +160,7 @@
 		70B4DADB1CC7B2F800159C81 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				7079BC4C1CC9242F005878AE /* Extensions */,
 				70B4DADC1CC7B2F800159C81 /* Constants.swift */,
 				70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */,
 				70B4DADE1CC7B2F800159C81 /* WsClient.swift */,
@@ -231,8 +231,8 @@
 			files = (
 				70B4DADF1CC7B2F800159C81 /* alienleaguebold.ttf in Resources */,
 				700E0DB81CC38EA900411559 /* LoginViewController.xib in Resources */,
+				7079BC571CC924CC005878AE /* Assets.xcassets in Resources */,
 				709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */,
-				709E97A01CAA850B00A6F1F2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +272,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "rm -rf ./Carthage\nln -s ../Carthage .";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -281,13 +282,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */,
-				700E0DC21CC6266200411559 /* UIViewController+PL.swift in Sources */,
 				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
-				700E0DBE1CC3966500411559 /* UIView+IBInspectable.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
 				70B4DAE11CC7B2F800159C81 /* CustomNotification.swift in Sources */,
 				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
 				70B4DAE21CC7B2F800159C81 /* WsClient.swift in Sources */,
+				7079BC501CC9242F005878AE /* UIViewController+PL.swift in Sources */,
+				7079BC4F1CC9242F005878AE /* UIView+IBInspectable.swift in Sources */,
 				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
 				70B4DAE01CC7B2F800159C81 /* Constants.swift in Sources */,
 			);
