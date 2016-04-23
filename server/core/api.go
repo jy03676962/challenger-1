@@ -16,7 +16,7 @@ func SetupRoute(e *echo.Echo) {
 
 func addTeam(c echo.Context) error {
 	count, _ := strconv.Atoi(c.Param("count"))
-	t, err := AddTeam(count)
+	t, err := AddTeamToQueue(count)
 	if err != nil {
 		return err
 	}

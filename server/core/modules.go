@@ -43,6 +43,7 @@ const (
 	SG_Game   SocketGroupType = iota
 	SG_Api    SocketGroupType = 1 << iota
 	SG_Client SocketGroupType = 2 << iota
+	SG_Admin  SocketGroupType = 3 << iota
 )
 
 type SocketOutput struct {

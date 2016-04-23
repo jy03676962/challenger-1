@@ -49,6 +49,11 @@ func (s *Server) OnClientConnected(ws *websocket.Conn) {
 	client.Listen()
 }
 
+func (s *Server) OnAdminConnected(ws *websocket.Conn) {
+	client := NewClient(ws, s, SG_Admin)
+	client.Listen()
+}
+
 func (s *Server) handleSocketInput(i *SocketInput) {
 	var it map[int]*Client
 	if i.Group == SG_Game {
@@ -94,6 +99,8 @@ func (s *Server) handleSocketOutput(e *SocketOutput) {
 			s.handleApiSocketMessage(e)
 		} else if e.Group == SG_Client {
 			s.handleClientSocketMessage(e)
+		} else if e.Group == SG_Admin {
+			s.handleAdminSocketMessage(e)
 		}
 	case S_Err:
 		log.Println("Error:", e.Error.Error())
@@ -122,6 +129,12 @@ func (s *Server) handleApiSocketMessage(e *SocketOutput) {
 }
 
 func (s *Server) handleClientSocketMessage(e *SocketOutput) {
+	msg := e.SocketMessage
+	if msg.GetCmd() == "query" {
+	}
+}
+
+func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	msg := e.SocketMessage
 	if msg.GetCmd() == "query" {
 	}

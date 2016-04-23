@@ -52,6 +52,9 @@ func main() {
 	e.Get("/client", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		srv.OnClientConnected(ws)
 	})))
+	e.Get("/admin", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
+		srv.OnAdminConnected(ws)
+	})))
 	core.SetupRoute(e)
 	e.Run(st.New(HOST))
 }
