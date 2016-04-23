@@ -11,6 +11,7 @@ import Alamofire
 import AutoKeyboardScrollView
 import SVProgressHUD
 import EasyPeasy
+import SwiftyUserDefaults
 
 class LoginViewController: UIViewController {
 
@@ -39,12 +40,12 @@ class LoginViewController: UIViewController {
 		weak var weakAlert = alert
 		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
 			if let host = weakAlert?.textFields![0].text {
-				NSUserDefaults.standardUserDefaults().setObject(host, forKey: "host")
+				Defaults[.host] = host
 				NSNotificationCenter.defaultCenter().postNotificationKey(.HostChanged, object: nil)
 			}
 			if let num = weakAlert?.textFields![1].text {
 				let id = Int(num) ?? 0
-				NSUserDefaults.standardUserDefaults().setInteger(id, forKey: "id")
+				Defaults[.deviceID] = Int(num) ?? 0
 			}
 		}
 		alert.addAction(doneAction)
@@ -61,16 +62,16 @@ class LoginViewController: UIViewController {
 
 	@IBAction func textFieldValueChanged(sender: UITextField) {
 		if usernameTextField.text?.characters.count > 0 && passwordTextField.text?.characters.count > 0 {
-			self.loginButton?.enabled = true
+			self.loginButton.enabled = true
 		} else {
-			self.loginButton?.enabled = false
+			self.loginButton.enabled = false
 		}
 	}
 
 	@IBAction func login() {
 		let parameters: [String: AnyObject] = [
-			"username": usernameTextField!.text!,
-			"password": passwordTextField!.text!
+			"username": usernameTextField.text!,
+			"password": passwordTextField.text!
 		]
 		SVProgressHUD.show()
 		Alamofire.request(.POST, "\(PLConstants.getHost())/login", parameters: parameters)

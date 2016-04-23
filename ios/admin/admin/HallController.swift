@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  HallController.swift
 //  admin
 //
 //  Created by tassar on 4/20/16.
@@ -7,15 +7,51 @@
 //
 
 import UIKit
+import UIScrollView_InfiniteScroll
 
 class HallController: UIViewController {
+	@IBOutlet weak var teamtableView: UITableView!
+	@IBOutlet weak var teamIDLabel: UILabel!
+
+	@IBOutlet weak var modeImageView: UIImageView!
+	@IBOutlet weak var modeLabel: UILabel!
+	@IBOutlet weak var playerNumberLabel: UILabel!
+	@IBOutlet weak var readyButton: UIButton!
+	@IBOutlet weak var startButton: UIButton!
+	var refreshControl: UIRefreshControl!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setBackgroundImage("GlobalBackground")
+		refreshControl = UIRefreshControl()
+		refreshControl.addTarget(self, action: #selector(HallController.refreshTeamData), forControlEvents: UIControlEvents.ValueChanged)
+		teamtableView.addSubview(refreshControl)
+		teamtableView.addInfiniteScrollWithHandler({ scrollView in
+			let tableView = scrollView as! UITableView
+			tableView.finishInfiniteScroll()
+		})
+	}
+	override func viewWillAppear(animated: Bool) {
+	}
+	func refreshTeamData() {
+		refreshControl.endRefreshing()
 	}
 	override func prefersStatusBarHidden() -> Bool {
 		return true
+	}
+	@IBAction func changeMode(sender: UITapGestureRecognizer) {
+	}
+	@IBAction func callTeam(sender: UIButton) {
+	}
+	@IBAction func delayTeam(sender: UIButton) {
+	}
+	@IBAction func addPlayer(sender: UIButton) {
+	}
+	@IBAction func removePlayer(sender: UIButton) {
+	}
+	@IBAction func ready(sender: UIButton) {
+	}
+	@IBAction func start(sender: AnyObject) {
 	}
 }
 
@@ -27,6 +63,6 @@ extension HallController: UITableViewDataSource, UITableViewDelegate {
 		return 1
 	}
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		return UITableViewCell()
+		return tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")!
 	}
 }

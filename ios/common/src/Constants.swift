@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import SwiftyUserDefaults
 
 struct PLConstants {
 	static let host = "localhost:3030"
 	static let usualFont = "Alien League Bold"
 	static func getHost() -> String {
-		if let h = NSUserDefaults.standardUserDefaults().stringForKey("host") {
+		if let h = Defaults[.host] {
 			return h
 		}
 		return host

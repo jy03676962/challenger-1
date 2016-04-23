@@ -8,14 +8,24 @@
 
 import Foundation
 import Starscream
+import SwiftyUserDefaults
 
 class WsClient {
 	static let singleton = WsClient()
 	private var socket: WebSocket?
-	private var currentAddress: String?
+	private var currentAddress: String? {
+		didSet {
+			if currentAddress == oldValue {
+				return
+			}
+			if socket!.isConnected {
+				socket!.disconnect()
+			}
+		}
+	}
 
 	@objc func onHostChanged(notif: NSNotification) {
-		socket!.disconnect()
+		currentAddress = Defaults[.host]
 	}
 
 	func onConnect() {
@@ -25,10 +35,10 @@ class WsClient {
 	func onDisconnect(error: NSError?) {
 		log.debug("socket disconnected:\(error?.localizedDescription)")
 		if error == nil {
-			socket!.connect()
+			doConnect()
 		} else {
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), {
-				self.socket!.connect()
+				self.doConnect()
 			})
 		}
 	}
@@ -40,8 +50,7 @@ class WsClient {
 	private init() {
 	}
 
-	func connect(address: String) {
-		currentAddress = address
+	func doConnect() {
 		socket = WebSocket(url: NSURL(string: currentAddress!)!)
 		socket!.onConnect = {
 			self.onConnect()
@@ -54,5 +63,9 @@ class WsClient {
 		}
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.onHostChanged(_:)), key: .HostChanged)
 		socket!.connect()
+	}
+
+	func connect(address: String) {
+		currentAddress = address
 	}
 }

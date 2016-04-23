@@ -15,6 +15,12 @@
 		7079BC541CC9243B005878AE /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */; };
 		7079BC551CC9243B005878AE /* UIViewController+PL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC531CC9243B005878AE /* UIViewController+PL.swift */; };
 		7079BC591CC924E9005878AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7079BC581CC924E9005878AE /* Assets.xcassets */; };
+		7079BC5C1CCB670C005878AE /* HallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */; };
+		7079BC5E1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC5D1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework */; };
+		7079BC601CCB87AA005878AE /* ConfigController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC5F1CCB87AA005878AE /* ConfigController.swift */; };
+		7079BC621CCB8C3A005878AE /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC611CCB8C3A005878AE /* AutoKeyboardScrollView.framework */; };
+		7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC631CCBC42C005878AE /* DefaultKeys.swift */; };
+		7079BC661CCBC45D005878AE /* SwiftyUserDefaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC651CCBC45D005878AE /* SwiftyUserDefaults.framework */; };
 		70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */; };
 		70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC61CC7B10A00159C81 /* HallController.swift */; };
 		70B4DAC91CC7B10A00159C81 /* MatchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC81CC7B10A00159C81 /* MatchController.swift */; };
@@ -36,6 +42,12 @@
 		7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
 		7079BC531CC9243B005878AE /* UIViewController+PL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+PL.swift"; sourceTree = "<group>"; };
 		7079BC581CC924E9005878AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HallTableViewCell.swift; sourceTree = "<group>"; };
+		7079BC5D1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIScrollView_InfiniteScroll.framework; path = ../Carthage/Build/iOS/UIScrollView_InfiniteScroll.framework; sourceTree = "<group>"; };
+		7079BC5F1CCB87AA005878AE /* ConfigController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigController.swift; sourceTree = "<group>"; };
+		7079BC611CCB8C3A005878AE /* AutoKeyboardScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AutoKeyboardScrollView.framework; path = ../Carthage/Build/iOS/AutoKeyboardScrollView.framework; sourceTree = "<group>"; };
+		7079BC631CCBC42C005878AE /* DefaultKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultKeys.swift; sourceTree = "<group>"; };
+		7079BC651CCBC45D005878AE /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = ../Carthage/Build/iOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
 		70B4DAC11CC7B10A00159C81 /* admin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = admin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70B4DAC61CC7B10A00159C81 /* HallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HallController.swift; sourceTree = "<group>"; };
@@ -55,6 +67,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7079BC661CCBC45D005878AE /* SwiftyUserDefaults.framework in Frameworks */,
+				7079BC621CCB8C3A005878AE /* AutoKeyboardScrollView.framework in Frameworks */,
+				7079BC5E1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework in Frameworks */,
 				7079BC451CC92268005878AE /* XCGLogger.framework in Frameworks */,
 				7079BC4B1CC92397005878AE /* EasyPeasy.framework in Frameworks */,
 				7079BC461CC92268005878AE /* HEXColor.framework in Frameworks */,
@@ -69,10 +84,19 @@
 		7079BC511CC9243B005878AE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				7079BC631CCBC42C005878AE /* DefaultKeys.swift */,
 				7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */,
 				7079BC531CC9243B005878AE /* UIViewController+PL.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7079BC5A1CCB66F1005878AE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		70B4DAB81CC7B10A00159C81 = {
@@ -96,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				70B4DAE31CC7B31700159C81 /* common */,
+				7079BC5A1CCB66F1005878AE /* Views */,
 				70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */,
 				70B4DAC61CC7B10A00159C81 /* HallController.swift */,
 				70B4DAC81CC7B10A00159C81 /* MatchController.swift */,
@@ -103,6 +128,7 @@
 				70B4DACA1CC7B10A00159C81 /* Main.storyboard */,
 				70B4DACF1CC7B10A00159C81 /* LaunchScreen.storyboard */,
 				70B4DAD21CC7B10A00159C81 /* Info.plist */,
+				7079BC5F1CCB87AA005878AE /* ConfigController.swift */,
 			);
 			path = admin;
 			sourceTree = "<group>";
@@ -140,6 +166,9 @@
 		70B4DAF01CC7B51A00159C81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7079BC651CCBC45D005878AE /* SwiftyUserDefaults.framework */,
+				7079BC611CCB8C3A005878AE /* AutoKeyboardScrollView.framework */,
+				7079BC5D1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework */,
 				7079BC4A1CC92397005878AE /* EasyPeasy.framework */,
 				7079BC401CC92268005878AE /* XCGLogger.framework */,
 				7079BC411CC92268005878AE /* HEXColor.framework */,
@@ -245,6 +274,9 @@
 				"$(SRCROOT)/Carthage/Build/iOS/XCGLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/HEXColor.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/EasyPeasy.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/UIScrollView_InfiniteScroll.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/AutoKeyboardScrollView.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftyUserDefaults.framework",
 			);
 			outputPaths = (
 			);
@@ -265,10 +297,13 @@
 				70B4DAED1CC7B31700159C81 /* WsClient.swift in Sources */,
 				70B4DAFE1CC7BD0200159C81 /* HistoryController.swift in Sources */,
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,
+				7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */,
 				70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */,
 				7079BC551CC9243B005878AE /* UIViewController+PL.swift in Sources */,
 				7079BC541CC9243B005878AE /* UIView+IBInspectable.swift in Sources */,
+				7079BC5C1CCB670C005878AE /* HallTableViewCell.swift in Sources */,
 				70B4DAEB1CC7B31700159C81 /* Constants.swift in Sources */,
+				7079BC601CCB87AA005878AE /* ConfigController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
