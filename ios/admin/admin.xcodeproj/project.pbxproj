@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70130ADD1CCBCF700081003E /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70130ADC1CCBCF700081003E /* SwiftyJSON.framework */; };
+		70130ADF1CCBD1540081003E /* PLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70130ADE1CCBD1540081003E /* PLViewController.swift */; };
 		7079BC451CC92268005878AE /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC401CC92268005878AE /* XCGLogger.framework */; };
 		7079BC461CC92268005878AE /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC411CC92268005878AE /* HEXColor.framework */; };
 		7079BC471CC92268005878AE /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC421CC92268005878AE /* Starscream.framework */; };
 		7079BC481CC92268005878AE /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC431CC92268005878AE /* SVProgressHUD.framework */; };
 		7079BC4B1CC92397005878AE /* EasyPeasy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC4A1CC92397005878AE /* EasyPeasy.framework */; };
 		7079BC541CC9243B005878AE /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */; };
-		7079BC551CC9243B005878AE /* UIViewController+PL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC531CC9243B005878AE /* UIViewController+PL.swift */; };
 		7079BC591CC924E9005878AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7079BC581CC924E9005878AE /* Assets.xcassets */; };
 		7079BC5C1CCB670C005878AE /* HallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */; };
 		7079BC5E1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC5D1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework */; };
@@ -34,13 +35,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		70130ADC1CCBCF700081003E /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = ../Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		70130ADE1CCBD1540081003E /* PLViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLViewController.swift; sourceTree = "<group>"; };
 		7079BC401CC92268005878AE /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = ../Carthage/Build/iOS/XCGLogger.framework; sourceTree = "<group>"; };
 		7079BC411CC92268005878AE /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		7079BC421CC92268005878AE /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = ../Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		7079BC431CC92268005878AE /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = ../Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
 		7079BC4A1CC92397005878AE /* EasyPeasy.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EasyPeasy.framework; path = ../Carthage/Build/iOS/EasyPeasy.framework; sourceTree = "<group>"; };
 		7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
-		7079BC531CC9243B005878AE /* UIViewController+PL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+PL.swift"; sourceTree = "<group>"; };
 		7079BC581CC924E9005878AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HallTableViewCell.swift; sourceTree = "<group>"; };
 		7079BC5D1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIScrollView_InfiniteScroll.framework; path = ../Carthage/Build/iOS/UIScrollView_InfiniteScroll.framework; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				7079BC451CC92268005878AE /* XCGLogger.framework in Frameworks */,
 				7079BC4B1CC92397005878AE /* EasyPeasy.framework in Frameworks */,
 				7079BC461CC92268005878AE /* HEXColor.framework in Frameworks */,
+				70130ADD1CCBCF700081003E /* SwiftyJSON.framework in Frameworks */,
 				7079BC471CC92268005878AE /* Starscream.framework in Frameworks */,
 				7079BC481CC92268005878AE /* SVProgressHUD.framework in Frameworks */,
 			);
@@ -86,7 +89,6 @@
 			children = (
 				7079BC631CCBC42C005878AE /* DefaultKeys.swift */,
 				7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */,
-				7079BC531CC9243B005878AE /* UIViewController+PL.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -159,6 +161,7 @@
 				70B4DAE71CC7B31700159C81 /* Constants.swift */,
 				70B4DAE81CC7B31700159C81 /* CustomNotification.swift */,
 				70B4DAE91CC7B31700159C81 /* WsClient.swift */,
+				70130ADE1CCBD1540081003E /* PLViewController.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 		70B4DAF01CC7B51A00159C81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				70130ADC1CCBCF700081003E /* SwiftyJSON.framework */,
 				7079BC651CCBC45D005878AE /* SwiftyUserDefaults.framework */,
 				7079BC611CCB8C3A005878AE /* AutoKeyboardScrollView.framework */,
 				7079BC5D1CCB71C9005878AE /* UIScrollView_InfiniteScroll.framework */,
@@ -277,6 +281,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/UIScrollView_InfiniteScroll.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AutoKeyboardScrollView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyUserDefaults.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
 			);
 			outputPaths = (
 			);
@@ -299,7 +304,7 @@
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,
 				7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */,
 				70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */,
-				7079BC551CC9243B005878AE /* UIViewController+PL.swift in Sources */,
+				70130ADF1CCBD1540081003E /* PLViewController.swift in Sources */,
 				7079BC541CC9243B005878AE /* UIView+IBInspectable.swift in Sources */,
 				7079BC5C1CCB670C005878AE /* HallTableViewCell.swift in Sources */,
 				70B4DAEB1CC7B31700159C81 /* Constants.swift in Sources */,

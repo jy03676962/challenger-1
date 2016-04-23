@@ -11,7 +11,7 @@ import AutoKeyboardScrollView
 import EasyPeasy
 import SwiftyUserDefaults
 
-class ConfigController: UIViewController {
+class ConfigController: PLViewController {
 
 	@IBOutlet weak var wrapperView: UIView!
 	@IBOutlet weak var hostTextField: UITextField!
@@ -26,14 +26,11 @@ class ConfigController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let scrollView = AutoKeyboardScrollView()
+		scrollView.backgroundColor = UIColor.clearColor()
 		view.addSubview(scrollView)
 		wrapperView.removeFromSuperview()
 		scrollView.addSubview(wrapperView)
 		scrollView <- Edges()
 		wrapperView <- Edges()
-	}
-
-	override func prefersStatusBarHidden() -> Bool {
-		return true
 	}
 }

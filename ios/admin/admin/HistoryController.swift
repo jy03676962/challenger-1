@@ -8,10 +8,9 @@
 
 import UIKit
 
-class HistoryController: UIViewController {
+class HistoryController: PLViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setBackgroundImage("GlobalBackground")
 	}
 }

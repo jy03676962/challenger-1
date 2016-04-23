@@ -15,7 +15,7 @@ class WsClient {
 	private var socket: WebSocket?
 	private var currentAddress: String? {
 		didSet {
-			if currentAddress == oldValue {
+			if currentAddress == oldValue || socket == nil {
 				return
 			}
 			if socket!.isConnected {

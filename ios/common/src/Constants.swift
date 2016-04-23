@@ -26,13 +26,6 @@ struct PLConstants {
 	}
 }
 
-/**
- @brief 不要用这里的做为ViewTag!!
- */
-struct ReservedViewTag {
-	static let vc_BackgroundImageView = 10001
-}
-
 enum GameMode: Int {
 	case Fun = 1, Survival
 }

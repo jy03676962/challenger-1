@@ -370,6 +370,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="bfQ-At-Vj9"/>
                                         </constraints>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -378,13 +379,15 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="9Fb-ex-hGs"/>
                                         </constraints>
-                                        <state key="normal" title="保存"/>
+                                        <state key="normal" title="保存">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
                                         <connections>
                                             <action selector="saveConfig" destination="G7o-3x-up7" eventType="touchUpInside" id="8gs-jq-G0y"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="15" id="IS4-kh-FBV"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="Ihj-3R-v99"/>
@@ -393,7 +396,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="uxj-jc-lX9" secondAttribute="trailing" id="E9x-Oi-WKO"/>
                             <constraint firstItem="uxj-jc-lX9" firstAttribute="top" secondItem="z8Z-ef-oxY" secondAttribute="bottom" id="ErL-ob-8rD"/>

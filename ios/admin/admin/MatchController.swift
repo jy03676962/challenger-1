@@ -8,10 +8,9 @@
 
 import UIKit
 
-class MatchController: UIViewController {
+class MatchController: PLViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setBackgroundImage("GlobalBackground")
 	}
 }

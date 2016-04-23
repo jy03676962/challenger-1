@@ -9,7 +9,7 @@
 import UIKit
 import UIScrollView_InfiniteScroll
 
-class HallController: UIViewController {
+class HallController: PLViewController {
 	@IBOutlet weak var teamtableView: UITableView!
 	@IBOutlet weak var teamIDLabel: UILabel!
 
@@ -22,7 +22,6 @@ class HallController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setBackgroundImage("GlobalBackground")
 		refreshControl = UIRefreshControl()
 		refreshControl.addTarget(self, action: #selector(HallController.refreshTeamData), forControlEvents: UIControlEvents.ValueChanged)
 		teamtableView.addSubview(refreshControl)
@@ -35,9 +34,6 @@ class HallController: UIViewController {
 	}
 	func refreshTeamData() {
 		refreshControl.endRefreshing()
-	}
-	override func prefersStatusBarHidden() -> Bool {
-		return true
 	}
 	@IBAction func changeMode(sender: UITapGestureRecognizer) {
 	}
