@@ -13,7 +13,7 @@ import SVProgressHUD
 import EasyPeasy
 import SwiftyUserDefaults
 
-class LoginViewController: UIViewController {
+class LoginViewController: PLViewController {
 
 	/*
 	 为什么要这个wrapperView看下面
@@ -96,7 +96,6 @@ extension LoginViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setBackgroundImage("GlobalBackground")
 		let scrollView = AutoKeyboardScrollView()
 		view.addSubview(scrollView)
 		wrapperView.removeFromSuperview()
@@ -109,9 +108,5 @@ extension LoginViewController {
 		wrapperView <- Edges()
 		scrollView.setTextMargin(175, forTextField: usernameTextField)
 		scrollView.setTextMargin(140, forTextField: passwordTextField)
-	}
-
-	override func prefersStatusBarHidden() -> Bool {
-		return true
 	}
 }

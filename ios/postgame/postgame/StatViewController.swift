@@ -34,7 +34,7 @@ let gameData: [String: Any] = [
 	]
 ]
 
-class StatViewController: UIViewController {
+class StatViewController: PLViewController {
 	var headerBackgroundView: UIImageView?
 	var QRImageView: UIImageView?
 	var timeLabel: UILabel?

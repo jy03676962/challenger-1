@@ -15,10 +15,12 @@ class WsClient {
 	private var socket: WebSocket?
 	private var currentAddress: String? {
 		didSet {
-			if currentAddress == oldValue || socket == nil {
+			if currentAddress == oldValue || currentAddress == nil {
 				return
 			}
-			if socket!.isConnected {
+			if socket == nil {
+				doConnect()
+			} else if socket!.isConnected {
 				socket!.disconnect()
 			}
 		}
@@ -30,10 +32,12 @@ class WsClient {
 
 	func onConnect() {
 		log.debug("socket connected")
+		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnected, object: nil)
 	}
 
 	func onDisconnect(error: NSError?) {
 		log.debug("socket disconnected:\(error?.localizedDescription)")
+		NSNotificationCenter.defaultCenter().postNotificationKey(.WsDisconnected, object: nil)
 		if error == nil {
 			doConnect()
 		} else {
@@ -63,6 +67,7 @@ class WsClient {
 		}
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.onHostChanged(_:)), key: .HostChanged)
 		socket!.connect()
+		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnecting, object: nil)
 	}
 
 	func connect(address: String) {

@@ -8,6 +8,7 @@
 
 import UIKit
 import UIScrollView_InfiniteScroll
+import SwiftyJSON
 
 class HallController: PLViewController {
 	@IBOutlet weak var teamtableView: UITableView!
@@ -19,6 +20,7 @@ class HallController: PLViewController {
 	@IBOutlet weak var readyButton: UIButton!
 	@IBOutlet weak var startButton: UIButton!
 	var refreshControl: UIRefreshControl!
+	var json: JSON?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -31,6 +33,9 @@ class HallController: PLViewController {
 		})
 	}
 	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		if json == nil {
+		}
 	}
 	func refreshTeamData() {
 		refreshControl.endRefreshing()

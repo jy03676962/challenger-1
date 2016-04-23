@@ -10,6 +10,9 @@ import Foundation
 
 public enum NotificationKey: String {
 	case HostChanged = "HostChangedNotification"
+	case WsConnected = "WsConnected"
+	case WsDisconnected = "WsDisconnected"
+	case WsConnecting = "WsConnecting"
 }
 
 extension NSNotificationCenter {

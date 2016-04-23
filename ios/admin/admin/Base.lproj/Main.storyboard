@@ -292,7 +292,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="大厅" image="first" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="大厅" id="acW-dT-cKf"/>
                     <connections>
                         <outlet property="modeImageView" destination="Wrt-xC-aqA" id="cTD-Bn-Jsp"/>
                         <outlet property="modeLabel" destination="LQv-Ga-QN3" id="M5C-Qh-vya"/>
@@ -325,7 +325,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="游戏" image="second" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" title="游戏" id="cPa-gy-q4n"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
@@ -450,7 +450,5 @@
         <image name="PrepareButton" width="30" height="30"/>
         <image name="RemovePlayer" width="30" height="30"/>
         <image name="StartMatchDisabled" width="30" height="30"/>
-        <image name="first" width="30" height="30"/>
-        <image name="second" width="30" height="30"/>
     </resources>
 </document>
