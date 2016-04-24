@@ -136,7 +136,7 @@ func (s *Server) handleClientSocketMessage(e *SocketOutput) {
 
 func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	msg := e.SocketMessage
-	if msg.GetCmd() == "query" {
+	if msg.GetCmd() == "init" {
 	}
 }
 

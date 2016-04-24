@@ -9,13 +9,25 @@ import (
 
 const initCursor = 2000
 
+type TeamStatus int
+
+const (
+	TS_Waiting  TeamStatus = iota
+	TS_Prepare  TeamStatus = 1 << iota
+	TS_Playing  TeamStatus = 2 << iota
+	TS_After    TeamStatus = 3 << iota
+	TS_Finished TeamStatus = 4 << iota
+)
+
 var _ = log.Printf
 
 var q = newQueue()
 
 type Team struct {
-	Size int `json:"size"`
-	ID   int `json:"id"`
+	Size       int        `json:"size"`
+	ID         int        `json:"id"`
+	DelayCount int        `json:"delayCount"`
+	Status     TeamStatus `json:"status"`
 }
 
 type Queue struct {
@@ -36,7 +48,7 @@ func AddTeamToQueue(teamSize int) (*Team, error) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	q.cur += 1
-	t := Team{Size: teamSize, ID: q.cur}
+	t := Team{Size: teamSize, ID: q.cur, Status: TS_Prepare}
 	q.li.PushBack(&t)
 	return &t, nil
 }
@@ -46,6 +58,14 @@ func ResetQueue() error {
 	defer q.lock.Unlock()
 	q.li.Init()
 	q.cur = initCursor
+	return nil
+}
+
+func EnterPrepare() error {
+	return nil
+}
+
+func EnterPlay() error {
 	return nil
 }
 
