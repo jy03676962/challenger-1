@@ -9,68 +9,82 @@
 import Foundation
 import Starscream
 import SwiftyUserDefaults
+import SwiftyJSON
 
 class WsClient {
 	static let singleton = WsClient()
+
+	private static let ERROR_WAIT_SECOND: UInt64 = 10
 	private var socket: WebSocket?
-	private var currentAddress: String? {
-		didSet {
-			if currentAddress == oldValue || currentAddress == nil {
-				return
-			}
-			if socket == nil {
-				doConnect()
-			} else if socket!.isConnected {
-				socket!.disconnect()
-			}
+	private var address: String?
+
+	func sendCmd(cmd: String) {
+		let json = JSON([
+			"cmd": cmd
+		])
+		sendJSON(json)
+	}
+
+	func sendJSON(json: JSON) {
+		let str = json.rawString(NSUTF8StringEncoding, options: [])!
+		socket!.writeString(str)
+	}
+
+	func connect(addr: String) {
+		if address == addr && socket != nil && socket!.isConnected {
+			return
 		}
-	}
-
-	@objc func onHostChanged(notif: NSNotification) {
-		currentAddress = Defaults[.host]
-	}
-
-	func onConnect() {
-		log.debug("socket connected")
-		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnected, object: nil)
-	}
-
-	func onDisconnect(error: NSError?) {
-		log.debug("socket disconnected:\(error?.localizedDescription)")
-		NSNotificationCenter.defaultCenter().postNotificationKey(.WsDisconnected, object: nil)
-		if error == nil {
+		address = addr
+		if socket == nil {
+			initSocket()
 			doConnect()
-		} else {
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), {
-				self.doConnect()
-			})
+		} else if socket!.isConnected {
+			socket!.disconnect()
 		}
-	}
-
-	func onText(text: String) {
-		log.debug("socket got:\(text)")
 	}
 
 	private init() {
 	}
 
-	func doConnect() {
-		socket = WebSocket(url: NSURL(string: currentAddress!)!)
-		socket!.onConnect = {
-			self.onConnect()
-		}
-		socket!.onDisconnect = { error in
-			self.onDisconnect(error)
-		}
-		socket!.onText = { text in
-			self.onText(text)
-		}
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.onHostChanged(_:)), key: .HostChanged)
+	private func initSocket() {
+		socket = WebSocket(url: NSURL(string: address!)!)
+		socket?.delegate = self
+	}
+
+	private func doConnect() {
 		socket!.connect()
 		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnecting, object: nil)
 	}
+}
 
-	func connect(address: String) {
-		currentAddress = address
+// MARK: websocket回调方法
+extension WsClient: WebSocketDelegate {
+
+	func websocketDidConnect(socket: WebSocket) {
+		log.debug("socket connected")
+		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnected, object: nil)
+		sendCmd("init")
+	}
+
+	func websocketDidReceiveData(socket: WebSocket, data: NSData) {
+	}
+
+	func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+		log.debug("socket disconnected:\(error?.localizedDescription)")
+		NSNotificationCenter.defaultCenter().postNotificationKey(.WsDisconnected, object: nil)
+		if socket.currentURL.absoluteString != address {
+			initSocket()
+		}
+		if error == nil {
+			doConnect()
+		} else {
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(WsClient.ERROR_WAIT_SECOND * NSEC_PER_SEC)), dispatch_get_main_queue(), {
+				self.doConnect()
+			})
+		}
+	}
+
+	func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+		log.debug("socket got:\(text)")
 	}
 }
