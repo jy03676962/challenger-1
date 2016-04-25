@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class HallTableViewCell: UITableViewCell {
 
+	@IBOutlet weak var teamIDLabel: UILabel!
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		backgroundColor = UIColor.clearColor()
@@ -19,5 +21,9 @@ class HallTableViewCell: UITableViewCell {
 		super.setSelected(selected, animated: animated)
 
 		// Configure the view for the selected state
+	}
+
+	func setData(dict: JSON) {
+		teamIDLabel.text = String(dict["id"].intValue)
 	}
 }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import UIScrollView_InfiniteScroll
 import SwiftyJSON
 
 class HallController: PLViewController {
@@ -20,24 +19,20 @@ class HallController: PLViewController {
 	@IBOutlet weak var readyButton: UIButton!
 	@IBOutlet weak var startButton: UIButton!
 	var refreshControl: UIRefreshControl!
-	var json: JSON?
+	var teams: [JSON]?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		refreshControl = UIRefreshControl()
 		refreshControl.addTarget(self, action: #selector(HallController.refreshTeamData), forControlEvents: UIControlEvents.ValueChanged)
 		teamtableView.addSubview(refreshControl)
-		teamtableView.addInfiniteScrollWithHandler({ scrollView in
-			let tableView = scrollView as! UITableView
-			tableView.finishInfiniteScroll()
-		})
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		DataManager.singleton.subscriptData([.HallData], receiver: self)
 	}
 	func refreshTeamData() {
-		refreshControl.endRefreshing()
+		DataManager.singleton.refreshData(.HallData)
 	}
 	@IBAction func changeMode(sender: UITapGestureRecognizer) {
 	}
@@ -57,18 +52,24 @@ class HallController: PLViewController {
 
 extension HallController: DataReceiver {
 	func onReceivedData(json: JSON, type: DataType) {
-		log.debug("got halldata:\(json)")
+		if type == .HallData {
+			teams = json["teams"].array
+			teamtableView.reloadData()
+			refreshControl.endRefreshing()
+		}
 	}
 }
 
 extension HallController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 1
+		return teams != nil ? teams!.count : 0
 	}
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		return 1
 	}
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		return tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")!
+		let cell = tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")! as! HallTableViewCell
+		cell.setData(teams![indexPath.row])
+		return cell
 	}
 }

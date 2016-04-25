@@ -32,7 +32,7 @@ const FrontView = CSSModules(observer(React.createClass({
     }
     $.post('/api/addteam', param, function(data) {
       if (data) {
-        front.number = data.num
+        front.number = data.id
       }
     })
   },

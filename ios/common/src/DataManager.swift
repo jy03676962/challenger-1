@@ -41,6 +41,10 @@ public class DataManager {
 		}
 	}
 
+	public func refreshData(type: DataType) {
+		WsClient.singleton.sendCmd(type.queryCmd)
+	}
+
 	private func dispatch() {
 	}
 

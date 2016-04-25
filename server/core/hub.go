@@ -64,6 +64,12 @@ type Hub struct {
 	Db              *DB
 }
 
+var hub = NewHub()
+
+func GetHub() *Hub {
+	return hub
+}
+
 func NewHub() *Hub {
 	hub := Hub{}
 	hub.MatchInputCh = make(chan *HubMap)

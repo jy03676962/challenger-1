@@ -139,7 +139,7 @@ func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	case "queryHallData":
 		data := NewHubMap()
 		data.SetCmd("HallData")
-		if teams := GetAllTeamsFromQueue(); teams != nil {
+		if teams := GetAllTeamsFromQueueWithLock(); teams != nil {
 			data.Set("teams", teams)
 		}
 		s.send(data, e.ID, SG_Admin)

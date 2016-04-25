@@ -9,6 +9,7 @@
         <mutableArray key="alienleaguebold.ttf">
             <string>AlienLeagueBold</string>
             <string>AlienLeagueBold</string>
+            <string>AlienLeagueBold</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -41,7 +42,7 @@
                                         <rect key="frame" x="0.0" y="28" width="660" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EjN-dm-CGv" id="7Sy-8x-a2H">
-                                            <rect key="frame" x="0.0" y="0.0" width="660" height="39.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="660" height="39"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HallTableCellBg" translatesAutoresizingMaskIntoConstraints="NO" id="RSQ-in-283">
@@ -51,14 +52,25 @@
                                                         <constraint firstAttribute="width" constant="656" id="cST-Oq-REQ"/>
                                                     </constraints>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ls5-eV-8fA">
+                                                    <rect key="frame" x="148" y="11" width="29" height="18"/>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="RSQ-in-283" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="GvG-2B-NIL"/>
                                                 <constraint firstItem="RSQ-in-283" firstAttribute="centerX" secondItem="7Sy-8x-a2H" secondAttribute="centerX" id="UJB-SD-0he"/>
+                                                <constraint firstItem="Ls5-eV-8fA" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="roZ-pO-iKw"/>
+                                                <constraint firstItem="Ls5-eV-8fA" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="140" id="t5f-xe-5tN"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="teamIDLabel" destination="Ls5-eV-8fA" id="gXR-EB-Ra7"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <variation key="default">
@@ -176,7 +188,7 @@
                                 <rect key="frame" x="720" y="218" width="254" height="128"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="玩家人数:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vUU-eg-qlT">
-                                        <rect key="frame" x="10" y="5" width="64.5" height="18"/>
+                                        <rect key="frame" x="10" y="5" width="65" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -193,7 +205,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zaJ-Gh-07s">
-                                        <rect key="frame" x="79" y="5" width="21.5" height="50"/>
+                                        <rect key="frame" x="80" y="5" width="22" height="50"/>
                                         <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="50"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>

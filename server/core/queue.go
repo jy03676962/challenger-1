@@ -46,10 +46,15 @@ func newQueue() *Queue {
 
 func AddTeamToQueue(teamSize int) (*Team, error) {
 	q.lock.Lock()
-	defer q.lock.Unlock()
 	q.cur += 1
 	t := Team{Size: teamSize, ID: q.cur, Status: TS_Prepare}
 	q.li.PushBack(&t)
+	msg := NewHubMap()
+	msg.SetCmd("HallData")
+	msg.Set("teams", GetAllTeamsFromQueue())
+	q.lock.Unlock()
+	socketInput := SocketInput{Broadcast: true, Group: SG_Admin, SocketMessage: msg}
+	GetHub().SocketInputCh <- &socketInput
 	return &t, nil
 }
 
@@ -69,9 +74,13 @@ func EnterPlay() error {
 	return nil
 }
 
-func GetAllTeamsFromQueue() []*Team {
+func GetAllTeamsFromQueueWithLock() []*Team {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
+	return GetAllTeamsFromQueue()
+}
+
+func GetAllTeamsFromQueue() []*Team {
 	result := make([]*Team, q.li.Len())
 	for e, i := q.li.Front(), 0; e != nil; e, i = e.Next(), i+1 {
 		result[i] = e.Value.(*Team)

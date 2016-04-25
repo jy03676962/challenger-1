@@ -31,7 +31,7 @@ func main() {
 		os.Exit(1)
 	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
-	hub := core.NewHub()
+	hub := core.GetHub()
 	hub.Db = db
 	log.Println("start listen websocket:", HOST)
 	srv := core.NewServer(hub)
