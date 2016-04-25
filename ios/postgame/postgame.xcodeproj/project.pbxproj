@@ -16,6 +16,7 @@
 		7079BC571CC924CC005878AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7079BC561CC924CC005878AE /* Assets.xcassets */; };
 		7079BC681CCBC48F005878AE /* SwiftyUserDefaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC671CCBC48F005878AE /* SwiftyUserDefaults.framework */; };
 		7079BC6A1CCBC4C6005878AE /* DefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC691CCBC4C6005878AE /* DefaultKeys.swift */; };
+		7080B8531CCE6A8E00E63CB5 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7080B8521CCE6A8E00E63CB5 /* DataManager.swift */; };
 		7095462E1CB24211003A9065 /* HEXColor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7095462D1CB24211003A9065 /* HEXColor.framework */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
 		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
@@ -41,6 +42,7 @@
 		7079BC561CC924CC005878AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7079BC671CCBC48F005878AE /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = ../Carthage/Build/iOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
 		7079BC691CCBC4C6005878AE /* DefaultKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultKeys.swift; sourceTree = "<group>"; };
+		7080B8521CCE6A8E00E63CB5 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		7095462D1CB24211003A9065 /* HEXColor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HEXColor.framework; path = ../Carthage/Build/iOS/HEXColor.framework; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				7079BC4C1CC9242F005878AE /* Extensions */,
 				70B4DADC1CC7B2F800159C81 /* Constants.swift */,
 				70B4DADE1CC7B2F800159C81 /* WsClient.swift */,
+				7080B8521CCE6A8E00E63CB5 /* DataManager.swift */,
 				70130AE01CCC00700081003E /* PLViewController.swift */,
 			);
 			path = src;
@@ -294,6 +297,7 @@
 				70B4DAE21CC7B2F800159C81 /* WsClient.swift in Sources */,
 				7079BC6A1CCBC4C6005878AE /* DefaultKeys.swift in Sources */,
 				7079BC4F1CC9242F005878AE /* UIView+IBInspectable.swift in Sources */,
+				7080B8531CCE6A8E00E63CB5 /* DataManager.swift in Sources */,
 				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
 				70B4DAE01CC7B2F800159C81 /* Constants.swift in Sources */,
 			);
@@ -399,7 +403,6 @@
 		709E97A81CAA850B00A6F1F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer: xin xu (9YZZUBJ3ZD)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -417,7 +420,6 @@
 		709E97A91CAA850B00A6F1F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: xin xu (96HSW2ZXJP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: xin xu (96HSW2ZXJP)";
 				FRAMEWORK_SEARCH_PATHS = (

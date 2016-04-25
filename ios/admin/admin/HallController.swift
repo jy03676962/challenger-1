@@ -34,7 +34,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		WsClient.singleton.sendCmd("queryHallData")
+		DataManager.singleton.subscriptData([.HallData], receiver: self)
 	}
 	func refreshTeamData() {
 		refreshControl.endRefreshing()
@@ -52,6 +52,12 @@ class HallController: PLViewController {
 	@IBAction func ready(sender: UIButton) {
 	}
 	@IBAction func start(sender: AnyObject) {
+	}
+}
+
+extension HallController: DataReceiver {
+	func onReceivedData(json: JSON, type: DataType) {
+		log.debug("got halldata:\(json)")
 	}
 }
 

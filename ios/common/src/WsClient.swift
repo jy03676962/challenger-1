@@ -18,6 +18,7 @@ public class WsClient {
 	public static let WsConnectingNotification = "WsConnecting"
 
 	public static let singleton = WsClient()
+	public weak var delegate: WebSocketDelegate?
 
 	private static let ERROR_WAIT_SECOND: UInt64 = 10
 	private var socket: WebSocket?
@@ -90,15 +91,17 @@ extension WsClient: WebSocketDelegate {
 
 	public func websocketDidConnect(socket: WebSocket) {
 		log.debug("socket connected")
+		delegate?.websocketDidConnect(socket)
 		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsConnectedNotification, object: nil)
-		sendCmd("init")
 	}
 
 	public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
+		delegate?.websocketDidReceiveData(socket, data: data)
 	}
 
 	public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
 		log.debug("socket disconnected:\(error?.localizedDescription)")
+		delegate?.websocketDidDisconnect(socket, error: error)
 		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsDisconnectedNotification, object: nil)
 		if UIApplication.sharedApplication().applicationState == .Background {
 			return
@@ -117,5 +120,6 @@ extension WsClient: WebSocketDelegate {
 
 	public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
 		log.debug("socket got:\(text)")
+		delegate?.websocketDidReceiveMessage(socket, text: text)
 	}
 }

@@ -83,7 +83,6 @@ func read(conn net.Conn, ch chan string) {
 func write(conn net.Conn, ch chan string) {
 	for {
 		s := <-ch
-		log.Println("will send:", s)
 		fmt.Fprintf(conn, "<"+s+">")
 	}
 }

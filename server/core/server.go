@@ -8,15 +8,13 @@ import (
 
 type Server struct {
 	*Hub
-	clients    map[int]*Client
-	apiClients map[int]*Client
+	clients map[SocketGroupType]map[int]*Client
 }
 
 func NewServer(hub *Hub) *Server {
 	s := Server{}
 	s.Hub = hub
-	s.clients = make(map[int]*Client)
-	s.apiClients = make(map[int]*Client)
+	s.clients = make(map[SocketGroupType]map[int]*Client)
 	return &s
 }
 
@@ -55,18 +53,16 @@ func (s *Server) OnAdminConnected(ws *websocket.Conn) {
 }
 
 func (s *Server) handleSocketInput(i *SocketInput) {
-	var it map[int]*Client
-	if i.Group == SG_Game {
-		it = s.clients
-	} else {
-		it = s.apiClients
+	clientList := s.clients[i.Group]
+	if clientList == nil {
+		return
 	}
 	if i.Broadcast {
-		for _, client := range it {
+		for _, client := range clientList {
 			client.Write(i.SocketMessage)
 		}
 	} else {
-		if client, ok := it[i.DestID]; ok {
+		if client, ok := clientList[i.DestID]; ok {
 			client.Write(i.SocketMessage)
 		}
 	}
@@ -75,22 +71,23 @@ func (s *Server) handleSocketInput(i *SocketInput) {
 func (s *Server) handleSocketOutput(e *SocketOutput) {
 	switch e.Type {
 	case S_Add:
-		log.Printf("add client:%v\n", e.ID)
-		if e.Group == SG_Game {
-			s.clients[e.ID] = e.Client
-		} else if e.Group == SG_Api {
-			s.apiClients[e.ID] = e.Client
+		log.Printf("add client:%v, group:%v\n", e.ID, e.Group.String())
+		clientList := s.clients[e.Group]
+		if clientList == nil {
+			clientList = make(map[int]*Client)
+			s.clients[e.Group] = clientList
 		}
+		clientList[e.ID] = e.Client
 	case S_Del:
-		log.Printf("del client:%v\n", e.ID)
+		log.Printf("del client:%v, group:%v\n", e.ID, e.Group.String())
+		if clientList := s.clients[e.Group]; clientList != nil {
+			delete(clientList, e.ID)
+		}
 		if e.Group == SG_Game {
-			delete(s.clients, e.ID)
 			hm := NewHubMap()
 			hm.SetCmd("disconnect")
 			hm.Set("cid", e.ID)
 			s.MatchInputCh <- hm
-		} else if e.Group == SG_Api {
-			delete(s.clients, e.ID)
 		}
 	case S_Msg:
 		if e.Group == SG_Game {
@@ -113,7 +110,7 @@ func (s *Server) handleGameSocketMessage(e *SocketOutput) {
 		data := NewHubMap()
 		data.SetCmd("options")
 		data.Set("options", s.Options)
-		s.send(data, e.ID)
+		s.send(data, e.ID, SG_Game)
 	}
 	s.MatchInputCh <- msg
 }
@@ -136,32 +133,34 @@ func (s *Server) handleClientSocketMessage(e *SocketOutput) {
 
 func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	msg := e.SocketMessage
+	log.Printf("got message:%v\n", msg)
 	switch msg.GetCmd() {
 	case "init":
 	case "queryHallData":
 		data := NewHubMap()
-		data.SetCmd("queryHallData")
+		data.SetCmd("HallData")
 		if teams := GetAllTeamsFromQueue(); teams != nil {
 			data.Set("teams", teams)
 		}
-		s.send(data, e.ID)
+		s.send(data, e.ID, SG_Admin)
 	}
 }
 
-func (s *Server) sendAll(msg *HubMap) {
+func (s *Server) sendAll(msg *HubMap, group SocketGroupType) {
 	input := SocketInput{}
 	input.SocketMessage = msg
 	input.Broadcast = true
-	input.Group = SG_Game
+	input.Group = group
 	go s.doSend(&input)
 }
 
-func (s *Server) send(msg *HubMap, cid int) {
+func (s *Server) send(msg *HubMap, cid int, group SocketGroupType) {
 	input := SocketInput{}
 	input.SocketMessage = msg
 	input.Broadcast = false
 	input.DestID = cid
-	input.Group = SG_Game
+	input.Group = group
+	log.Printf("will send:%v\n", input)
 	go s.doSend(&input)
 }
 

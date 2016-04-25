@@ -41,10 +41,9 @@ class LoginViewController: PLViewController {
 		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
 			if let host = weakAlert?.textFields![0].text {
 				Defaults[.host] = host
-				NSNotificationCenter.defaultCenter().postNotificationKey(.HostChanged, object: nil)
+				WsClient.singleton.connect(PLConstants.getAdminWsAddress())
 			}
 			if let num = weakAlert?.textFields![1].text {
-				let id = Int(num) ?? 0
 				Defaults[.deviceID] = Int(num) ?? 0
 			}
 		}

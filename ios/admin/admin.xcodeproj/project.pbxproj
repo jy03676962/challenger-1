@@ -22,6 +22,7 @@
 		7079BC621CCB8C3A005878AE /* AutoKeyboardScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC611CCB8C3A005878AE /* AutoKeyboardScrollView.framework */; };
 		7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC631CCBC42C005878AE /* DefaultKeys.swift */; };
 		7079BC661CCBC45D005878AE /* SwiftyUserDefaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7079BC651CCBC45D005878AE /* SwiftyUserDefaults.framework */; };
+		7080B8511CCE6A8600E63CB5 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7080B8501CCE6A8600E63CB5 /* DataManager.swift */; };
 		70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */; };
 		70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC61CC7B10A00159C81 /* HallController.swift */; };
 		70B4DAC91CC7B10A00159C81 /* MatchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC81CC7B10A00159C81 /* MatchController.swift */; };
@@ -49,6 +50,7 @@
 		7079BC611CCB8C3A005878AE /* AutoKeyboardScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AutoKeyboardScrollView.framework; path = ../Carthage/Build/iOS/AutoKeyboardScrollView.framework; sourceTree = "<group>"; };
 		7079BC631CCBC42C005878AE /* DefaultKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultKeys.swift; sourceTree = "<group>"; };
 		7079BC651CCBC45D005878AE /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = ../Carthage/Build/iOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
+		7080B8501CCE6A8600E63CB5 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		70B4DAC11CC7B10A00159C81 /* admin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = admin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70B4DAC61CC7B10A00159C81 /* HallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HallController.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				7079BC511CC9243B005878AE /* Extensions */,
 				70B4DAE71CC7B31700159C81 /* Constants.swift */,
 				70B4DAE91CC7B31700159C81 /* WsClient.swift */,
+				7080B8501CCE6A8600E63CB5 /* DataManager.swift */,
 				70130ADE1CCBD1540081003E /* PLViewController.swift */,
 			);
 			path = src;
@@ -295,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70B4DAC91CC7B10A00159C81 /* MatchController.swift in Sources */,
+				7080B8511CCE6A8600E63CB5 /* DataManager.swift in Sources */,
 				70B4DAED1CC7B31700159C81 /* WsClient.swift in Sources */,
 				70B4DAFE1CC7BD0200159C81 /* HistoryController.swift in Sources */,
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,

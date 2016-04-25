@@ -81,7 +81,7 @@ extension StatViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		let headerSize = UIImage(named: "FunImage")!.size
+		_ = UIImage(named: "FunImage")!.size
 		let headerView = UIView()
 		headerView.backgroundColor = UIColor.clearColor()
 		view.addSubview(headerView)
