@@ -136,7 +136,15 @@ func (s *Server) handleClientSocketMessage(e *SocketOutput) {
 
 func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	msg := e.SocketMessage
-	if msg.GetCmd() == "init" {
+	switch msg.GetCmd() {
+	case "init":
+	case "queryHallData":
+		data := NewHubMap()
+		data.SetCmd("queryHallData")
+		if teams := GetAllTeamsFromQueue(); teams != nil {
+			data.Set("teams", teams)
+		}
+		s.send(data, e.ID)
 	}
 }
 

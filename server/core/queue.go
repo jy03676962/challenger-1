@@ -69,6 +69,16 @@ func EnterPlay() error {
 	return nil
 }
 
+func GetAllTeamsFromQueue() []*Team {
+	q.lock.RLock()
+	defer q.lock.RUnlock()
+	result := make([]*Team, q.li.Len())
+	for e, i := q.li.Front(), 0; e != nil; e, i = e.Next(), i+1 {
+		result[i] = e.Value.(*Team)
+	}
+	return result
+}
+
 // 将拉去previousID之后count个team，previousID可以是0，表示从头开始拉取
 func GetTeamsFromQueue(previousID int, count int) ([]*Team, error) {
 	if previousID < 0 {
