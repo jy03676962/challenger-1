@@ -7,7 +7,10 @@ import (
 	"sync"
 )
 
-const initCursor = 2000
+const (
+	initCursor     = 2000
+	singleWaitTime = 360
+)
 
 type TeamStatus int
 
@@ -28,6 +31,7 @@ type Team struct {
 	ID         string     `json:"id"`
 	DelayCount int        `json:"delayCount"`
 	Status     TeamStatus `json:"status"`
+	WaitTime   int        `json:"waitTime"`
 }
 
 type Queue struct {
@@ -116,46 +120,17 @@ func GetAllTeamsFromQueueWithLock() []*Team {
 
 func GetAllTeamsFromQueue() []*Team {
 	result := make([]*Team, q.li.Len())
+	waitTime := 0
 	for e, i := q.li.Front(), 0; e != nil; e, i = e.Next(), i+1 {
-		result[i] = e.Value.(*Team)
+		team := e.Value.(*Team)
+		if team.Status == TS_Waiting {
+			waitTime += singleWaitTime
+			team.WaitTime = waitTime
+		}
+		result[i] = team
 	}
 	return result
 }
-
-//将拉去previousID之后count个team，previousID可以是0，表示从头开始拉取
-//func GetTeamsFromQueue(previousID int, count int) ([]*Team, error) {
-//if previousID < 0 {
-//return nil, errors.New("previousID must >= 0")
-//}
-//q.lock.RLock()
-//defer q.lock.RUnlock()
-//if q.li.Len() == 0 {
-//return nil, nil
-//}
-//var firstElement *list.Element = nil
-//var remainTeamCount = q.li.Len()
-//if previousID == 0 {
-//firstElement = q.li.Front()
-//} else {
-//for e := q.li.Front(); e != nil; e = e.Next() {
-//remainTeamCount -= 1
-//team := e.Value.(*Team)
-//if team.ID == previousID {
-//firstElement = e.Next()
-//break
-//}
-//}
-//}
-//if firstElement == nil {
-//return nil, nil
-//}
-//resultCount := MinInt(remainTeamCount, count)
-//result := make([]*Team, resultCount)
-//for e, i := firstElement, 0; e != nil; e, i = e.Next(), i+1 {
-//result[i] = e.Value.(*Team)
-//}
-//return result, nil
-//}
 
 func updateHallData() {
 	msg := NewHubMap()

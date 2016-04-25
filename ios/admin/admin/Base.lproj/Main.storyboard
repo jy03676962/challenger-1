@@ -10,6 +10,8 @@
             <string>AlienLeagueBold</string>
             <string>AlienLeagueBold</string>
             <string>AlienLeagueBold</string>
+            <string>AlienLeagueBold</string>
+            <string>AlienLeagueBold</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -64,14 +66,42 @@
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="- 0 -" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZO-b8-lrk">
+                                                    <rect key="frame" x="378" y="11" width="55" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="55" id="Dd3-ct-4wg"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R3O-hW-8Fu">
+                                                    <rect key="frame" x="517" y="11" width="80" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="55" id="B1O-ug-6Nn"/>
+                                                        <constraint firstAttribute="width" constant="80" id="q3P-je-j9K"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="B1O-ug-6Nn"/>
+                                                        </mask>
+                                                    </variation>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="RSQ-in-283" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="GvG-2B-NIL"/>
+                                                <constraint firstItem="5ZO-b8-lrk" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="PAa-dA-QSZ"/>
                                                 <constraint firstItem="RSQ-in-283" firstAttribute="centerX" secondItem="7Sy-8x-a2H" secondAttribute="centerX" id="UJB-SD-0he"/>
                                                 <constraint firstItem="P2O-Ql-eAc" firstAttribute="leading" secondItem="Ls5-eV-8fA" secondAttribute="trailing" constant="100" id="b95-bv-zHi"/>
+                                                <constraint firstItem="5ZO-b8-lrk" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="370" id="c00-3n-MXe"/>
+                                                <constraint firstItem="R3O-hW-8Fu" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="ciR-Zb-XRH"/>
                                                 <constraint firstItem="P2O-Ql-eAc" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="ecR-QR-PpG"/>
                                                 <constraint firstItem="P2O-Ql-eAc" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="270" id="huu-xg-y0V"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="R3O-hW-8Fu" secondAttribute="trailing" constant="55" id="oJm-Tt-rtF"/>
                                                 <constraint firstItem="Ls5-eV-8fA" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="roZ-pO-iKw"/>
                                                 <constraint firstItem="Ls5-eV-8fA" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="140" id="t5f-xe-5tN"/>
                                             </constraints>
@@ -83,8 +113,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
+                                            <outlet property="delayCountLabel" destination="5ZO-b8-lrk" id="8nB-xf-ZaQ"/>
                                             <outlet property="teamIDLabel" destination="Ls5-eV-8fA" id="gXR-EB-Ra7"/>
                                             <outlet property="teamSizeLabel" destination="P2O-Ql-eAc" id="3iX-oP-71B"/>
+                                            <outlet property="waitTimeLabel" destination="R3O-hW-8Fu" id="A8s-gn-HLI"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
