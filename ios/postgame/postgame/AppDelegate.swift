@@ -17,7 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		setup()
+		#if DEBUG
+			log.setup(.Debug, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
+		#else
+			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
+		#endif
 		self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
 		let vc = LoginViewController()
 		let navi = UINavigationController(rootViewController: vc)
@@ -26,13 +30,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		self.window?.makeKeyAndVisible()
 		WsClient.singleton.connect(PLConstants.getClientWsAddress())
 		return true
-	}
-
-	private func setup() {
-		#if DEBUG
-			log.setup(.Debug, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
-		#else
-			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
-		#endif
 	}
 }

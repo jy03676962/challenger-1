@@ -7,4 +7,7 @@
    <FileRef
       location = "group:postgame/postgame.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
 </Workspace>
