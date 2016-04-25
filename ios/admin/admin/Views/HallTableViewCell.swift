@@ -13,6 +13,7 @@ import SWTableViewCell
 class HallTableViewCell: SWTableViewCell {
 
 	@IBOutlet weak var teamIDLabel: UILabel!
+	@IBOutlet weak var teamSizeLabel: UILabel!
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		backgroundColor = UIColor.clearColor()
@@ -26,5 +27,6 @@ class HallTableViewCell: SWTableViewCell {
 
 	func setData(dict: JSON) {
 		teamIDLabel.text = dict["id"].stringValue
+		teamSizeLabel.text = String(dict["size"].intValue)
 	}
 }
