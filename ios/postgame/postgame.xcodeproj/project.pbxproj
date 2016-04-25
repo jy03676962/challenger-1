@@ -26,7 +26,6 @@
 		70B0EB071CBA8670000560D9 /* SVProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */; };
 		70B4DADF1CC7B2F800159C81 /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70B4DADA1CC7B2F800159C81 /* alienleaguebold.ttf */; };
 		70B4DAE01CC7B2F800159C81 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DADC1CC7B2F800159C81 /* Constants.swift */; };
-		70B4DAE11CC7B2F800159C81 /* CustomNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */; };
 		70B4DAE21CC7B2F800159C81 /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DADE1CC7B2F800159C81 /* WsClient.swift */; };
 		70B4DAFC1CC7B8F700159C81 /* EasyPeasy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B4DAFB1CC7B8F700159C81 /* EasyPeasy.framework */; };
 		70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */; };
@@ -54,7 +53,6 @@
 		70B0EB061CBA8670000560D9 /* SVProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SVProgressHUD.framework; path = ../Carthage/Build/iOS/SVProgressHUD.framework; sourceTree = "<group>"; };
 		70B4DADA1CC7B2F800159C81 /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 		70B4DADC1CC7B2F800159C81 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNotification.swift; sourceTree = "<group>"; };
 		70B4DADE1CC7B2F800159C81 /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
 		70B4DAFB1CC7B8F700159C81 /* EasyPeasy.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EasyPeasy.framework; path = ../Carthage/Build/iOS/EasyPeasy.framework; sourceTree = "<group>"; };
 		70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 			children = (
 				7079BC4C1CC9242F005878AE /* Extensions */,
 				70B4DADC1CC7B2F800159C81 /* Constants.swift */,
-				70B4DADD1CC7B2F800159C81 /* CustomNotification.swift */,
 				70B4DADE1CC7B2F800159C81 /* WsClient.swift */,
 				70130AE01CCC00700081003E /* PLViewController.swift */,
 			);
@@ -293,7 +290,6 @@
 				70130AE11CCC00700081003E /* PLViewController.swift in Sources */,
 				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
-				70B4DAE11CC7B2F800159C81 /* CustomNotification.swift in Sources */,
 				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
 				70B4DAE21CC7B2F800159C81 /* WsClient.swift in Sources */,
 				7079BC6A1CCBC4C6005878AE /* DefaultKeys.swift in Sources */,

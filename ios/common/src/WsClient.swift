@@ -6,31 +6,36 @@
 //  Copyright © 2016 pulupulu. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Starscream
 import SwiftyUserDefaults
 import SwiftyJSON
 
-class WsClient {
-	static let singleton = WsClient()
+public class WsClient {
+	// notification
+	public static let WsConnectedNotification = "WsConnected"
+	public static let WsDisconnectedNotification = "WsDisconnected"
+	public static let WsConnectingNotification = "WsConnecting"
+
+	public static let singleton = WsClient()
 
 	private static let ERROR_WAIT_SECOND: UInt64 = 10
 	private var socket: WebSocket?
 	private var address: String?
 
-	func sendCmd(cmd: String) {
+	public func sendCmd(cmd: String) {
 		let json = JSON([
 			"cmd": cmd
 		])
 		sendJSON(json)
 	}
 
-	func sendJSON(json: JSON) {
+	public func sendJSON(json: JSON) {
 		let str = json.rawString(NSUTF8StringEncoding, options: [])!
 		socket!.writeString(str)
 	}
 
-	func connect(addr: String) {
+	public func connect(addr: String) {
 		if address == addr && socket != nil && socket!.isConnected {
 			return
 		}
@@ -43,7 +48,30 @@ class WsClient {
 		}
 	}
 
+	@objc func appDidEnterBackground() {
+		if socket != nil && socket!.isConnected {
+			socket!.disconnect()
+		}
+	}
+
+	@objc func appWillEnterForeground() {
+		if socket != nil && socket!.isConnected {
+			return
+		}
+		guard address != nil else {
+			return
+		}
+		initSocket()
+		doConnect()
+	}
+
 	private init() {
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.appDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.appWillEnterForeground), name: UIApplicationWillEnterForegroundNotification, object: nil)
+	}
+
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 
 	private func initSocket() {
@@ -53,25 +81,28 @@ class WsClient {
 
 	private func doConnect() {
 		socket!.connect()
-		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnecting, object: nil)
+		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsConnectingNotification, object: nil)
 	}
 }
 
 // MARK: websocket回调方法
 extension WsClient: WebSocketDelegate {
 
-	func websocketDidConnect(socket: WebSocket) {
+	public func websocketDidConnect(socket: WebSocket) {
 		log.debug("socket connected")
-		NSNotificationCenter.defaultCenter().postNotificationKey(.WsConnected, object: nil)
+		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsConnectedNotification, object: nil)
 		sendCmd("init")
 	}
 
-	func websocketDidReceiveData(socket: WebSocket, data: NSData) {
+	public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
 	}
 
-	func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+	public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
 		log.debug("socket disconnected:\(error?.localizedDescription)")
-		NSNotificationCenter.defaultCenter().postNotificationKey(.WsDisconnected, object: nil)
+		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsDisconnectedNotification, object: nil)
+		if UIApplication.sharedApplication().applicationState == .Background {
+			return
+		}
 		if socket.currentURL.absoluteString != address {
 			initSocket()
 		}
@@ -84,7 +115,7 @@ extension WsClient: WebSocketDelegate {
 		}
 	}
 
-	func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+	public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
 		log.debug("socket got:\(text)")
 	}
 }

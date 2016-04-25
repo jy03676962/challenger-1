@@ -34,8 +34,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		if json == nil {
-		}
+		WsClient.singleton.sendCmd("queryHallData")
 	}
 	func refreshTeamData() {
 		refreshControl.endRefreshing()

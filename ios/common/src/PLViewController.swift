@@ -30,9 +30,9 @@ class PLViewController: UIViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PLViewController.onWsConnected), key: .WsConnected)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PLViewController.onWsConnecting), key: .WsConnecting)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PLViewController.onWsDisconnected), key: .WsDisconnected)
+//		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PLViewController.onWsConnected), key: .WsConnected)
+//		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PLViewController.onWsConnecting), key: .WsConnecting)
+//		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PLViewController.onWsDisconnected), key: .WsDisconnected)
 	}
 
 	override func viewDidDisappear(animated: Bool) {
