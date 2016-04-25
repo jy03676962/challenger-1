@@ -146,6 +146,9 @@ func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	case "teamCutLine":
 		teamID := msg.Get("teamID").(string)
 		TeamCutLine(teamID)
+	case "teamRemove":
+		teamID := msg.Get("teamID").(string)
+		TeamRemove(teamID)
 	}
 }
 

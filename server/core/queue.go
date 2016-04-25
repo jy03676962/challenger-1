@@ -95,6 +95,19 @@ func TeamCutLine(teamID string) {
 	}
 }
 
+func TeamRemove(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	if team.Status != TS_Waiting {
+		return
+	}
+	delete(q.dict, teamID)
+	q.li.Remove(element)
+}
+
 func GetAllTeamsFromQueueWithLock() []*Team {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
