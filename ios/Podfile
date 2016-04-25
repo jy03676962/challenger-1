@@ -17,6 +17,7 @@ pod 'Starscream', '~> 1.1.3'
 pod "EasyPeasy"
 pod 'SwiftyUserDefaults'
 pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
+pod 'SWTableViewCell', '~> 0.3.7'
 end
 
 project 'admin/admin.xcodeproj'

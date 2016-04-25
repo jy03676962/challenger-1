@@ -143,6 +143,9 @@ func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 			data.Set("teams", teams)
 		}
 		s.send(data, e.ID, SG_Admin)
+	case "teamCutLine":
+		teamID := msg.Get("teamID").(string)
+		TeamCutLine(teamID)
 	}
 }
 

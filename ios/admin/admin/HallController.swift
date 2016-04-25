@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import SWTableViewCell
 
 class HallController: PLViewController {
 	@IBOutlet weak var teamtableView: UITableView!
@@ -32,7 +33,7 @@ class HallController: PLViewController {
 		DataManager.singleton.subscriptData([.HallData], receiver: self)
 	}
 	func refreshTeamData() {
-		DataManager.singleton.refreshData(.HallData)
+		DataManager.singleton.queryData(.HallData)
 	}
 	@IBAction func changeMode(sender: UITapGestureRecognizer) {
 	}
@@ -60,6 +61,52 @@ extension HallController: DataReceiver {
 	}
 }
 
+// MARK: swipe function
+extension HallController: SWTableViewCellDelegate {
+	private var rightButtons: [AnyObject] {
+		let jumpButton = UIButton()
+		jumpButton.setImage(UIImage(named: "CutLineButton"), forState: .Normal)
+		jumpButton.backgroundColor = UIColor.clearColor()
+		let removeButton = UIButton()
+		removeButton.setImage(UIImage(named: "RemoveTeamButton"), forState: .Normal)
+		removeButton.backgroundColor = UIColor.clearColor()
+		return [jumpButton, removeButton]
+	}
+
+	func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerRightUtilityButtonWithIndex index: Int) {
+		let teamJson = teamJsonFromCell(cell)
+		if index == 0 {
+			let json = JSON([
+				"cmd": "teamCutLine",
+				"teamID": teamJson["id"].stringValue
+			])
+			WsClient.singleton.sendJSON(json)
+		} else if index == 1 {
+			let json = JSON([
+				"cmd": "teamRemove",
+				"teamID": teamJson["id"].stringValue
+			])
+			WsClient.singleton.sendJSON(json)
+		}
+	}
+	func swipeableTableViewCellShouldHideUtilityButtonsOnSwipe(cell: SWTableViewCell!) -> Bool {
+		return true
+	}
+	func swipeableTableViewCell(cell: SWTableViewCell!, canSwipeToState state: SWCellState) -> Bool {
+		let teamJson = teamJsonFromCell(cell)
+		let status = TeamStatus(rawValue: teamJson["status"].intValue)!
+		if status != .Waiting {
+			return false
+		}
+		return true
+	}
+
+	private func teamJsonFromCell(cell: SWTableViewCell) -> JSON {
+		let cellIndex = teamtableView.indexPathForCell(cell)!
+		return teams![cellIndex.row]
+	}
+}
+
 extension HallController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return teams != nil ? teams!.count : 0
@@ -70,6 +117,8 @@ extension HallController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")! as! HallTableViewCell
 		cell.setData(teams![indexPath.row])
+		cell.delegate = self
+		cell.rightUtilityButtons = rightButtons
 		return cell
 	}
 }

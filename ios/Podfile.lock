@@ -6,6 +6,7 @@ PODS:
   - SVProgressHUD (2.0.3)
   - SwiftyJSON (2.3.2)
   - SwiftyUserDefaults (2.2.0)
+  - SWTableViewCell (0.3.7)
   - UIColor_Hex_Swift (2.1)
   - XCGLogger (3.3)
 
@@ -17,6 +18,7 @@ DEPENDENCIES:
   - SVProgressHUD
   - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
   - SwiftyUserDefaults
+  - SWTableViewCell (~> 0.3.7)
   - UIColor_Hex_Swift (~> 2.1)
   - XCGLogger (~> 3.3)
 
@@ -37,9 +39,10 @@ SPEC CHECKSUMS:
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
   SwiftyUserDefaults: e7c8197a9d4068702e7f2406a968cae413b8de27
+  SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
   UIColor_Hex_Swift: e91dc51f6bf252ec7bf74c8704ceedeeb7640c1c
   XCGLogger: d6e196e78940ff6daab17d6917107876f973fa31
 
-PODFILE CHECKSUM: 875feeec705c672c3845c5a75217b97914f09ca9
+PODFILE CHECKSUM: f953475705c792075acb9cce695fadfb0f259e58
 
 COCOAPODS: 1.0.0.beta.8

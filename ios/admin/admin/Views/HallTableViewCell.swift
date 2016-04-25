@@ -8,8 +8,9 @@
 
 import UIKit
 import SwiftyJSON
+import SWTableViewCell
 
-class HallTableViewCell: UITableViewCell {
+class HallTableViewCell: SWTableViewCell {
 
 	@IBOutlet weak var teamIDLabel: UILabel!
 	override func awakeFromNib() {
@@ -24,6 +25,6 @@ class HallTableViewCell: UITableViewCell {
 	}
 
 	func setData(dict: JSON) {
-		teamIDLabel.text = String(dict["id"].intValue)
+		teamIDLabel.text = dict["id"].stringValue
 	}
 }
