@@ -18,7 +18,7 @@ type PlayerData struct {
 
 type MatchData struct {
 	gorm.Model
-	Mode    int
+	Mode    string
 	Elasped float64
 	Gold    int
 	Member  []PlayerData

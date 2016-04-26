@@ -19,6 +19,7 @@ struct Team: Mappable {
 	var delayCount: Int!
 	var status: TeamStatus!
 	var waitTime: Int!
+	var mode: String!
 
 	init?(_ map: Map) {
 	}
@@ -29,5 +30,6 @@ struct Team: Mappable {
 		delayCount <- map["delayCount"]
 		status <- map["status"]
 		waitTime <- map["waitTime"]
+		mode <- map["mode"]
 	}
 }

@@ -23,7 +23,7 @@ type Match struct {
 	Elasped      float64         `json:"elasped"`
 	WarmupTime   float64         `json:"warmupTime"`
 	RampageTime  float64         `json:"rampageTime"`
-	Mode         int             `json:"mode"`
+	Mode         string          `json:"mode"`
 	Gold         int             `json:"gold"`
 	Energy       float64         `json:"energy"`
 	OnButtons    map[string]bool `json:"onButtons"`
@@ -71,7 +71,7 @@ func (m *Match) tick(dt time.Duration) {
 	}
 	sec := dt.Seconds()
 	m.Elasped += sec
-	if m.Mode == 1 {
+	if m.Mode == "g" {
 		m.TotalTime -= sec
 	}
 	if m.Stage == "warmup" {
@@ -81,7 +81,7 @@ func (m *Match) tick(dt time.Duration) {
 			m.enterOngoing()
 		}
 	} else if m.Stage == "ongoing" {
-		if m.Mode == 2 && m.goldDropTime > 0 {
+		if m.Mode == "s" && m.goldDropTime > 0 {
 			m.goldDropTime -= sec
 			if m.goldDropTime <= 0 {
 				m.Gold -= m.Options.Mode2GoldDropRate[len(m.Member)-1]
@@ -103,14 +103,14 @@ func (m *Match) tick(dt time.Duration) {
 		laser.Tick(sec)
 	}
 	m.checkRampage(sec)
-	if m.Mode == 1 && m.TotalTime <= 0 || m.Mode == 2 && m.Gold <= 0 {
+	if m.Mode == "g" && m.TotalTime <= 0 || m.Mode == "s" && m.Gold <= 0 {
 		m.enterAfter()
 	}
 }
 
 func (m *Match) enterOngoing() {
 	m.Stage = "ongoing"
-	if m.Mode == 2 {
+	if m.Mode == "s" {
 		m.goldDropTime = m.Options.mode2GoldDropInterval
 	}
 	m.initLasers()
@@ -171,7 +171,7 @@ func (m *Match) reset() {
 	m.Elasped = 0
 	m.WarmupTime = 0
 	m.RampageTime = 0
-	m.Mode = 0
+	m.Mode = ""
 	m.Gold = 0
 	m.Energy = 0
 	m.OnButtons = nil
@@ -207,10 +207,10 @@ func (m *Match) handleInput(input *HubMap) {
 		player := NewPlayer(name, id)
 		m.Member = append(m.Member, player)
 	case "startMatch":
-		m.Mode = int(input.Get("mode").(float64))
+		m.Mode = input.GetStr("mode")
 		m.Stage = "warmup"
 		m.WarmupTime = m.Options.Warmup
-		if m.Mode == 1 {
+		if m.Mode == "g" {
 			m.TotalTime = m.Options.Mode1TotalTime
 		} else {
 			m.Gold = m.Options.Mode2InitGold[len(m.Member)-1]
@@ -296,6 +296,14 @@ func (m *Match) isFull() bool {
 	return len(m.Member) == m.Capacity
 }
 
+func (m *Match) modeIndex() int {
+	if m.Mode == "g" {
+		return 0
+	} else {
+		return 1
+	}
+}
+
 func (m *Match) isRunning() bool {
 	return m.Stage == "ongoing" || m.Stage == "warmup"
 }
@@ -341,7 +349,7 @@ func (m *Match) initButtons() {
 func (m *Match) consumeButton(btn string, player *Player) {
 	player.LevelData[player.ButtonLevel] += 1
 	if player.ButtonLevel > 0 {
-		m.Gold += m.Options.GoldBonus[m.Mode-1]
+		m.Gold += m.Options.GoldBonus[m.modeIndex()]
 		player.Gold += 1
 		if m.RampageTime <= 0 {
 			sec := time.Since(player.lastHitTime).Seconds()
@@ -383,12 +391,12 @@ func (m *Match) consumeButton(btn string, player *Player) {
 	i := r.Intn(len(m.offButtons))
 	key := m.offButtons[i]
 	m.offButtons[i] = btn
-	t := m.Options.buttonHideTime[m.Mode-1]
+	t := m.Options.buttonHideTime[m.modeIndex()]
 	m.hiddenButtons[key] = t
 }
 
 func (m *Match) enterRampage() {
-	m.RampageTime = m.Options.rampageTime[m.Mode-1]
+	m.RampageTime = m.Options.rampageTime[m.modeIndex()]
 	for i := 0; i < len(m.Options.Buttons); i++ {
 		k := strconv.Itoa(i)
 		m.OnButtons[k] = true

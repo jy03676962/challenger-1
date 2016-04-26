@@ -32,6 +32,7 @@ type Team struct {
 	DelayCount int        `json:"delayCount"`
 	Status     TeamStatus `json:"status"`
 	WaitTime   int        `json:"waitTime"`
+	Mode       string     `json:"mode"`
 }
 
 type Queue struct {
@@ -50,13 +51,13 @@ func newQueue() *Queue {
 	return &q
 }
 
-func AddTeamToQueue(teamSize int) (*Team, error) {
+func AddTeamToQueue(teamSize int, mode string) (*Team, error) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	defer updateHallData()
 	q.cur += 1
 	id := strconv.Itoa(q.cur)
-	t := Team{Size: teamSize, ID: id, Status: TS_Waiting}
+	t := Team{Size: teamSize, ID: id, Status: TS_Waiting, Mode: mode}
 	element := q.li.PushBack(&t)
 	q.dict[id] = element
 	return &t, nil
@@ -92,7 +93,6 @@ func TeamCutLine(teamID string) {
 	for e := q.li.Front(); e != nil; e = e.Next() {
 		t := e.Value.(*Team)
 		if t.Status == TS_Waiting {
-			log.Printf("becut:%v\n", t)
 			q.li.MoveBefore(element, e)
 			return
 		}

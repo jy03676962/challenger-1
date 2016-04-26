@@ -33,7 +33,7 @@ const MatchView = observer(React.createClass({
       if (hoster == this.props.game.playerName) {
         actionComponent =
           <div>
-        <button onClick={this.startFunMode}>开始娱乐模式</button>
+        <button onClick={this.startGoldMode}>开始赏模式</button>
         <button onClick={this.startSurvivalMode}>开始生存模式</button>
         </div>
       }
@@ -52,11 +52,11 @@ const MatchView = observer(React.createClass({
       </div>
     )
   },
-  startFunMode: function(e) {
-    this.props.game.startMatch(1)
+  startGoldMode: function(e) {
+    this.props.game.startMatch('g')
   },
   startSurvivalMode: function(e) {
-    this.props.game.startMatch(2)
+    this.props.game.startMatch('s')
   },
   joinMatch: function(e) {
     this.props.game.joinMatch()

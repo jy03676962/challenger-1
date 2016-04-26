@@ -22,6 +22,7 @@ class HallController: PLViewController {
 	@IBOutlet weak var startButton: UIButton!
 	var refreshControl: UIRefreshControl!
 	var teams: [Team]?
+	var topWaitingTeam: Team?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -50,12 +51,25 @@ class HallController: PLViewController {
 	}
 	@IBAction func start(sender: AnyObject) {
 	}
+
+	private func renderTopWaitingTeam() {
+		teamIDLabel.text = topWaitingTeam?.id
+	}
 }
 
 extension HallController: DataReceiver {
 	func onReceivedData(json: [String: AnyObject], type: DataType) {
 		if type == .HallData {
 			teams = Mapper<Team>().mapArray(json["data"])
+			if teams != nil {
+				for team in teams! {
+					if team.status == .Waiting {
+						topWaitingTeam = team
+						renderTopWaitingTeam()
+						break
+					}
+				}
+			}
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
 		}

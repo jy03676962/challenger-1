@@ -72,7 +72,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       timeText = `还剩${left}秒`
     } else {
       msg = '游戏阶段'
-      if (match.mode == 1) {
+      if (match.mode == 'g') {
         let left = (match.totalTime).toFixed(1)
         timeText = `还剩${left}秒`
       }

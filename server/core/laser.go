@@ -136,7 +136,7 @@ func (l *Laser) Tick(dt float64) {
 			player.InvincibleTime = l.getOpt().playerInvincibleTime
 			player.HitCount += 1
 			var punish int
-			if l.match.Mode == 1 {
+			if l.match.Mode == "g" {
 				punish = int(float64(l.match.Gold) * l.getOpt().mode1TouchPunish)
 			} else {
 				punish = l.getOpt().mode2TouchPunish
