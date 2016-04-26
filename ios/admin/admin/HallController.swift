@@ -37,11 +37,23 @@ class HallController: PLViewController {
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
 	}
-	@IBAction func changeMode(sender: UITapGestureRecognizer) {
+	@IBAction func changeMode() {
+		let mode = topWaitingTeam!.mode == "g" ? "s" : "g"
+		let json = JSON([
+			"cmd": "teamChangeMode",
+			"teamID": topWaitingTeam!.id,
+			"mode": mode
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func callTeam(sender: UIButton) {
 	}
 	@IBAction func delayTeam(sender: UIButton) {
+		let json = JSON([
+			"cmd": "teamDelay",
+			"teamID": topWaitingTeam!.id,
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func addPlayer(sender: UIButton) {
 	}
@@ -54,6 +66,14 @@ class HallController: PLViewController {
 
 	private func renderTopWaitingTeam() {
 		teamIDLabel.text = topWaitingTeam?.id
+		playerNumberLabel.text = String(topWaitingTeam?.size)
+		if topWaitingTeam?.mode == "g" {
+			modeImageView.image = UIImage(named: "FunIcon")
+			modeLabel.text = "[赏金模式]"
+		} else {
+			modeImageView.image = UIImage(named: "SurvivalIcon")
+			modeLabel.text = "[生存模式]"
+		}
 	}
 }
 

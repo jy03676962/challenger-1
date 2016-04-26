@@ -144,12 +144,20 @@ func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 		}
 		s.send(data, e.ID, SG_Admin)
 	case "teamCutLine":
-		teamID := msg.Get("teamID").(string)
+		teamID := msg.GetStr("teamID")
 		TeamCutLine(teamID)
 	case "teamRemove":
-		teamID := msg.Get("teamID").(string)
+		teamID := msg.GetStr("teamID")
 		TeamRemove(teamID)
+	case "teamChangeMode":
+		teamID := msg.GetStr("teamID")
+		mode := msg.GetStr("mode")
+		TeamChangeMode(teamID, mode)
+	case "teamDelay":
+		teamID := msg.GetStr("teamID")
+		TeamDelay(teamID)
 	}
+
 }
 
 func (s *Server) sendAll(msg *HubMap, group SocketGroupType) {

@@ -112,6 +112,28 @@ func TeamRemove(teamID string) {
 	q.li.Remove(element)
 }
 
+func TeamChangeMode(teamID string, mode string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	team.Mode = mode
+}
+
+func TeamDelay(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	next := element.Next()
+	if next != nil {
+		q.li.MoveAfter(element, next)
+		team := element.Value.(*Team)
+		team.DelayCount += 1
+	}
+}
+
 func GetAllTeamsFromQueueWithLock() []*Team {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
