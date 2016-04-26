@@ -162,6 +162,15 @@ func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	case "teamRemovePlayer":
 		teamID := msg.GetStr("teamID")
 		TeamRemovePlayer(teamID)
+	case "teamPrepare":
+		teamID := msg.GetStr("teamID")
+		TeamPrepare(teamID)
+	case "teamStart":
+		teamID := msg.GetStr("teamID")
+		TeamStart(teamID)
+	case "teamCall":
+		teamID := msg.GetStr("teamID")
+		TeamCall(teamID)
 	}
 
 }

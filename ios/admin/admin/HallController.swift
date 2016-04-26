@@ -22,7 +22,7 @@ class HallController: PLViewController {
 	@IBOutlet weak var startButton: UIButton!
 	var refreshControl: UIRefreshControl!
 	var teams: [Team]?
-	var topWaitingTeam: Team?
+	var topTeam: Team?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -38,57 +38,97 @@ class HallController: PLViewController {
 		DataManager.singleton.queryData(.HallData)
 	}
 	@IBAction func changeMode() {
-		let mode = topWaitingTeam!.mode == "g" ? "s" : "g"
+		guard topTeam != nil else {
+			return
+		}
+		let mode = topTeam!.mode == "g" ? "s" : "g"
 		let json = JSON([
 			"cmd": "teamChangeMode",
-			"teamID": topWaitingTeam!.id,
+			"teamID": topTeam!.id,
 			"mode": mode
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func callTeam(sender: UIButton) {
+		guard topTeam != nil else {
+			return
+		}
+		let json = JSON([
+			"cmd": "teamCall",
+			"teamID": topTeam!.id,
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func delayTeam(sender: UIButton) {
+		guard topTeam != nil else {
+			return
+		}
 		let json = JSON([
 			"cmd": "teamDelay",
-			"teamID": topWaitingTeam!.id,
+			"teamID": topTeam!.id,
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func addPlayer(sender: UIButton) {
-		guard topWaitingTeam != nil && topWaitingTeam!.size < PLConstants.maxTeamSize else {
+		guard topTeam != nil && topTeam!.size < PLConstants.maxTeamSize else {
 			return
 		}
 		let json = JSON([
 			"cmd": "teamAddPlayer",
-			"teamID": topWaitingTeam!.id,
+			"teamID": topTeam!.id,
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func removePlayer(sender: UIButton) {
-		guard topWaitingTeam != nil && topWaitingTeam!.size > 1 else {
+		guard topTeam != nil && topTeam!.size > 1 else {
 			return
 		}
 		let json = JSON([
 			"cmd": "teamRemovePlayer",
-			"teamID": topWaitingTeam!.id,
+			"teamID": topTeam!.id,
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func ready(sender: UIButton) {
+		guard topTeam != nil else {
+			return
+		}
+		let json = JSON([
+			"cmd": "teamPrepare",
+			"teamID": topTeam!.id,
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func start(sender: AnyObject) {
+		guard topTeam != nil else {
+			return
+		}
+		let json = JSON([
+			"cmd": "teamStart",
+			"teamID": topTeam!.id,
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 
 	private func renderTopWaitingTeam() {
-		teamIDLabel.text = topWaitingTeam?.id
-		playerNumberLabel.text = "\(topWaitingTeam?.size ?? 0)"
-		if topWaitingTeam?.mode == "g" {
+		guard topTeam != nil else {
+			return
+		}
+		teamIDLabel.text = topTeam!.id
+		playerNumberLabel.text = "\(topTeam!.size)"
+		if topTeam!.mode == "g" {
 			modeImageView.image = UIImage(named: "FunIcon")
 			modeLabel.text = "[赏金模式]"
 		} else {
 			modeImageView.image = UIImage(named: "SurvivalIcon")
 			modeLabel.text = "[生存模式]"
+		}
+		if topTeam!.status == .Waiting {
+			readyButton.enabled = true
+			startButton.enabled = false
+		} else if topTeam!.status == .Prepare {
+			readyButton.enabled = false
+			startButton.enabled = true
 		}
 	}
 }
@@ -99,8 +139,8 @@ extension HallController: DataReceiver {
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
 				for team in teams! {
-					if team.status == .Waiting {
-						topWaitingTeam = team
+					if team.status == .Waiting || team.status == .Prepare {
+						topTeam = team
 						renderTopWaitingTeam()
 						break
 					}
@@ -166,7 +206,8 @@ extension HallController: UITableViewDataSource, UITableViewDelegate {
 	}
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")! as! HallTableViewCell
-		cell.setData(teams![indexPath.row], number: indexPath.row)
+		let team = teams![indexPath.row]
+		cell.setData(team, number: indexPath.row, active: team.id == topTeam?.id)
 		cell.delegate = self
 		cell.rightUtilityButtons = rightButtons
 		return cell

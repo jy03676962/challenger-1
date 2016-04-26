@@ -55,6 +55,12 @@
                                                         <constraint firstAttribute="width" constant="656" id="cST-Oq-REQ"/>
                                                     </constraints>
                                                 </imageView>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TopTeamBackground" translatesAutoresizingMaskIntoConstraints="NO" id="nLV-ha-A1S">
+                                                    <rect key="frame" x="2" y="0.0" width="656" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="kgN-3l-1L3"/>
+                                                    </constraints>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2016" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ls5-eV-8fA">
                                                     <rect key="frame" x="148" y="11" width="29" height="18"/>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
@@ -107,14 +113,17 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
+                                                <constraint firstItem="nLV-ha-A1S" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="DK0-DR-Vvo"/>
                                                 <constraint firstItem="VnQ-eu-M8B" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="20" id="Dg4-JS-Jvc"/>
                                                 <constraint firstItem="RSQ-in-283" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="GvG-2B-NIL"/>
                                                 <constraint firstItem="5ZO-b8-lrk" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="PAa-dA-QSZ"/>
                                                 <constraint firstItem="RSQ-in-283" firstAttribute="centerX" secondItem="7Sy-8x-a2H" secondAttribute="centerX" id="UJB-SD-0he"/>
+                                                <constraint firstItem="nLV-ha-A1S" firstAttribute="centerX" secondItem="RSQ-in-283" secondAttribute="centerX" id="XYV-cL-bjC"/>
                                                 <constraint firstItem="b4v-2G-hTa" firstAttribute="centerY" secondItem="VnQ-eu-M8B" secondAttribute="centerY" id="Ya4-Xw-wvH"/>
                                                 <constraint firstItem="P2O-Ql-eAc" firstAttribute="leading" secondItem="Ls5-eV-8fA" secondAttribute="trailing" constant="100" id="b95-bv-zHi"/>
                                                 <constraint firstItem="5ZO-b8-lrk" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="370" id="c00-3n-MXe"/>
                                                 <constraint firstItem="R3O-hW-8Fu" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="ciR-Zb-XRH"/>
+                                                <constraint firstItem="nLV-ha-A1S" firstAttribute="width" secondItem="RSQ-in-283" secondAttribute="width" id="d0p-bu-y5A"/>
                                                 <constraint firstItem="P2O-Ql-eAc" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="ecR-QR-PpG"/>
                                                 <constraint firstItem="P2O-Ql-eAc" firstAttribute="leading" secondItem="7Sy-8x-a2H" secondAttribute="leadingMargin" constant="270" id="huu-xg-y0V"/>
                                                 <constraint firstItem="VnQ-eu-M8B" firstAttribute="centerY" secondItem="7Sy-8x-a2H" secondAttribute="centerY" id="mL8-sa-JQZ"/>
@@ -131,6 +140,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
+                                            <outlet property="activeImageView" destination="nLV-ha-A1S" id="k9s-ZW-emx"/>
                                             <outlet property="delayCountImageView" destination="VnQ-eu-M8B" id="Ofy-W9-2mX"/>
                                             <outlet property="delayCountLabel" destination="5ZO-b8-lrk" id="8nB-xf-ZaQ"/>
                                             <outlet property="numberLabel" destination="b4v-2G-hTa" id="xSx-bE-SgD"/>
@@ -316,24 +326,26 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3hb-B2-1Qd">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3hb-B2-1Qd">
                                 <rect key="frame" x="710" y="375" width="273" height="33"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="273" id="G1H-rl-u5q"/>
                                     <constraint firstAttribute="height" constant="33" id="jI7-0o-i9u"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="PrepareButton"/>
+                                <state key="disabled" backgroundImage="PrepareDoneButton"/>
                                 <connections>
                                     <action selector="ready:" destination="9pv-A4-QxB" eventType="touchUpInside" id="oK6-Nl-ZmR"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WFV-Bd-zVd">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WFV-Bd-zVd">
                                 <rect key="frame" x="710" y="606" width="273" height="33"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="273" id="RSg-fT-BXT"/>
                                     <constraint firstAttribute="height" constant="33" id="jAx-ov-idK"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="StartMatchDisabled"/>
+                                <state key="normal" backgroundImage="StartMatch"/>
+                                <state key="disabled" backgroundImage="StartMatchDisabled"/>
                                 <connections>
                                     <action selector="start:" destination="9pv-A4-QxB" eventType="touchUpInside" id="phA-2z-i38"/>
                                 </connections>
@@ -527,7 +539,10 @@
         <image name="HallTableHeader" width="30" height="30"/>
         <image name="ModeChangeIcon" width="30" height="30"/>
         <image name="PrepareButton" width="30" height="30"/>
+        <image name="PrepareDoneButton" width="30" height="30"/>
         <image name="RemovePlayer" width="30" height="30"/>
+        <image name="StartMatch" width="30" height="30"/>
         <image name="StartMatchDisabled" width="30" height="30"/>
+        <image name="TopTeamBackground" width="30" height="30"/>
     </resources>
 </document>

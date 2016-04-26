@@ -18,6 +18,7 @@ class HallTableViewCell: SWTableViewCell {
 	@IBOutlet weak var waitTimeLabel: UILabel!
 	@IBOutlet weak var delayCountImageView: UIImageView!
 	@IBOutlet weak var numberLabel: UILabel!
+	@IBOutlet weak var activeImageView: UIImageView!
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		backgroundColor = UIColor.clearColor()
@@ -29,7 +30,7 @@ class HallTableViewCell: SWTableViewCell {
 		// Configure the view for the selected state
 	}
 
-	func setData(team: Team, number: Int) {
+	func setData(team: Team, number: Int, active: Bool) {
 		teamIDLabel.text = team.id
 		teamSizeLabel.text = String(team.size)
 		delayCountLabel.text = "- \(team.delayCount) -"
@@ -43,5 +44,6 @@ class HallTableViewCell: SWTableViewCell {
 		let delayImage = UIImage(named: delayImageName)
 		delayCountImageView.image = delayImage
 		numberLabel.text = String(number + 1)
+		activeImageView.hidden = !active
 	}
 }

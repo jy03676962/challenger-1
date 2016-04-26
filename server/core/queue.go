@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	initCursor     = 2000
-	singleWaitTime = 360
+	initCursor       = 2000
+	singleWaitTime   = 360
+	maxFinishedCount = 3
 )
 
 type TeamStatus int
@@ -73,12 +74,36 @@ func ResetQueue() error {
 	return nil
 }
 
-func EnterPrepare() error {
-	return nil
+func TeamPrepare(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	if team.Status == TS_Waiting {
+		team.Status = TS_Prepare
+	}
 }
 
-func EnterPlay() error {
-	return nil
+func TeamStart(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	if team.Status == TS_Prepare {
+		team.Status = TS_Playing
+	}
+}
+
+func TeamCall(teamID string) {
+	q.lock.RLock()
+	defer q.lock.RUnlock()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	if team.Status == TS_Waiting {
+		// TODO: call team
+	}
 }
 
 func TeamCutLine(teamID string) {
