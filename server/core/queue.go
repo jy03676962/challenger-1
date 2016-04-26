@@ -135,7 +135,7 @@ func GetAllTeamsFromQueue() []*Team {
 func updateHallData() {
 	msg := NewHubMap()
 	msg.SetCmd("HallData")
-	msg.Set("teams", GetAllTeamsFromQueue())
+	msg.Set("data", GetAllTeamsFromQueue())
 	socketInput := SocketInput{Broadcast: true, Group: SG_Admin, SocketMessage: msg}
 	go func() {
 		GetHub().SocketInputCh <- &socketInput

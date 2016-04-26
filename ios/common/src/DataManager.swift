@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import SwiftyJSON
 import Starscream
+import SwiftyJSON
 
 public protocol DataReceiver {
-	func onReceivedData(json: JSON, type: DataType)
+	func onReceivedData(json: [String: AnyObject], type: DataType)
 }
 
 public enum DataType: String {
@@ -71,6 +71,9 @@ extension DataManager: WebSocketDelegate {
 			return
 		}
 		let json = JSON(data: dataFromString!)
+		guard json.type == .Dictionary else {
+			return
+		}
 		let cmd = json["cmd"].string
 		guard cmd != nil else {
 			return
@@ -78,7 +81,7 @@ extension DataManager: WebSocketDelegate {
 		for (type, receivers) in receiversMap {
 			if type.rawValue == cmd {
 				for receiver in receivers {
-					receiver.onReceivedData(json, type: type)
+					receiver.onReceivedData(json.dictionaryObject!, type: type)
 				}
 			}
 		}

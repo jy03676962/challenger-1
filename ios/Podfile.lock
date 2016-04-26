@@ -2,6 +2,7 @@ PODS:
   - Alamofire (3.3.1)
   - AutoKeyboardScrollView (1.4.1)
   - EasyPeasy (0.2.3)
+  - ObjectMapper (1.2.0)
   - Starscream (1.1.3)
   - SVProgressHUD (2.0.3)
   - SwiftyJSON (2.3.2)
@@ -14,6 +15,7 @@ DEPENDENCIES:
   - Alamofire (~> 3.3)
   - AutoKeyboardScrollView (~> 1.4)
   - EasyPeasy
+  - ObjectMapper (~> 1.2)
   - Starscream (~> 1.1.3)
   - SVProgressHUD
   - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
@@ -35,6 +37,7 @@ SPEC CHECKSUMS:
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
   AutoKeyboardScrollView: 95e6780deca4bf6e0beac8fdfa508d861800c9cf
   EasyPeasy: 8ffc6502c888220d80cbecb53ca188e772d4ea2a
+  ObjectMapper: b1e9c7c8a9f6400b72690c80072c131504caa66f
   Starscream: d662732354b40dd19ed1ece3e3c44c80b536b83c
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
@@ -43,6 +46,6 @@ SPEC CHECKSUMS:
   UIColor_Hex_Swift: e91dc51f6bf252ec7bf74c8704ceedeeb7640c1c
   XCGLogger: d6e196e78940ff6daab17d6917107876f973fa31
 
-PODFILE CHECKSUM: f953475705c792075acb9cce695fadfb0f259e58
+PODFILE CHECKSUM: 1ef0ee92420bca8e4c20cb06229413c165b07669
 
 COCOAPODS: 1.0.0.beta.8

@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import SWTableViewCell
+import ObjectMapper
 
 class HallController: PLViewController {
 	@IBOutlet weak var teamtableView: UITableView!
@@ -20,7 +21,7 @@ class HallController: PLViewController {
 	@IBOutlet weak var readyButton: UIButton!
 	@IBOutlet weak var startButton: UIButton!
 	var refreshControl: UIRefreshControl!
-	var teams: [JSON]?
+	var teams: [Team]?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -52,9 +53,9 @@ class HallController: PLViewController {
 }
 
 extension HallController: DataReceiver {
-	func onReceivedData(json: JSON, type: DataType) {
+	func onReceivedData(json: [String: AnyObject], type: DataType) {
 		if type == .HallData {
-			teams = json["teams"].array
+			teams = Mapper<Team>().mapArray(json["data"])
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
 		}
@@ -74,17 +75,17 @@ extension HallController: SWTableViewCellDelegate {
 	}
 
 	func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerRightUtilityButtonWithIndex index: Int) {
-		let teamJson = teamJsonFromCell(cell)
+		let team = teamFromCell(cell)
 		if index == 0 {
 			let json = JSON([
 				"cmd": "teamCutLine",
-				"teamID": teamJson["id"].stringValue
+				"teamID": team.id
 			])
 			WsClient.singleton.sendJSON(json)
 		} else if index == 1 {
 			let json = JSON([
 				"cmd": "teamRemove",
-				"teamID": teamJson["id"].stringValue
+				"teamID": team.id
 			])
 			WsClient.singleton.sendJSON(json)
 		}
@@ -93,15 +94,14 @@ extension HallController: SWTableViewCellDelegate {
 		return true
 	}
 	func swipeableTableViewCell(cell: SWTableViewCell!, canSwipeToState state: SWCellState) -> Bool {
-		let teamJson = teamJsonFromCell(cell)
-		let status = TeamStatus(rawValue: teamJson["status"].intValue)!
-		if status != .Waiting {
+		let team = teamFromCell(cell)
+		if team.status != .Waiting {
 			return false
 		}
 		return true
 	}
 
-	private func teamJsonFromCell(cell: SWTableViewCell) -> JSON {
+	private func teamFromCell(cell: SWTableViewCell) -> Team {
 		let cellIndex = teamtableView.indexPathForCell(cell)!
 		return teams![cellIndex.row]
 	}
