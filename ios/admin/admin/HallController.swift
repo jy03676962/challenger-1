@@ -116,7 +116,7 @@ extension HallController: UITableViewDataSource, UITableViewDelegate {
 	}
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")! as! HallTableViewCell
-		cell.setData(teams![indexPath.row])
+		cell.setData(teams![indexPath.row], number: indexPath.row)
 		cell.delegate = self
 		cell.rightUtilityButtons = rightButtons
 		return cell
