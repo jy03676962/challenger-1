@@ -12,6 +12,7 @@ import SwiftyUserDefaults
 struct PLConstants {
 	static let host = "localhost:3030"
 	static let usualFont = "Alien League Bold"
+	static let maxTeamSize = 4
 	static func getHost() -> String {
 		if let h = Defaults[.host] {
 			return h

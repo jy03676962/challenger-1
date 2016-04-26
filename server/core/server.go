@@ -156,6 +156,12 @@ func (s *Server) handleAdminSocketMessage(e *SocketOutput) {
 	case "teamDelay":
 		teamID := msg.GetStr("teamID")
 		TeamDelay(teamID)
+	case "teamAddPlayer":
+		teamID := msg.GetStr("teamID")
+		TeamAddPlayer(teamID)
+	case "teamRemovePlayer":
+		teamID := msg.GetStr("teamID")
+		TeamRemovePlayer(teamID)
 	}
 
 }

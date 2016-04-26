@@ -56,8 +56,24 @@ class HallController: PLViewController {
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func addPlayer(sender: UIButton) {
+		guard topWaitingTeam != nil && topWaitingTeam!.size < PLConstants.maxTeamSize else {
+			return
+		}
+		let json = JSON([
+			"cmd": "teamAddPlayer",
+			"teamID": topWaitingTeam!.id,
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func removePlayer(sender: UIButton) {
+		guard topWaitingTeam != nil && topWaitingTeam!.size > 1 else {
+			return
+		}
+		let json = JSON([
+			"cmd": "teamRemovePlayer",
+			"teamID": topWaitingTeam!.id,
+		])
+		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func ready(sender: UIButton) {
 	}
@@ -66,7 +82,7 @@ class HallController: PLViewController {
 
 	private func renderTopWaitingTeam() {
 		teamIDLabel.text = topWaitingTeam?.id
-		playerNumberLabel.text = String(topWaitingTeam?.size)
+		playerNumberLabel.text = "\(topWaitingTeam?.size ?? 0)"
 		if topWaitingTeam?.mode == "g" {
 			modeImageView.image = UIImage(named: "FunIcon")
 			modeLabel.text = "[赏金模式]"

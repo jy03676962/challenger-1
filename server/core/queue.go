@@ -134,6 +134,24 @@ func TeamDelay(teamID string) {
 	}
 }
 
+func TeamAddPlayer(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	team.Size += 1
+}
+
+func TeamRemovePlayer(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	team.Size -= 1
+}
+
 func GetAllTeamsFromQueueWithLock() []*Team {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
