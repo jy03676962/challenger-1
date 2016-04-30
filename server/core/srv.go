@@ -155,12 +155,56 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 	switch msg.AddAddress.Type {
 	case InboxAddressTypeSimulatorDevice:
 		s.handleSimulatorMessage(msg)
+	case InboxAddressTypeArduinoTestDevice:
+		s.handleArduinoTestMessage(msg)
+	case InboxAddressTypeAdminDevice:
+		s.handleAdminMessage(msg)
 	}
 }
 
 func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	if cmd == "init" {
+		s.sendMsgToAddresses("options", GetOptions(), []InboxAddress{*msg.Address})
+	}
+}
+
+func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
+	s.send(msg, []InboxAddress{InboxAddress{InboxAddressTypeArduinoDevice, ""}})
+}
+
+func (s *Srv) handleAdminMessage(msg *InboxMessage) {
+	switch msg.GetCmd() {
+	case "queryHallData":
+		s.queue.TeamQueryData()
+	case "teamCutLine":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamCutLine(teamID)
+	case "teamRemove":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamRemove(teamID)
+	case "teamChangeMode":
+		teamID := msg.GetStr("teamID")
+		mode := msg.GetStr("mode")
+		s.queue.TeamChangeMode(teamID, mode)
+	case "teamDelay":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamDelay(teamID)
+	case "teamAddPlayer":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamAddPlayer(teamID)
+	case "teamRemovePlayer":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamRemovePlayer(teamID)
+	case "teamPrepare":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamPrepare(teamID)
+	case "teamStart":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamStart(teamID)
+	case "teamCall":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamCall(teamID)
 	}
 }
 
@@ -181,5 +225,9 @@ func (s *Srv) sendMsgToAddresses(cmd string, data interface{}, addrs []InboxAddr
 	msg := NewInboxMessage()
 	msg.SetCmd(cmd)
 	msg.Set("data", data)
+	s.send(msg, addrs)
+}
+
+func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
 	go s.inbox.Send(msg, addrs)
 }

@@ -175,10 +175,10 @@ func (q *Queue) TeamRemovePlayer(teamID string) {
 	team.Size -= 1
 }
 
-func (q *Queue) GetAllTeamsFromQueueWithLock() []Team {
+func (q *Queue) TeamQueryData() {
 	q.lock.RLock()
-	defer q.lock.RUnlock()
-	return q.GetAllTeamsFromQueue()
+	q.updateHallData()
+	q.lock.RUnlock()
 }
 
 func (q *Queue) GetAllTeamsFromQueue() []Team {

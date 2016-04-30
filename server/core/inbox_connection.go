@@ -152,10 +152,8 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 			d := buf[:cmdLen]
 			id := string(d[3:6])
 			v.Set("head", string(d[:3]))
-			v.Set("ID", id)
 			v.Set("loc", string(d[6:9]))
 			v.Set("status", string(d[9:]))
-			v.Set("TYPE", InboxAddressTypeWearableDevice)
 			udp.lock.RLock()
 			c, ok := udp.dict[id]
 			udp.lock.RUnlock()
@@ -253,24 +251,16 @@ func (ws *InboxWsConnection) ReadJSON(v *InboxMessage) error {
 		return e
 	}
 	if v.GetCmd() == "init" {
-		t := v.GetStr("TYPE")
+		t := v.Get("TYPE").(InboxAddressType)
 		id := v.GetStr("ID")
-		var tt InboxAddressType
-		if t == "admin" {
-			tt = InboxAddressTypeAdminDevice
-		} else if t == "postgame" {
-			tt = InboxAddressTypePostgameDevice
-		} else if t == "simulator" {
-			tt = InboxAddressTypePostgameDevice
-		}
 		oldid, oldt := ws.getAddressInfo()
 		if oldid != id {
-			v.AddAddress = &InboxAddress{tt, id}
+			v.AddAddress = &InboxAddress{t, id}
 			v.Address = v.AddAddress
 			if oldid != "" {
 				v.RemoveAddress = &InboxAddress{oldt, oldid}
 			}
-			ws.setAddressInfo(id, tt)
+			ws.setAddressInfo(id, t)
 		}
 	} else {
 		id, t := ws.getAddressInfo()
