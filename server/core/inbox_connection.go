@@ -35,33 +35,40 @@ func (tcp *InboxTcpConnection) Close() error {
 func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 	b, e := tcp.r.ReadBytes(60) // tcp message frame start with '<'
 	if e != nil {
+		if tcp.id != "" {
+			v.RemoveAddress = &InboxAddress{InboxAddressTypeArduinoDevice, tcp.id}
+			v.ShouldCloseConnection = true
+		}
 		return e
 	}
 	b, e = tcp.r.ReadBytes(62) // tcp message frame end with '>'
 	if e != nil {
+		if tcp.id != "" {
+			v.RemoveAddress = &InboxAddress{InboxAddressTypeArduinoDevice, tcp.id}
+			v.ShouldCloseConnection = true
+		}
 		return e
+	}
+	if tcp.id != "" {
+		v.Address = &InboxAddress{InboxAddressTypeArduinoDevice, tcp.id}
 	}
 	if len(b) == 1 { // only has '>' delimiter
 		return nil
 	}
 	if b[0] == 123 { // first byte is '{', json encoding frame
-		e := json.Unmarshal(b[:len(b)-1], &v.Data)
-		if e == nil {
-			if len(tcp.id) > 0 {
-				v.Set("ID", tcp.id)
-				v.Set("TYPE", InboxAddressTypeArduinoDevice)
-			}
-		}
-		return e
+		json.Unmarshal(b[:len(b)-1], &v.Data)
 	} else { // parse heart beat frame
 		parseTcpHB(string(b), v)
 		v.SetCmd("hb")
-		v.Set("TYPE", InboxAddressTypeArduinoDevice)
-		if id := v.GetStr("ID"); id != "" {
+		if id := v.GetStr("ID"); id != "" && tcp.id != id {
+			v.AddAddress = &InboxAddress{InboxAddressTypeArduinoDevice, id}
+			if tcp.id != "" {
+				v.RemoveAddress = &InboxAddress{InboxAddressTypeArduinoDevice, tcp.id}
+			}
 			tcp.id = id
 		}
-		return nil
 	}
+	return nil
 }
 
 // Tcp HB format is [key1]value1[key2]value2
@@ -130,12 +137,26 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 		v.Set("loc", string(d[6:9]))
 		v.Set("status", string(d[9:]))
 		v.Set("TYPE", InboxAddressTypeWearableDevice)
-		udp.lock.Lock()
-		udp.dict[id] = addr
-		udp.lock.Unlock()
+		udp.lock.RLock()
+		a, ok := udp.dict[id]
+		udp.lock.RUnlock()
+		if !ok {
+			udp.lock.Lock()
+			udp.dict[id] = addr
+			udp.lock.Unlock()
+			v.AddAddress = &InboxAddress{InboxAddressTypeWearableDevice, id}
+		} else {
+			if a.String() != addr.String() {
+				udp.lock.Lock()
+				udp.dict[id] = addr
+				udp.lock.Unlock()
+			}
+			v.Address = &InboxAddress{InboxAddressTypeWearableDevice, id}
+		}
 	}
 	return nil
 }
+
 func (udp *InboxUdpConnection) WriteJSON(v *InboxMessage) error {
 	str := v.GetStr("head") + v.GetStr("id") + v.GetStr("cmd")
 	udp.lock.RLock()
@@ -179,12 +200,17 @@ func (ws *InboxWsConnection) Close() error {
 func (ws *InboxWsConnection) ReadJSON(v *InboxMessage) error {
 	e := websocket.JSON.Receive(ws.conn, &v.Data)
 	if e != nil {
+		id, t := ws.getAddressInfo()
+		if id != "" {
+			v.RemoveAddress = &InboxAddress{t, id}
+		}
+		v.ShouldCloseConnection = true
 		return e
 	}
 	if v.GetCmd() == "init" {
 		t := v.GetStr("TYPE")
+		id := v.GetStr("ID")
 		var tt InboxAddressType
-		id := ""
 		if t == "admin" {
 			tt = InboxAddressTypeAdminDevice
 		} else if t == "postgame" {
@@ -192,11 +218,19 @@ func (ws *InboxWsConnection) ReadJSON(v *InboxMessage) error {
 		} else if t == "simulator" {
 			tt = InboxAddressTypePostgameDevice
 		}
-		ws.setAddressInfo(v.GetStr("ID"), tt)
-	}
-	if id, t, b := ws.getAddressInfo(); b {
-		v.Set("ID", id)
-		v.Set("TYPE", t)
+		oldid, oldt := ws.getAddressInfo()
+		if oldid != id {
+			v.AddAddress = &InboxAddress{tt, id}
+			if oldid != "" {
+				v.RemoveAddress = &InboxAddress{oldt, oldid}
+			}
+			ws.setAddressInfo(id, tt)
+		}
+	} else {
+		id, t := ws.getAddressInfo()
+		if id != "" {
+			v.Address = &InboxAddress{t, id}
+		}
 	}
 	return nil
 }
@@ -206,7 +240,7 @@ func (ws *InboxWsConnection) WriteJSON(v *InboxMessage) error {
 }
 
 func (ws *InboxWsConnection) Accept(addr InboxAddress) bool {
-	if id, t, b := ws.getAddressInfo(); b {
+	if id, t := ws.getAddressInfo(); id != "" {
 		if t != addr.Type {
 			return false
 		}
@@ -215,14 +249,10 @@ func (ws *InboxWsConnection) Accept(addr InboxAddress) bool {
 	return false
 }
 
-func (ws *InboxWsConnection) getAddressInfo() (id string, t InboxAddressType, hasInfo bool) {
-	id, t, hasInfo = "", InboxAddressTypeUnknown, false
+func (ws *InboxWsConnection) getAddressInfo() (string, InboxAddressType) {
 	ws.l.RLock()
 	defer ws.l.RUnlock()
-	if len(ws.id) > 0 {
-		id, t, hasInfo = ws.id, ws.t, true
-	}
-	return
+	return ws.id, ws.t
 }
 
 func (ws *InboxWsConnection) setAddressInfo(id string, t InboxAddressType) {

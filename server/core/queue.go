@@ -36,21 +36,23 @@ type Team struct {
 
 type Queue struct {
 	li   *list.List
+	srv  *Srv
 	dict map[string]*list.Element
 	cur  int
 	lock *sync.RWMutex
 }
 
-func NewQueue() *Queue {
+func NewQueue(srv *Srv) *Queue {
 	q := Queue{}
 	q.li = list.New()
+	q.srv = srv
 	q.dict = make(map[string]*list.Element)
 	q.cur = initCursor
 	q.lock = new(sync.RWMutex)
 	return &q
 }
 
-func (q *Queue) AddTeamToQueue(teamSize int, mode string) (*Team, error) {
+func (q *Queue) AddTeamToQueue(teamSize int, mode string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	defer q.updateHallData()
@@ -59,17 +61,15 @@ func (q *Queue) AddTeamToQueue(teamSize int, mode string) (*Team, error) {
 	t := Team{Size: teamSize, ID: id, Status: TS_Waiting, Mode: mode}
 	element := q.li.PushBack(&t)
 	q.dict[id] = element
-	return &t, nil
 }
 
-func (q *Queue) ResetQueue() error {
+func (q *Queue) ResetQueue() {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	q.li.Init()
 	q.dict = make(map[string]*list.Element)
 	q.cur = initCursor
-	return nil
 }
 
 func (q *Queue) TeamPrepare(teamID string) {
@@ -175,14 +175,14 @@ func (q *Queue) TeamRemovePlayer(teamID string) {
 	team.Size -= 1
 }
 
-func (q *Queue) GetAllTeamsFromQueueWithLock() []*Team {
+func (q *Queue) GetAllTeamsFromQueueWithLock() []Team {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
 	return q.GetAllTeamsFromQueue()
 }
 
-func (q *Queue) GetAllTeamsFromQueue() []*Team {
-	result := make([]*Team, q.li.Len())
+func (q *Queue) GetAllTeamsFromQueue() []Team {
+	result := make([]Team, q.li.Len())
 	waitTime := 0
 	for e, i := q.li.Front(), 0; e != nil; e, i = e.Next(), i+1 {
 		team := e.Value.(*Team)
@@ -190,17 +190,11 @@ func (q *Queue) GetAllTeamsFromQueue() []*Team {
 			waitTime += singleWaitTime
 			team.WaitTime = waitTime
 		}
-		result[i] = team
+		result[i] = *team
 	}
 	return result
 }
 
 func (q *Queue) updateHallData() {
-	msg := NewHubMap()
-	msg.SetCmd("HallData")
-	msg.Set("data", q.GetAllTeamsFromQueue())
-	socketInput := SocketInput{Broadcast: true, Group: SG_Admin, SocketMessage: msg}
-	go func() {
-		GetHub().SocketInputCh <- &socketInput
-	}()
+	q.srv.onQueueUpdated(q.GetAllTeamsFromQueue())
 }

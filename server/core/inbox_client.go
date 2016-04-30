@@ -7,17 +7,15 @@ import (
 var _ = log.Println
 
 type InboxClient struct {
-	conn   InboxConnection
-	doneCh chan bool
-	id     int
-	inbox  *Inbox
+	conn  InboxConnection
+	id    int
+	inbox *Inbox
 }
 
 func NewInboxClient(conn InboxConnection, inbox *Inbox, id int) *InboxClient {
 	client := InboxClient{}
 	client.conn = conn
 	client.id = id
-	client.doneCh = make(chan bool)
 	client.inbox = inbox
 	return &client
 }
@@ -36,7 +34,6 @@ func (c *InboxClient) Write(msg *InboxMessage, addr InboxAddress) {
 		e := c.conn.WriteJSON(msg)
 		if e != nil {
 			log.Printf("send message error:%v\n", e.Error())
-			close(c.doneCh)
 		}
 	}()
 }
@@ -44,16 +41,16 @@ func (c *InboxClient) Write(msg *InboxMessage, addr InboxAddress) {
 func (c *InboxClient) listenRead() {
 	for {
 		select {
-		case <-c.doneCh:
-			return
 		default:
 			m := NewInboxMessage()
 			e := c.conn.ReadJSON(m)
 			if e != nil {
 				log.Printf("read message error:%v\n", e.Error())
-				return
 			}
 			c.inbox.ReceiveMessage(m)
+			if m.ShouldCloseConnection {
+				return
+			}
 		}
 	}
 

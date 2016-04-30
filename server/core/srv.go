@@ -2,12 +2,12 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -24,19 +24,18 @@ type Srv struct {
 
 func NewSrv() *Srv {
 	s := Srv{}
-	s.inbox = NewInbox(s)
-	s.queue = NewQueue()
-	s.match = NewMatch(s)
+	s.inbox = NewInbox(&s)
+	s.queue = NewQueue(&s)
+	s.match = NewMatch(&s)
 	s.db = NewDb()
 	s.inboxMessageChan = make(chan *InboxMessage, 1)
 	return &s
 }
 
 func (s *Srv) Run(tcpAddr string, udpAddr string, dbPath string) {
-e:
-	s.db.connect(dbPath)
+	e := s.db.connect(dbPath)
 	if e != nil {
-		log.Printf("open database error:%v\n", r.Error())
+		log.Printf("open database error:%v\n", e.Error())
 		os.Exit(1)
 	}
 	//go s.inbox.Run()
@@ -47,7 +46,7 @@ e:
 }
 
 func (s *Srv) ListenWebSocket(conn *websocket.Conn) {
-	inbox.ListenConnection(NewInboxWsConnection(conn))
+	s.inbox.ListenConnection(NewInboxWsConnection(conn))
 }
 
 // http interface
@@ -55,18 +54,12 @@ func (s *Srv) ListenWebSocket(conn *websocket.Conn) {
 func (s *Srv) AddTeam(c echo.Context) error {
 	count, _ := strconv.Atoi(c.FormValue("count"))
 	mode := c.FormValue("mode")
-	t, err := s.queue.AddTeamToQueue(count, mode)
-	if err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, t)
+	s.queue.AddTeamToQueue(count, mode)
+	return c.JSON(http.StatusOK, nil)
 }
 
 func (s *Srv) ResetQueue(c echo.Context) error {
-	err := s.queue.ResetQueue()
-	if err != nil {
-		return err
-	}
+	s.queue.ResetQueue()
 	return c.JSON(http.StatusOK, nil)
 }
 
@@ -94,11 +87,11 @@ func (s *Srv) listenTcp(address string) {
 	}
 	defer listener.Close()
 	for {
-		conn, err := ln.AcceptTCP()
+		conn, err := listener.AcceptTCP()
 		if err != nil {
 			log.Println("tcp listen error: ", err.Error())
 		} else {
-			go inbox.ListenConnection(NewInboxTcpConnection(conn))
+			go s.inbox.ListenConnection(NewInboxTcpConnection(conn))
 		}
 	}
 }
@@ -114,64 +107,70 @@ func (s *Srv) listenUdp(address string) {
 		log.Println("udp listen error: ", err.Error())
 		os.Exit(1)
 	}
-	inbox.ListenConnection(NewInboxUdpConnection(conn))
+	s.inbox.ListenConnection(NewInboxUdpConnection(conn))
 }
 
-// nonblock
 func (s *Srv) onInboxMessageArrived(msg *InboxMessage) {
 	s.inboxMessageChan <- msg
 }
 
+func (s *Srv) onInboxConnectionBroken() {
+}
+
 // nonblock, 下发match数据
-func (s *Srv) onMatchUpdated() {
-	b, e := json.Marshal(s.match)
-	if e != nil {
-		log.Printf("marshal match error:%v\n", e.Error())
-		return
-	}
-	s.sendMsg("updateMatch", string(b), InboxAddressTypeSimulatorDevice, "")
+func (s *Srv) onMatchUpdated(matchData []byte) {
+	s.sendMsg("updateMatch", string(matchData), InboxAddressTypeSimulatorDevice, "")
 }
 
 func (s *Srv) saveMatch(d *MatchData) {
-	s.db.SaveMatch(d)
+	s.db.saveMatch(d)
+}
+
+// nonblock, 下发queue数据
+func (s *Srv) onQueueUpdated(queueData []Team) {
+	s.sendMsgs("updateQueue", queueData, InboxAddressTypeAdminDevice)
 }
 
 func (s *Srv) handleInboxMessage(msg *InboxMessage) {
-	id := msg.GetStr("ID")
-	if len(id) == 0 {
-		log.Printf("message has no ID:%v\n", msg.Data)
-		return
+	shouldUpdatePlayerController := false
+	if msg.RemoveAddress != nil && msg.RemoveAddress.Type.IsPlayerControllerType() {
+		delete(s.pDict, msg.RemoveAddress.String())
+		shouldUpdatePlayerController = true
+	}
+	if msg.AddAddress != nil && msg.AddAddress.Type.IsPlayerControllerType() {
+		s.pDict[msg.AddAddress.String()] = NewPlayerController(*msg.AddAddress)
+		shouldUpdatePlayerController = true
+	}
+	if shouldUpdatePlayerController {
+		json, _ := json.Marshal(s.pDict)
+		s.sendMsgs("updatePlayerController", json, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
+	}
+
+	if msg.Address == nil || msg.AddAddress == nil {
+		log.Printf("message has no address:%v\n", msg.Data)
 	}
 	cmd := msg.GetCmd()
 	if len(cmd) == 0 {
 		log.Printf("message has no cmd:%v\n", msg.Data)
 		return
 	}
-
-	t := msg.Get("TYPE").(InboxAddressType)
-	addr := InboxAddress{t, id}
-	if t == InboxAddressTypeSimulatorDevice || t == InboxAddressTypeWearableDevice {
-		key := fmt.Sprintf("%v:%v", t, id)
-		if _, ok := s.pDict[key]; !ok {
-			controller = NewPlayerController(addr)
-			s.pDict[addr.String()] = controller
-			json, _ := json.Marshal(controller)
-			addrs := []InboxAddress{
-				InboxAddress{InboxAddressTypeAdminDevice, ""},
-				InboxAddress{InboxAddressTypeSimulatorDevice, ""},
-			}
-			s.sendMsgs("updatePlayerController", json, addrs)
-		}
-	}
 }
 
 func (s *Srv) sendMsg(cmd string, data interface{}, t InboxAddressType, id string) {
 	addr := InboxAddress{t, id}
-	sendMsgs(cmd, data, []InboxAddress{addr})
+	s.sendMsgToAddresses(cmd, data, []InboxAddress{addr})
 }
 
-func (s *Srv) sendMsgs(cmd string, data interface{}, addrs []InboxAddress) {
-	msg := NewInboxMessage{}
+func (s *Srv) sendMsgs(cmd string, data interface{}, types ...InboxAddressType) {
+	addrs := make([]InboxAddress, len(types))
+	for i, t := range types {
+		addrs[i] = InboxAddress{t, ""}
+	}
+	s.sendMsgToAddresses(cmd, data, addrs)
+}
+
+func (s *Srv) sendMsgToAddresses(cmd string, data interface{}, addrs []InboxAddress) {
+	msg := NewInboxMessage()
 	msg.SetCmd(cmd)
 	msg.Set("data", data)
 	go s.inbox.Send(msg, addrs)

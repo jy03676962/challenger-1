@@ -32,7 +32,7 @@ func NewDb() *DB {
 	return &DB{}
 }
 
-func (db *DB) Connect(path string) error {
+func (db *DB) connect(path string) error {
 	conn, err := gorm.Open("sqlite3", path)
 	conn.AutoMigrate(&MatchData{}, &PlayerData{})
 	if err != nil {

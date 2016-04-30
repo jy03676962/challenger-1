@@ -15,6 +15,10 @@ const (
 	InboxAddressTypeArduinoDevice               // Arduino设备
 )
 
+func (t InboxAddressType) IsPlayerControllerType() bool {
+	return t == InboxAddressTypeSimulatorDevice || t == InboxAddressTypeWearableDevice
+}
+
 type InboxAddress struct {
 	Type InboxAddressType `json:"type"`
 	ID   string           `json:"id"`

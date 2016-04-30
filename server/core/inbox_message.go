@@ -5,11 +5,17 @@ import (
 )
 
 type InboxMessage struct {
-	Data map[string]interface{}
+	Data                  map[string]interface{}
+	Address               *InboxAddress
+	RemoveAddress         *InboxAddress
+	AddAddress            *InboxAddress
+	ShouldCloseConnection bool
 }
 
 func NewInboxMessage() *InboxMessage {
-	return &InboxMessage{make(map[string]interface{})}
+	msg := InboxMessage{}
+	msg.Data = make(map[string]interface{})
+	return &msg
 }
 
 func (message *InboxMessage) Get(key string) interface{} {

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"log"
 	"math"
 	"math/rand"
@@ -155,7 +156,8 @@ func (m *Match) enterAfter() {
 }
 
 func (m *Match) sync() {
-	m.srv.onMatchUpdated()
+	b, _ := json.Marshal(m)
+	m.srv.onMatchUpdated(b)
 }
 
 func (m *Match) reset() {
