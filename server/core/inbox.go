@@ -52,7 +52,9 @@ func (inbox *Inbox) Send(msg *InboxMessage, addrs []InboxAddress) {
 	defer inbox.l.RUnlock()
 	for _, cli := range inbox.cdict {
 		for _, addr := range addrs {
-			cli.Write(msg, addr)
+			go func() {
+				cli.Write(msg, addr)
+			}()
 		}
 	}
 }

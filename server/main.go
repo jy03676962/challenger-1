@@ -34,17 +34,18 @@ func main() {
 	go srv.Run(tcpAddr, udpAddr, dbPath)
 
 	// setup echo
-	echo := echo.New()
-	echo.Static("/", "public")
-	echo.Use(mw.Logger())
-	echo.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
+	ec := echo.New()
+	ec.Static("/", "public")
+	ec.Use(mw.Logger())
+	ec.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		srv.ListenWebSocket(ws)
 	})))
-	echo.Post("/api/addteam", func(c echo.Context) error {
-		srv.AddTeam(c)
+	ec.Post("/api/addteam", func(c echo.Context) error {
+		return srv.AddTeam(c)
 	})
-	echo.Post("/api/resetqueue", func(c echo.Context) error {
-		srv.ResetQueue(c)
+	ec.Post("/api/resetqueue", func(c echo.Context) error {
+		return srv.ResetQueue(c)
 	})
-	echo.Run(st.New(httpAddr))
+	log.Println("listen http:", httpAddr)
+	ec.Run(st.New(httpAddr))
 }

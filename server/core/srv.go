@@ -86,6 +86,7 @@ func (s *Srv) listenTcp(address string) {
 		os.Exit(1)
 	}
 	defer listener.Close()
+	log.Println("listen tcp:", address)
 	for {
 		conn, err := listener.AcceptTCP()
 		if err != nil {
@@ -107,6 +108,7 @@ func (s *Srv) listenUdp(address string) {
 		log.Println("udp listen error: ", err.Error())
 		os.Exit(1)
 	}
+	log.Println("listen udp:", address)
 	s.inbox.ListenConnection(NewInboxUdpConnection(conn))
 }
 
