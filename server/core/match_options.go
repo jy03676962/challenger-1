@@ -85,6 +85,12 @@ type MatchOptions struct {
 	mode2GoldDropInterval float64
 }
 
+var opt = DefaultMatchOptions()
+
+func GetOptions() *MatchOptions {
+	return opt
+}
+
 func DefaultMatchOptions() *MatchOptions {
 	v := MatchOptions{}
 	v.ArenaWidth = 8

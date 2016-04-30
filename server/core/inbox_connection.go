@@ -3,10 +3,12 @@ package core
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"golang.org/x/net/websocket"
 	"net"
 	"strings"
 	"sync"
+	"time"
 )
 
 type InboxConnection interface {
@@ -62,6 +64,7 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 		v.SetCmd("hb")
 		if id := v.GetStr("ID"); id != "" && tcp.id != id {
 			v.AddAddress = &InboxAddress{InboxAddressTypeArduinoDevice, id}
+			v.Address = v.AddAddress
 			if tcp.id != "" {
 				v.RemoveAddress = &InboxAddress{InboxAddressTypeArduinoDevice, tcp.id}
 			}
@@ -107,14 +110,22 @@ func (tcp *InboxTcpConnection) Accept(addr InboxAddress) bool {
 
 type InboxUdpConnection struct {
 	conn *net.UDPConn
-	dict map[string]*net.UDPAddr
+	dict map[string]*udpClient
 	lock *sync.RWMutex
+	rmCh chan *udpClient
+}
+
+type udpClient struct {
+	addr *net.UDPAddr
+	ch   chan bool
+	id   string
 }
 
 func NewInboxUdpConnection(conn *net.UDPConn) *InboxUdpConnection {
 	u := InboxUdpConnection{conn: conn}
-	u.dict = make(map[string]*net.UDPAddr)
+	u.dict = make(map[string]*udpClient)
 	u.lock = new(sync.RWMutex)
+	u.rmCh = make(chan *udpClient, 1024)
 	return &u
 }
 
@@ -123,47 +134,58 @@ func (udp *InboxUdpConnection) Close() error {
 }
 
 func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
-	buf := make([]byte, 1024)
-	n, addr, err := udp.conn.ReadFromUDP(buf)
-	if err != nil {
-		return err
-	}
-	cmdLen := 11
-	if n >= cmdLen {
-		d := buf[:cmdLen]
-		id := string(d[3:6])
-		v.Set("head", string(d[:3]))
-		v.Set("ID", id)
-		v.Set("loc", string(d[6:9]))
-		v.Set("status", string(d[9:]))
-		v.Set("TYPE", InboxAddressTypeWearableDevice)
-		udp.lock.RLock()
-		a, ok := udp.dict[id]
-		udp.lock.RUnlock()
-		if !ok {
-			udp.lock.Lock()
-			udp.dict[id] = addr
-			udp.lock.Unlock()
-			v.AddAddress = &InboxAddress{InboxAddressTypeWearableDevice, id}
-		} else {
-			if a.String() != addr.String() {
-				udp.lock.Lock()
-				udp.dict[id] = addr
-				udp.lock.Unlock()
-			}
-			v.Address = &InboxAddress{InboxAddressTypeWearableDevice, id}
+	select {
+	case c := <-udp.rmCh:
+		udp.lock.Lock()
+		delete(udp.dict, c.id)
+		udp.lock.Unlock()
+		v.RemoveAddress = &InboxAddress{InboxAddressTypeWearableDevice, c.id}
+		return nil
+	default:
+		buf := make([]byte, 1024)
+		n, addr, err := udp.conn.ReadFromUDP(buf)
+		if err != nil {
+			return err
 		}
+		cmdLen := 11
+		if n >= cmdLen {
+			d := buf[:cmdLen]
+			id := string(d[3:6])
+			v.Set("head", string(d[:3]))
+			v.Set("ID", id)
+			v.Set("loc", string(d[6:9]))
+			v.Set("status", string(d[9:]))
+			v.Set("TYPE", InboxAddressTypeWearableDevice)
+			udp.lock.RLock()
+			c, ok := udp.dict[id]
+			udp.lock.RUnlock()
+			if !ok {
+				udp.lock.Lock()
+				cc := &udpClient{addr, make(chan bool), id}
+				udp.dict[id] = cc
+				udp.lock.Unlock()
+				v.AddAddress = &InboxAddress{InboxAddressTypeWearableDevice, id}
+				v.Address = v.AddAddress
+				go udp.ping(cc)
+			} else {
+				v.Address = &InboxAddress{InboxAddressTypeWearableDevice, id}
+				select {
+				case c.ch <- true:
+				default:
+				}
+			}
+		}
+		return nil
 	}
-	return nil
 }
 
 func (udp *InboxUdpConnection) WriteJSON(v *InboxMessage) error {
 	str := v.GetStr("head") + v.GetStr("id") + v.GetStr("cmd")
 	udp.lock.RLock()
-	addr := udp.dict[v.GetStr("id")]
+	c, ok := udp.dict[v.GetStr("id")]
 	udp.lock.RUnlock()
-	if addr != nil {
-		_, e := udp.conn.WriteToUDP([]byte(str), addr)
+	if ok {
+		_, e := udp.conn.WriteToUDP([]byte(str), c.addr)
 		return e
 	}
 	return nil
@@ -180,6 +202,29 @@ func (udp *InboxUdpConnection) Accept(addr InboxAddress) bool {
 	defer udp.lock.RUnlock()
 	_, ok := udp.dict[addr.ID]
 	return ok
+}
+
+func (udp *InboxUdpConnection) ping(c *udpClient) {
+	for {
+		str := fmt.Sprintf("CAL%v00", c.id)
+		_, e := udp.conn.WriteToUDP([]byte(str), c.addr)
+		if e != nil {
+			udp.rmCh <- c
+			return
+		}
+		timeout := make(chan bool, 1)
+		go func() {
+			time.Sleep(10 * time.Second)
+			timeout <- true
+		}()
+		select {
+		case <-c.ch:
+			time.Sleep(3 * time.Second)
+		case <-timeout:
+			udp.rmCh <- c
+			return
+		}
+	}
 }
 
 type InboxWsConnection struct {
@@ -221,6 +266,7 @@ func (ws *InboxWsConnection) ReadJSON(v *InboxMessage) error {
 		oldid, oldt := ws.getAddressInfo()
 		if oldid != id {
 			v.AddAddress = &InboxAddress{tt, id}
+			v.Address = v.AddAddress
 			if oldid != "" {
 				v.RemoveAddress = &InboxAddress{oldt, oldid}
 			}

@@ -114,9 +114,6 @@ func (s *Srv) onInboxMessageArrived(msg *InboxMessage) {
 	s.inboxMessageChan <- msg
 }
 
-func (s *Srv) onInboxConnectionBroken() {
-}
-
 // nonblock, 下发match数据
 func (s *Srv) onMatchUpdated(matchData []byte) {
 	s.sendMsg("updateMatch", string(matchData), InboxAddressTypeSimulatorDevice, "")
@@ -146,13 +143,24 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.sendMsgs("updatePlayerController", json, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
 	}
 
-	if msg.Address == nil || msg.AddAddress == nil {
+	if msg.Address == nil {
 		log.Printf("message has no address:%v\n", msg.Data)
+		return
 	}
 	cmd := msg.GetCmd()
 	if len(cmd) == 0 {
 		log.Printf("message has no cmd:%v\n", msg.Data)
 		return
+	}
+	switch msg.AddAddress.Type {
+	case InboxAddressTypeSimulatorDevice:
+		s.handleSimulatorMessage(msg)
+	}
+}
+
+func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
+	cmd := msg.GetCmd()
+	if cmd == "init" {
 	}
 }
 

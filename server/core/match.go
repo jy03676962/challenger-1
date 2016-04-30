@@ -43,7 +43,7 @@ func NewMatch(s *Srv) *Match {
 	m.Capacity = MATCH_CAPACITY
 	m.Member = make([]*Player, 0)
 	m.Stage = "before"
-	m.opt = DefaultMatchOptions()
+	m.opt = GetOptions()
 	m.srv = s
 	m.msgCh = make(chan *InboxMessage)
 	return &m
