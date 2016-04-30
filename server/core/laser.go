@@ -174,5 +174,5 @@ func (l *Laser) FindPath() {
 }
 
 func (l *Laser) getOpt() *MatchOptions {
-	return l.match.Options
+	return l.match.opt
 }

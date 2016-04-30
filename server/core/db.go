@@ -32,8 +32,8 @@ func NewDb() *DB {
 	return &DB{}
 }
 
-func (db *DB) Connect() error {
-	conn, err := gorm.Open("sqlite3", "./challenger.db")
+func (db *DB) Connect(path string) error {
+	conn, err := gorm.Open("sqlite3", path)
 	conn.AutoMigrate(&MatchData{}, &PlayerData{})
 	if err != nil {
 		return err
@@ -42,22 +42,8 @@ func (db *DB) Connect() error {
 	return nil
 }
 
-func (db *DB) saveMatch(m *Match) *MatchData {
-	data := MatchData{}
-	data.Mode = m.Mode
-	data.Gold = m.Gold
-	data.Elasped = m.Elasped
-	data.Member = make([]PlayerData, 0)
-	for _, player := range m.Member {
-		playerData := PlayerData{}
-		playerData.Gold = player.Gold
-		playerData.Energy = player.Energy
-		playerData.LostGold = player.LostGold
-		playerData.Combo = player.ComboCount
-		data.Member = append(data.Member, playerData)
-	}
-	db.conn.Create(&data)
-	return &data
+func (db *DB) saveMatch(d *MatchData) {
+	db.conn.Create(&d)
 }
 
 func (db *DB) updateMatchData(m *MatchData) {

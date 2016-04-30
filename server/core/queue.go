@@ -25,8 +25,6 @@ const (
 
 var _ = log.Printf
 
-var q = newQueue()
-
 type Team struct {
 	Size       int        `json:"size"`
 	ID         string     `json:"id"`
@@ -43,7 +41,7 @@ type Queue struct {
 	lock *sync.RWMutex
 }
 
-func newQueue() *Queue {
+func NewQueue() *Queue {
 	q := Queue{}
 	q.li = list.New()
 	q.dict = make(map[string]*list.Element)
@@ -52,10 +50,10 @@ func newQueue() *Queue {
 	return &q
 }
 
-func AddTeamToQueue(teamSize int, mode string) (*Team, error) {
+func (q *Queue) AddTeamToQueue(teamSize int, mode string) (*Team, error) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	q.cur += 1
 	id := strconv.Itoa(q.cur)
 	t := Team{Size: teamSize, ID: id, Status: TS_Waiting, Mode: mode}
@@ -64,20 +62,20 @@ func AddTeamToQueue(teamSize int, mode string) (*Team, error) {
 	return &t, nil
 }
 
-func ResetQueue() error {
+func (q *Queue) ResetQueue() error {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	q.li.Init()
 	q.dict = make(map[string]*list.Element)
 	q.cur = initCursor
 	return nil
 }
 
-func TeamPrepare(teamID string) {
+func (q *Queue) TeamPrepare(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	if team.Status == TS_Waiting {
@@ -85,10 +83,10 @@ func TeamPrepare(teamID string) {
 	}
 }
 
-func TeamStart(teamID string) {
+func (q *Queue) TeamStart(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	if team.Status == TS_Prepare {
@@ -96,7 +94,7 @@ func TeamStart(teamID string) {
 	}
 }
 
-func TeamCall(teamID string) {
+func (q *Queue) TeamCall(teamID string) {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
 	element := q.dict[teamID]
@@ -106,10 +104,10 @@ func TeamCall(teamID string) {
 	}
 }
 
-func TeamCutLine(teamID string) {
+func (q *Queue) TeamCutLine(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	if team.Status != TS_Waiting {
@@ -124,10 +122,10 @@ func TeamCutLine(teamID string) {
 	}
 }
 
-func TeamRemove(teamID string) {
+func (q *Queue) TeamRemove(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	if team.Status != TS_Waiting {
@@ -137,19 +135,19 @@ func TeamRemove(teamID string) {
 	q.li.Remove(element)
 }
 
-func TeamChangeMode(teamID string, mode string) {
+func (q *Queue) TeamChangeMode(teamID string, mode string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	team.Mode = mode
 }
 
-func TeamDelay(teamID string) {
+func (q *Queue) TeamDelay(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	next := element.Next()
 	if next != nil {
@@ -159,31 +157,31 @@ func TeamDelay(teamID string) {
 	}
 }
 
-func TeamAddPlayer(teamID string) {
+func (q *Queue) TeamAddPlayer(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	team.Size += 1
 }
 
-func TeamRemovePlayer(teamID string) {
+func (q *Queue) TeamRemovePlayer(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
-	defer updateHallData()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	team := element.Value.(*Team)
 	team.Size -= 1
 }
 
-func GetAllTeamsFromQueueWithLock() []*Team {
+func (q *Queue) GetAllTeamsFromQueueWithLock() []*Team {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
-	return GetAllTeamsFromQueue()
+	return q.GetAllTeamsFromQueue()
 }
 
-func GetAllTeamsFromQueue() []*Team {
+func (q *Queue) GetAllTeamsFromQueue() []*Team {
 	result := make([]*Team, q.li.Len())
 	waitTime := 0
 	for e, i := q.li.Front(), 0; e != nil; e, i = e.Next(), i+1 {
@@ -197,10 +195,10 @@ func GetAllTeamsFromQueue() []*Team {
 	return result
 }
 
-func updateHallData() {
+func (q *Queue) updateHallData() {
 	msg := NewHubMap()
 	msg.SetCmd("HallData")
-	msg.Set("data", GetAllTeamsFromQueue())
+	msg.Set("data", q.GetAllTeamsFromQueue())
 	socketInput := SocketInput{Broadcast: true, Group: SG_Admin, SocketMessage: msg}
 	go func() {
 		GetHub().SocketInputCh <- &socketInput

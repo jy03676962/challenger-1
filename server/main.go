@@ -13,48 +13,38 @@ import (
 	"time"
 )
 
-const API string = "localhost:4040"
-const HOST string = "localhost:3030"
-const DB_PATH string = "./challenger.db"
+const (
+	httpAddr = "localhost:3000"
+	tcpAddr  = "localhost:4000"
+	udpAddr  = "localhost:5000"
+	dbPath   = "./challenger.db"
+)
 
 func main() {
+	// setup log system
 	logfileName := "log/" + time.Now().Local().Format("2006-01-02-15-04-05") + ".log"
 	f, err := os.OpenFile(logfileName, os.O_WRONLY|os.O_CREATE, 0640)
 	if err != nil {
 		fmt.Println("error open log file", err)
 		os.Exit(1)
 	}
-	db := core.NewDb()
-	err = db.Connect()
-	if err != nil {
-		fmt.Println("error open database", err)
-		os.Exit(1)
-	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
-	hub := core.GetHub()
-	hub.Db = db
-	log.Println("start listen websocket:", HOST)
-	srv := core.NewServer(hub)
-	api := core.NewTCPServer(API, hub)
-	match := core.NewMatch(hub)
-	go match.Run()
-	go srv.Run()
-	go api.Run()
-	e := echo.New()
-	e.Static("/", "public")
-	e.Use(mw.Logger())
-	e.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
-		srv.OnConnected(ws)
+
+	srv := core.NewSrv()
+	go srv.Run(tcpAddr, udpAddr, dbPath)
+
+	// setup echo
+	echo := echo.New()
+	echo.Static("/", "public")
+	echo.Use(mw.Logger())
+	echo.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
+		srv.ListenWebSocket(ws)
 	})))
-	e.Get("/api", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
-		srv.OnApiConnected(ws)
-	})))
-	e.Get("/client", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
-		srv.OnClientConnected(ws)
-	})))
-	e.Get("/admin", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
-		srv.OnAdminConnected(ws)
-	})))
-	core.SetupRoute(e)
-	e.Run(st.New(HOST))
+	echo.Post("/api/addteam", func(c echo.Context) error {
+		srv.AddTeam(c)
+	})
+	echo.Post("/api/resetqueue", func(c echo.Context) error {
+		srv.ResetQueue(c)
+	})
+	echo.Run(st.New(httpAddr))
 }

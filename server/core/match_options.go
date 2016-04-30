@@ -4,6 +4,39 @@ import (
 	"strconv"
 )
 
+type ArenaPosition struct {
+	X int
+	Y int
+}
+
+type P ArenaPosition
+
+type RealPosition struct {
+	X float64
+	Y float64
+}
+
+type RP RealPosition
+
+type Rect struct {
+	X float64
+	Y float64
+	W float64
+	H float64
+}
+
+type ArenaWall struct {
+	P1 P
+	P2 P
+}
+
+type W ArenaWall
+
+type Button struct {
+	Id string `json:"id"`
+	R  Rect   `json:"r"`
+}
+
 type MatchOptions struct {
 	ArenaWidth        int        `json:"arenaWidth"`
 	ArenaHeight       int        `json:"arenaHeight"`
