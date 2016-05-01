@@ -15,7 +15,7 @@ public protocol DataReceiver {
 }
 
 public enum DataType: String {
-	case HallData = "HallData"
+	case QueueData = "updateQueue"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
@@ -54,34 +54,22 @@ public class DataManager {
 }
 
 // MARK: websocket notificaiton
-extension DataManager: WebSocketDelegate {
-	public func websocketDidConnect(socket: WebSocket) {
+extension DataManager: WsClientDelegate {
+
+	public func wsClientDidInit(client: WsClient, data: [String: AnyObject]) {
 		for (type, _) in receiversMap {
 			WsClient.singleton.sendCmd(type.queryCmd)
 		}
 	}
 
-	public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
+	public func wsClientDidDisconnect(client: WsClient, error: NSError?) {
 	}
-	public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-	}
-	public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-		let dataFromString = text.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-		guard dataFromString != nil else {
-			return
-		}
-		let json = JSON(data: dataFromString!)
-		guard json.type == .Dictionary else {
-			return
-		}
-		let cmd = json["cmd"].string
-		guard cmd != nil else {
-			return
-		}
+
+	public func wsClientDidReceiveMessage(client: WsClient, cmd: String, data: [String: AnyObject]) {
 		for (type, receivers) in receiversMap {
 			if type.rawValue == cmd {
 				for receiver in receivers {
-					receiver.onReceivedData(json.dictionaryObject!, type: type)
+					receiver.onReceivedData(data, type: type)
 				}
 			}
 		}

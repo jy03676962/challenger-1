@@ -19,7 +19,7 @@ class ConfigController: PLViewController {
 	@IBAction func saveConfig() {
 		if let text = hostTextField.text {
 			Defaults[.host] = text
-			WsClient.singleton.connect(PLConstants.getAdminWsAddress())
+			WsClient.singleton.connect(PLConstants.getWsAddress())
 		}
 	}
 

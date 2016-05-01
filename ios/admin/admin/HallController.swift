@@ -32,10 +32,10 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.HallData], receiver: self)
+		DataManager.singleton.subscriptData([.QueueData], receiver: self)
 	}
 	func refreshTeamData() {
-		DataManager.singleton.queryData(.HallData)
+		DataManager.singleton.queryData(.QueueData)
 	}
 	@IBAction func changeMode() {
 		guard topTeam != nil else {
@@ -135,7 +135,7 @@ class HallController: PLViewController {
 
 extension HallController: DataReceiver {
 	func onReceivedData(json: [String: AnyObject], type: DataType) {
-		if type == .HallData {
+		if type == .QueueData {
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
 				for team in teams! {

@@ -16,6 +16,7 @@
 		7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC631CCBC42C005878AE /* DefaultKeys.swift */; };
 		7080B8511CCE6A8600E63CB5 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7080B8501CCE6A8600E63CB5 /* DataManager.swift */; };
 		7080B8591CCFA6C200E63CB5 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7080B8581CCFA6C200E63CB5 /* Team.swift */; };
+		7080B85B1CD6197800E63CB5 /* AdminConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7080B85A1CD6197800E63CB5 /* AdminConstants.swift */; };
 		70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */; };
 		70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC61CC7B10A00159C81 /* HallController.swift */; };
 		70B4DAC91CC7B10A00159C81 /* MatchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC81CC7B10A00159C81 /* MatchController.swift */; };
@@ -38,6 +39,7 @@
 		7079BC631CCBC42C005878AE /* DefaultKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultKeys.swift; sourceTree = "<group>"; };
 		7080B8501CCE6A8600E63CB5 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		7080B8581CCFA6C200E63CB5 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		7080B85A1CD6197800E63CB5 /* AdminConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminConstants.swift; sourceTree = "<group>"; };
 		70B4DAC11CC7B10A00159C81 /* admin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = admin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70B4DAC61CC7B10A00159C81 /* HallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HallController.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				70B4DACF1CC7B10A00159C81 /* LaunchScreen.storyboard */,
 				70B4DAD21CC7B10A00159C81 /* Info.plist */,
 				7079BC5F1CCB87AA005878AE /* ConfigController.swift */,
+				7080B85A1CD6197800E63CB5 /* AdminConstants.swift */,
 			);
 			path = admin;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				7080B8591CCFA6C200E63CB5 /* Team.swift in Sources */,
 				70B4DAED1CC7B31700159C81 /* WsClient.swift in Sources */,
 				70B4DAFE1CC7BD0200159C81 /* HistoryController.swift in Sources */,
+				7080B85B1CD6197800E63CB5 /* AdminConstants.swift in Sources */,
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,
 				7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */,
 				70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */,

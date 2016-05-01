@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UITabBar.appearance().barTintColor = UIColor.clearColor()
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
-		WsClient.singleton.connect(PLConstants.getAdminWsAddress())
+		WsClient.singleton.connect(PLConstants.getWsAddress())
 		return true
 	}
 }

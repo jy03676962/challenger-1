@@ -10,7 +10,7 @@ import Foundation
 import SwiftyUserDefaults
 
 struct PLConstants {
-	static let host = "localhost:3030"
+	static let host = "localhost:3000"
 	static let usualFont = "Alien League Bold"
 	static let maxTeamSize = 4
 	static func getHost() -> String {
@@ -19,14 +19,11 @@ struct PLConstants {
 		}
 		return host
 	}
-	static func getClientWsAddress() -> String {
-		return "ws://" + getHost() + "/client"
-	}
-	static func getAdminWsAddress() -> String {
-		return "ws://" + getHost() + "/admin"
+	static func getWsAddress() -> String {
+		return "ws://" + getHost() + "/ws"
 	}
 }
 
 enum GameMode: Int {
-	case Fun = 1, Survival
+	case Fun = 1,  Survival
 }

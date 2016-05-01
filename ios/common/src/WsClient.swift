@@ -11,18 +11,25 @@ import Starscream
 import SwiftyUserDefaults
 import SwiftyJSON
 
+public protocol WsClientDelegate: class {
+	func wsClientDidInit(client: WsClient, data: [String: AnyObject])
+	func wsClientDidReceiveMessage(client: WsClient, cmd: String, data: [String: AnyObject])
+	func wsClientDidDisconnect(client: WsClient, error: NSError?)
+}
+
 public class WsClient {
 	// notification
-	public static let WsConnectedNotification = "WsConnected"
+	public static let WsInitedNotification = "WsInited"
 	public static let WsDisconnectedNotification = "WsDisconnected"
 	public static let WsConnectingNotification = "WsConnecting"
 
 	public static let singleton = WsClient()
-	public weak var delegate: WebSocketDelegate?
+	public weak var delegate: WsClientDelegate?
 
 	private static let ERROR_WAIT_SECOND: UInt64 = 10
 	private var socket: WebSocket?
 	private var address: String?
+	private var didInit: Bool = false
 
 	public func sendCmd(cmd: String) {
 		let json = JSON([
@@ -90,18 +97,20 @@ public class WsClient {
 extension WsClient: WebSocketDelegate {
 
 	public func websocketDidConnect(socket: WebSocket) {
-		log.debug("socket connected")
-		delegate?.websocketDidConnect(socket)
-		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsConnectedNotification, object: nil)
+		let json = JSON([
+			"cmd": "init",
+			"ID": AdminConstants.socketID,
+			"TYPE": 1,
+		])
+		self.sendJSON(json)
 	}
 
 	public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-		delegate?.websocketDidReceiveData(socket, data: data)
 	}
 
 	public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-		log.debug("socket disconnected:\(error?.localizedDescription)")
-		delegate?.websocketDidDisconnect(socket, error: error)
+		self.didInit = false
+		delegate?.wsClientDidDisconnect(self, error: error)
 		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsDisconnectedNotification, object: nil)
 		if UIApplication.sharedApplication().applicationState == .Background {
 			return
@@ -119,7 +128,24 @@ extension WsClient: WebSocketDelegate {
 	}
 
 	public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-		log.debug("socket got:\(text)")
-		delegate?.websocketDidReceiveMessage(socket, text: text)
+		let dataFromString = text.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+		guard dataFromString != nil else {
+			return
+		}
+		let json = JSON(data: dataFromString!)
+		guard json.type == .Dictionary else {
+			return
+		}
+		let cmd = json["cmd"].string
+		guard cmd != nil else {
+			return
+		}
+		if cmd == "init" {
+			self.didInit = true
+			NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsInitedNotification, object: nil)
+			self.delegate?.wsClientDidInit(self, data: json.dictionaryObject!)
+		} else if self.didInit {
+			self.delegate?.wsClientDidReceiveMessage(self, cmd: cmd!, data: json.dictionaryObject!)
+		}
 	}
 }

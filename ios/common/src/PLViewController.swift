@@ -30,7 +30,7 @@ class PLViewController: UIViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsConnected), name: WsClient.WsConnectedNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsInited), name: WsClient.WsInitedNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsConnecting), name: WsClient.WsConnectingNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsDisconnected), name: WsClient.WsDisconnectedNotification, object: nil)
 	}
@@ -40,7 +40,7 @@ class PLViewController: UIViewController {
 		NSNotificationCenter.defaultCenter().removeObserver(self)
 	}
 
-	func onWsConnected() {
+	func onWsInited() {
 		timeLabel.textColor = UIColor.whiteColor()
 	}
 
