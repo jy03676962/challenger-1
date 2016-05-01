@@ -31,6 +31,7 @@ func (c *InboxClient) Write(msg *InboxMessage, addr InboxAddress) {
 		return
 	}
 	go func() {
+		log.Printf("will send message:%v\n", msg)
 		e := c.conn.WriteJSON(msg)
 		if e != nil {
 			log.Printf("send message error:%v\n", e.Error())
@@ -47,6 +48,7 @@ func (c *InboxClient) listenRead() {
 			if e != nil {
 				log.Printf("read message error:%v\n", e.Error())
 			}
+			log.Printf("got message:%v", m)
 			c.inbox.ReceiveMessage(m)
 			if m.ShouldCloseConnection {
 				return

@@ -105,11 +105,11 @@ class Game {
   onMessage(msg) {
     let data = JSON.parse(msg)
     switch (data.cmd) {
-      case 'options':
-        this.options = data.options
+      case 'init':
+        this.options = data
         break
-      case 'sync':
-        this.match = data.match
+      case 'updateMatch':
+        this.match = JSON.parse(data)
         break
     }
   }

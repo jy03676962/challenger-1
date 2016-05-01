@@ -32,6 +32,9 @@ public class WsClient {
 	private var didInit: Bool = false
 
 	public func sendCmd(cmd: String) {
+		if !didInit {
+			return
+		}
 		let json = JSON([
 			"cmd": cmd
 		])
@@ -97,10 +100,11 @@ public class WsClient {
 extension WsClient: WebSocketDelegate {
 
 	public func websocketDidConnect(socket: WebSocket) {
+		log.debug("socket connected")
 		let json = JSON([
 			"cmd": "init",
 			"ID": AdminConstants.socketID,
-			"TYPE": 1,
+			"TYPE": "1",
 		])
 		self.sendJSON(json)
 	}
@@ -128,6 +132,7 @@ extension WsClient: WebSocketDelegate {
 	}
 
 	public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+		log.debug("socket got:\(text)")
 		let dataFromString = text.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
 		guard dataFromString != nil else {
 			return

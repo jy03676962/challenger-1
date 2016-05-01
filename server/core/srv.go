@@ -54,13 +54,15 @@ func (s *Srv) ListenWebSocket(conn *websocket.Conn) {
 func (s *Srv) AddTeam(c echo.Context) error {
 	count, _ := strconv.Atoi(c.FormValue("count"))
 	mode := c.FormValue("mode")
-	s.queue.AddTeamToQueue(count, mode)
-	return c.JSON(http.StatusOK, nil)
+	id := s.queue.AddTeamToQueue(count, mode)
+	d := map[string]interface{}{"id": id}
+	return c.JSON(http.StatusOK, d)
 }
 
 func (s *Srv) ResetQueue(c echo.Context) error {
-	s.queue.ResetQueue()
-	return c.JSON(http.StatusOK, nil)
+	id := s.queue.ResetQueue()
+	d := map[string]interface{}{"id": id}
+	return c.JSON(http.StatusOK, d)
 }
 
 // MARK: internal
@@ -127,7 +129,7 @@ func (s *Srv) saveMatch(d *MatchData) {
 
 // nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
-	s.sendMsgs("updateQueue", queueData, InboxAddressTypeAdminDevice)
+	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
 }
 
 func (s *Srv) handleInboxMessage(msg *InboxMessage) {
@@ -154,7 +156,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		log.Printf("message has no cmd:%v\n", msg.Data)
 		return
 	}
-	switch msg.AddAddress.Type {
+	switch msg.Address.Type {
 	case InboxAddressTypeSimulatorDevice:
 		s.handleSimulatorMessage(msg)
 	case InboxAddressTypeArduinoTestDevice:
@@ -167,7 +169,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	if cmd == "init" {
-		s.sendMsgToAddresses("options", GetOptions(), []InboxAddress{*msg.Address})
+		s.sendMsgToAddresses("init", GetOptions(), []InboxAddress{*msg.Address})
 	}
 }
 
@@ -177,6 +179,8 @@ func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
 
 func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	switch msg.GetCmd() {
+	case "init":
+		s.sendMsg("init", nil, msg.Address.Type, msg.Address.ID)
 	case "queryHallData":
 		s.queue.TeamQueryData()
 	case "teamCutLine":
@@ -226,7 +230,9 @@ func (s *Srv) sendMsgs(cmd string, data interface{}, types ...InboxAddressType) 
 func (s *Srv) sendMsgToAddresses(cmd string, data interface{}, addrs []InboxAddress) {
 	msg := NewInboxMessage()
 	msg.SetCmd(cmd)
-	msg.Set("data", data)
+	if data != nil {
+		msg.Set("data", data)
+	}
 	s.send(msg, addrs)
 }
 

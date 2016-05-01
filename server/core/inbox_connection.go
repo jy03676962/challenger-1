@@ -5,11 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"golang.org/x/net/websocket"
+	"log"
 	"net"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
+
+var _ = log.Printf
 
 type InboxConnection interface {
 	ReadJSON(v *InboxMessage) error
@@ -251,7 +255,8 @@ func (ws *InboxWsConnection) ReadJSON(v *InboxMessage) error {
 		return e
 	}
 	if v.GetCmd() == "init" {
-		t := v.Get("TYPE").(InboxAddressType)
+		tt, _ := strconv.Atoi(v.Get("TYPE").(string))
+		t := InboxAddressType(tt)
 		id := v.GetStr("ID")
 		oldid, oldt := ws.getAddressInfo()
 		if oldid != id {

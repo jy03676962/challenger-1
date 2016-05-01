@@ -52,7 +52,7 @@ func NewQueue(srv *Srv) *Queue {
 	return &q
 }
 
-func (q *Queue) AddTeamToQueue(teamSize int, mode string) {
+func (q *Queue) AddTeamToQueue(teamSize int, mode string) int {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	defer q.updateHallData()
@@ -61,15 +61,17 @@ func (q *Queue) AddTeamToQueue(teamSize int, mode string) {
 	t := Team{Size: teamSize, ID: id, Status: TS_Waiting, Mode: mode}
 	element := q.li.PushBack(&t)
 	q.dict[id] = element
+	return q.cur
 }
 
-func (q *Queue) ResetQueue() {
+func (q *Queue) ResetQueue() int {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	q.li.Init()
 	q.dict = make(map[string]*list.Element)
 	q.cur = initCursor
+	return q.cur
 }
 
 func (q *Queue) TeamPrepare(teamID string) {
