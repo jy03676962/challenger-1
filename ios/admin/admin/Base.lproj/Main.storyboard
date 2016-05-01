@@ -350,29 +350,212 @@
                                     <action selector="start:" destination="9pv-A4-QxB" eventType="touchUpInside" id="phA-2z-i38"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" tag="100" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OUC-MD-vfh">
+                                <rect key="frame" x="710" y="428" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="13c-rl-79K"/>
+                                    <constraint firstAttribute="width" constant="26" id="ieP-kV-oRI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Nhm-1s-lF1"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="101" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QBD-fL-3vR">
+                                <rect key="frame" x="762" y="428" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="3uB-oB-dby"/>
+                                    <constraint firstAttribute="width" constant="26" id="ONw-E6-I79"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="D3m-lY-ef5"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="102" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5eb-h8-gRw">
+                                <rect key="frame" x="814" y="428" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="SxJ-Rg-oVc"/>
+                                    <constraint firstAttribute="width" constant="26" id="r90-ts-c2H"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="MNq-ET-xgk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="103" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mfr-Kz-5HY">
+                                <rect key="frame" x="866" y="428" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="kYP-Db-Eu3"/>
+                                    <constraint firstAttribute="width" constant="26" id="vr0-Yf-bHa"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="pwX-sl-2pf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="104" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13J-N8-igf">
+                                <rect key="frame" x="710" y="474" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="E52-cy-ra5"/>
+                                    <constraint firstAttribute="width" constant="26" id="Iah-xR-hAG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Rfy-TU-MZh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="105" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q2C-wi-lSo">
+                                <rect key="frame" x="762" y="474" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="26" id="9pP-aC-2lm"/>
+                                    <constraint firstAttribute="height" constant="26" id="SYe-x3-rYI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="u4W-2t-dQG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="109" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhM-UO-lmv">
+                                <rect key="frame" x="762" y="520" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="3G4-5z-6uB"/>
+                                    <constraint firstAttribute="width" constant="26" id="UcX-yG-uQu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="nHt-1g-atE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="106" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-dv-7Nl">
+                                <rect key="frame" x="814" y="474" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="0au-UJ-bf0"/>
+                                    <constraint firstAttribute="width" constant="26" id="AP2-f3-Ac5"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Y1T-6C-hAY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="107" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2IJ-iE-JnE">
+                                <rect key="frame" x="866" y="474" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="26" id="C83-Do-EUA"/>
+                                    <constraint firstAttribute="height" constant="26" id="m7y-sM-QfF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="udU-Mt-itR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="108" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="92g-H4-8Id">
+                                <rect key="frame" x="710" y="520" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="3IE-pE-aJA"/>
+                                    <constraint firstAttribute="width" constant="26" id="7z6-2L-7IS"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" backgroundImage="PCOffline">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled" backgroundImage="PCOffline"/>
+                                <state key="selected" backgroundImage="PCSelected"/>
+                                <connections>
+                                    <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Z44-pj-8qn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="9Bn-00-0EL" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" constant="30" id="14C-eD-CJa"/>
                             <constraint firstItem="ZPR-ZZ-kcc" firstAttribute="leading" secondItem="9Bn-00-0EL" secondAttribute="trailing" constant="30" id="3rW-Se-S4j"/>
+                            <constraint firstItem="q2C-wi-lSo" firstAttribute="leading" secondItem="13J-N8-igf" secondAttribute="trailing" constant="26" id="46Y-eK-y3b"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ZPR-ZZ-kcc" secondAttribute="trailing" constant="30" id="5Bh-28-E4d"/>
+                            <constraint firstItem="lhM-UO-lmv" firstAttribute="leading" secondItem="92g-H4-8Id" secondAttribute="trailing" constant="26" id="61Z-mN-pqX"/>
+                            <constraint firstItem="5eb-h8-gRw" firstAttribute="top" secondItem="OUC-MD-vfh" secondAttribute="top" id="6K2-Gb-cfP"/>
                             <constraint firstItem="WFV-Bd-zVd" firstAttribute="centerX" secondItem="3hb-B2-1Qd" secondAttribute="centerX" id="7xl-6Q-PfW"/>
+                            <constraint firstItem="QBD-fL-3vR" firstAttribute="leading" secondItem="OUC-MD-vfh" secondAttribute="trailing" constant="26" id="8oR-7f-k1D"/>
+                            <constraint firstItem="mfr-Kz-5HY" firstAttribute="leading" secondItem="OUC-MD-vfh" secondAttribute="leading" id="9hM-Zn-3dp"/>
                             <constraint firstItem="NSC-Xu-dTJ" firstAttribute="leading" secondItem="ZPR-ZZ-kcc" secondAttribute="leading" id="AjR-PZ-HPO"/>
+                            <constraint firstItem="2IJ-iE-JnE" firstAttribute="top" secondItem="13J-N8-igf" secondAttribute="top" id="Bdg-md-1nC"/>
                             <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="9Bn-00-0EL" secondAttribute="bottom" constant="80" id="BjV-s8-mVt"/>
                             <constraint firstItem="Y7y-ve-9zq" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" constant="80" id="D3o-tY-uHb"/>
+                            <constraint firstItem="2IJ-iE-JnE" firstAttribute="leading" secondItem="v9D-dv-7Nl" secondAttribute="trailing" constant="26" id="DLA-J3-1BV"/>
+                            <constraint firstItem="lhM-UO-lmv" firstAttribute="top" secondItem="92g-H4-8Id" secondAttribute="top" id="DYX-dk-9qI"/>
                             <constraint firstItem="9Bn-00-0EL" firstAttribute="top" secondItem="Y7y-ve-9zq" secondAttribute="bottom" id="Exd-D8-gaF"/>
+                            <constraint firstItem="13J-N8-igf" firstAttribute="top" secondItem="OUC-MD-vfh" secondAttribute="bottom" constant="20" id="FNR-AM-Aej"/>
+                            <constraint firstItem="5eb-h8-gRw" firstAttribute="leading" secondItem="QBD-fL-3vR" secondAttribute="trailing" constant="26" id="INZ-RZ-Tuy"/>
                             <constraint firstItem="ZPR-ZZ-kcc" firstAttribute="top" secondItem="9Bn-00-0EL" secondAttribute="top" id="Iia-wf-yx0"/>
+                            <constraint firstItem="mfr-Kz-5HY" firstAttribute="leading" secondItem="5eb-h8-gRw" secondAttribute="trailing" constant="26" id="Ikn-PQ-s2r"/>
                             <constraint firstItem="Y7y-ve-9zq" firstAttribute="width" secondItem="9Bn-00-0EL" secondAttribute="width" id="M6E-cQ-Eii"/>
                             <constraint firstItem="Y7y-ve-9zq" firstAttribute="leading" secondItem="9Bn-00-0EL" secondAttribute="leading" id="NTj-tt-DMD"/>
+                            <constraint firstItem="OUC-MD-vfh" firstAttribute="leading" secondItem="3hb-B2-1Qd" secondAttribute="leading" id="QDk-7u-ZAG"/>
                             <constraint firstItem="9Bn-00-0EL" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" constant="188" id="Vtd-D9-7RG"/>
                             <constraint firstItem="3hb-B2-1Qd" firstAttribute="centerX" secondItem="NSC-Xu-dTJ" secondAttribute="centerX" id="Wpp-97-63r"/>
                             <constraint firstItem="3hb-B2-1Qd" firstAttribute="top" secondItem="NSC-Xu-dTJ" secondAttribute="bottom" constant="29" id="WqW-TJ-DsC"/>
                             <constraint firstItem="NSC-Xu-dTJ" firstAttribute="width" secondItem="ZPR-ZZ-kcc" secondAttribute="width" id="Xo7-eU-NMC"/>
+                            <constraint firstItem="92g-H4-8Id" firstAttribute="leading" secondItem="13J-N8-igf" secondAttribute="leading" id="a3s-DY-WxU"/>
+                            <constraint firstItem="5eb-h8-gRw" firstAttribute="leading" secondItem="OUC-MD-vfh" secondAttribute="leading" id="aga-kK-SKP"/>
+                            <constraint firstItem="v9D-dv-7Nl" firstAttribute="top" secondItem="13J-N8-igf" secondAttribute="top" id="c74-an-paw"/>
+                            <constraint firstItem="92g-H4-8Id" firstAttribute="top" secondItem="13J-N8-igf" secondAttribute="bottom" constant="20" id="cy5-7C-wB5"/>
+                            <constraint firstItem="QBD-fL-3vR" firstAttribute="leading" secondItem="OUC-MD-vfh" secondAttribute="leading" id="fZA-6p-Dqw"/>
                             <constraint firstItem="NSC-Xu-dTJ" firstAttribute="top" secondItem="ZPR-ZZ-kcc" secondAttribute="bottom" constant="10" id="iaS-uS-D21"/>
+                            <constraint firstItem="mfr-Kz-5HY" firstAttribute="top" secondItem="OUC-MD-vfh" secondAttribute="top" id="kxL-T1-nS4"/>
                             <constraint firstItem="9Bn-00-0EL" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" constant="80" id="lkH-09-cKn"/>
+                            <constraint firstItem="QBD-fL-3vR" firstAttribute="top" secondItem="OUC-MD-vfh" secondAttribute="top" id="luI-Ek-73Y"/>
                             <constraint firstItem="ZPR-ZZ-kcc" firstAttribute="top" secondItem="Y7y-ve-9zq" secondAttribute="top" id="oHU-9l-ilz"/>
+                            <constraint firstItem="q2C-wi-lSo" firstAttribute="top" secondItem="13J-N8-igf" secondAttribute="top" id="ou5-u4-8HC"/>
+                            <constraint firstItem="13J-N8-igf" firstAttribute="leading" secondItem="OUC-MD-vfh" secondAttribute="leading" id="oy5-Am-KZe"/>
                             <constraint firstItem="i9c-nG-6Dj" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" constant="710" id="pcU-XN-PKT"/>
+                            <constraint firstItem="v9D-dv-7Nl" firstAttribute="leading" secondItem="q2C-wi-lSo" secondAttribute="trailing" constant="26" id="vaU-6G-jHW"/>
                             <constraint firstItem="WFV-Bd-zVd" firstAttribute="bottom" secondItem="9Bn-00-0EL" secondAttribute="bottom" id="yOe-WL-mUu"/>
+                            <constraint firstItem="OUC-MD-vfh" firstAttribute="top" secondItem="3hb-B2-1Qd" secondAttribute="bottom" constant="20" id="zt7-dX-8e3"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -380,6 +563,9 @@
                                 <exclude reference="lkH-09-cKn"/>
                                 <exclude reference="Iia-wf-yx0"/>
                                 <exclude reference="pcU-XN-PKT"/>
+                                <exclude reference="fZA-6p-Dqw"/>
+                                <exclude reference="aga-kK-SKP"/>
+                                <exclude reference="9hM-Zn-3dp"/>
                             </mask>
                         </variation>
                     </view>
@@ -392,6 +578,16 @@
                         <outlet property="startButton" destination="WFV-Bd-zVd" id="iH2-vl-jeC"/>
                         <outlet property="teamIDLabel" destination="i9c-nG-6Dj" id="hB6-Wp-L5X"/>
                         <outlet property="teamtableView" destination="9Bn-00-0EL" id="KJn-dw-r4B"/>
+                        <outletCollection property="controllerButtons" destination="5eb-h8-gRw" collectionClass="NSMutableArray" id="VCI-hX-VdN"/>
+                        <outletCollection property="controllerButtons" destination="QBD-fL-3vR" collectionClass="NSMutableArray" id="6Jn-sM-Hob"/>
+                        <outletCollection property="controllerButtons" destination="OUC-MD-vfh" collectionClass="NSMutableArray" id="rYY-Xf-gdU"/>
+                        <outletCollection property="controllerButtons" destination="13J-N8-igf" collectionClass="NSMutableArray" id="Jh8-Zo-2br"/>
+                        <outletCollection property="controllerButtons" destination="q2C-wi-lSo" collectionClass="NSMutableArray" id="zGm-9k-0eC"/>
+                        <outletCollection property="controllerButtons" destination="lhM-UO-lmv" collectionClass="NSMutableArray" id="Xbo-a6-alv"/>
+                        <outletCollection property="controllerButtons" destination="v9D-dv-7Nl" collectionClass="NSMutableArray" id="ciI-dk-sKL"/>
+                        <outletCollection property="controllerButtons" destination="2IJ-iE-JnE" collectionClass="NSMutableArray" id="Kg1-y3-i7n"/>
+                        <outletCollection property="controllerButtons" destination="92g-H4-8Id" collectionClass="NSMutableArray" id="EyQ-Hr-Wu3"/>
+                        <outletCollection property="controllerButtons" destination="mfr-Kz-5HY" collectionClass="NSMutableArray" id="pM7-ay-Z9Y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -538,6 +734,8 @@
         <image name="HallTableCellBg" width="30" height="30"/>
         <image name="HallTableHeader" width="30" height="30"/>
         <image name="ModeChangeIcon" width="30" height="30"/>
+        <image name="PCOffline" width="30" height="30"/>
+        <image name="PCSelected" width="30" height="30"/>
         <image name="PrepareButton" width="30" height="30"/>
         <image name="PrepareDoneButton" width="30" height="30"/>
         <image name="RemovePlayer" width="30" height="30"/>

@@ -194,26 +194,26 @@ func (m *Match) handleInputs() bool {
 func (m *Match) handleInput(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	switch cmd {
-	case "login":
-		if m.isFull() || m.Stage != "before" {
-			return
-		}
-		name := msg.GetStr("name")
-		id := msg.Get("cid").(int)
-		player := NewPlayer(name, id)
-		m.Member = append(m.Member, player)
-	case "startMatch":
-		m.Mode = msg.GetStr("mode")
-		m.Stage = "warmup"
-		m.WarmupTime = m.opt.Warmup
-		if m.Mode == "g" {
-			m.TotalTime = m.opt.Mode1TotalTime
-		} else {
-			m.Gold = m.opt.Mode2InitGold[len(m.Member)-1]
-		}
-		for _, member := range m.Member {
-			member.Pos = m.opt.RealPosition(m.opt.ArenaEntrance)
-		}
+	//case "login":
+	//if m.isFull() || m.Stage != "before" {
+	//return
+	//}
+	//name := msg.GetStr("name")
+	//id := msg.Get("cid").(int)
+	//player := NewPlayer(name, id)
+	//m.Member = append(m.Member, player)
+	//case "startMatch":
+	//m.Mode = msg.GetStr("mode")
+	//m.Stage = "warmup"
+	//m.WarmupTime = m.opt.Warmup
+	//if m.Mode == "g" {
+	//m.TotalTime = m.opt.Mode1TotalTime
+	//} else {
+	//m.Gold = m.opt.Mode2InitGold[len(m.Member)-1]
+	//}
+	//for _, member := range m.Member {
+	//member.Pos = m.opt.RealPosition(m.opt.ArenaEntrance)
+	//}
 	case "playerMove":
 		name := msg.GetStr("name")
 		dir := msg.GetStr("dir")

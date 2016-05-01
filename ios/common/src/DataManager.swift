@@ -16,6 +16,7 @@ public protocol DataReceiver {
 
 public enum DataType: String {
 	case HallData = "HallData"
+	case ControllerData = "ControllerData"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"

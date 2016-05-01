@@ -1,16 +1,13 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "ipad",
       "scale" : "1x"
     },
     {
-      "idiom" : "universal",
+      "idiom" : "ipad",
+      "filename" : "gaming.png",
       "scale" : "2x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
     }
   ],
   "info" : {

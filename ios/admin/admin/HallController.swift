@@ -12,8 +12,11 @@ import SWTableViewCell
 import ObjectMapper
 
 class HallController: PLViewController {
+	private static let controllerButtonTagStart = 100
+
 	@IBOutlet weak var teamtableView: UITableView!
 	@IBOutlet weak var teamIDLabel: UILabel!
+	@IBOutlet var controllerButtons: [UIButton]!
 
 	@IBOutlet weak var modeImageView: UIImageView!
 	@IBOutlet weak var modeLabel: UILabel!
@@ -32,7 +35,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.HallData], receiver: self)
+		DataManager.singleton.subscriptData([.HallData, .ControllerData], receiver: self)
 	}
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
@@ -110,6 +113,10 @@ class HallController: PLViewController {
 		WsClient.singleton.sendJSON(json)
 	}
 
+	@IBAction func toggleControllerButton(sender: UIButton) {
+		sender.selected = !sender.selected
+	}
+
 	private func renderTopWaitingTeam() {
 		guard topTeam != nil else {
 			return
@@ -131,6 +138,10 @@ class HallController: PLViewController {
 			startButton.enabled = true
 		}
 	}
+
+	private func getBtn(idx: Int) -> UIButton {
+		return view.viewWithTag(idx + HallController.controllerButtonTagStart) as! UIButton
+	}
 }
 
 extension HallController: DataReceiver {
@@ -148,6 +159,32 @@ extension HallController: DataReceiver {
 			}
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
+		} else if type == .ControllerData {
+			let controllers = Mapper<PlayerController>().mapArray(json["data"])
+			if controllers != nil {
+				for btn in controllerButtons {
+					btn.enabled = false
+					btn.setTitle(nil, forState: .Normal)
+				}
+				for (i, c) in controllers!.enumerate() {
+					let btn = getBtn(i)
+					if c.status == .Idle {
+						btn.enabled = true
+						btn.setBackgroundImage(UIImage(named: "PCAvailable"), forState: .Normal)
+					} else if c.status == .Offline {
+						btn.enabled = false
+					} else if c.status == .Using {
+						btn.enabled = true
+						btn.setBackgroundImage(UIImage(named: "PCGaming"), forState: .Normal)
+					}
+					let id: String = c.address.id
+					if c.address.type == .Simulator {
+						btn.setTitle(String(id[id.startIndex]), forState: .Normal)
+					} else if c.address.type == .Wearable {
+						btn.setTitle(String(id[id.endIndex.predecessor()]), forState: .Normal)
+					}
+				}
+			}
 		}
 	}
 }

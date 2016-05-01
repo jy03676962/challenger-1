@@ -1,7 +1,6 @@
 package core
 
 import (
-	"encoding/json"
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
 	"log"
@@ -29,6 +28,7 @@ func NewSrv() *Srv {
 	s.match = NewMatch(&s)
 	s.db = NewDb()
 	s.inboxMessageChan = make(chan *InboxMessage, 1)
+	s.pDict = make(map[string]*PlayerController)
 	return &s
 }
 
@@ -142,12 +142,11 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		shouldUpdatePlayerController = true
 	}
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsPlayerControllerType() {
-		s.pDict[msg.AddAddress.String()] = NewPlayerController(*msg.AddAddress)
+		s.pDict[msg.AddAddress.String()] = NewPlayerController(*msg.AddAddress, PCStatusIdle)
 		shouldUpdatePlayerController = true
 	}
 	if shouldUpdatePlayerController {
-		json, _ := json.Marshal(s.pDict)
-		s.sendMsgs("updatePlayerController", json, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
+		s.sendMsgs("ControllerData", s.getControllerData(), InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
 	}
 
 	if msg.Address == nil {
@@ -172,7 +171,11 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	if cmd == "init" {
-		s.sendMsgToAddresses("init", GetOptions(), []InboxAddress{*msg.Address})
+		d := map[string]interface{}{
+			"options": GetOptions(),
+			"ID":      msg.Address.ID,
+		}
+		s.sendMsgToAddresses("init", d, []InboxAddress{*msg.Address})
 	}
 }
 
@@ -186,6 +189,8 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.sendMsg("init", nil, msg.Address.Type, msg.Address.ID)
 	case "queryHallData":
 		s.queue.TeamQueryData()
+	case "queryControllerData":
+		s.sendMsg("ControllerData", s.getControllerData(), msg.Address.Type, msg.Address.ID)
 	case "teamCutLine":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCutLine(teamID)
@@ -215,6 +220,16 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
 	}
+}
+
+func (s *Srv) getControllerData() []PlayerController {
+	r := make([]PlayerController, len(s.pDict))
+	i := 0
+	for _, pc := range s.pDict {
+		r[i] = *pc
+		i += 1
+	}
+	return r
 }
 
 func (s *Srv) sendMsg(cmd string, data interface{}, t InboxAddressType, id string) {

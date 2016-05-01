@@ -5,12 +5,13 @@ class Game {
   @observable match
   @observable playerName
   @observable options
+  @observable controllers
 
   @computed get stage() {
-    if (!this.playerName || this.match == null || this.match.member == null || this.match.member.length == 0) {
+    if (!this.playerName) {
       return 'login'
     }
-    if (!this.match || this.match.stage == 'before') {
+    if (!this.match) {
       return 'hall'
     }
     if (this.match && (this.match.stage == 'ongoing' || this.match.stage == 'warmup')) {
@@ -31,6 +32,7 @@ class Game {
     this.match = null
     this.arg = null
     this.options = null
+    this.controllers = null
     this.currentKey = 0
   }
 
@@ -38,7 +40,6 @@ class Game {
     let uri = wsAddressWithPath('ws')
     let sock = new WebSocket(uri)
     console.log('socket is ' + uri)
-    this.playerName = playerName
     sock.onopen = () => {
       console.log('connected to ' + uri)
       this.login(playerName)
@@ -56,28 +57,9 @@ class Game {
   login(playerName) {
     if (this.sock) {
       let data = {
-        cmd: 'login',
-        name: playerName
-      }
-      this.sock.send(JSON.stringify(data))
-    }
-  }
-
-  joinMatch() {
-    if (this.sock) {
-      let data = {
-        cmd: 'joinMatch',
-        name: this.playerName
-      }
-      this.sock.send(JSON.stringify(data))
-    }
-  }
-
-  createMatch() {
-    if (this.sock) {
-      let data = {
-        cmd: 'createMatch',
-        name: this.playerName
+        cmd: 'init',
+        ID: playerName,
+        TYPE: '2'
       }
       this.sock.send(JSON.stringify(data))
     }
@@ -103,13 +85,18 @@ class Game {
   }
 
   onMessage(msg) {
-    let data = JSON.parse(msg)
-    switch (data.cmd) {
+    let json = JSON.parse(msg)
+    console.log(msg)
+    switch (json.cmd) {
       case 'init':
-        this.options = data
+        this.options = json.data.options
+        this.playerName = json.data.ID
         break
       case 'updateMatch':
         this.match = JSON.parse(data)
+        break
+      case 'ControllerData':
+        this.controllers = json.data
         break
     }
   }
