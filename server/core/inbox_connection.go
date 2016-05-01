@@ -182,6 +182,7 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 }
 
 func (udp *InboxUdpConnection) WriteJSON(v *InboxMessage) error {
+	log.Printf("udp will send:%v\n", v)
 	str := v.GetStr("head") + v.GetStr("id") + v.GetStr("cmd")
 	udp.lock.RLock()
 	c, ok := udp.dict[v.GetStr("id")]
@@ -277,6 +278,7 @@ func (ws *InboxWsConnection) ReadJSON(v *InboxMessage) error {
 }
 
 func (ws *InboxWsConnection) WriteJSON(v *InboxMessage) error {
+	log.Printf("ws will send:%v\n", v)
 	return websocket.JSON.Send(ws.conn, v.Data)
 }
 

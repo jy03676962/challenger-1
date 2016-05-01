@@ -46,6 +46,7 @@ func (s *Srv) Run(tcpAddr string, udpAddr string, dbPath string) {
 }
 
 func (s *Srv) ListenWebSocket(conn *websocket.Conn) {
+	log.Println("got new ws connection")
 	s.inbox.ListenConnection(NewInboxWsConnection(conn))
 }
 
@@ -94,6 +95,7 @@ func (s *Srv) listenTcp(address string) {
 		if err != nil {
 			log.Println("tcp listen error: ", err.Error())
 		} else {
+			log.Println("got new tcp connection")
 			go s.inbox.ListenConnection(NewInboxTcpConnection(conn))
 		}
 	}
@@ -129,6 +131,7 @@ func (s *Srv) saveMatch(d *MatchData) {
 
 // nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
+	log.Println("on queue updated")
 	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
 }
 
@@ -237,5 +240,5 @@ func (s *Srv) sendMsgToAddresses(cmd string, data interface{}, addrs []InboxAddr
 }
 
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
-	go s.inbox.Send(msg, addrs)
+	s.inbox.Send(msg, addrs)
 }

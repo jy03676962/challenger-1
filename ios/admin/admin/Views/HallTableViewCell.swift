@@ -34,12 +34,15 @@ class HallTableViewCell: SWTableViewCell {
 		teamIDLabel.text = team.id
 		teamSizeLabel.text = String(team.size)
 		delayCountLabel.text = "- \(team.delayCount) -"
-		var waitTime: Int = team.waitTime
-		let waitHour = waitTime / 3600
-		waitTime -= 3600 * waitHour
-		let waitMin = waitTime / 60
-		waitTime -= 60 * waitMin
-		waitTimeLabel.text = String(format: "%02d:%02d:%02d", waitHour, waitMin, waitTime)
+		if team.status == .Prepare {
+			waitTimeLabel.text = "准备中..."
+		} else if team.status == .Playing {
+			waitTimeLabel.text = "游戏中..."
+		} else if team.status == .After {
+			waitTimeLabel.text = "答题中..."
+		} else if team.status == .Waiting {
+			waitTimeLabel.text = String(format: "预计等待 %d分钟", team.waitTime / 60)
+		}
 		let delayImageName = "IconLate\(team.delayCount)"
 		let delayImage = UIImage(named: delayImageName)
 		delayCountImageView.image = delayImage

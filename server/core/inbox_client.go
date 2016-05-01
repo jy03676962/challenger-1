@@ -26,12 +26,12 @@ func (c *InboxClient) Listen() {
 	c.inbox.RemoveClient(c.id)
 }
 
-func (c *InboxClient) Write(msg *InboxMessage, addr InboxAddress) {
-	if !c.conn.Accept(addr) {
-		return
-	}
+func (c *InboxClient) Accept(addr InboxAddress) bool {
+	return c.conn.Accept(addr)
+}
+
+func (c *InboxClient) Write(msg *InboxMessage) {
 	go func() {
-		log.Printf("will send message:%v\n", msg)
 		e := c.conn.WriteJSON(msg)
 		if e != nil {
 			log.Printf("send message error:%v\n", e.Error())
