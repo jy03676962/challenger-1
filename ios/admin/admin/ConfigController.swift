@@ -10,6 +10,7 @@ import UIKit
 import AutoKeyboardScrollView
 import EasyPeasy
 import SwiftyUserDefaults
+import SwiftyJSON
 
 class ConfigController: PLViewController {
 
@@ -18,6 +19,10 @@ class ConfigController: PLViewController {
 	@IBOutlet weak var modeControl: UISegmentedControl!
 
 	@IBAction func modeChange(sender: UISegmentedControl) {
+		WsClient.singleton.sendJSON(JSON([
+			"cmd": "arduinoModeChange",
+			"mode": sender.selectedSegmentIndex
+			]))
 	}
 
 	@IBAction func saveConfig() {
@@ -38,5 +43,15 @@ class ConfigController: PLViewController {
 		wrapperView <- Edges()
 
 		modeControl.tintColor = UIColor.whiteColor()
+		DataManager.singleton.subscriptData([.ArduinoModeChange], receiver: self)
+	}
+}
+
+extension ConfigController: DataReceiver {
+	func onReceivedData(json: [String: AnyObject], type: DataType) {
+		if type == .ArduinoModeChange {
+			let mode = json["data"] as! Int
+			modeControl.selectedSegmentIndex = mode
+		}
 	}
 }

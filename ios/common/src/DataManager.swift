@@ -18,6 +18,7 @@ public enum DataType: String {
 	case HallData = "HallData"
 	case ControllerData = "ControllerData"
 	case NewMatch = "newMatch"
+	case ArduinoModeChange = "arduinoModeChange"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
@@ -73,9 +74,6 @@ extension DataManager: WsClientDelegate {
 	public func wsClientDidReceiveMessage(client: WsClient, cmd: String, data: [String: AnyObject]) {
 		for (type, receivers) in receiversMap {
 			if type.rawValue == cmd {
-				if type == .NewMatch {
-					log.debug("hello")
-				}
 				for receiver in receivers {
 					receiver.onReceivedData(data, type: type)
 				}

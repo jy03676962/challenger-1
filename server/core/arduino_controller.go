@@ -2,7 +2,7 @@ package core
 
 type ArduinoMode int
 
-const ArduinoModeUnknown = -1
+const ArduinoModeUnknown ArduinoMode = -1
 
 const (
 	ArduinoModeOff = iota
@@ -13,7 +13,7 @@ const (
 
 type ArduinoStatus int
 
-const ArduinoStatusUnknown = -1
+const ArduinoStatusUnknown ArduinoStatus = -1
 
 const (
 	ArduinoStatusIdle = iota

@@ -228,8 +228,13 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	switch cmd {
 	case "confirm_mode_change":
+		preM := s.getArduinoMode()
 		if ac, ok := s.aDict[msg.Address.String()]; ok {
 			ac.Mode = msg.Get("mode").(ArduinoMode)
+		}
+		m := s.getArduinoMode()
+		if preM != m {
+			s.sendMsgs("arduinoModeChange", m, InboxAddressTypeAdminDevice)
 		}
 	case "confirm_status_change":
 		if ac, ok := s.aDict[msg.Address.String()]; ok {
@@ -309,6 +314,19 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
 	case "arduinoModeChange":
+		mode := ArduinoMode(msg.Get("mode").(float64))
+		if len(s.aDict) == 0 || s.getArduinoMode() == mode {
+			s.sendMsgs("arduinoModeChange", mode, InboxAddressTypeAdminDevice)
+		} else {
+			for _, a := range s.aDict {
+				if a.Mode != mode {
+					am := NewInboxMessage()
+					am.SetCmd("mode_change")
+					am.Set("mode", string(mode))
+					s.send(am, []InboxAddress{a.Address})
+				}
+			}
+		}
 	}
 }
 
@@ -340,6 +358,21 @@ func (s *Srv) canStartMatch() bool {
 	return true
 }
 
+func (s *Srv) getArduinoMode() ArduinoMode {
+	b, m := false, ArduinoModeUnknown
+	for _, ac := range s.aDict {
+		if !b {
+			m = ac.Mode
+			b = true
+		} else {
+			if ac.Mode != m {
+				return ArduinoModeUnknown
+			}
+		}
+	}
+	return m
+}
+
 func (s *Srv) prepare() {
 	for {
 		if s.canStartMatch() {
@@ -359,7 +392,7 @@ func (s *Srv) prepare() {
 				s.send(msg, []InboxAddress{ac.Address})
 			}
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
 
