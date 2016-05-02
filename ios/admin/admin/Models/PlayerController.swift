@@ -31,6 +31,7 @@ enum PCStatus: Int {
 struct PlayerController: Mappable {
 	var address: Address!
 	var status: PCStatus!
+	var id: String!
 
 	init?(_ map: Map) {
 	}
@@ -38,5 +39,6 @@ struct PlayerController: Mappable {
 	mutating func mapping(map: Map) {
 		address <- map["address"]
 		status <- map["status"]
+		id <- map["id"]
 	}
 }

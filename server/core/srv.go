@@ -15,20 +15,22 @@ var _ = log.Println
 type Srv struct {
 	inbox            *Inbox
 	queue            *Queue
-	match            *Match
 	db               *DB
 	inboxMessageChan chan *InboxMessage
+	mChan            chan MatchEvent
 	pDict            map[string]*PlayerController
+	mDict            map[uint]*Match
 }
 
 func NewSrv() *Srv {
 	s := Srv{}
 	s.inbox = NewInbox(&s)
 	s.queue = NewQueue(&s)
-	s.match = NewMatch(&s)
 	s.db = NewDb()
 	s.inboxMessageChan = make(chan *InboxMessage, 1)
+	s.mChan = make(chan MatchEvent)
 	s.pDict = make(map[string]*PlayerController)
+	s.mDict = make(map[uint]*Match)
 	return &s
 }
 
@@ -39,7 +41,6 @@ func (s *Srv) Run(tcpAddr string, udpAddr string, dbPath string) {
 		os.Exit(1)
 	}
 	//go s.inbox.Run()
-	go s.match.Run()
 	go s.listenTcp(tcpAddr)
 	go s.listenUdp(udpAddr)
 	s.mainLoop()
@@ -73,6 +74,8 @@ func (s *Srv) mainLoop() {
 		select {
 		case msg := <-s.inboxMessageChan:
 			s.handleInboxMessage(msg)
+		case evt := <-s.mChan:
+			s.handleMatchEvent(evt)
 		}
 	}
 }
@@ -135,6 +138,18 @@ func (s *Srv) onQueueUpdated(queueData []Team) {
 	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
 }
 
+func (s *Srv) handleMatchEvent(evt MatchEvent) {
+	switch evt.Type {
+	case MatchEventTypeEnd:
+		delete(s.mDict, evt.ID)
+		for _, p := range s.pDict {
+			if p.MatchID == evt.ID {
+				p.MatchID = 0
+			}
+		}
+	}
+}
+
 func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 	shouldUpdatePlayerController := false
 	if msg.RemoveAddress != nil && msg.RemoveAddress.Type.IsPlayerControllerType() {
@@ -142,7 +157,8 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		shouldUpdatePlayerController = true
 	}
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsPlayerControllerType() {
-		s.pDict[msg.AddAddress.String()] = NewPlayerController(*msg.AddAddress, PCStatusIdle)
+		pc := NewPlayerController(*msg.AddAddress)
+		s.pDict[pc.ID] = pc
 		shouldUpdatePlayerController = true
 	}
 	if shouldUpdatePlayerController {
@@ -215,11 +231,23 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.queue.TeamPrepare(teamID)
 	case "teamStart":
 		teamID := msg.GetStr("teamID")
+		controllerIDs := msg.Get("ids").([]string)
 		s.queue.TeamStart(teamID)
+		s.startNewMatch(controllerIDs)
 	case "teamCall":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
 	}
+}
+
+func (s *Srv) startNewMatch(controllerIDs []string) {
+	mid := s.db.saveMatch(&MatchData{})
+	for _, id := range controllerIDs {
+		s.pDict[id].MatchID = mid
+	}
+	m := NewMatch(s, controllerIDs, mid)
+	s.mDict[mid] = m
+	go m.Run()
 }
 
 func (s *Srv) getControllerData() []PlayerController {

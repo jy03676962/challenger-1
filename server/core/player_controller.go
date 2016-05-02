@@ -2,20 +2,16 @@ package core
 
 type PCStatus int
 
-const (
-	PCStatusOffline = iota
-	PCStatusIdle
-	PCStatusUsing
-)
-
 type PlayerController struct {
 	Address InboxAddress `json:"address"`
-	Status  PCStatus     `json:"status"`
+	ID      string       `json:"id"`
+	MatchID uint         `json:"matchID"`
 }
 
-func NewPlayerController(addr InboxAddress, st PCStatus) *PlayerController {
+func NewPlayerController(addr InboxAddress) *PlayerController {
 	c := PlayerController{}
 	c.Address = addr
-	c.Status = st
+	c.ID = addr.String()
+	c.MatchID = 0
 	return &c
 }

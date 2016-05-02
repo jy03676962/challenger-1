@@ -26,6 +26,7 @@ class HallController: PLViewController {
 	var refreshControl: UIRefreshControl!
 	var teams: [Team]?
 	var topTeam: Team?
+	var controllers: [PlayerController]?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -106,15 +107,26 @@ class HallController: PLViewController {
 		guard topTeam != nil else {
 			return
 		}
+		var selectedControllerIds = [String]()
+		for btn in controllerButtons {
+			if btn.selected {
+				let idx = btn.tag - HallController.controllerButtonTagStart
+				let playerController = self.controllers![idx]
+				selectedControllerIds.append(playerController.id)
+			}
+		}
+
 		let json = JSON([
 			"cmd": "teamStart",
 			"teamID": topTeam!.id,
+			"ids": selectedControllerIds
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 
 	@IBAction func toggleControllerButton(sender: UIButton) {
 		sender.selected = !sender.selected
+		startButton.enabled = canStart()
 	}
 
 	private func renderTopWaitingTeam() {
@@ -132,11 +144,20 @@ class HallController: PLViewController {
 		}
 		if topTeam!.status == .Waiting {
 			readyButton.enabled = true
-			startButton.enabled = false
 		} else if topTeam!.status == .Prepare {
 			readyButton.enabled = false
-			startButton.enabled = true
 		}
+		startButton.enabled = canStart()
+	}
+
+	private func canStart() -> Bool {
+		var count = 0
+		for btn in controllerButtons {
+			if btn.selected {
+				count += 1
+			}
+		}
+		return topTeam != nil && topTeam!.status == .Prepare && topTeam!.size == count
 	}
 
 	private func getBtn(idx: Int) -> UIButton {
@@ -178,12 +199,16 @@ extension HallController: DataReceiver {
 						btn.setBackgroundImage(UIImage(named: "PCGaming"), forState: .Normal)
 					}
 					let id: String = c.address.id
+					var title: String?
 					if c.address.type == .Simulator {
-						btn.setTitle(String(id[id.startIndex]), forState: .Normal)
+						title = String(id[id.startIndex])
 					} else if c.address.type == .Wearable {
-						btn.setTitle(String(id[id.endIndex.predecessor()]), forState: .Normal)
+						title = String(id[id.endIndex.predecessor()])
 					}
+					btn.setTitle(title, forState: .Normal)
+					btn.setTitle(title, forState: .Selected)
 				}
+				self.controllers = controllers
 			}
 		}
 	}

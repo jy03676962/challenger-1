@@ -5,7 +5,6 @@ import (
 )
 
 type Player struct {
-	Name           string  `json:"name"`
 	Pos            RP      `json:"pos"`
 	Direction      string  `json:"dir"` // values:up,right,down,left
 	Button         string  `json:"button"`
@@ -19,20 +18,19 @@ type Player struct {
 	InvincibleTime float64 `json:"invincibleTime"`
 	Combo          int     `json:"combo"`
 	ComboCount     int     `json:"comboCount"`
+	ControllerID   string  `json:"cid"`
 
 	moving      bool
 	lastButton  string
-	clientID    int
 	lastHitTime time.Time
 }
 
-func NewPlayer(name string, clientID int) *Player {
+func NewPlayer(cid string) *Player {
 	p := Player{}
-	p.Name = name
 	p.Pos = RP{0, 0}
 	p.Direction = "up"
+	p.ControllerID = cid
 	p.LevelData = [4]int{0, 0, 0, 0}
-	p.clientID = clientID
 	p.lastHitTime = time.Unix(0, 0)
 	return &p
 }

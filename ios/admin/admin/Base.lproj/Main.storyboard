@@ -361,7 +361,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Nhm-1s-lF1"/>
                                 </connections>
@@ -377,7 +379,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="D3m-lY-ef5"/>
                                 </connections>
@@ -393,7 +397,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="MNq-ET-xgk"/>
                                 </connections>
@@ -409,7 +415,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="pwX-sl-2pf"/>
                                 </connections>
@@ -425,7 +433,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Rfy-TU-MZh"/>
                                 </connections>
@@ -441,7 +451,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="u4W-2t-dQG"/>
                                 </connections>
@@ -457,7 +469,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="nHt-1g-atE"/>
                                 </connections>
@@ -473,7 +487,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Y1T-6C-hAY"/>
                                 </connections>
@@ -489,7 +505,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="udU-Mt-itR"/>
                                 </connections>
@@ -505,7 +523,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="disabled" backgroundImage="PCOffline"/>
-                                <state key="selected" backgroundImage="PCSelected"/>
+                                <state key="selected" backgroundImage="PCSelected">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Z44-pj-8qn"/>
                                 </connections>

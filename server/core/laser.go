@@ -35,8 +35,8 @@ func (l *Laser) Pause(t float64) {
 	l.pauseTime = math.Max(t, l.pauseTime)
 }
 
-func (l *Laser) IsFollow(name string) bool {
-	return l.player.Name == name
+func (l *Laser) IsFollow(cid string) bool {
+	return l.player.ControllerID == cid
 }
 
 func (l *Laser) Tick(dt float64) {

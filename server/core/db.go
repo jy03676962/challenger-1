@@ -42,8 +42,9 @@ func (db *DB) connect(path string) error {
 	return nil
 }
 
-func (db *DB) saveMatch(d *MatchData) {
-	db.conn.Create(&d)
+func (db *DB) saveMatch(d *MatchData) uint {
+	db.conn.Create(d)
+	return d.ID
 }
 
 func (db *DB) updateMatchData(m *MatchData) {

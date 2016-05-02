@@ -11,12 +11,18 @@ import (
 
 var _ = log.Printf
 
+type MatchEventType int
+
 const (
-	MATCH_CAPACITY = 4
+	MatchEventTypeEnd = iota
 )
 
+type MatchEvent struct {
+	Type MatchEventType
+	ID   uint
+}
+
 type Match struct {
-	Capacity     int             `json:"capacity"`
 	Member       []*Player       `json:"member"`
 	Stage        string          `json:"stage"`
 	TotalTime    float64         `json:"totalTime"`
@@ -29,6 +35,7 @@ type Match struct {
 	OnButtons    map[string]bool `json:"onButtons"`
 	RampageCount int             `json:"rampageCount"`
 	Lasers       []*Laser        `json:"lasers"`
+	ID           uint            `json:"id"`
 
 	offButtons    []string
 	hiddenButtons map[string]float64
@@ -38,13 +45,16 @@ type Match struct {
 	msgCh         chan *InboxMessage
 }
 
-func NewMatch(s *Srv) *Match {
+func NewMatch(s *Srv, controllerIDs []string, matchID uint) *Match {
 	m := Match{}
-	m.Capacity = MATCH_CAPACITY
-	m.Member = make([]*Player, 0)
+	m.srv = s
+	m.Member = make([]*Player, len(controllerIDs))
+	for i, id := range controllerIDs {
+		m.Member[i] = NewPlayer(id)
+	}
+	m.ID = matchID
 	m.Stage = "before"
 	m.opt = GetOptions()
-	m.srv = s
 	m.msgCh = make(chan *InboxMessage)
 	return &m
 }
@@ -52,17 +62,15 @@ func NewMatch(s *Srv) *Match {
 func (m *Match) Run() {
 	dt := 33 * time.Millisecond
 	tickChan := time.Tick(dt)
+	m.Stage = "warmup"
 	for {
+		if m.Stage == "after" || m.Stage == "stop" {
+			return
+		}
 		<-tickChan
-		isRunning := m.isRunning()
-		needUpdate := m.handleInputs()
-		if isRunning {
-			needUpdate = true
-			m.tick(dt)
-		}
-		if needUpdate {
-			go m.sync()
-		}
+		m.handleInputs()
+		m.tick(dt)
+		m.sync()
 	}
 }
 
@@ -71,9 +79,6 @@ func (m *Match) OnMatchCmdArrived(cmd *InboxMessage) {
 }
 
 func (m *Match) tick(dt time.Duration) {
-	if !m.isRunning() {
-		return
-	}
 	sec := dt.Seconds()
 	m.Elasped += sec
 	if m.Mode == "g" {
@@ -194,72 +199,69 @@ func (m *Match) handleInputs() bool {
 func (m *Match) handleInput(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	switch cmd {
-	//case "login":
-	//if m.isFull() || m.Stage != "before" {
-	//return
-	//}
-	//name := msg.GetStr("name")
-	//id := msg.Get("cid").(int)
-	//player := NewPlayer(name, id)
-	//m.Member = append(m.Member, player)
-	//case "startMatch":
-	//m.Mode = msg.GetStr("mode")
-	//m.Stage = "warmup"
-	//m.WarmupTime = m.opt.Warmup
-	//if m.Mode == "g" {
-	//m.TotalTime = m.opt.Mode1TotalTime
-	//} else {
-	//m.Gold = m.opt.Mode2InitGold[len(m.Member)-1]
-	//}
-	//for _, member := range m.Member {
-	//member.Pos = m.opt.RealPosition(m.opt.ArenaEntrance)
-	//}
-	case "playerMove":
-		name := msg.GetStr("name")
-		dir := msg.GetStr("dir")
-		if player := m.getPlayer(name); player != nil {
-			player.moving = true
-			player.Direction = dir
-		}
-	case "playerStop":
-		name := msg.GetStr("name")
-		if player := m.getPlayer(name); player != nil {
-			player.moving = false
-		}
-	case "disconnect":
-		cid := msg.Get("cid").(int)
-		m.removePlayer(cid)
-	case "resetMatch":
-		m.reset()
+	case "stop":
+		m.Stage = "stop"
+		//case "login":
+		//if m.isFull() || m.Stage != "before" {
+		//return
+		//}
+		//name := msg.GetStr("name")
+		//id := msg.Get("cid").(int)
+		//player := NewPlayer(name, id)
+		//m.Member = append(m.Member, player)
+		//case "startMatch":
+		//m.Mode = msg.GetStr("mode")
+		//m.Stage = "warmup"
+		//m.WarmupTime = m.opt.Warmup
+		//if m.Mode == "g" {
+		//m.TotalTime = m.opt.Mode1TotalTime
+		//} else {
+		//m.Gold = m.opt.Mode2InitGold[len(m.Member)-1]
+		//}
+		//for _, member := range m.Member {
+		//member.Pos = m.opt.RealPosition(m.opt.ArenaEntrance)
+		//}
+		//case "playerMove":
+		//name := msg.GetStr("name")
+		//dir := msg.GetStr("dir")
+		//if player := m.getPlayer(name); player != nil {
+		//player.moving = true
+		//player.Direction = dir
+		//}
+		//case "playerStop":
+		//name := msg.GetStr("name")
+		//if player := m.getPlayer(name); player != nil {
+		//player.moving = false
+		//}
+		//case "disconnect":
+		//cid := msg.Get("cid").(int)
+		//m.removePlayer(cid)
+		//case "resetMatch":
+		//m.reset()
 	}
 }
 
-func (m *Match) getPlayer(name string) *Player {
+func (m *Match) getPlayer(controllerID string) *Player {
 	for _, player := range m.Member {
-		if player.Name == name {
+		if player.ControllerID == controllerID {
 			return player
 		}
 	}
 	return nil
 }
 
-func (m *Match) removePlayer(cid int) {
-	if m.Stage == "after" {
-		return
-	}
+func (m *Match) removePlayer(cid string) {
 	destIdx := -1
-	destName := ""
 	for idx, player := range m.Member {
-		if player.clientID == cid {
+		if player.ControllerID == cid {
 			destIdx = idx
-			destName = player.Name
 		}
 	}
 	if destIdx >= 0 {
 		m.Member = append(m.Member[:destIdx], m.Member[destIdx+1:]...)
 		idx := -1
 		for i, laser := range m.Lasers {
-			if laser.IsFollow(destName) {
+			if laser.IsFollow(cid) {
 				idx = i
 			}
 		}
@@ -305,20 +307,12 @@ func (m *Match) getMatchData() *MatchData {
 	return &data
 }
 
-func (m *Match) isFull() bool {
-	return len(m.Member) == m.Capacity
-}
-
 func (m *Match) modeIndex() int {
 	if m.Mode == "g" {
 		return 0
 	} else {
 		return 1
 	}
-}
-
-func (m *Match) isRunning() bool {
-	return m.Stage == "ongoing" || m.Stage == "warmup"
 }
 
 func (m *Match) initLasers() {
