@@ -37,13 +37,9 @@ public class DataManager {
 
 	public func subscriptData(types: [DataType], receiver: DataReceiver) {
 		for type in types {
-			if var list = receiversMap[type] {
-				list.append(receiver)
-			} else {
-				var list = [DataReceiver]()
-				list.append(receiver)
-				receiversMap[type] = list
-			}
+			var list = receiversMap[type] ?? [DataReceiver]()
+			list.append(receiver)
+			receiversMap[type] = list
 			if type.shouldQuery {
 				WsClient.singleton.sendCmd(type.queryCmd)
 			}
@@ -77,6 +73,9 @@ extension DataManager: WsClientDelegate {
 	public func wsClientDidReceiveMessage(client: WsClient, cmd: String, data: [String: AnyObject]) {
 		for (type, receivers) in receiversMap {
 			if type.rawValue == cmd {
+				if type == .NewMatch {
+					log.debug("hello")
+				}
 				for receiver in receivers {
 					receiver.onReceivedData(data, type: type)
 				}

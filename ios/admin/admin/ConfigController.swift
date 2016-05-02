@@ -15,10 +15,14 @@ class ConfigController: PLViewController {
 
 	@IBOutlet weak var wrapperView: UIView!
 	@IBOutlet weak var hostTextField: UITextField!
+	@IBOutlet weak var modeControl: UISegmentedControl!
+
+	@IBAction func modeChange(sender: UISegmentedControl) {
+	}
 
 	@IBAction func saveConfig() {
-		if let text = hostTextField.text {
-			Defaults[.host] = text
+		if hostTextField.text != nil && hostTextField.text?.characters.count > 0 {
+			Defaults[.host] = hostTextField.text
 			WsClient.singleton.connect(PLConstants.getWsAddress())
 		}
 	}
@@ -32,5 +36,7 @@ class ConfigController: PLViewController {
 		scrollView.addSubview(wrapperView)
 		scrollView <- Edges()
 		wrapperView <- Edges()
+
+		modeControl.tintColor = UIColor.whiteColor()
 	}
 }

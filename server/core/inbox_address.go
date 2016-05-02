@@ -20,6 +20,10 @@ func (t InboxAddressType) IsPlayerControllerType() bool {
 	return t == InboxAddressTypeSimulatorDevice || t == InboxAddressTypeWearableDevice
 }
 
+func (t InboxAddressType) IsArduinoControllerType() bool {
+	return t == InboxAddressTypeArduinoDevice
+}
+
 type InboxAddress struct {
 	Type InboxAddressType `json:"type"`
 	ID   string           `json:"id"`

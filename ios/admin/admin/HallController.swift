@@ -10,6 +10,7 @@ import UIKit
 import SwiftyJSON
 import SWTableViewCell
 import ObjectMapper
+import PKHUD
 
 class HallController: PLViewController {
 	private static let controllerButtonTagStart = 100
@@ -27,6 +28,8 @@ class HallController: PLViewController {
 	var teams: [Team]?
 	var topTeam: Team?
 	var controllers: [PlayerController]?
+	var hasPlayingTeam = false
+	var hasPrepareTeam = false
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -36,7 +39,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.HallData, .ControllerData], receiver: self)
+		DataManager.singleton.subscriptData([.HallData, .ControllerData, .NewMatch], receiver: self)
 	}
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
@@ -97,7 +100,7 @@ class HallController: PLViewController {
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func ready(sender: UIButton) {
-		guard topTeam != nil else {
+		guard topTeam != nil && !hasPrepareTeam else {
 			return
 		}
 		let json = JSON([
@@ -126,6 +129,7 @@ class HallController: PLViewController {
 			"ids": selectedControllerIds.joinWithSeparator(",")
 		])
 		WsClient.singleton.sendJSON(json)
+		HUD.show(.LabeledProgress(title: nil, subtitle: nil))
 	}
 
 	@IBAction func toggleControllerButton(sender: UIButton) {
@@ -161,7 +165,7 @@ class HallController: PLViewController {
 				count += 1
 			}
 		}
-		return topTeam != nil && topTeam!.status == .Prepare && topTeam!.size == count
+		return topTeam != nil && topTeam!.status == .Prepare && topTeam!.size == count && !hasPlayingTeam
 	}
 
 	private func getBtn(idx: Int) -> UIButton {
@@ -175,12 +179,17 @@ extension HallController: DataReceiver {
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
 				for team in teams! {
-					if team.status == .Waiting || team.status == .Prepare {
+					if (team.status == .Waiting || team.status == .Prepare) && topTeam == nil {
 						topTeam = team
-						renderTopWaitingTeam()
-						break
+					}
+					if team.status == .Prepare {
+						hasPrepareTeam = true
+					}
+					if team.status == .Playing {
+						hasPlayingTeam = true
 					}
 				}
+				renderTopWaitingTeam()
 			}
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
@@ -210,6 +219,11 @@ extension HallController: DataReceiver {
 					btn.setTitle(title, forState: .Selected)
 				}
 				self.controllers = controllers
+			}
+		} else if type == .NewMatch {
+			HUD.hide()
+			for btn in controllerButtons {
+				btn.selected = false
 			}
 		}
 	}
