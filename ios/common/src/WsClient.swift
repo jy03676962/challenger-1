@@ -25,11 +25,11 @@ public class WsClient {
 
 	public static let singleton = WsClient()
 	public weak var delegate: WsClientDelegate?
+	public var didInit: Bool = false
 
 	private static let ERROR_WAIT_SECOND: UInt64 = 10
 	private var socket: WebSocket?
 	private var address: String?
-	private var didInit: Bool = false
 
 	public func sendCmd(cmd: String) {
 		if !didInit {

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var _ = log.Println
@@ -255,7 +256,8 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	case "teamStart":
 		teamID := msg.GetStr("teamID")
 		mode := msg.GetStr("mode")
-		controllerIDs := msg.Get("ids").([]string)
+		ids := msg.Get("ids").(string)
+		controllerIDs := strings.Split(ids, ",")
 		s.queue.TeamStart(teamID)
 		s.startNewMatch(controllerIDs, mode)
 	case "teamCall":

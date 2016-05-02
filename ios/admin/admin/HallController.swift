@@ -36,7 +36,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.HallData, .ControllerData, .NewMatch], receiver: self)
+		DataManager.singleton.subscriptData([.HallData, .ControllerData], receiver: self)
 	}
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
@@ -65,6 +65,9 @@ class HallController: PLViewController {
 	}
 	@IBAction func delayTeam(sender: UIButton) {
 		guard topTeam != nil else {
+			return
+		}
+		if topTeam!.status != .Waiting {
 			return
 		}
 		let json = JSON([
@@ -120,7 +123,7 @@ class HallController: PLViewController {
 			"cmd": "teamStart",
 			"teamID": topTeam!.id,
 			"mode": topTeam!.mode,
-			"ids": selectedControllerIds
+			"ids": selectedControllerIds.joinWithSeparator(",")
 		])
 		WsClient.singleton.sendJSON(json)
 	}
@@ -190,13 +193,10 @@ extension HallController: DataReceiver {
 				}
 				for (i, c) in controllers!.enumerate() {
 					let btn = getBtn(i)
-					if c.status == .Idle {
-						btn.enabled = true
+					btn.enabled = true
+					if c.matchID == 0 {
 						btn.setBackgroundImage(UIImage(named: "PCAvailable"), forState: .Normal)
-					} else if c.status == .Offline {
-						btn.enabled = false
-					} else if c.status == .Using {
-						btn.enabled = true
+					} else {
 						btn.setBackgroundImage(UIImage(named: "PCGaming"), forState: .Normal)
 					}
 					let id: String = c.address.id

@@ -24,21 +24,17 @@ struct Address: Mappable {
 	}
 }
 
-enum PCStatus: Int {
-	case Offline = 0, Idle, Using
-}
-
 struct PlayerController: Mappable {
 	var address: Address!
-	var status: PCStatus!
 	var id: String!
+	var matchID: Int!
 
 	init?(_ map: Map) {
 	}
 
 	mutating func mapping(map: Map) {
 		address <- map["address"]
-		status <- map["status"]
 		id <- map["id"]
+		matchID <- map["matchID"]
 	}
 }

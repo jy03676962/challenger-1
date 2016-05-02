@@ -12,4 +12,5 @@ import SwiftyUserDefaults
 extension DefaultsKeys {
 	static let host = DefaultsKey<String?>("host")
 	static let deviceID = DefaultsKey<Int>("deviceID")
+	static let matchID = DefaultsKey<Int>("matchID")
 }

@@ -19,7 +19,7 @@ class PLViewController: UIViewController {
 		imageView <- Edges()
 		timeLabel = UILabel()
 		timeLabel.font = UIFont(name: PLConstants.usualFont, size: 30)
-		timeLabel.textColor = UIColor.whiteColor()
+		timeLabel.textColor = WsClient.singleton.didInit ? UIColor.whiteColor() : UIColor.redColor()
 		imageView.addSubview(timeLabel)
 		timeLabel <- [
 			CenterX(0),

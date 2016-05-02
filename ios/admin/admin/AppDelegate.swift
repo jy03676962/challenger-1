@@ -8,6 +8,7 @@
 
 import UIKit
 import XCGLogger
+import SwiftyUserDefaults
 
 let log = XCGLogger.defaultInstance()
 
@@ -26,6 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
 		WsClient.singleton.connect(PLConstants.getWsAddress())
+		DataManager.singleton.subscriptData([.NewMatch], receiver: self)
 		return true
+	}
+}
+
+extension AppDelegate: DataReceiver {
+	func onReceivedData(json: [String: AnyObject], type: DataType) {
+		if type == .NewMatch {
+			Defaults[.matchID] = json["data"] as! Int
+		}
 	}
 }
