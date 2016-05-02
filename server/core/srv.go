@@ -123,9 +123,8 @@ func (s *Srv) onInboxMessageArrived(msg *InboxMessage) {
 	s.inboxMessageChan <- msg
 }
 
-// nonblock, 下发match数据
-func (s *Srv) onMatchUpdated(matchData []byte) {
-	s.sendMsg("updateMatch", string(matchData), InboxAddressTypeSimulatorDevice, "")
+func (s *Srv) onMatchEvent(evt MatchEvent) {
+	s.mChan <- evt
 }
 
 func (s *Srv) saveMatch(d *MatchData) {
@@ -147,13 +146,21 @@ func (s *Srv) handleMatchEvent(evt MatchEvent) {
 				p.MatchID = 0
 			}
 		}
+		s.sendMsgs("matchStop", evt.ID, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
+	case MatchEventTypeUpdate:
+		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
 	}
 }
 
 func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 	shouldUpdatePlayerController := false
 	if msg.RemoveAddress != nil && msg.RemoveAddress.Type.IsPlayerControllerType() {
-		delete(s.pDict, msg.RemoveAddress.String())
+		cid := msg.RemoveAddress.String()
+		pc := s.pDict[cid]
+		if pc.MatchID > 0 {
+			s.mDict[pc.MatchID].OnMatchCmdArrived(msg)
+		}
+		delete(s.pDict, cid)
 		shouldUpdatePlayerController = true
 	}
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsPlayerControllerType() {
@@ -186,12 +193,28 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 
 func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
-	if cmd == "init" {
+	switch cmd {
+	case "init":
 		d := map[string]interface{}{
 			"options": GetOptions(),
 			"ID":      msg.Address.ID,
 		}
 		s.sendMsgToAddresses("init", d, []InboxAddress{*msg.Address})
+	case "startMatch":
+		mode := msg.GetStr("mode")
+		ids := make([]string, 0)
+		for _, pc := range s.pDict {
+			if pc.Address.Type == InboxAddressTypeSimulatorDevice {
+				ids = append(ids, pc.ID)
+			}
+		}
+		s.startNewMatch(ids, mode)
+	case "stopMatch", "playerMove", "playerStop":
+		mid := uint(msg.Get("matchID").(float64))
+		match := s.mDict[mid]
+		if match != nil {
+			match.OnMatchCmdArrived(msg)
+		}
 	}
 }
 
@@ -231,23 +254,25 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.queue.TeamPrepare(teamID)
 	case "teamStart":
 		teamID := msg.GetStr("teamID")
+		mode := msg.GetStr("mode")
 		controllerIDs := msg.Get("ids").([]string)
 		s.queue.TeamStart(teamID)
-		s.startNewMatch(controllerIDs)
+		s.startNewMatch(controllerIDs, mode)
 	case "teamCall":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
 	}
 }
 
-func (s *Srv) startNewMatch(controllerIDs []string) {
+func (s *Srv) startNewMatch(controllerIDs []string, mode string) {
 	mid := s.db.saveMatch(&MatchData{})
 	for _, id := range controllerIDs {
 		s.pDict[id].MatchID = mid
 	}
-	m := NewMatch(s, controllerIDs, mid)
+	m := NewMatch(s, controllerIDs, mid, mode)
 	s.mDict[mid] = m
 	go m.Run()
+	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
 }
 
 func (s *Srv) getControllerData() []PlayerController {

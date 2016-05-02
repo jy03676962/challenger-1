@@ -64,7 +64,7 @@ const Player = observer(React.createClass({
     return (
       <div style={style}>
       <div style={bodyStyle}>
-      {player.name.substring(0, 1)}
+      {player.cid.substring(2, 3)}
       </div>
       <img style={imgStyle} src={require('../assets/arrow.png')} />
       </div>

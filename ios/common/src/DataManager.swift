@@ -17,9 +17,15 @@ public protocol DataReceiver {
 public enum DataType: String {
 	case HallData = "HallData"
 	case ControllerData = "ControllerData"
+	case NewMatch = "newMatch"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
+	}
+
+	var shouldQuery: Bool {
+		let first: String = self.rawValue[0]
+		return first.uppercaseString == first
 	}
 }
 
@@ -38,7 +44,9 @@ public class DataManager {
 				list.append(receiver)
 				receiversMap[type] = list
 			}
-			WsClient.singleton.sendCmd(type.queryCmd)
+			if type.shouldQuery {
+				WsClient.singleton.sendCmd(type.queryCmd)
+			}
 		}
 	}
 

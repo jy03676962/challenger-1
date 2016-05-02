@@ -36,7 +36,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.HallData, .ControllerData], receiver: self)
+		DataManager.singleton.subscriptData([.HallData, .ControllerData, .NewMatch], receiver: self)
 	}
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
@@ -119,6 +119,7 @@ class HallController: PLViewController {
 		let json = JSON([
 			"cmd": "teamStart",
 			"teamID": topTeam!.id,
+			"mode": topTeam!.mode,
 			"ids": selectedControllerIds
 		])
 		WsClient.singleton.sendJSON(json)
@@ -201,9 +202,9 @@ extension HallController: DataReceiver {
 					let id: String = c.address.id
 					var title: String?
 					if c.address.type == .Simulator {
-						title = String(id[id.startIndex])
+						title = id[0]
 					} else if c.address.type == .Wearable {
-						title = String(id[id.endIndex.predecessor()])
+						title = id.last()
 					}
 					btn.setTitle(title, forState: .Normal)
 					btn.setTitle(title, forState: .Selected)

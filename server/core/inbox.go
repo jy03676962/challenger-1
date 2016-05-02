@@ -51,7 +51,6 @@ func (inbox *Inbox) ReceiveMessage(m *InboxMessage) {
 func (inbox *Inbox) Send(msg *InboxMessage, addrs []InboxAddress) {
 	inbox.l.RLock()
 	defer inbox.l.RUnlock()
-	log.Println("inbox will send to", addrs)
 	for _, cli := range inbox.cdict {
 		for _, addr := range addrs {
 			if cli.Accept(addr) {

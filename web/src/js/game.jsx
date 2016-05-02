@@ -14,7 +14,7 @@ class Game {
     if (!this.match) {
       return 'hall'
     }
-    if (this.match && (this.match.stage == 'ongoing' || this.match.stage == 'warmup')) {
+    if (this.matchID > 0 && this.match != null) {
       return 'arena'
     }
     if (this.match && this.match.stage == 'after') {
@@ -34,6 +34,7 @@ class Game {
     this.options = null
     this.controllers = null
     this.currentKey = 0
+    this.matchID = 0
   }
 
   connectServer(playerName) {
@@ -78,7 +79,8 @@ class Game {
   resetMatch() {
     if (this.sock) {
       let data = {
-        cmd: 'resetMatch'
+        cmd: 'stopMatch',
+        matchID: this.matchID,
       }
       this.sock.send(JSON.stringify(data))
     }
@@ -93,11 +95,22 @@ class Game {
         this.playerName = json.data.ID
         break
       case 'updateMatch':
-        this.match = JSON.parse(data)
+        let match = JSON.parse(json.data)
+        if (match.id == this.matchID) {
+          this.match = match
+        }
         break
       case 'ControllerData':
         this.controllers = json.data
         break
+      case 'newMatch':
+        this.matchID = json.data
+        break
+      case 'matchStop':
+        if (this.matchID == json.data) {
+          this.matchID = 0
+          this.match = null
+        }
     }
   }
 
@@ -126,7 +139,7 @@ class Game {
       let data = {
         cmd: 'playerMove',
         dir: dir,
-        name: this.playerName,
+        matchID: this.matchID,
       }
       this.sock.send(JSON.stringify(data))
     }
@@ -141,7 +154,7 @@ class Game {
       this.currentKey = 0
       let data = {
         cmd: 'playerStop',
-        name: this.playerName,
+        matchID: this.matchID,
       }
       this.sock.send(JSON.stringify(data))
     }

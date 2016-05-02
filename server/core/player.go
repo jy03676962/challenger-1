@@ -1,8 +1,11 @@
 package core
 
 import (
+	"log"
 	"time"
 )
+
+var _ = log.Printf
 
 type Player struct {
 	Pos            RP      `json:"pos"`
@@ -55,6 +58,7 @@ func (p *Player) UpdatePos(sec float64, options *MatchOptions) bool {
 		dx = -delta
 		dy = 0
 	}
+	log.Printf("dx:%v,dy:%v\n", dx, dy)
 	minXY := (float64(options.ArenaBorder) + options.PlayerSize) / 2
 	maxX := float64((options.ArenaBorder+options.ArenaCellSize)*options.ArenaWidth) - minXY
 	maxY := float64((options.ArenaBorder+options.ArenaCellSize)*options.ArenaHeight) - minXY
