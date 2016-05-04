@@ -9,7 +9,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 var _ = log.Println
@@ -25,12 +24,9 @@ type Srv struct {
 	db               *DB
 	inboxMessageChan chan *InboxMessage
 	mChan            chan MatchEvent
-	prepareDoneChan  chan bool
 	pDict            map[string]*PlayerController
 	aDict            map[string]*ArduinoController
-	arduinoMode      ArduinoMode
-	pm               *pendingMatch
-	m                *Match
+	mDict            map[uint]*Match
 }
 
 func NewSrv() *Srv {
@@ -40,12 +36,9 @@ func NewSrv() *Srv {
 	s.db = NewDb()
 	s.inboxMessageChan = make(chan *InboxMessage, 1)
 	s.mChan = make(chan MatchEvent)
-	s.prepareDoneChan = make(chan bool)
 	s.pDict = make(map[string]*PlayerController)
 	s.aDict = make(map[string]*ArduinoController)
-	s.arduinoMode = ArduinoModeFree
-	s.pm = nil
-	s.m = nil
+	s.mDict = make(map[uint]*Match)
 	return &s
 }
 
@@ -91,10 +84,6 @@ func (s *Srv) mainLoop() {
 			s.handleInboxMessage(msg)
 		case evt := <-s.mChan:
 			s.handleMatchEvent(evt)
-		case <-s.prepareDoneChan:
-			pm := s.pm
-			s.pm = nil
-			s.startNewMatch(pm.ids, pm.mode)
 		}
 	}
 }
@@ -159,9 +148,7 @@ func (s *Srv) onQueueUpdated(queueData []Team) {
 func (s *Srv) handleMatchEvent(evt MatchEvent) {
 	switch evt.Type {
 	case MatchEventTypeEnd:
-		if evt.ID == s.m.ID {
-			s.m = nil
-		}
+		delete(s.mDict, evt.ID)
 		for _, p := range s.pDict {
 			if p.MatchID == evt.ID {
 				p.MatchID = 0
@@ -179,7 +166,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		cid := msg.RemoveAddress.String()
 		pc := s.pDict[cid]
 		if pc.MatchID > 0 {
-			s.m.OnMatchCmdArrived(msg)
+			s.mDict[pc.MatchID].OnMatchCmdArrived(msg)
 		}
 		delete(s.pDict, cid)
 		shouldUpdatePlayerController = true
@@ -219,7 +206,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.handleArduinoTestMessage(msg)
 	case InboxAddressTypeAdminDevice:
 		s.handleAdminMessage(msg)
-	case InboxAddressTypeArduinoDevice:
+	case InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice:
 		s.handleArduinoMessage(msg)
 	}
 }
@@ -227,19 +214,6 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	switch cmd {
-	case "confirm_mode_change":
-		preM := s.getArduinoMode()
-		if ac, ok := s.aDict[msg.Address.String()]; ok {
-			ac.Mode = msg.Get("mode").(ArduinoMode)
-		}
-		m := s.getArduinoMode()
-		if preM != m {
-			s.sendMsgs("arduinoModeChange", m, InboxAddressTypeAdminDevice)
-		}
-	case "confirm_status_change":
-		if ac, ok := s.aDict[msg.Address.String()]; ok {
-			ac.Status = msg.Get("status").(ArduinoStatus)
-		}
 	}
 }
 
@@ -263,14 +237,14 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 		s.startNewMatch(ids, mode)
 	case "stopMatch", "playerMove", "playerStop":
 		mid := uint(msg.Get("matchID").(float64))
-		if s.m != nil && s.m.ID == mid {
-			s.m.OnMatchCmdArrived(msg)
+		if match := s.mDict[mid]; match != nil {
+			match.OnMatchCmdArrived(msg)
 		}
 	}
 }
 
 func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
-	s.send(msg, []InboxAddress{InboxAddress{InboxAddressTypeArduinoDevice, ""}})
+	s.send(msg, []InboxAddress{InboxAddress{InboxAddressTypeSubArduinoDevice, ""}, InboxAddress{InboxAddressTypeMainArduinoDevice, ""}})
 }
 
 func (s *Srv) handleAdminMessage(msg *InboxMessage) {
@@ -331,31 +305,15 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 }
 
 func (s *Srv) startNewMatch(controllerIDs []string, mode string) {
-	if s.pm != nil || s.m != nil {
-		return
-	}
-	if !s.canStartMatch() {
-		s.pm = &pendingMatch{controllerIDs, mode}
-		go s.prepare()
-		return
-	}
 	mid := s.db.saveMatch(&MatchData{})
 	for _, id := range controllerIDs {
 		s.pDict[id].MatchID = mid
 	}
-	s.m = NewMatch(s, controllerIDs, mid, mode)
-	go s.m.Run()
+	m := NewMatch(s, controllerIDs, mid, mode)
+	s.mDict[mid] = m
+	go m.Run()
 	log.Println("will send newMatch")
 	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
-}
-
-func (s *Srv) canStartMatch() bool {
-	for _, ac := range s.aDict {
-		if ac.Mode != ArduinoModeFree || ac.Status != ArduinoStatusNormal {
-			return false
-		}
-	}
-	return true
 }
 
 func (s *Srv) getArduinoMode() ArduinoMode {
@@ -371,29 +329,6 @@ func (s *Srv) getArduinoMode() ArduinoMode {
 		}
 	}
 	return m
-}
-
-func (s *Srv) prepare() {
-	for {
-		if s.canStartMatch() {
-			s.prepareDoneChan <- true
-			break
-		}
-		for _, ac := range s.aDict {
-			if ac.Mode != ArduinoModeFree {
-				msg := NewInboxMessage()
-				msg.SetCmd("mode_change")
-				msg.Set("mode", string(ArduinoModeFree))
-				s.send(msg, []InboxAddress{ac.Address})
-			} else if ac.Status != ArduinoStatusNormal {
-				msg := NewInboxMessage()
-				msg.SetCmd("status_change")
-				msg.Set("status", string(ArduinoStatusNormal))
-				s.send(msg, []InboxAddress{ac.Address})
-			}
-		}
-		time.Sleep(3 * time.Second)
-	}
 }
 
 func (s *Srv) getControllerData() []PlayerController {

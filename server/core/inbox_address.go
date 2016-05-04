@@ -13,7 +13,8 @@ const (
 	InboxAddressTypeArduinoTestDevice //测试Arduino设备
 	InboxAddressTypePostgameDevice    // 出口处iPad
 	InboxAddressTypeWearableDevice    // 穿戴设备
-	InboxAddressTypeArduinoDevice     // Arduino设备
+	InboxAddressTypeMainArduinoDevice // Arduino主墙设备
+	InboxAddressTypeSubArduinoDevice  // Arduino小墙设备
 )
 
 func (t InboxAddressType) IsPlayerControllerType() bool {
@@ -21,7 +22,7 @@ func (t InboxAddressType) IsPlayerControllerType() bool {
 }
 
 func (t InboxAddressType) IsArduinoControllerType() bool {
-	return t == InboxAddressTypeArduinoDevice
+	return t == InboxAddressTypeMainArduinoDevice || t == InboxAddressTypeSubArduinoDevice
 }
 
 type InboxAddress struct {

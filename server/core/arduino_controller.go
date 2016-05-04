@@ -11,20 +11,10 @@ const (
 	ArduinoModeFree
 )
 
-type ArduinoStatus int
-
-const ArduinoStatusUnknown ArduinoStatus = -1
-
-const (
-	ArduinoStatusIdle = iota
-	ArduinoStatusNormal
-)
-
 type ArduinoController struct {
-	Address InboxAddress  `json:"address"`
-	ID      string        `json:"id"`
-	Mode    ArduinoMode   `json:"mode"`
-	Status  ArduinoStatus `json:"status"`
+	Address InboxAddress `json:"address"`
+	ID      string       `json:"id"`
+	Mode    ArduinoMode  `json:"mode"`
 }
 
 func NewArduinoController(addr InboxAddress) *ArduinoController {
@@ -32,6 +22,5 @@ func NewArduinoController(addr InboxAddress) *ArduinoController {
 	a.Address = addr
 	a.ID = addr.String()
 	a.Mode = ArduinoModeUnknown
-	a.Status = ArduinoStatusUnknown
 	return &a
 }
