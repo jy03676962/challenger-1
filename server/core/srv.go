@@ -255,6 +255,12 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.queue.TeamQueryData()
 	case "queryControllerData":
 		s.sendMsg("ControllerData", s.getControllerData(), msg.Address.Type, msg.Address.ID)
+	case "queryArenaSize":
+		d := map[string]int{
+			"width":  GetOptions().ArenaWidth,
+			"height": GetOptions().ArenaHeight,
+		}
+		s.sendMsg("ArenaSize", d, msg.Address.Type, msg.Address.ID)
 	case "teamCutLine":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCutLine(teamID)
@@ -289,18 +295,10 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.queue.TeamCall(teamID)
 	case "arduinoModeChange":
 		mode := ArduinoMode(msg.Get("mode").(float64))
-		if len(s.aDict) == 0 || s.getArduinoMode() == mode {
-			s.sendMsgs("arduinoModeChange", mode, InboxAddressTypeAdminDevice)
-		} else {
-			for _, a := range s.aDict {
-				if a.Mode != mode {
-					am := NewInboxMessage()
-					am.SetCmd("mode_change")
-					am.Set("mode", string(mode))
-					s.send(am, []InboxAddress{a.Address})
-				}
-			}
-		}
+		am := NewInboxMessage()
+		am.SetCmd("mode_change")
+		am.Set("mode", string(mode))
+		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	}
 }
 
@@ -359,6 +357,14 @@ func (s *Srv) sendMsgToAddresses(cmd string, data interface{}, addrs []InboxAddr
 	msg.SetCmd(cmd)
 	if data != nil {
 		msg.Set("data", data)
+	}
+	s.send(msg, addrs)
+}
+
+func (s *Srv) sends(msg *InboxMessage, types ...InboxAddressType) {
+	addrs := make([]InboxAddress, len(types))
+	for i, t := range types {
+		addrs[i] = InboxAddress{t, ""}
 	}
 	s.send(msg, addrs)
 }

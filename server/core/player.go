@@ -42,7 +42,7 @@ func (p *Player) UpdatePos(sec float64, options *MatchOptions) bool {
 	if !p.moving {
 		return false
 	}
-	delta := sec * options.playerSpeed
+	delta := sec * options.PlayerSpeed
 	var dx, dy float64
 	switch p.Direction {
 	case "up":

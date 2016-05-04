@@ -116,7 +116,7 @@ func (m *Match) tick(dt time.Duration) {
 			m.goldDropTime -= sec
 			if m.goldDropTime <= 0 {
 				m.Gold -= m.opt.Mode2GoldDropRate[len(m.Member)-1]
-				m.goldDropTime = m.opt.mode2GoldDropInterval
+				m.goldDropTime = m.opt.Mode2GoldDropInterval
 			}
 		}
 		for k, v := range m.hiddenButtons {
@@ -142,7 +142,7 @@ func (m *Match) tick(dt time.Duration) {
 func (m *Match) enterOngoing() {
 	m.Stage = "ongoing"
 	if m.Mode == "s" {
-		m.goldDropTime = m.opt.mode2GoldDropInterval
+		m.goldDropTime = m.opt.Mode2GoldDropInterval
 	}
 	m.initLasers()
 	m.initButtons()
@@ -321,7 +321,7 @@ func (m *Match) initLasers() {
 		loc := l[i]
 		p := P{loc % m.opt.ArenaWidth, loc / m.opt.ArenaWidth}
 		m.Lasers[i] = NewLaser(p, player, m)
-		m.Lasers[i].Pause(m.opt.laserAppearTime)
+		m.Lasers[i].Pause(m.opt.LaserAppearTime)
 	}
 }
 
@@ -336,7 +336,7 @@ func (m *Match) initButtons() {
 	src := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(src)
 	list := r.Perm(l)
-	n := m.opt.initButtonNum[len(m.Member)-1]
+	n := m.opt.InitButtonNum[len(m.Member)-1]
 	m.OnButtons = make(map[string]bool)
 	m.offButtons = make([]string, l-n)
 	m.hiddenButtons = make(map[string]float64)
@@ -360,9 +360,9 @@ func (m *Match) consumeButton(btn string, player *Player) {
 			player.lastHitTime = time.Now()
 			var max float64
 			if player.Combo == 0 {
-				max = m.opt.firstComboInterval[len(m.Member)-1]
+				max = m.opt.FirstComboInterval[len(m.Member)-1]
 			} else {
-				max = m.opt.firstComboInterval[len(m.Member)-1]
+				max = m.opt.FirstComboInterval[len(m.Member)-1]
 			}
 			if sec <= max {
 				player.Combo += 1
@@ -371,12 +371,12 @@ func (m *Match) consumeButton(btn string, player *Player) {
 			}
 			extra := 0.0
 			if player.Combo == 1 {
-				extra = m.opt.firstComboExtra
+				extra = m.opt.FirstComboExtra
 				player.ComboCount += 1
 			} else if player.Combo > 1 {
-				extra = m.opt.comboExtra
+				extra = m.opt.ComboExtra
 			}
-			delta := m.opt.energyBonus[player.ButtonLevel][len(m.Member)-1] + extra
+			delta := m.opt.EnergyBonus[player.ButtonLevel][len(m.Member)-1] + extra
 			m.Energy = math.Min(m.opt.MaxEnergy, m.Energy+delta)
 			player.Energy += delta
 		}
@@ -395,12 +395,12 @@ func (m *Match) consumeButton(btn string, player *Player) {
 	i := r.Intn(len(m.offButtons))
 	key := m.offButtons[i]
 	m.offButtons[i] = btn
-	t := m.opt.buttonHideTime[m.modeIndex()]
+	t := m.opt.ButtonHideTime[m.modeIndex()]
 	m.hiddenButtons[key] = t
 }
 
 func (m *Match) enterRampage() {
-	m.RampageTime = m.opt.rampageTime[m.modeIndex()]
+	m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 	for i := 0; i < len(m.opt.Buttons); i++ {
 		k := strconv.Itoa(i)
 		m.OnButtons[k] = true

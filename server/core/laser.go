@@ -50,7 +50,7 @@ func (l *Laser) Tick(dt float64) {
 	}
 	l.FindPath()
 	next, min := l.p, l.pathMap[l.p]
-	for _, i := range l.getOpt().tileAdjacency[l.p] {
+	for _, i := range l.getOpt().TileAdjacency[l.p] {
 		if l.pathMap[i] < min {
 			min = l.pathMap[i]
 			next = i
@@ -72,7 +72,7 @@ func (l *Laser) Tick(dt float64) {
 	}
 	currentRealP := l.getOpt().RealPosition(currentP)
 	nextRealP := l.getOpt().RealPosition(nextP)
-	speed := l.getOpt().LaserSpeed(l.match.Energy)
+	speed := l.getOpt().laserSpeed(l.match.Energy)
 	delta := speed * dt
 	var dir2 string
 	dx, dy := l.Pos.X-currentRealP.X, l.Pos.Y-currentRealP.Y
@@ -133,13 +133,13 @@ func (l *Laser) Tick(dt float64) {
 		playerRect := Rect{player.Pos.X - playerSize/2, player.Pos.Y - playerSize/2, playerSize, playerSize}
 		if l.getOpt().Collide(&rect, &playerRect) {
 			shouldPause = true
-			player.InvincibleTime = l.getOpt().playerInvincibleTime
+			player.InvincibleTime = l.getOpt().PlayerInvincibleTime
 			player.HitCount += 1
 			var punish int
 			if l.match.Mode == "g" {
-				punish = int(float64(l.match.Gold) * l.getOpt().mode1TouchPunish)
+				punish = int(float64(l.match.Gold) * l.getOpt().Mode1TouchPunish)
 			} else {
-				punish = l.getOpt().mode2TouchPunish
+				punish = l.getOpt().Mode2TouchPunish
 			}
 			l.match.Gold = MaxInt(l.match.Gold-punish, 0)
 			player.Gold -= punish
@@ -147,7 +147,7 @@ func (l *Laser) Tick(dt float64) {
 		}
 	}
 	if shouldPause {
-		l.Pause(l.getOpt().laserPauseTime)
+		l.Pause(l.getOpt().LaserPauseTime)
 	}
 }
 
@@ -164,7 +164,7 @@ func (l *Laser) FindPath() {
 	var fill func(x int, v int)
 	fill = func(x int, v int) {
 		l.pathMap[x] = v
-		for _, i := range l.getOpt().tileAdjacency[x] {
+		for _, i := range l.getOpt().TileAdjacency[x] {
 			if l.pathMap[i] > v+1 {
 				fill(i, v+1)
 			}

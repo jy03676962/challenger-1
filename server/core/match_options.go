@@ -1,8 +1,13 @@
 package core
 
 import (
+	"github.com/BurntSushi/toml"
+	"log"
+	"os"
 	"strconv"
 )
+
+var _ = log.Printf
 
 type ArenaPosition struct {
 	X int
@@ -25,16 +30,19 @@ type Rect struct {
 	H float64
 }
 
-type ArenaWall struct {
-	P1 P
-	P2 P
-}
-
-type W ArenaWall
-
 type Button struct {
 	Id string `json:"id"`
 	R  Rect   `json:"r"`
+}
+
+type RenderInfo struct {
+	ArenaCellSize int
+	ArenaBorder   int
+	PlayerSize    float64
+	WebScale      float64
+	ButtonWidth   float64
+	ButtonHeight  float64
+	PlayerSpeed   float64
 }
 
 type MatchOptions struct {
@@ -59,30 +67,29 @@ type MatchOptions struct {
 	Mode2GoldDropRate [4]int     `json:"mode2GoldDropRate"`
 	MaxEnergy         float64    `json:"maxEnergy"`
 	Mode1TotalTime    float64    `json:"mode1TotalTime"`
+	WallRects         []Rect     `json:"walls"`
+	Buttons           []*Button  `json:"buttons"`
 
-	WallRects []Rect    `json:"walls"`
-	Buttons   []*Button `json:"buttons"`
-	// private
-	playerSpeed           float64
-	arenaWallList         []W
-	energyBonus           [4][4]float64
-	initButtonNum         [4]int
-	buttonHideTime        [2]float64
-	rampageTime           [2]float64
-	firstComboInterval    [4]float64
-	comboInterval         [4]float64
-	firstComboExtra       float64
-	comboExtra            float64
-	laserSpeed            float64
-	laserSpeedup          float64
-	energySpeedup         float64
-	laserAppearTime       float64
-	laserPauseTime        float64
-	tileAdjacency         map[int][]int
-	playerInvincibleTime  float64
-	mode1TouchPunish      float64
-	mode2TouchPunish      int
-	mode2GoldDropInterval float64
+	PlayerSpeed           float64       `json:"-"`
+	Walls                 [][]int       `json:"-"`
+	EnergyBonus           [4][4]float64 `json:"-"`
+	InitButtonNum         [4]int        `json:"-"`
+	ButtonHideTime        [2]float64    `json:"-"`
+	RampageTime           [2]float64    `json:"-"`
+	FirstComboInterval    [4]float64    `json:"-"`
+	ComboInterval         [4]float64    `json:"-"`
+	FirstComboExtra       float64       `json:"-"`
+	ComboExtra            float64       `json:"-"`
+	LaserSpeed            float64       `json:"-"`
+	LaserSpeedup          float64       `json:"-"`
+	EnergySpeedup         float64       `json:"-"`
+	LaserAppearTime       float64       `json:"-"`
+	LaserPauseTime        float64       `json:"-"`
+	TileAdjacency         map[int][]int `json:"-"`
+	PlayerInvincibleTime  float64       `json:"-"`
+	Mode1TouchPunish      float64       `json:"-"`
+	Mode2TouchPunish      int           `json:"-"`
+	Mode2GoldDropInterval float64       `json:"-"`
 }
 
 var opt = DefaultMatchOptions()
@@ -92,56 +99,15 @@ func GetOptions() *MatchOptions {
 }
 
 func DefaultMatchOptions() *MatchOptions {
-	v := MatchOptions{}
-	v.ArenaWidth = 8
-	v.ArenaHeight = 6
-	v.ArenaCellSize = 140
-	v.ArenaBorder = 24
-	v.Warmup = 2
-	v.ArenaEntrance = P{0, 4}
-	v.ArenaExit = P{6, 0}
-	v.PlayerSize = 50
-	v.Web_ArenaScale = 0.5
-	v.ButtonWidth = 60
-	v.ButtonHeight = 30
-	v.T1 = 2
-	v.T2 = 2.2
-	v.T3 = 2.5
-	v.TRampage = 1
-	v.playerSpeed = 200
-	v.GoldBonus = [2]int{1, 1}
-	v.TouchPunish = [2]float64{30, 10}
-	v.Mode2InitGold = [4]int{60, 90, 120, 150}
-	v.Mode2GoldDropRate = [4]int{2, 3, 4, 5}
-	v.MaxEnergy = 100
-	v.Mode1TotalTime = 60
-	v.laserSpeed = 0.25
-	v.laserSpeedup = 0.05
-	v.energySpeedup = 200
-	v.laserAppearTime = 3
-	v.laserPauseTime = 10
-	v.energyBonus = [4][4]float64{
-		{0, 0, 0, 0},
-		{50, 40, 30, 20},
-		{40, 32, 24, 16},
-		{30, 24, 18, 12},
+	var opt MatchOptions
+	if _, err := toml.DecodeFile("core/cfg.toml", &opt); err != nil {
+		log.Printf("parse toml error:%v\n", err.Error())
+		os.Exit(1)
 	}
-	v.initButtonNum = [4]int{20, 30, 40, 50}
-	v.buttonHideTime = [2]float64{6, 6}
-	v.rampageTime = [2]float64{20, 20}
-	v.firstComboInterval = [4]float64{5, 4, 3, 2}
-	v.comboInterval = [4]float64{3, 3, 2, 2}
-	v.firstComboExtra = 30
-	v.comboExtra = 15
-	v.playerInvincibleTime = 3
-	v.mode1TouchPunish = .3
-	v.mode2TouchPunish = 10
-	v.mode2GoldDropInterval = 1
-	v.buildWallPoints()
-	v.buildWallRects()
-	v.buildButtons()
-	v.buildAdjacency()
-	return &v
+	opt.buildWallRects()
+	opt.buildButtons()
+	opt.buildAdjacency()
+	return &opt
 }
 
 func (m *MatchOptions) buildAdjacency() {
@@ -154,9 +120,9 @@ func (m *MatchOptions) buildAdjacency() {
 		if a%w == 0 && b == a-1 || b%w == 0 && a == b-1 {
 			return false
 		}
-		for _, wall := range m.arenaWallList {
-			p1 := m.TilePosToInt(wall.P1)
-			p2 := m.TilePosToInt(wall.P2)
+		for _, wall := range m.Walls {
+			p1 := m.TilePosToInt(P{wall[0], wall[1]})
+			p2 := m.TilePosToInt(P{wall[2], wall[3]})
 			if a == p1 && b == p2 || a == p2 && b == p1 {
 				return false
 			}
@@ -176,57 +142,24 @@ func (m *MatchOptions) buildAdjacency() {
 			}
 		}
 	}
-	m.tileAdjacency = adj
-}
-
-func (m *MatchOptions) buildWallPoints() {
-	m.arenaWallList = []W{
-		W{P{4, 0}, P{5, 0}},
-		W{P{1, 0}, P{1, 1}},
-		W{P{6, 0}, P{6, 1}},
-		W{P{0, 1}, P{1, 1}},
-		W{P{2, 1}, P{3, 1}},
-		W{P{3, 1}, P{4, 1}},
-		W{P{6, 1}, P{7, 1}},
-		W{P{2, 1}, P{2, 2}},
-		W{P{5, 1}, P{5, 2}},
-		W{P{2, 2}, P{3, 2}},
-		W{P{3, 2}, P{4, 2}},
-		W{P{4, 2}, P{5, 2}},
-		W{P{1, 2}, P{1, 3}},
-		W{P{6, 2}, P{6, 3}},
-		W{P{0, 3}, P{1, 3}},
-		W{P{2, 3}, P{3, 3}},
-		W{P{4, 3}, P{5, 3}},
-		W{P{6, 3}, P{7, 3}},
-		W{P{2, 3}, P{2, 4}},
-		W{P{3, 3}, P{3, 4}},
-		W{P{0, 4}, P{1, 4}},
-		W{P{1, 4}, P{2, 4}},
-		W{P{4, 4}, P{5, 4}},
-		W{P{5, 4}, P{6, 4}},
-		W{P{6, 4}, P{7, 4}},
-		W{P{4, 4}, P{4, 5}},
-		W{P{2, 5}, P{3, 5}},
-		W{P{5, 5}, P{6, 5}},
-	}
+	m.TileAdjacency = adj
 }
 
 func (m *MatchOptions) buildWallRects() {
 	m.WallRects = make([]Rect, 0)
-	for _, wall := range m.arenaWallList {
-		horizontal := wall.P1.X == wall.P2.X
+	for _, wall := range m.Walls {
+		horizontal := wall[0] == wall[2]
 		var w, h, x, y float64
 		if horizontal {
 			w = float64(m.ArenaCellSize + 2*m.ArenaBorder)
 			h = float64(m.ArenaBorder)
-			x = float64(wall.P1.X*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
-			y = float64(MaxInt(wall.P1.Y, wall.P2.Y)*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+			x = float64(wall[0]*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+			y = float64(MaxInt(wall[1], wall[3])*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
 		} else {
 			w = float64(m.ArenaBorder)
 			h = float64(m.ArenaCellSize + 2*m.ArenaBorder)
-			y = float64(wall.P1.Y*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
-			x = float64(MaxInt(wall.P1.X, wall.P2.X)*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+			y = float64(wall[1]*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
+			x = float64(MaxInt(wall[0], wall[2])*(m.ArenaCellSize+m.ArenaBorder) - m.ArenaBorder/2)
 		}
 		m.WallRects = append(m.WallRects, Rect{x, y, w, h})
 	}
@@ -300,8 +233,8 @@ func (m *MatchOptions) buildButtons() {
 	}
 	// inner wall
 	for idx, rect := range m.WallRects {
-		wall := m.arenaWallList[idx]
-		horizontal := wall.P1.X == wall.P2.X
+		wall := m.Walls[idx]
+		horizontal := wall[0] == wall[2]
 		if horizontal {
 			w = bw
 			h = bh
@@ -396,8 +329,8 @@ func (m *MatchOptions) IntToTile(i int) P {
 	return P{i % m.ArenaWidth, i / m.ArenaWidth}
 }
 
-func (m *MatchOptions) LaserSpeed(energy float64) float64 {
-	level := int(energy / m.energySpeedup)
-	speed := m.laserSpeed - float64(level)*m.laserSpeedup
+func (m *MatchOptions) laserSpeed(energy float64) float64 {
+	level := int(energy / m.EnergySpeedup)
+	speed := m.LaserSpeed - float64(level)*m.LaserSpeedup
 	return float64(m.ArenaCellSize) / 10 / speed
 }
