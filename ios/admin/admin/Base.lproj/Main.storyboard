@@ -899,7 +899,7 @@
                                         </connections>
                                     </button>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="WIS-97-uSB">
-                                        <rect key="frame" x="382" y="167" width="260" height="29"/>
+                                        <rect key="frame" x="382" y="130" width="260" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="260" id="9TS-Re-uCx"/>
                                             <constraint firstAttribute="height" constant="28" id="Cgp-cb-Vtn"/>
@@ -920,7 +920,7 @@
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="15" id="IS4-kh-FBV"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="Ihj-3R-v99"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="80" id="gHd-fs-edP"/>
-                                    <constraint firstItem="WIS-97-uSB" firstAttribute="top" secondItem="qSS-Jh-Wtj" secondAttribute="bottom" constant="57" id="hGS-sV-iUW"/>
+                                    <constraint firstItem="WIS-97-uSB" firstAttribute="top" secondItem="qSS-Jh-Wtj" secondAttribute="bottom" constant="20" id="hGS-sV-iUW"/>
                                     <constraint firstItem="WIS-97-uSB" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="kvd-ji-se3"/>
                                     <constraint firstAttribute="trailing" secondItem="OgJ-A9-ePy" secondAttribute="trailing" constant="22" id="tuq-xI-6tt"/>
                                 </constraints>

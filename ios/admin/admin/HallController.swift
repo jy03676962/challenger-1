@@ -41,6 +41,11 @@ class HallController: PLViewController {
 		super.viewWillAppear(animated)
 		DataManager.singleton.subscriptData([.HallData, .ControllerData, .NewMatch], receiver: self)
 	}
+
+	override func viewDidDisappear(animated: Bool) {
+		super.viewDidDisappear(animated)
+		DataManager.singleton.removeSubscript(self)
+	}
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
 	}

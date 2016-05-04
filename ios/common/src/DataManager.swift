@@ -10,7 +10,7 @@ import Foundation
 import Starscream
 import SwiftyJSON
 
-public protocol DataReceiver {
+public protocol DataReceiver: class {
 	func onReceivedData(json: [String: AnyObject], type: DataType)
 }
 
@@ -18,7 +18,8 @@ public enum DataType: String {
 	case HallData = "HallData"
 	case ControllerData = "ControllerData"
 	case NewMatch = "newMatch"
-	case ArduinoModeChange = "arduinoModeChange"
+	case ArenaSize = "ArenaSize"
+	case ArduinoMode = "ArduinoMode"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
@@ -44,6 +45,18 @@ public class DataManager {
 			if type.shouldQuery {
 				WsClient.singleton.sendCmd(type.queryCmd)
 			}
+		}
+	}
+
+	public func removeSubscript(receiver: DataReceiver) {
+		for (t, l) in receiversMap {
+			var nl = [DataReceiver]()
+			for r in l {
+				if r !== receiver {
+					nl.append(r)
+				}
+			}
+			receiversMap[t] = nl
 		}
 	}
 

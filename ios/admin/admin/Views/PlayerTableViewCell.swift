@@ -6,8 +6,7 @@
 //  Copyright © 2016 pulupulu. All rights reserved.
 //
 
-import Cocoa
+import UIKit
 
 class PlayerTableViewCell: UITableViewCell {
-
 }
