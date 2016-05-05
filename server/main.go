@@ -30,6 +30,8 @@ func main() {
 	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
+	core.GetOptions()
+
 	srv := core.NewSrv()
 	go srv.Run(tcpAddr, udpAddr, dbPath)
 

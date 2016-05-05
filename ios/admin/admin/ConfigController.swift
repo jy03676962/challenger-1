@@ -82,6 +82,7 @@ class ConfigController: PLViewController {
 				let left = CGFloat(i % row) * (margin + width) + margin
 //				log.debug("\(i): \(CGFloat(i % row)), top is \(top), left is \(top)")
 				label.frame = CGRect(x: left, y: top, width: width, height: height)
+				label.textAlignment = .Center
 				self.arduinoView.addSubview(label)
 				arduinoViewMap[controller.address.id] = label
 			} else {
@@ -99,6 +100,13 @@ class ConfigController: PLViewController {
 				}
 			} else {
 				label.textColor = UIColor.redColor()
+			}
+			label.borderWidth = 0
+			if (controller.address.type == .MainArduino) {
+				if !controller.scoreUpdated {
+					label.borderWidth = 1
+					label.borderColor = UIColor.redColor()
+				}
 			}
 		}
 	}

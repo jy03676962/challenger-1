@@ -94,10 +94,33 @@ type MatchOptions struct {
 	SubArduino            []string      `json:"-"`
 }
 
+type ScoreInfo [4]map[string]interface{}
+
 var opt = DefaultMatchOptions()
 
 func GetOptions() *MatchOptions {
 	return opt
+}
+
+func GetScoreInfo() ScoreInfo {
+	return [4]map[string]interface{}{
+		map[string]interface{}{
+			"time":   opt.T1,
+			"status": "T1",
+		},
+		map[string]interface{}{
+			"time":   opt.T2,
+			"status": "T2",
+		},
+		map[string]interface{}{
+			"time":   opt.T3,
+			"status": "T3",
+		},
+		map[string]interface{}{
+			"time":   opt.TRampage,
+			"status": "T4",
+		},
+	}
 }
 
 func DefaultMatchOptions() *MatchOptions {

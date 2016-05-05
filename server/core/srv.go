@@ -184,6 +184,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		id := msg.RemoveAddress.String()
 		if controller := s.aDict[id]; controller != nil {
 			controller.Online = false
+			controller.ScoreUpdated = false
 		}
 	}
 
@@ -191,6 +192,9 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		ac := NewArduinoController(*msg.AddAddress)
 		if controller := s.aDict[ac.ID]; controller != nil {
 			controller.Online = true
+			if controller.NeedUpdateScore() {
+				s.updateArduinoControllerScore(controller)
+			}
 		} else {
 			log.Printf("Warning: get arduino connection not belong to list:%v\n", msg.AddAddress.String())
 		}
@@ -220,6 +224,10 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	switch cmd {
+	case "confirm_init_score":
+		if controller := s.aDict[msg.Address.String()]; controller != nil {
+			controller.ScoreUpdated = true
+		}
 	}
 }
 
@@ -377,4 +385,15 @@ func (s *Srv) initArduinoControllers() {
 		controller := NewArduinoController(addr)
 		s.aDict[addr.String()] = controller
 	}
+}
+
+func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
+	if !controller.NeedUpdateScore() {
+		return
+	}
+	scoreInfo := GetScoreInfo()
+	msg := NewInboxMessage()
+	msg.SetCmd("init_score")
+	msg.Set("score", scoreInfo)
+	s.send(msg, []InboxAddress{controller.Address})
 }

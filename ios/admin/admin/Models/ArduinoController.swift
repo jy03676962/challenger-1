@@ -19,6 +19,7 @@ struct ArduinoController: Mappable {
 	var id: String!
 	var mode: ArduinoMode!
 	var online: Bool!
+	var scoreUpdated: Bool!
 
 	init?(_ map: Map) {
 	}
@@ -28,5 +29,6 @@ struct ArduinoController: Mappable {
 		id <- map["id"]
 		mode <- map["mode"]
 		online <- map["online"]
+		scoreUpdated <- map["scoreUpdated"]
 	}
 }
