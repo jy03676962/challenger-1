@@ -38,6 +38,7 @@ func main() {
 	// setup echo
 	ec := echo.New()
 	ec.Static("/", "public")
+	ec.Static("/api/asset/", "api_public")
 	ec.Use(mw.Logger())
 	ec.Get("/ws", st.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		srv.ListenWebSocket(ws)
