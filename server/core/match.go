@@ -6,6 +6,7 @@ import (
 	"math"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -38,6 +39,8 @@ type Match struct {
 	RampageCount int             `json:"rampageCount"`
 	Lasers       []*Laser        `json:"lasers"`
 	ID           uint            `json:"id"`
+	TeamID       string          `json:"teamID"`
+	MaxEnergy    float64         `json:"maxEnergy"`
 
 	offButtons    []string
 	hiddenButtons map[string]float64
@@ -46,7 +49,6 @@ type Match struct {
 	srv           *Srv
 	msgCh         chan *InboxMessage
 	closeCh       chan bool
-	teamID        string
 }
 
 func NewMatch(s *Srv, controllerIDs []string, matchID uint, mode string, teamID string) *Match {
@@ -62,7 +64,8 @@ func NewMatch(s *Srv, controllerIDs []string, matchID uint, mode string, teamID 
 	m.Mode = mode
 	m.msgCh = make(chan *InboxMessage)
 	m.closeCh = make(chan bool)
-	m.teamID = teamID
+	m.TeamID = teamID
+	m.MaxEnergy = GetOptions().MaxEnergy
 	return &m
 }
 
@@ -88,7 +91,10 @@ func (m *Match) Run() {
 		m.tick(dt)
 		m.sync()
 	}
-	m.srv.onMatchEvent(MatchEvent{MatchEventTypeEnd, m.ID, nil})
+	d := make(map[string]interface{})
+	d["matchData"] = m.getMatchData()
+	d["teamID"] = m.TeamID
+	m.srv.onMatchEvent(MatchEvent{MatchEventTypeEnd, m.ID, d})
 	close(m.closeCh)
 }
 
@@ -180,10 +186,6 @@ func (m *Match) checkRampage(sec float64) {
 
 func (m *Match) enterAfter() {
 	m.Stage = "after"
-	if m.teamID != "" {
-		TeamFinishMatch(m.teamID)
-	}
-	m.srv.saveMatch(m.getMatchData())
 }
 
 func (m *Match) sync() {
@@ -298,12 +300,20 @@ func (m *Match) getMatchData() *MatchData {
 	data.Gold = m.Gold
 	data.Elasped = m.Elasped
 	data.Member = make([]PlayerData, 0)
+	data.RampageCount = m.RampageCount
 	for _, player := range m.Member {
 		playerData := PlayerData{}
 		playerData.Gold = player.Gold
 		playerData.Energy = player.Energy
 		playerData.LostGold = player.LostGold
 		playerData.Combo = player.ComboCount
+		strs := make([]string, 4)
+		for i, c := range player.LevelData {
+			strs[i] = strconv.Itoa(c)
+		}
+		playerData.LevelData = strings.Join(strs, ",")
+		playerData.HitCount = player.HitCount
+		playerData.Name = player.ControllerID
 		data.Member = append(data.Member, playerData)
 	}
 	return &data

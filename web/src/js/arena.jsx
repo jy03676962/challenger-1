@@ -57,7 +57,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
     let msg, timeText
     let player = null
     for (let p of game.match.member) {
-      if (p.name == game.playerName) {
+      if (p.cid == game.playerName) {
         player = p
       }
     }

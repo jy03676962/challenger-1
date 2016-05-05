@@ -5,7 +5,7 @@ import styles from '~/styles/board.css'
 
 const Board = CSSModules(observer(React.createClass({
   render() {
-    let match = this.props.game.match
+    let match = this.props.game.matchData
     return (
       <div>
       <table>

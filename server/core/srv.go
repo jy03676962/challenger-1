@@ -154,7 +154,11 @@ func (s *Srv) handleMatchEvent(evt MatchEvent) {
 				p.MatchID = 0
 			}
 		}
-		s.sendMsgs("matchStop", evt.ID, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
+		d := evt.Data.(map[string]interface{})
+		d["matchID"] = evt.ID
+		s.queue.TeamFinishMatch(d["teamID"].(string))
+		s.saveMatch(d["matchData"].(*MatchData))
+		s.sendMsgs("matchStop", d, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
 	case MatchEventTypeUpdate:
 		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
 	}
@@ -237,7 +241,7 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 	case "init":
 		d := map[string]interface{}{
 			"options": GetOptions(),
-			"ID":      msg.Address.ID,
+			"ID":      msg.Address.String(),
 		}
 		s.sendMsgToAddresses("init", d, []InboxAddress{*msg.Address})
 	case "startMatch":
@@ -315,6 +319,11 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 			i += 1
 		}
 		s.sendMsg("ArduinoList", arduinolist, msg.Address.ID, msg.Address.Type)
+	case "stopMatch":
+		mid := uint(msg.Get("matchID").(float64))
+		if match := s.mDict[mid]; match != nil {
+			match.OnMatchCmdArrived(msg)
+		}
 	}
 }
 

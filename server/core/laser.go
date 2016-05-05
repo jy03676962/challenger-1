@@ -1,8 +1,11 @@
 package core
 
 import (
+	"log"
 	"math"
 )
+
+var _ = log.Printf
 
 type Laser struct {
 	Pos     RP   `json:"pos"`

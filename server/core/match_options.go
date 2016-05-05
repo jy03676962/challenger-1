@@ -54,7 +54,7 @@ type MatchOptions struct {
 	ArenaEntrance     P          `json:"arenaEntrance"`
 	ArenaExit         P          `json:"arenaExit"`
 	PlayerSize        float64    `json:"playerSize"`
-	Web_ArenaScale    float64    `json:"webScale"`
+	WebScale          float64    `json:"webScale"`
 	ButtonWidth       float64    `json:"buttonWidth"`
 	ButtonHeight      float64    `json:"buttonHeight"`
 	T1                float64    `json:"t1"`

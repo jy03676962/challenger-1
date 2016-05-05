@@ -7,21 +7,24 @@ import (
 
 type PlayerData struct {
 	gorm.Model
-	Name     string
-	Gold     int
-	LostGold int
-	Energy   float64
-	Combo    int
-	Grade    string
-	Level    int
+	Name      string  `json:"name"`
+	Gold      int     `json:"gold"`
+	LostGold  int     `json:"lostGold"`
+	Energy    float64 `json:"energy"`
+	Combo     int     `json:"combo"`
+	Grade     string  `json:"grade"`
+	Level     int     `json:"level"`
+	LevelData string  `json:"levelData"`
+	HitCount  int     `json:"hitCount"`
 }
 
 type MatchData struct {
 	gorm.Model
-	Mode    string
-	Elasped float64
-	Gold    int
-	Member  []PlayerData
+	Mode         string       `json:"mode"`
+	Elasped      float64      `json:"elasped"`
+	Gold         int          `json:"gold"`
+	Member       []PlayerData `json:"member"`
+	RampageCount int          `json:"rampageCount"`
 }
 
 type DB struct {

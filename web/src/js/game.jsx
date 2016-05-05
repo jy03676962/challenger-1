@@ -6,18 +6,19 @@ class Game {
   @observable playerName
   @observable options
   @observable controllers
+  @observable matchData
 
   @computed get stage() {
     if (!this.playerName) {
       return 'login'
     }
-    if (!this.match) {
+    if (!this.match && !this.matchData) {
       return 'hall'
     }
     if (this.matchID > 0 && this.match != null) {
       return 'arena'
     }
-    if (this.match && this.match.stage == 'after') {
+    if (this.matchData != null) {
       return 'board'
     }
   }
@@ -33,6 +34,7 @@ class Game {
     this.arg = null
     this.options = null
     this.controllers = null
+    this.matchData = null
     this.currentKey = 0
     this.matchID = 0
   }
@@ -77,12 +79,16 @@ class Game {
   }
 
   resetMatch() {
-    if (this.sock) {
-      let data = {
-        cmd: 'stopMatch',
-        matchID: this.matchID,
+    if (this.matchID > 0) {
+      if (this.sock) {
+        let data = {
+          cmd: 'stopMatch',
+          matchID: this.matchID,
+        }
+        this.sock.send(JSON.stringify(data))
       }
-      this.sock.send(JSON.stringify(data))
+    } else if (this.matchData != null) {
+      this.matchData = null
     }
   }
 
@@ -92,6 +98,7 @@ class Game {
     switch (json.cmd) {
       case 'init':
         this.options = json.data.options
+        console.log(json.data.options)
         this.playerName = json.data.ID
         break
       case 'updateMatch':
@@ -107,7 +114,8 @@ class Game {
         this.matchID = json.data
         break
       case 'matchStop':
-        if (this.matchID == json.data) {
+        if (this.matchID == json.data.matchID) {
+          this.matchData = json.data.matchData
           this.matchID = 0
           this.match = null
         }

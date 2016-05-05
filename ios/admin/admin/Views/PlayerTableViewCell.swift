@@ -9,4 +9,15 @@
 import UIKit
 
 class PlayerTableViewCell: UITableViewCell {
+	@IBOutlet weak var playerIDLabel: UILabel!
+	@IBOutlet weak var goldLabel: UILabel!
+	@IBOutlet weak var energyLabel: UILabel!
+	@IBOutlet weak var comboLabel: UILabel!
+
+	func setData(player: Player) {
+		playerIDLabel.text = player.controllerID
+		goldLabel.text = "\(player.gold)/-\(player.lostGold)"
+		energyLabel.text = String(format: "%.f", player.energy)
+		comboLabel.text = "\(player.combo)"
+	}
 }

@@ -69,7 +69,9 @@ struct Match: Mappable {
 	var gold: Int!
 	var energy: Double!
 	var rampageCount: Int!
-	var id: UInt!
+	var id: Int!
+	var teamID: String!
+	var maxEnergy: Int!
 
 	init?(_ map: Map) {
 	}
@@ -86,5 +88,7 @@ struct Match: Mappable {
 		energy <- map["energy"]
 		rampageCount <- map["rampageCount"]
 		id <- map["id"]
+		teamID <- map["teamID"]
+		maxEnergy <- map["maxEnergy"]
 	}
 }
