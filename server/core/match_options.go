@@ -90,6 +90,8 @@ type MatchOptions struct {
 	Mode1TouchPunish      float64       `json:"-"`
 	Mode2TouchPunish      int           `json:"-"`
 	Mode2GoldDropInterval float64       `json:"-"`
+	MainArduino           []string      `json:"-"`
+	SubArduino            []string      `json:"-"`
 }
 
 var opt = DefaultMatchOptions()

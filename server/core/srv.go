@@ -39,6 +39,7 @@ func NewSrv() *Srv {
 	s.pDict = make(map[string]*PlayerController)
 	s.aDict = make(map[string]*ArduinoController)
 	s.mDict = make(map[uint]*Match)
+	s.initArduinoControllers()
 	return &s
 }
 
@@ -48,7 +49,6 @@ func (s *Srv) Run(tcpAddr string, udpAddr string, dbPath string) {
 		log.Printf("open database error:%v\n", e.Error())
 		os.Exit(1)
 	}
-	//go s.inbox.Run()
 	go s.listenTcp(tcpAddr)
 	go s.listenUdp(udpAddr)
 	s.mainLoop()
@@ -182,12 +182,18 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 
 	if msg.RemoveAddress != nil && msg.RemoveAddress.Type.IsArduinoControllerType() {
 		id := msg.RemoveAddress.String()
-		delete(s.aDict, id)
+		if controller := s.aDict[id]; controller != nil {
+			controller.Online = false
+		}
 	}
 
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsArduinoControllerType() {
 		ac := NewArduinoController(*msg.AddAddress)
-		s.aDict[ac.ID] = ac
+		if controller := s.aDict[ac.ID]; controller != nil {
+			controller.Online = true
+		} else {
+			log.Printf("Warning: get arduino connection not belong to list:%v\n", msg.AddAddress.String())
+		}
 	}
 
 	if msg.Address == nil {
@@ -314,21 +320,6 @@ func (s *Srv) startNewMatch(controllerIDs []string, mode string) {
 	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
 }
 
-func (s *Srv) getArduinoMode() ArduinoMode {
-	b, m := false, ArduinoModeUnknown
-	for _, ac := range s.aDict {
-		if !b {
-			m = ac.Mode
-			b = true
-		} else {
-			if ac.Mode != m {
-				return ArduinoModeUnknown
-			}
-		}
-	}
-	return m
-}
-
 func (s *Srv) getControllerData() []PlayerController {
 	r := make([]PlayerController, len(s.pDict))
 	i := 0
@@ -371,4 +362,17 @@ func (s *Srv) sends(msg *InboxMessage, types ...InboxAddressType) {
 
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
 	s.inbox.Send(msg, addrs)
+}
+
+func (s *Srv) initArduinoControllers() {
+	for _, main := range GetOptions().MainArduino {
+		addr := InboxAddress{main, InboxAddressTypeMainArduinoDevice}
+		controller := NewArduinoController(addr)
+		s.aDict[addr.String()] = controller
+	}
+	for _, sub := range GetOptions().SubArduino {
+		addr := InboxAddress{main, InboxAddressTypeSubArduinoDevice}
+		controller := NewArduinoController(addr)
+		s.aDict[addr.String()] = controller
+	}
 }

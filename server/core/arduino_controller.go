@@ -15,6 +15,7 @@ type ArduinoController struct {
 	Address InboxAddress `json:"address"`
 	ID      string       `json:"id"`
 	Mode    ArduinoMode  `json:"mode"`
+	Online  bool         `json:"online"`
 }
 
 func NewArduinoController(addr InboxAddress) *ArduinoController {
@@ -22,5 +23,6 @@ func NewArduinoController(addr InboxAddress) *ArduinoController {
 	a.Address = addr
 	a.ID = addr.String()
 	a.Mode = ArduinoModeUnknown
+	a.Online = false
 	return &a
 }
