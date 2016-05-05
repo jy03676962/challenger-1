@@ -20,6 +20,7 @@ pod 'ObjectMapper', '~> 1.2'
 pod 'SWTableViewCell', '~> 0.3.7'
 pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
 pod "PKHUD"
+pod 'AlamofireImage', '~> 2.0'
 end
 
 project 'admin/admin.xcodeproj'

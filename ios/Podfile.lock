@@ -1,5 +1,7 @@
 PODS:
   - Alamofire (3.3.1)
+  - AlamofireImage (2.4.0):
+    - Alamofire (~> 3.3)
   - AutoKeyboardScrollView (1.4.1)
   - EasyPeasy (0.2.3)
   - ObjectMapper (1.2.0)
@@ -14,6 +16,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 3.3)
+  - AlamofireImage (~> 2.0)
   - AutoKeyboardScrollView (~> 1.4)
   - EasyPeasy
   - ObjectMapper (~> 1.2)
@@ -37,6 +40,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
+  AlamofireImage: 87408b652e0f5ae5fe364035f15aea8b9b24c77e
   AutoKeyboardScrollView: 95e6780deca4bf6e0beac8fdfa508d861800c9cf
   EasyPeasy: 8ffc6502c888220d80cbecb53ca188e772d4ea2a
   ObjectMapper: b1e9c7c8a9f6400b72690c80072c131504caa66f
@@ -49,6 +53,6 @@ SPEC CHECKSUMS:
   UIColor_Hex_Swift: e91dc51f6bf252ec7bf74c8704ceedeeb7640c1c
   XCGLogger: d6e196e78940ff6daab17d6917107876f973fa31
 
-PODFILE CHECKSUM: 28ad842dec07689c787837f659cf3f9fc62f7f8f
+PODFILE CHECKSUM: 7cc51cd30a423d4eea0af636b1070bc8679af036
 
 COCOAPODS: 1.0.0.beta.8
