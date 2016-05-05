@@ -256,17 +256,11 @@ func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
 func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	switch msg.GetCmd() {
 	case "init":
-		s.sendMsg("init", nil, msg.Address.Type, msg.Address.ID)
+		s.sendMsg("init", nil, msg.Address.ID, msg.Address.Type)
 	case "queryHallData":
 		s.queue.TeamQueryData()
 	case "queryControllerData":
-		s.sendMsg("ControllerData", s.getControllerData(), msg.Address.Type, msg.Address.ID)
-	case "queryArenaSize":
-		d := map[string]int{
-			"width":  GetOptions().ArenaWidth,
-			"height": GetOptions().ArenaHeight,
-		}
-		s.sendMsg("ArenaSize", d, msg.Address.Type, msg.Address.ID)
+		s.sendMsg("ControllerData", s.getControllerData(), msg.Address.ID, msg.Address.Type)
 	case "teamCutLine":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCutLine(teamID)
@@ -305,6 +299,14 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am.SetCmd("mode_change")
 		am.Set("mode", string(mode))
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
+	case "queryArduinoList":
+		arduinolist := make([]ArduinoController, len(s.aDict))
+		i := 0
+		for _, controller := range s.aDict {
+			arduinolist[i] = *controller
+			i += 1
+		}
+		s.sendMsg("ArduinoList", arduinolist, msg.Address.ID, msg.Address.Type)
 	}
 }
 
@@ -330,7 +332,7 @@ func (s *Srv) getControllerData() []PlayerController {
 	return r
 }
 
-func (s *Srv) sendMsg(cmd string, data interface{}, t InboxAddressType, id string) {
+func (s *Srv) sendMsg(cmd string, data interface{}, id string, t InboxAddressType) {
 	addr := InboxAddress{t, id}
 	s.sendMsgToAddresses(cmd, data, []InboxAddress{addr})
 }
@@ -366,12 +368,12 @@ func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
 
 func (s *Srv) initArduinoControllers() {
 	for _, main := range GetOptions().MainArduino {
-		addr := InboxAddress{main, InboxAddressTypeMainArduinoDevice}
+		addr := InboxAddress{InboxAddressTypeMainArduinoDevice, main}
 		controller := NewArduinoController(addr)
 		s.aDict[addr.String()] = controller
 	}
 	for _, sub := range GetOptions().SubArduino {
-		addr := InboxAddress{main, InboxAddressTypeSubArduinoDevice}
+		addr := InboxAddress{InboxAddressTypeSubArduinoDevice, sub}
 		controller := NewArduinoController(addr)
 		s.aDict[addr.String()] = controller
 	}

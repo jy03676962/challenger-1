@@ -11,17 +11,17 @@ import AutoKeyboardScrollView
 import EasyPeasy
 import SwiftyUserDefaults
 import SwiftyJSON
-
-let arenaMainSize: CGFloat = 60
-let arenaSubSize: CGFloat = 15
+import ObjectMapper
 
 class ConfigController: PLViewController {
 
 	@IBOutlet weak var wrapperView: UIView!
 	@IBOutlet weak var hostTextField: UITextField!
 	@IBOutlet weak var modeControl: UISegmentedControl!
-	var arenaWidth: Int = 0
-	var arenaHeight: Int = 0
+	@IBOutlet weak var arduinoView: UIView!
+
+	var arduinoViewMap: [String: UILabel] = [String: UILabel]()
+	var timer = NSTimer()
 
 	@IBAction func modeChange(sender: UISegmentedControl) {
 		WsClient.singleton.sendJSON(JSON([
@@ -52,20 +52,65 @@ class ConfigController: PLViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.ArenaSize, .ArduinoMode], receiver: self)
+		DataManager.singleton.subscriptData([.ArduinoList], receiver: self)
+		timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(queryArduinoList), userInfo: nil, repeats: true)
 	}
 
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
 		DataManager.singleton.removeSubscript(self)
+		timer.invalidate()
+	}
+
+	func queryArduinoList() {
+		WsClient.singleton.sendCmd(DataType.ArduinoList.queryCmd)
+	}
+
+	func renderArduinoList(list: [ArduinoController]) {
+		let margin: CGFloat = 10
+		let row = 10
+		let width: CGFloat = 80
+		let height: CGFloat = 20
+		let firstRender = self.arduinoViewMap.count == 0
+		for (i, controller) in list.enumerate() {
+			let label: UILabel
+			if firstRender {
+				label = UILabel()
+				label.text = controller.address.id
+				label.font = UIFont.systemFontOfSize(12)
+				let top = CGFloat(i / row) * (margin + height) + margin
+				let left = CGFloat(i % row) * (margin + width) + margin
+//				log.debug("\(i): \(CGFloat(i % row)), top is \(top), left is \(top)")
+				label.frame = CGRect(x: left, y: top, width: width, height: height)
+				self.arduinoView.addSubview(label)
+				arduinoViewMap[controller.address.id] = label
+			} else {
+				label = arduinoViewMap[controller.address.id]!
+			}
+			if (controller.online == true) {
+				if controller.mode == .On {
+					label.textColor = UIColor.blackColor()
+				} else if controller.mode == .Off {
+					label.textColor = UIColor.blueColor()
+				} else if controller.mode == .Free {
+					label.textColor = UIColor.greenColor()
+				} else {
+					label.textColor = UIColor.orangeColor()
+				}
+			} else {
+				label.textColor = UIColor.redColor()
+			}
+		}
 	}
 }
 
 extension ConfigController: DataReceiver {
 	func onReceivedData(json: [String: AnyObject], type: DataType) {
-		if type == .ArenaSize {
-			arenaWidth = json["data"]!["width"] as! Int
-			arenaHeight = json["data"]!["height"] as! Int
+		if type == .ArduinoList {
+			let arduinoList = Mapper<ArduinoController>().mapArray(json["data"])
+			if arduinoList != nil {
+				renderArduinoList(arduinoList!)
+			}
 		}
 	}
 }

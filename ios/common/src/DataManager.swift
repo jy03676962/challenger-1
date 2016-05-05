@@ -18,8 +18,7 @@ public enum DataType: String {
 	case HallData = "HallData"
 	case ControllerData = "ControllerData"
 	case NewMatch = "newMatch"
-	case ArenaSize = "ArenaSize"
-	case ArduinoMode = "ArduinoMode"
+	case ArduinoList = "ArduinoList"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"

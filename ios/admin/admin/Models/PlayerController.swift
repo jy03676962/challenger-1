@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 enum AddressType: Int {
-	case Unknown = 0, Admin, Simulator, ArduinoTest, Postgame, Wearable, Arduino
+	case Unknown = 0, Admin, Simulator, ArduinoTest, Postgame, Wearable, MainArduino, SubArduino
 }
 
 struct Address: Mappable {

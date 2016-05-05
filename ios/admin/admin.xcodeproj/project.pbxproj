@@ -26,6 +26,7 @@
 		70B4DAEB1CC7B31700159C81 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAE71CC7B31700159C81 /* Constants.swift */; };
 		70B4DAED1CC7B31700159C81 /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAE91CC7B31700159C81 /* WsClient.swift */; };
 		70B4DAFE1CC7BD0200159C81 /* HistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAFD1CC7BD0200159C81 /* HistoryController.swift */; };
+		70CF96CC1CDB263D007D821F /* ArduinoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CF96CB1CDB263D007D821F /* ArduinoController.swift */; };
 		70E3383B1CD653A000723816 /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E3383A1CD653A000723816 /* PlayerController.swift */; };
 		70E3383D1CD783DC00723816 /* String+PL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E3383C1CD783DC00723816 /* String+PL.swift */; };
 		70E3383F1CD8030A00723816 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E3383E1CD8030A00723816 /* PlayerTableViewCell.swift */; };
@@ -55,6 +56,7 @@
 		70B4DAE71CC7B31700159C81 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		70B4DAE91CC7B31700159C81 /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
 		70B4DAFD1CC7BD0200159C81 /* HistoryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryController.swift; sourceTree = "<group>"; };
+		70CF96CB1CDB263D007D821F /* ArduinoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArduinoController.swift; sourceTree = "<group>"; };
 		70E3383A1CD653A000723816 /* PlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerController.swift; sourceTree = "<group>"; };
 		70E3383C1CD783DC00723816 /* String+PL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+PL.swift"; sourceTree = "<group>"; };
 		70E3383E1CD8030A00723816 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 			children = (
 				7080B8581CCFA6C200E63CB5 /* Team.swift */,
 				70E3383A1CD653A000723816 /* PlayerController.swift */,
+				70CF96CB1CDB263D007D821F /* ArduinoController.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				70B4DAFE1CC7BD0200159C81 /* HistoryController.swift in Sources */,
 				7080B85B1CD6197800E63CB5 /* AdminConstants.swift in Sources */,
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,
+				70CF96CC1CDB263D007D821F /* ArduinoController.swift in Sources */,
 				7079BC641CCBC42C005878AE /* DefaultKeys.swift in Sources */,
 				70E3383D1CD783DC00723816 /* String+PL.swift in Sources */,
 				70E3383F1CD8030A00723816 /* PlayerTableViewCell.swift in Sources */,
