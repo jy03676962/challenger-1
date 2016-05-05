@@ -248,7 +248,7 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 				ids = append(ids, pc.ID)
 			}
 		}
-		s.startNewMatch(ids, mode)
+		s.startNewMatch(ids, mode, "")
 	case "stopMatch", "playerMove", "playerStop":
 		mid := uint(msg.Get("matchID").(float64))
 		if match := s.mDict[mid]; match != nil {
@@ -297,7 +297,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		ids := msg.Get("ids").(string)
 		controllerIDs := strings.Split(ids, ",")
 		s.queue.TeamStart(teamID)
-		s.startNewMatch(controllerIDs, mode)
+		s.startNewMatch(controllerIDs, mode, teamID)
 	case "teamCall":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
@@ -318,15 +318,14 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	}
 }
 
-func (s *Srv) startNewMatch(controllerIDs []string, mode string) {
+func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string) {
 	mid := s.db.saveMatch(&MatchData{})
 	for _, id := range controllerIDs {
 		s.pDict[id].MatchID = mid
 	}
-	m := NewMatch(s, controllerIDs, mid, mode)
+	m := NewMatch(s, controllerIDs, mid, mode, teamID)
 	s.mDict[mid] = m
 	go m.Run()
-	log.Println("will send newMatch")
 	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
 }
 

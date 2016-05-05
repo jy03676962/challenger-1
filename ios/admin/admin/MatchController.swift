@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import AlamofireImage
 import EasyPeasy
+import ObjectMapper
 
 let cellSize = 45
 let cellBorder = 10
@@ -25,6 +26,8 @@ class MatchController: PLViewController {
 	@IBOutlet weak var mapContainerView: UIView!
 	@IBOutlet weak var playerTableView: UITableView!
 
+	var match: Match?
+
 	var mapView: UIImageView = UIImageView()
 
 	@IBAction func forceEnd() {
@@ -36,19 +39,35 @@ class MatchController: PLViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		DataManager.singleton.subscribeData([.UpdateMatch], receiver: self)
 		if mapView.image == nil {
 			Alamofire.request(.GET, PLConstants.getHttpAddress("api/asset/map.png"))
 				.responseImage(completionHandler: { response in
 					if let image = response.result.value {
 						self.mapView.image = image
 						self.mapContainerView.addSubview(self.mapView)
-//						let center = self.mapContainerView.center
 						self.mapView <- [
 							Size(image.size),
 							Center()
 						]
 					}
 			})
+		}
+	}
+
+	override func viewDidDisappear(animated: Bool) {
+		super.viewDidDisappear(animated)
+		DataManager.singleton.unsubscribe(self)
+	}
+
+	func renderMatch() {
+	}
+}
+
+extension MatchController: DataReceiver {
+	func onReceivedData(json: [String: AnyObject], type: DataType) {
+		if type == .UpdateMatch {
+			match = Mapper<Match>().map(json["data"] as! String)
 		}
 	}
 }

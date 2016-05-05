@@ -46,9 +46,10 @@ type Match struct {
 	srv           *Srv
 	msgCh         chan *InboxMessage
 	closeCh       chan bool
+	teamID        string
 }
 
-func NewMatch(s *Srv, controllerIDs []string, matchID uint, mode string) *Match {
+func NewMatch(s *Srv, controllerIDs []string, matchID uint, mode string, teamID string) *Match {
 	m := Match{}
 	m.srv = s
 	m.Member = make([]*Player, len(controllerIDs))
@@ -61,6 +62,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchID uint, mode string) *Match 
 	m.Mode = mode
 	m.msgCh = make(chan *InboxMessage)
 	m.closeCh = make(chan bool)
+	m.teamID = teamID
 	return &m
 }
 
@@ -178,6 +180,9 @@ func (m *Match) checkRampage(sec float64) {
 
 func (m *Match) enterAfter() {
 	m.Stage = "after"
+	if m.teamID != "" {
+		TeamFinishMatch(m.teamID)
+	}
 	m.srv.saveMatch(m.getMatchData())
 }
 

@@ -90,16 +90,34 @@ func (q *Queue) TeamStart(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	if team.Status == TS_Prepare {
 		team.Status = TS_Playing
 	}
 }
 
+func (q *Queue) TeamFinishMatch(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer q.updateHallData()
+	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
+	team := element.Value.(*Team)
+	team.Status = TS_After
+}
+
 func (q *Queue) TeamCall(teamID string) {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	if team.Status == TS_Waiting {
 		// TODO: call team
@@ -111,6 +129,9 @@ func (q *Queue) TeamCutLine(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	if team.Status != TS_Waiting {
 		return
@@ -129,6 +150,9 @@ func (q *Queue) TeamRemove(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	if team.Status != TS_Waiting {
 		return
@@ -142,6 +166,9 @@ func (q *Queue) TeamChangeMode(teamID string, mode string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	team.Mode = mode
 }
@@ -151,6 +178,9 @@ func (q *Queue) TeamDelay(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	next := element.Next()
 	if next != nil {
 		q.li.MoveAfter(element, next)
@@ -164,6 +194,9 @@ func (q *Queue) TeamAddPlayer(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	team.Size += 1
 }
@@ -173,6 +206,9 @@ func (q *Queue) TeamRemovePlayer(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	team.Size -= 1
 }

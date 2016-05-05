@@ -19,6 +19,7 @@ public enum DataType: String {
 	case ControllerData = "ControllerData"
 	case NewMatch = "newMatch"
 	case ArduinoList = "ArduinoList"
+	case UpdateMatch = "updateMatch"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
@@ -36,7 +37,7 @@ public class DataManager {
 
 	public static let singleton = DataManager()
 
-	public func subscriptData(types: [DataType], receiver: DataReceiver) {
+	public func subscribeData(types: [DataType], receiver: DataReceiver) {
 		for type in types {
 			var list = receiversMap[type] ?? [DataReceiver]()
 			list.append(receiver)
@@ -47,7 +48,7 @@ public class DataManager {
 		}
 	}
 
-	public func removeSubscript(receiver: DataReceiver) {
+	public func unsubscribe(receiver: DataReceiver) {
 		for (t, l) in receiversMap {
 			var nl = [DataReceiver]()
 			for r in l {

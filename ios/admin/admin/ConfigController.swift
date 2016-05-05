@@ -52,13 +52,13 @@ class ConfigController: PLViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.ArduinoList], receiver: self)
+		DataManager.singleton.subscribeData([.ArduinoList], receiver: self)
 		timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(queryArduinoList), userInfo: nil, repeats: true)
 	}
 
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
-		DataManager.singleton.removeSubscript(self)
+		DataManager.singleton.unsubscribe(self)
 		timer.invalidate()
 	}
 
@@ -80,7 +80,6 @@ class ConfigController: PLViewController {
 				label.font = UIFont.systemFontOfSize(12)
 				let top = CGFloat(i / row) * (margin + height) + margin
 				let left = CGFloat(i % row) * (margin + width) + margin
-//				log.debug("\(i): \(CGFloat(i % row)), top is \(top), left is \(top)")
 				label.frame = CGRect(x: left, y: top, width: width, height: height)
 				label.textAlignment = .Center
 				self.arduinoView.addSubview(label)

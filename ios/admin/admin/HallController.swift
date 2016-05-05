@@ -39,12 +39,12 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscriptData([.HallData, .ControllerData, .NewMatch], receiver: self)
+		DataManager.singleton.subscribeData([.HallData, .ControllerData, .NewMatch], receiver: self)
 	}
 
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
-		DataManager.singleton.removeSubscript(self)
+		DataManager.singleton.unsubscribe(self)
 	}
 	func refreshTeamData() {
 		DataManager.singleton.queryData(.HallData)
@@ -183,9 +183,11 @@ extension HallController: DataReceiver {
 		if type == .HallData {
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
+				var topTeamSet = false
 				for team in teams! {
-					if (team.status == .Waiting || team.status == .Prepare) && topTeam == nil {
+					if (team.status == .Waiting || team.status == .Prepare) && !topTeamSet {
 						topTeam = team
+						topTeamSet = true
 					}
 					if team.status == .Prepare {
 						hasPrepareTeam = true

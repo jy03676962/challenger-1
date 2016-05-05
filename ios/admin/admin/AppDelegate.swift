@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
 		WsClient.singleton.connect(PLConstants.getWsAddress())
-		DataManager.singleton.subscriptData([.NewMatch], receiver: self)
+		DataManager.singleton.subscribeData([.NewMatch], receiver: self)
 		return true
 	}
 }
