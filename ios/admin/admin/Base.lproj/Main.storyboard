@@ -690,6 +690,9 @@
                                             <constraint firstAttribute="height" constant="35" id="WXZ-he-EPL"/>
                                         </constraints>
                                         <state key="normal" backgroundImage="ForceEndButton"/>
+                                        <connections>
+                                            <action selector="forceEnd" destination="8rJ-Kc-sve" eventType="touchUpInside" id="QPO-lV-OB3"/>
+                                        </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PowerIcon" translatesAutoresizingMaskIntoConstraints="NO" id="bvM-vq-4AT">
                                         <rect key="frame" x="15" y="146" width="23" height="28"/>
@@ -814,6 +817,10 @@
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="dataSource" destination="8rJ-Kc-sve" id="zv2-Po-OTS"/>
+                                    <outlet property="delegate" destination="8rJ-Kc-sve" id="fcu-it-Hg6"/>
+                                </connections>
                             </tableView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MatchDataHeader" translatesAutoresizingMaskIntoConstraints="NO" id="6T7-GU-jtv">
                                 <rect key="frame" x="702" y="80" width="272" height="36"/>
@@ -822,22 +829,58 @@
                                     <constraint firstAttribute="height" constant="36" id="Xhz-Hr-CJW"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4ap-e3-XdH">
+                                <rect key="frame" x="20" y="116" width="660" height="412"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" red="0.29411764709999999" green="0.42352941179999998" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MapHeader" translatesAutoresizingMaskIntoConstraints="NO" id="h3u-XO-qHj">
+                                <rect key="frame" x="20" y="80" width="660" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="660" id="Bpr-Wd-aWu"/>
+                                    <constraint firstAttribute="height" constant="36" id="G5Y-kU-unV"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="6T7-GU-jtv" secondAttribute="trailing" constant="30" id="0al-4z-IlK"/>
                             <constraint firstItem="7x3-OL-jOQ" firstAttribute="top" secondItem="mC2-WM-BSA" secondAttribute="bottom" constant="1" id="4XT-YC-TP3"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="h3u-XO-qHj" secondAttribute="leading" id="5an-Kw-fvx"/>
                             <constraint firstItem="7x3-OL-jOQ" firstAttribute="centerX" secondItem="Cdw-Sg-bmP" secondAttribute="centerX" id="Cf8-tE-1qj"/>
                             <constraint firstItem="Cdw-Sg-bmP" firstAttribute="width" secondItem="6T7-GU-jtv" secondAttribute="width" id="F0G-ee-Is2"/>
+                            <constraint firstItem="4ap-e3-XdH" firstAttribute="top" secondItem="h3u-XO-qHj" secondAttribute="bottom" id="Itp-R3-Inq"/>
                             <constraint firstItem="Cdw-Sg-bmP" firstAttribute="centerX" secondItem="6T7-GU-jtv" secondAttribute="centerX" id="L7Y-8V-VhF"/>
                             <constraint firstItem="Cdw-Sg-bmP" firstAttribute="top" secondItem="6T7-GU-jtv" secondAttribute="bottom" id="Pep-HM-ycD"/>
                             <constraint firstItem="6T7-GU-jtv" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="80" id="QB0-gq-Jim"/>
+                            <constraint firstItem="4ap-e3-XdH" firstAttribute="width" secondItem="h3u-XO-qHj" secondAttribute="width" id="WCT-oU-qQM"/>
+                            <constraint firstItem="h3u-XO-qHj" firstAttribute="top" secondItem="6T7-GU-jtv" secondAttribute="top" id="jMz-zo-Fn9"/>
                             <constraint firstItem="mC2-WM-BSA" firstAttribute="centerX" secondItem="Cdw-Sg-bmP" secondAttribute="centerX" id="jZ4-sr-pEl"/>
+                            <constraint firstItem="4ap-e3-XdH" firstAttribute="centerX" secondItem="h3u-XO-qHj" secondAttribute="centerX" id="kzJ-6A-VQK"/>
                             <constraint firstItem="mC2-WM-BSA" firstAttribute="top" secondItem="Cdw-Sg-bmP" secondAttribute="bottom" constant="20" id="mYo-qX-QmG"/>
                             <constraint firstItem="7x3-OL-jOQ" firstAttribute="width" secondItem="Cdw-Sg-bmP" secondAttribute="width" id="tzR-tA-OOo"/>
+                            <constraint firstItem="4ap-e3-XdH" firstAttribute="bottom" secondItem="7x3-OL-jOQ" secondAttribute="bottom" id="xqV-HP-uiz"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="游戏" id="cPa-gy-q4n"/>
+                    <connections>
+                        <outlet property="energyLabel" destination="eoy-hs-GWh" id="Q6b-oB-ZzU"/>
+                        <outlet property="groupIDLabel" destination="NDz-xW-KAv" id="UBc-ig-RVk"/>
+                        <outlet property="mapContainerView" destination="4ap-e3-XdH" id="4eI-yg-ANu"/>
+                        <outlet property="matchModeImageView" destination="2gr-nt-i7h" id="TAh-Zv-f5U"/>
+                        <outlet property="matchStatusLabel" destination="aIr-NG-zJF" id="zjg-08-IyS"/>
+                        <outlet property="matchTimeLabel" destination="QUd-Yp-JvK" id="eUu-zF-Ltx"/>
+                        <outlet property="playerCountLabel" destination="Owp-Jd-LdN" id="y22-Ha-XNc"/>
+                        <outlet property="playerTableView" destination="7x3-OL-jOQ" id="n4y-XZ-lwr"/>
+                        <outlet property="totalCoinLabel" destination="7O9-zf-BVl" id="UQm-M5-Vqj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
@@ -1031,6 +1074,7 @@
         <image name="FunIcon" width="30" height="30"/>
         <image name="HallTableCellBg" width="30" height="30"/>
         <image name="HallTableHeader" width="30" height="30"/>
+        <image name="MapHeader" width="30" height="30"/>
         <image name="MatchDataHeader" width="30" height="30"/>
         <image name="ModeChangeIcon" width="30" height="30"/>
         <image name="PCOffline" width="30" height="30"/>
