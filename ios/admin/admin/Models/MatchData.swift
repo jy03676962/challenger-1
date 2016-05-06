@@ -10,6 +10,8 @@ import Foundation
 import ObjectMapper
 
 struct PlayerData: Mappable {
+	var id: UInt!
+	var createdAt: String!
 	var name: String!
 	var gold: Int!
 	var lostGold: Int!
@@ -23,6 +25,8 @@ struct PlayerData: Mappable {
 	}
 
 	mutating func mapping(map: Map) {
+		id <- map["id"]
+		createdAt <- map["createdAt"]
 		name <- map["name"]
 		gold <- map["gold"]
 		lostGold <- map["lostGold"]
@@ -40,6 +44,8 @@ enum MatchAnswerType: Int {
 }
 
 struct MatchData: Mappable {
+	var id: UInt!
+	var createdAt: String!
 	var mode: String!
 	var elasped: Double!
 	var gold: Int!
@@ -52,6 +58,8 @@ struct MatchData: Mappable {
 	}
 
 	mutating func mapping(map: Map) {
+		id <- map["id"]
+		createdAt <- map["createdAt"]
 		mode <- map["mode"]
 		elasped <- map["elasped"]
 		gold <- map["gold"]

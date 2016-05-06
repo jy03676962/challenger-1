@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"
+	"time"
 )
 
 var _ = log.Printf
@@ -17,17 +18,18 @@ const (
 )
 
 type PlayerData struct {
-	gorm.Model
-	MatchID   int     `json:"-"`
-	Name      string  `json:"name"`
-	Gold      int     `json:"gold"`
-	LostGold  int     `json:"lostGold"`
-	Energy    float64 `json:"energy"`
-	Combo     int     `json:"combo"`
-	Grade     string  `json:"grade"`
-	Level     int     `json:"level"`
-	LevelData string  `json:"levelData"`
-	HitCount  int     `json:"hitCount"`
+	ID        uint      `json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	MatchID   int       `json:"-"`
+	Name      string    `json:"name"`
+	Gold      int       `json:"gold"`
+	LostGold  int       `json:"lostGold"`
+	Energy    float64   `json:"energy"`
+	Combo     int       `json:"combo"`
+	Grade     string    `json:"grade"`
+	Level     int       `json:"level"`
+	LevelData string    `json:"levelData"`
+	HitCount  int       `json:"hitCount"`
 }
 
 func (PlayerData) TableName() string {
@@ -35,7 +37,8 @@ func (PlayerData) TableName() string {
 }
 
 type MatchData struct {
-	gorm.Model
+	ID           uint            `json:"id"`
+	CreatedAt    time.Time       `json:"createdAt"`
 	Mode         string          `json:"mode"`
 	Elasped      float64         `json:"elasped"`
 	Gold         int             `json:"gold"`
@@ -77,14 +80,14 @@ func (db *DB) saveMatchData(m *MatchData) {
 	db.conn.Save(m)
 }
 
-func (db *DB) getLatestMatch() *MatchData {
-	var m MatchData
-	db.conn.Last(&m)
-	return &m
-}
-
 func (db *DB) getHistory(count int) []MatchData {
 	var matches []MatchData
 	db.conn.Limit(count).Preload("Member").Find(&matches)
 	return matches
+}
+
+func (db *DB) startAnswer(mid int) *MatchData {
+	var match MatchData
+	db.conn.Model(&match).Where("id = ?", mid).Update("answer_type", MatchAnswering)
+	return &match
 }

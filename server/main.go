@@ -52,6 +52,9 @@ func main() {
 	ec.Get("/api/history", func(c echo.Context) error {
 		return srv.GetHistory(c)
 	})
+	ec.Post("/api/start_answer", func(c echo.Context) error {
+		return srv.MatchStartAnswer(c)
+	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))
 }

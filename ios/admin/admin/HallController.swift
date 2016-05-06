@@ -134,7 +134,7 @@ class HallController: PLViewController {
 			"ids": selectedControllerIds.joinWithSeparator(",")
 		])
 		WsClient.singleton.sendJSON(json)
-		HUD.show(.LabeledProgress(title: nil, subtitle: nil))
+		HUD.show(.Progress)
 	}
 
 	@IBAction func toggleControllerButton(sender: UIButton) {

@@ -80,6 +80,12 @@ func (s *Srv) GetHistory(c echo.Context) error {
 	return c.JSON(http.StatusOK, d)
 }
 
+func (s *Srv) MatchStartAnswer(c echo.Context) error {
+	mid, _ := strconv.Atoi(c.FormValue("mid"))
+	d := s.db.startAnswer(mid)
+	return c.JSON(http.StatusOK, d)
+}
+
 // MARK: internal
 
 func (s *Srv) mainLoop() {

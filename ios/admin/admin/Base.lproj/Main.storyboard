@@ -1021,6 +1021,17 @@
                                     <outlet property="delegate" destination="Iuf-d3-jhp" id="Vns-yx-5Lh"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3X-tO-hMh">
+                                <rect key="frame" x="447" y="629" width="130" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="130" id="QtS-Ni-bBu"/>
+                                    <constraint firstAttribute="height" constant="36" id="Zqg-gl-VvE"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="StartAnswer"/>
+                                <connections>
+                                    <action selector="startAnswer" destination="Iuf-d3-jhp" eventType="touchUpInside" id="EE2-5O-SiM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1029,6 +1040,8 @@
                             <constraint firstItem="VAi-Tn-2ZL" firstAttribute="top" secondItem="E0R-Gt-hhT" secondAttribute="bottom" constant="80" id="AYY-EV-2Dq"/>
                             <constraint firstItem="Hrd-db-EKC" firstAttribute="centerX" secondItem="cl7-T8-sEE" secondAttribute="centerX" id="D9q-dI-Qsn"/>
                             <constraint firstItem="VAi-Tn-2ZL" firstAttribute="centerX" secondItem="cl7-T8-sEE" secondAttribute="centerX" id="Gfa-4H-bNo"/>
+                            <constraint firstItem="X3X-tO-hMh" firstAttribute="top" secondItem="Hrd-db-EKC" secondAttribute="bottom" constant="33" id="iGd-dI-V6u"/>
+                            <constraint firstItem="X3X-tO-hMh" firstAttribute="centerX" secondItem="cl7-T8-sEE" secondAttribute="centerX" id="oiX-6R-Lyb"/>
                             <constraint firstItem="Hrd-db-EKC" firstAttribute="top" secondItem="VAi-Tn-2ZL" secondAttribute="bottom" id="ql4-TP-ZSY"/>
                             <constraint firstItem="Hrd-db-EKC" firstAttribute="centerY" secondItem="cl7-T8-sEE" secondAttribute="centerY" id="wNB-bN-pkT"/>
                         </constraints>
@@ -1041,8 +1054,9 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="历史" id="bFP-Ut-R5T"/>
                     <connections>
+                        <outlet property="startAnswerButton" destination="X3X-tO-hMh" id="TMn-s8-b6Y"/>
                         <outlet property="tableView" destination="Hrd-db-EKC" id="zJS-AF-Ljo"/>
-                        <segue destination="i7b-A2-ZBM" kind="presentation" identifier="presentMatchResult" id="ihL-hv-XEw"/>
+                        <segue destination="i7b-A2-ZBM" kind="presentation" identifier="PresentMatchResult" id="ihL-hv-XEw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2k1-So-H47" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1255,6 +1269,7 @@
         <image name="PrepareButton" width="30" height="30"/>
         <image name="PrepareDoneButton" width="30" height="30"/>
         <image name="RemovePlayer" width="30" height="30"/>
+        <image name="StartAnswer" width="30" height="30"/>
         <image name="StartMatch" width="30" height="30"/>
         <image name="StartMatchDisabled" width="30" height="30"/>
         <image name="TopTeamBackground" width="30" height="30"/>
