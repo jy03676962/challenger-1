@@ -125,7 +125,7 @@ func GetScoreInfo() ScoreInfo {
 
 func DefaultMatchOptions() *MatchOptions {
 	var opt MatchOptions
-	if _, err := toml.DecodeFile("core/cfg.toml", &opt); err != nil {
+	if _, err := toml.DecodeFile("cfg.toml", &opt); err != nil {
 		log.Printf("parse toml error:%v\n", err.Error())
 		os.Exit(1)
 	}
