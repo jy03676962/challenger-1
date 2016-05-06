@@ -49,6 +49,9 @@ func main() {
 	ec.Post("/api/resetqueue", func(c echo.Context) error {
 		return srv.ResetQueue(c)
 	})
+	ec.Get("/api/history", func(c echo.Context) error {
+		return srv.GetHistory(c)
+	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))
 }

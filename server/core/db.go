@@ -3,10 +3,22 @@ package core
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"log"
+)
+
+var _ = log.Printf
+
+type MatchAnswerType int
+
+const (
+	MatchNotAnswer MatchAnswerType = 0
+	MatchAnswering MatchAnswerType = 1
+	MatchAnswered  MatchAnswerType = 2
 )
 
 type PlayerData struct {
 	gorm.Model
+	MatchID   int     `json:"-"`
 	Name      string  `json:"name"`
 	Gold      int     `json:"gold"`
 	LostGold  int     `json:"lostGold"`
@@ -18,13 +30,23 @@ type PlayerData struct {
 	HitCount  int     `json:"hitCount"`
 }
 
+func (PlayerData) TableName() string {
+	return "players"
+}
+
 type MatchData struct {
 	gorm.Model
-	Mode         string       `json:"mode"`
-	Elasped      float64      `json:"elasped"`
-	Gold         int          `json:"gold"`
-	Member       []PlayerData `json:"member"`
-	RampageCount int          `json:"rampageCount"`
+	Mode         string          `json:"mode"`
+	Elasped      float64         `json:"elasped"`
+	Gold         int             `json:"gold"`
+	Member       []PlayerData    `gorm:"ForeignKey:MatchID" json:"member"`
+	RampageCount int             `json:"rampageCount"`
+	AnswerType   MatchAnswerType `json:"answerType"`
+	TeamID       string          `json:"teamID"`
+}
+
+func (MatchData) TableName() string {
+	return "matches"
 }
 
 type DB struct {
@@ -45,17 +67,24 @@ func (db *DB) connect(path string) error {
 	return nil
 }
 
-func (db *DB) saveMatch(d *MatchData) uint {
-	db.conn.Create(d)
-	return d.ID
+func (db *DB) newMatch() *MatchData {
+	var m = MatchData{}
+	db.conn.Create(&m)
+	return &m
 }
 
-func (db *DB) updateMatchData(m *MatchData) {
-	db.conn.Save(&m)
+func (db *DB) saveMatchData(m *MatchData) {
+	db.conn.Save(m)
 }
 
 func (db *DB) getLatestMatch() *MatchData {
 	var m MatchData
 	db.conn.Last(&m)
 	return &m
+}
+
+func (db *DB) getHistory(count int) []MatchData {
+	var matches []MatchData
+	db.conn.Limit(count).Preload("Member").Find(&matches)
+	return matches
 }

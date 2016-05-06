@@ -19,6 +19,9 @@
             <string>AlienLeagueBold</string>
             <string>AlienLeagueBold</string>
             <string>AlienLeagueBold</string>
+            <string>AlienLeagueBold</string>
+            <string>AlienLeagueBold</string>
+            <string>AlienLeagueBold</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -917,13 +920,152 @@
                     <view key="view" contentMode="scaleToFill" id="cl7-T8-sEE">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HistoryHeader" translatesAutoresizingMaskIntoConstraints="NO" id="VAi-Tn-2ZL">
+                                <rect key="frame" x="260" y="80" width="505" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="VVP-wN-37d"/>
+                                    <constraint firstAttribute="width" constant="505" id="ep0-fL-CtF"/>
+                                </constraints>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hrd-db-EKC">
+                                <rect key="frame" x="260" y="116" width="505" height="480"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="480" id="J3l-C1-OJv"/>
+                                    <constraint firstAttribute="width" constant="800" id="Qu5-vG-Y53"/>
+                                </constraints>
+                                <color key="separatorColor" red="0.29411764709999999" green="0.42352941179999998" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="HistoryTableViewCell" id="Sm9-JS-Ydh" customClass="HistoryTableViewCell" customModule="admin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="505" height="40"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Sm9-JS-Ydh" id="kBE-ta-I8V">
+                                            <rect key="frame" x="0.0" y="0.0" width="505" height="39"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TopTeamBackground" translatesAutoresizingMaskIntoConstraints="NO" id="Z61-3r-Rwq">
+                                                    <rect key="frame" x="0.0" y="0.0" width="505" height="39"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2001" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Hk-d7-vg2">
+                                                    <rect key="frame" x="78" y="11" width="28" height="17"/>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GO-Mn-5TH">
+                                                    <rect key="frame" x="244" y="11" width="8" height="17"/>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="答题中..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="crI-Y0-Mpc">
+                                                    <rect key="frame" x="367" y="11" width="65" height="17"/>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Z61-3r-Rwq" secondAttribute="trailing" id="3V0-WO-e9z"/>
+                                                <constraint firstItem="2Hk-d7-vg2" firstAttribute="leading" secondItem="kBE-ta-I8V" secondAttribute="leadingMargin" constant="70" id="5kb-4u-0US"/>
+                                                <constraint firstItem="Z61-3r-Rwq" firstAttribute="leading" secondItem="kBE-ta-I8V" secondAttribute="leadingMargin" constant="103" id="E7B-xf-aXy"/>
+                                                <constraint firstItem="Z61-3r-Rwq" firstAttribute="leading" secondItem="2Hk-d7-vg2" secondAttribute="trailing" id="Eeu-L3-BLR"/>
+                                                <constraint firstAttribute="bottom" secondItem="Z61-3r-Rwq" secondAttribute="bottom" id="FjF-Di-8nZ"/>
+                                                <constraint firstItem="Z61-3r-Rwq" firstAttribute="leading" secondItem="kBE-ta-I8V" secondAttribute="leading" id="Ith-mg-YBh"/>
+                                                <constraint firstItem="crI-Y0-Mpc" firstAttribute="centerY" secondItem="kBE-ta-I8V" secondAttribute="centerY" id="MMm-y5-8db"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="crI-Y0-Mpc" secondAttribute="trailing" constant="65" id="PIb-4i-geG"/>
+                                                <constraint firstItem="3GO-Mn-5TH" firstAttribute="centerX" secondItem="kBE-ta-I8V" secondAttribute="centerX" constant="-5" id="Tsu-oF-NSg"/>
+                                                <constraint firstItem="2Hk-d7-vg2" firstAttribute="centerY" secondItem="kBE-ta-I8V" secondAttribute="centerY" id="VEa-I0-Br1"/>
+                                                <constraint firstItem="3GO-Mn-5TH" firstAttribute="centerY" secondItem="kBE-ta-I8V" secondAttribute="centerY" id="rzx-g3-HRt"/>
+                                                <constraint firstItem="Z61-3r-Rwq" firstAttribute="leading" secondItem="kBE-ta-I8V" secondAttribute="leadingMargin" constant="103" id="vxL-x0-zmY"/>
+                                                <constraint firstItem="Z61-3r-Rwq" firstAttribute="top" secondItem="kBE-ta-I8V" secondAttribute="top" id="y3J-c1-CHW"/>
+                                                <constraint firstItem="Z61-3r-Rwq" firstAttribute="leading" secondItem="2Hk-d7-vg2" secondAttribute="trailing" id="ygL-5T-iuK"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="E7B-xf-aXy"/>
+                                                    <exclude reference="Eeu-L3-BLR"/>
+                                                    <exclude reference="vxL-x0-zmY"/>
+                                                    <exclude reference="ygL-5T-iuK"/>
+                                                </mask>
+                                            </variation>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="backgroundImageView" destination="Z61-3r-Rwq" id="wFK-te-QhY"/>
+                                            <outlet property="playerCountLabel" destination="3GO-Mn-5TH" id="yYi-gn-w6z"/>
+                                            <outlet property="statusLabel" destination="crI-Y0-Mpc" id="Ztw-ei-NGB"/>
+                                            <outlet property="teamIDLabel" destination="2Hk-d7-vg2" id="2f7-Mn-uW5"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" red="0.29411764709999999" green="0.42352941179999998" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Qu5-vG-Y53"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="dataSource" destination="Iuf-d3-jhp" id="7Pi-FF-ylG"/>
+                                    <outlet property="delegate" destination="Iuf-d3-jhp" id="Vns-yx-5Lh"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Hrd-db-EKC" firstAttribute="centerX" secondItem="VAi-Tn-2ZL" secondAttribute="centerX" id="2Hu-gd-rJE"/>
+                            <constraint firstItem="Hrd-db-EKC" firstAttribute="width" secondItem="VAi-Tn-2ZL" secondAttribute="width" id="59n-xJ-iqc"/>
+                            <constraint firstItem="VAi-Tn-2ZL" firstAttribute="top" secondItem="E0R-Gt-hhT" secondAttribute="bottom" constant="80" id="AYY-EV-2Dq"/>
+                            <constraint firstItem="Hrd-db-EKC" firstAttribute="centerX" secondItem="cl7-T8-sEE" secondAttribute="centerX" id="D9q-dI-Qsn"/>
+                            <constraint firstItem="VAi-Tn-2ZL" firstAttribute="centerX" secondItem="cl7-T8-sEE" secondAttribute="centerX" id="Gfa-4H-bNo"/>
+                            <constraint firstItem="Hrd-db-EKC" firstAttribute="top" secondItem="VAi-Tn-2ZL" secondAttribute="bottom" id="ql4-TP-ZSY"/>
+                            <constraint firstItem="Hrd-db-EKC" firstAttribute="centerY" secondItem="cl7-T8-sEE" secondAttribute="centerY" id="wNB-bN-pkT"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="D9q-dI-Qsn"/>
+                                <exclude reference="wNB-bN-pkT"/>
+                            </mask>
+                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="历史" id="bFP-Ut-R5T"/>
+                    <connections>
+                        <outlet property="tableView" destination="Hrd-db-EKC" id="zJS-AF-Ljo"/>
+                        <segue destination="i7b-A2-ZBM" kind="presentation" identifier="presentMatchResult" id="ihL-hv-XEw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2k1-So-H47" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1296" y="1156"/>
+        </scene>
+        <!--Match Result Controller-->
+        <scene sceneID="39e-Y9-TUq">
+            <objects>
+                <viewController id="i7b-A2-ZBM" customClass="MatchResultController" customModule="admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wWn-pV-V0F"/>
+                        <viewControllerLayoutGuide type="bottom" id="SDE-yu-2oQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4od-xd-j2h">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nYZ-ao-Frv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2577" y="1156"/>
         </scene>
         <!--设置-->
         <scene sceneID="tJU-4E-OfY">
@@ -1102,6 +1244,7 @@
         <image name="FunIcon" width="30" height="30"/>
         <image name="HallTableCellBg" width="30" height="30"/>
         <image name="HallTableHeader" width="30" height="30"/>
+        <image name="HistoryHeader" width="30" height="30"/>
         <image name="MapHeader" width="30" height="30"/>
         <image name="MatchDataHeader" width="30" height="30"/>
         <image name="ModeChangeIcon" width="30" height="30"/>

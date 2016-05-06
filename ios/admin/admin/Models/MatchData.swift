@@ -35,12 +35,18 @@ struct PlayerData: Mappable {
 	}
 }
 
+enum MatchAnswerType: Int {
+	case NotAnswer = 0, Answering, Answered
+}
+
 struct MatchData: Mappable {
 	var mode: String!
 	var elasped: Double!
 	var gold: Int!
 	var member: [PlayerData]!
 	var rampageCount: Int!
+	var answerType: MatchAnswerType!
+	var teamID: String!
 
 	init?(_ map: Map) {
 	}
@@ -51,6 +57,8 @@ struct MatchData: Mappable {
 		gold <- map["gold"]
 		member <- map["member"]
 		rampageCount <- map["rampageCount"]
+		answerType <- map["answerType"]
+		teamID <- map["teamID"]
 	}
 }
 

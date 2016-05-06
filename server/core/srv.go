@@ -75,6 +75,11 @@ func (s *Srv) ResetQueue(c echo.Context) error {
 	return c.JSON(http.StatusOK, d)
 }
 
+func (s *Srv) GetHistory(c echo.Context) error {
+	d := s.db.getHistory(10)
+	return c.JSON(http.StatusOK, d)
+}
+
 // MARK: internal
 
 func (s *Srv) mainLoop() {
@@ -135,10 +140,6 @@ func (s *Srv) onMatchEvent(evt MatchEvent) {
 	s.mChan <- evt
 }
 
-func (s *Srv) saveMatch(d *MatchData) {
-	s.db.saveMatch(d)
-}
-
 // nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
 	log.Println("on queue updated")
@@ -157,7 +158,7 @@ func (s *Srv) handleMatchEvent(evt MatchEvent) {
 		d := evt.Data.(map[string]interface{})
 		d["matchID"] = evt.ID
 		s.queue.TeamFinishMatch(d["teamID"].(string))
-		s.saveMatch(d["matchData"].(*MatchData))
+		s.db.saveMatchData(d["matchData"].(*MatchData))
 		s.sendMsgs("matchStop", d, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
 	case MatchEventTypeUpdate:
 		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
@@ -328,11 +329,12 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 }
 
 func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string) {
-	mid := s.db.saveMatch(&MatchData{})
+	md := s.db.newMatch()
+	mid := md.ID
 	for _, id := range controllerIDs {
 		s.pDict[id].MatchID = mid
 	}
-	m := NewMatch(s, controllerIDs, mid, mode, teamID)
+	m := NewMatch(s, controllerIDs, md, mode, teamID)
 	s.mDict[mid] = m
 	go m.Run()
 	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)

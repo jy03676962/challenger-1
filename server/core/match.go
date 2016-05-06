@@ -49,16 +49,18 @@ type Match struct {
 	srv           *Srv
 	msgCh         chan *InboxMessage
 	closeCh       chan bool
+	matchData     *MatchData
 }
 
-func NewMatch(s *Srv, controllerIDs []string, matchID uint, mode string, teamID string) *Match {
+func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string) *Match {
 	m := Match{}
 	m.srv = s
 	m.Member = make([]*Player, len(controllerIDs))
 	for i, id := range controllerIDs {
 		m.Member[i] = NewPlayer(id)
 	}
-	m.ID = matchID
+	m.ID = matchData.ID
+	m.matchData = matchData
 	m.Stage = "before"
 	m.opt = GetOptions()
 	m.Mode = mode
@@ -92,7 +94,7 @@ func (m *Match) Run() {
 		m.sync()
 	}
 	d := make(map[string]interface{})
-	d["matchData"] = m.getMatchData()
+	d["matchData"] = m.dumpMatchData()
 	d["teamID"] = m.TeamID
 	m.srv.onMatchEvent(MatchEvent{MatchEventTypeEnd, m.ID, d})
 	close(m.closeCh)
@@ -294,13 +296,14 @@ func (m *Match) playerTick(player *Player, sec float64) {
 	}
 }
 
-func (m *Match) getMatchData() *MatchData {
-	data := MatchData{}
-	data.Mode = m.Mode
-	data.Gold = m.Gold
-	data.Elasped = m.Elasped
-	data.Member = make([]PlayerData, 0)
-	data.RampageCount = m.RampageCount
+func (m *Match) dumpMatchData() *MatchData {
+	m.matchData.Mode = m.Mode
+	m.matchData.Gold = m.Gold
+	m.matchData.Elasped = m.Elasped
+	m.matchData.Member = make([]PlayerData, 0)
+	m.matchData.RampageCount = m.RampageCount
+	m.matchData.AnswerType = MatchNotAnswer
+	m.matchData.TeamID = m.TeamID
 	for _, player := range m.Member {
 		playerData := PlayerData{}
 		playerData.Gold = player.Gold
@@ -314,9 +317,9 @@ func (m *Match) getMatchData() *MatchData {
 		playerData.LevelData = strings.Join(strs, ",")
 		playerData.HitCount = player.HitCount
 		playerData.Name = player.ControllerID
-		data.Member = append(data.Member, playerData)
+		m.matchData.Member = append(m.matchData.Member, playerData)
 	}
-	return &data
+	return m.matchData
 }
 
 func (m *Match) modeIndex() int {
