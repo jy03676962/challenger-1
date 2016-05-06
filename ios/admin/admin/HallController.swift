@@ -184,6 +184,8 @@ extension HallController: DataReceiver {
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
 				var topTeamSet = false
+				hasPrepareTeam = false
+				hasPlayingTeam = false
 				for team in teams! {
 					if (team.status == .Waiting || team.status == .Prepare) && !topTeamSet {
 						topTeam = team

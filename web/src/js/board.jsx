@@ -38,15 +38,16 @@ const Board = CSSModules(observer(React.createClass({
       </tr>
       {
         match.member.map((member) => {
+          let levelData = member.levelData.split(',')
           return (
             <tr key={member.name}>
             <td>{member.name}</td>
             <td>{member.gold}</td>
             <td>{member.energy}</td>
-            <td>{member.levelData[0]}</td>
-            <td>{member.levelData[1]}</td>
-            <td>{member.levelData[2]}</td>
-            <td>{member.levelData[3]}</td>
+            <td>{levelData[0]}</td>
+            <td>{levelData[1]}</td>
+            <td>{levelData[2]}</td>
+            <td>{levelData[3]}</td>
             <td>{member.hitCount}</td>
             </tr>)
         })

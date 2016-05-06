@@ -38,9 +38,9 @@ mode2GoldDropInterval = 1.0 # 生存模式每隔几秒金币减少1
 
 
 # render configures, 显示相关，仅与模拟器有关参数
-arenaCellSize = 140 # 格子大小
-arenaBorder = 24 # 格子边框大小
-playerSize = 50.0 # 玩家大小
+arenaCellSize = 135 # 格子大小
+arenaBorder = 30 # 格子边框大小
+playerSize = 48.0 # 玩家大小
 webScale = 0.5 # 模拟器显示缩放比例
 buttonWidth = 60.0 # 按钮宽度
 buttonHeight = 30.0 # 按钮高度

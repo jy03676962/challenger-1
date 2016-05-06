@@ -29,6 +29,7 @@ class MatchController: PLViewController {
 	@IBOutlet weak var playerTableView: UITableView!
 
 	var match: Match?
+	var playerViews: [UIButton]!
 
 	var mapView: UIImageView = UIImageView()
 
@@ -43,6 +44,16 @@ class MatchController: PLViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		playerTableView.backgroundColor = UIColor.clearColor()
+		playerViews = [UIButton]()
+		for _ in 1 ... 4 {
+			let btn = UIButton()
+			btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+			btn.setBackgroundImage(UIImage(named: "PlayerIcon"), forState: .Normal)
+			btn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+			btn.hidden = true
+			playerViews.append(btn)
+			mapView.addSubview(btn)
+		}
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -80,6 +91,16 @@ class MatchController: PLViewController {
 			totalCoinLabel.text = "总金币:\(match!.gold)G"
 			energyLabel.text = String(format: "%.1f/%d", match!.energy, match!.maxEnergy)
 			playerTableView.reloadData()
+			for (i, btn) in playerViews.enumerate() {
+				if i < match!.member.count {
+					let player = match!.member[i]
+					btn.hidden = false
+					btn.center = CGPoint(x: player.pos.X / 3, y: player.pos.Y / 3)
+					btn.setTitle(player.controllerID, forState: .Normal)
+				} else {
+					btn.hidden = true
+				}
+			}
 		} else {
 			matchTimeLabel.text = "00: 00"
 			matchStatusLabel.text = "实时状态: 未进行"
@@ -87,6 +108,12 @@ class MatchController: PLViewController {
 			totalCoinLabel.text = "总金币:0G"
 			energyLabel.text = ""
 			playerTableView.reloadData()
+			for btn in playerViews {
+				btn.hidden = true
+			}
+		}
+		for btn in playerViews {
+			log.debug("\(btn)")
 		}
 	}
 }
@@ -99,10 +126,12 @@ extension MatchController: DataReceiver {
 				renderMatch()
 			}
 		} else if type == .MatchStop {
-			let matchID = json["data"] as! Int
-			if matchID == Defaults[.matchID] {
-				match = nil
-				renderMatch()
+			let matchResult = Mapper<MatchResult>().map(json["data"])
+			if matchResult != nil {
+				if matchResult?.matchID == Defaults[.matchID] {
+					match = nil
+					renderMatch()
+				}
 			}
 		}
 	}

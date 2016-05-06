@@ -733,7 +733,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mC2-WM-BSA">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PlayerTableHeader" translatesAutoresizingMaskIntoConstraints="NO" id="mC2-WM-BSA">
                                 <rect key="frame" x="702" y="326" width="272" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="272" id="qgf-vv-up3"/>
@@ -757,7 +757,28 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1P" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="up9-Id-d1Q">
-                                                    <rect key="frame" x="8" y="11" width="14" height="18"/>
+                                                    <rect key="frame" x="24" y="11" width="14" height="18"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QXi-eI-OIU">
+                                                    <rect key="frame" x="78" y="11" width="40" height="18"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PowerIcon" translatesAutoresizingMaskIntoConstraints="NO" id="ieF-ed-Tuo">
+                                                    <rect key="frame" x="158" y="5" width="23" height="28"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="28" id="QUr-9n-AO2"/>
+                                                        <constraint firstAttribute="width" constant="23" id="Xv2-fp-1qu"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F7B-vj-rPv">
+                                                    <rect key="frame" x="186" y="11" width="23" height="18"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -770,45 +791,32 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QXi-eI-OIU">
-                                                    <rect key="frame" x="65" y="11" width="40" height="18"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F7B-vj-rPv">
-                                                    <rect key="frame" x="136" y="11" width="23" height="18"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="18"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PowerIcon" translatesAutoresizingMaskIntoConstraints="NO" id="ieF-ed-Tuo">
-                                                    <rect key="frame" x="111" y="5" width="23" height="28"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="28" id="QUr-9n-AO2"/>
-                                                        <constraint firstAttribute="width" constant="23" id="Xv2-fp-1qu"/>
-                                                    </constraints>
-                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
+                                                <constraint firstItem="ieF-ed-Tuo" firstAttribute="leading" secondItem="uit-df-j6C" secondAttribute="leadingMargin" constant="150" id="09M-hV-VDT"/>
                                                 <constraint firstItem="5S3-db-eRt" firstAttribute="centerY" secondItem="uit-df-j6C" secondAttribute="centerY" id="89O-lf-DY4"/>
                                                 <constraint firstAttribute="trailing" secondItem="5S3-db-eRt" secondAttribute="trailing" constant="35" id="B6W-ua-U8e"/>
+                                                <constraint firstItem="F7B-vj-rPv" firstAttribute="leading" secondItem="ieF-ed-Tuo" secondAttribute="trailing" constant="5" id="BTn-Dd-cRO"/>
                                                 <constraint firstItem="QXi-eI-OIU" firstAttribute="centerY" secondItem="uit-df-j6C" secondAttribute="centerY" id="CeX-hi-8lj"/>
                                                 <constraint firstItem="F7B-vj-rPv" firstAttribute="leading" secondItem="ieF-ed-Tuo" secondAttribute="trailing" constant="2" id="Ibg-Oe-iCz"/>
                                                 <constraint firstItem="F7B-vj-rPv" firstAttribute="top" secondItem="ieF-ed-Tuo" secondAttribute="bottom" constant="-22" id="JsW-ae-3rz"/>
                                                 <constraint firstItem="5S3-db-eRt" firstAttribute="leading" secondItem="F7B-vj-rPv" secondAttribute="trailing" constant="70" id="ZPb-px-Fbi"/>
                                                 <constraint firstItem="up9-Id-d1Q" firstAttribute="centerY" secondItem="uit-df-j6C" secondAttribute="centerY" id="adt-ui-5Lb"/>
-                                                <constraint firstItem="QXi-eI-OIU" firstAttribute="leading" secondItem="up9-Id-d1Q" secondAttribute="trailing" constant="43" id="azs-bR-P59"/>
-                                                <constraint firstAttribute="leadingMargin" secondItem="up9-Id-d1Q" secondAttribute="leading" id="eyS-2s-pWz"/>
+                                                <constraint firstItem="QXi-eI-OIU" firstAttribute="leading" secondItem="up9-Id-d1Q" secondAttribute="trailing" constant="30" id="azs-bR-P59"/>
+                                                <constraint firstAttribute="leadingMargin" secondItem="up9-Id-d1Q" secondAttribute="leading" constant="24" id="eyS-2s-pWz"/>
+                                                <constraint firstItem="QXi-eI-OIU" firstAttribute="leading" secondItem="uit-df-j6C" secondAttribute="leadingMargin" constant="70" id="pHw-fY-5yj"/>
                                                 <constraint firstItem="F7B-vj-rPv" firstAttribute="centerY" secondItem="uit-df-j6C" secondAttribute="centerY" id="pgB-89-pQa"/>
                                                 <constraint firstItem="ieF-ed-Tuo" firstAttribute="centerY" secondItem="uit-df-j6C" secondAttribute="centerY" id="pqz-iU-MEK"/>
+                                                <constraint firstItem="up9-Id-d1Q" firstAttribute="leading" secondItem="uit-df-j6C" secondAttribute="leading" constant="24" id="wH6-YR-nOT"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
+                                                    <exclude reference="eyS-2s-pWz"/>
+                                                    <exclude reference="azs-bR-P59"/>
+                                                    <exclude reference="Ibg-Oe-iCz"/>
                                                     <exclude reference="JsW-ae-3rz"/>
+                                                    <exclude reference="ZPb-px-Fbi"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -1099,6 +1107,7 @@
         <image name="ModeChangeIcon" width="30" height="30"/>
         <image name="PCOffline" width="30" height="30"/>
         <image name="PCSelected" width="30" height="30"/>
+        <image name="PlayerTableHeader" width="30" height="30"/>
         <image name="PowerIcon" width="30" height="30"/>
         <image name="PrepareButton" width="30" height="30"/>
         <image name="PrepareDoneButton" width="30" height="30"/>

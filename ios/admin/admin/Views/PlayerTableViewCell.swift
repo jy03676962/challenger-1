@@ -14,6 +14,11 @@ class PlayerTableViewCell: UITableViewCell {
 	@IBOutlet weak var energyLabel: UILabel!
 	@IBOutlet weak var comboLabel: UILabel!
 
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		backgroundColor = UIColor.clearColor()
+	}
+
 	func setData(player: Player) {
 		playerIDLabel.text = player.controllerID
 		goldLabel.text = "\(player.gold)/-\(player.lostGold)"
