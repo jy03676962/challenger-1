@@ -21,6 +21,8 @@ public enum DataType: String {
 	case ArduinoList = "ArduinoList"
 	case UpdateMatch = "updateMatch"
 	case MatchStop = "matchStop"
+	case StartAnswer = "startAnswer"
+	case StopAnswer = "stopAnswer"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"

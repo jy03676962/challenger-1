@@ -14,7 +14,7 @@
         <!--Login View Controller-->
         <scene sceneID="63Z-kB-guU">
             <objects>
-                <viewController id="H6z-UT-JCw" customClass="LoginViewController" customModule="postgame" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="H6z-UT-JCw" customClass="LoginViewController" customModule="postgame" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XlO-qz-Mvf"/>
                         <viewControllerLayoutGuide type="bottom" id="dTp-nN-LTs"/>
@@ -144,6 +144,7 @@
                         <outlet property="passwordTextField" destination="GoW-hv-DVq" id="rdq-sY-YNk"/>
                         <outlet property="usernameTextField" destination="s6A-yU-aSM" id="u3l-tP-ISX"/>
                         <outlet property="wrapperView" destination="4Gk-Is-E3Q" id="kBu-Mh-lcX"/>
+                        <segue destination="kYu-qj-CWZ" kind="custom" identifier="ShowMatchResult" customClass="ReplaceSeuge" customModule="postgame" customModuleProvider="target" id="Obl-Nk-Djt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Now-IO-elc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -154,6 +155,14 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1980" y="316"/>
+        </scene>
+        <!--MatchResult-->
+        <scene sceneID="Az3-aB-2QR">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MatchResult" id="kYu-qj-CWZ" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jn6-8k-V1p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3005" y="316"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="kwq-zW-VFs">

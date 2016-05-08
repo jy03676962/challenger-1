@@ -13,6 +13,8 @@ import SVProgressHUD
 import EasyPeasy
 import SwiftyUserDefaults
 
+let SegueIDShowMatchResult = "ShowMatchResult"
+
 class LoginViewController: PLViewController {
 
 	/*
@@ -68,25 +70,31 @@ class LoginViewController: PLViewController {
 	}
 
 	@IBAction func login() {
-		let parameters: [String: AnyObject] = [
-			"username": usernameTextField.text!,
-			"password": passwordTextField.text!
-		]
-		SVProgressHUD.show()
-		Alamofire.request(.POST, "\(PLConstants.getHost())/login", parameters: parameters)
-			.responseJSON { response in
-				SVProgressHUD.dismiss()
-				if let JSON = response.result.value {
-					log.debug("\(JSON["username"]) has logined")
-				}
-		}
+//		let parameters: [String: AnyObject] = [
+//			"username": usernameTextField.text!,
+//			"password": passwordTextField.text!
+//		]
+//		SVProgressHUD.show()
+		// TODO login
+//		Alamofire.request(.POST, PLConstants.getHttpAddress("api/login"), parameters: parameters)
+//			.responseJSON { response in
+//				SVProgressHUD.dismiss()
+//				if let JSON = response.result.value {
+//					log.debug("\(JSON["username"]) has logined")
+//				}
+//		}
 	}
 	@IBAction func skip() {
-		log.debug("skip login")
-		var controllerStack = navigationController!.viewControllers;
-		let vc = StatViewController()
-		controllerStack[controllerStack.count - 1] = vc
-		navigationController?.setViewControllers(controllerStack, animated: true)
+		performSegueWithIdentifier(SegueIDShowMatchResult, sender: nil)
+	}
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		if segue.identifier == SegueIDShowMatchResult {
+			let vc = segue.destinationViewController as! MatchResultController
+			let app = UIApplication.sharedApplication().delegate as! AppDelegate
+			vc.matchData = app.matchData
+			vc.isAdmin = false
+		}
 	}
 }
 

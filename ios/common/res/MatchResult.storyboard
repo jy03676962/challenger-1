@@ -287,7 +287,10 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
                         <outlet property="headerImageView" destination="h9V-YT-iYN" id="XUf-og-X7k"/>
+                        <outlet property="playerTableView" destination="eeg-p1-WvP" id="V3e-7F-g3A"/>
                         <outlet property="scoreLabel" destination="0MC-f3-PA2" id="owg-lp-IyJ"/>
+                        <outlet property="stopAnswerButton" destination="Ijr-jg-9ll" id="FuL-Lt-ukX"/>
+                        <outlet property="tableHeaderImageView" destination="k2j-nN-dXH" id="tqL-1m-6eY"/>
                         <outlet property="teamIDLabel" destination="Twd-UK-UoT" id="OLv-cO-kgW"/>
                     </connections>
                 </viewController>

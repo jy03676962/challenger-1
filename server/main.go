@@ -55,6 +55,9 @@ func main() {
 	ec.Post("/api/start_answer", func(c echo.Context) error {
 		return srv.MatchStartAnswer(c)
 	})
+	ec.Post("/api/stop_answer", func(c echo.Context) error {
+		return srv.MatchStopAnswer(c)
+	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))
 }

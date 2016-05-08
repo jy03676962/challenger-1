@@ -29,6 +29,7 @@ class HistoryController: PLViewController {
 		HUD.show(.Progress)
 		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id], encoding: .URL, headers: nil)
 			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
+				HUD.hide()
 				let md = response.result.value
 				if self.data != nil && md != nil {
 					for (i, d) in self.data!.enumerate() {
@@ -38,9 +39,8 @@ class HistoryController: PLViewController {
 						}
 					}
 				}
-				HUD.hide()
+				self.performSegueWithIdentifier(segueIDPresentMatchResult, sender: matchData)
 		})
-		performSegueWithIdentifier(segueIDPresentMatchResult, sender: matchData)
 	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -50,9 +50,7 @@ class HistoryController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		if data == nil {
-			refreshHistory()
-		}
+		refreshHistory()
 	}
 
 	func refreshHistory() {
@@ -70,6 +68,7 @@ class HistoryController: PLViewController {
 		if segue.identifier == segueIDPresentMatchResult {
 			let vc = segue.destinationViewController as! MatchResultController
 			vc.matchData = sender as? MatchData
+			vc.isAdmin = true
 		}
 	}
 }

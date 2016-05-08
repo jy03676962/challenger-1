@@ -9,6 +9,7 @@
 import UIKit
 import XCGLogger
 import SwiftyUserDefaults
+import ObjectMapper
 
 let log = XCGLogger.defaultInstance()
 
@@ -16,6 +17,10 @@ let log = XCGLogger.defaultInstance()
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
+	var navi: UINavigationController? {
+		return window?.rootViewController as? UINavigationController
+	}
+	var matchData: MatchData?
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		#if DEBUG
@@ -27,7 +32,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Defaults[.deviceID] = "1"
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0
+		DataManager.singleton.subscribeData([.StartAnswer, .StopAnswer], receiver: self)
 		WsClient.singleton.connect(PLConstants.getWsAddress())
 		return true
+	}
+}
+
+extension AppDelegate: DataReceiver {
+	func onReceivedData(json: [String: AnyObject], type: DataType) {
+		if type == .StopAnswer {
+			guard navi?.visibleViewController as? LoginViewController == nil else {
+				return
+			}
+			matchData = nil
+			let sb = UIStoryboard(name: "Main", bundle: nil)
+			let login = sb.instantiateViewControllerWithIdentifier("LoginViewController")
+			navi?.setViewControllers([login], animated: true)
+		} else if type == .StartAnswer {
+			matchData = Mapper<MatchData>().map(json["data"])
+			if let vc = navi?.visibleViewController as? MatchResultController {
+				vc.matchData = matchData
+			}
+		}
 	}
 }

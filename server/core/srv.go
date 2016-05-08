@@ -83,7 +83,15 @@ func (s *Srv) GetHistory(c echo.Context) error {
 func (s *Srv) MatchStartAnswer(c echo.Context) error {
 	mid, _ := strconv.Atoi(c.FormValue("mid"))
 	d := s.db.startAnswer(mid)
+	s.sendMsgs("startAnswer", *d, InboxAddressTypePostgameDevice)
 	return c.JSON(http.StatusOK, d)
+}
+
+func (s *Srv) MatchStopAnswer(c echo.Context) error {
+	mid, _ := strconv.Atoi(c.FormValue("mid"))
+	s.db.stopAnswer(mid)
+	s.sendMsgs("stopAnswer", nil, InboxAddressTypePostgameDevice)
+	return c.JSON(http.StatusOK, mid)
 }
 
 // internal
@@ -229,6 +237,8 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.handleAdminMessage(msg)
 	case InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice:
 		s.handleArduinoMessage(msg)
+	case InboxAddressTypePostgameDevice:
+		s.handlePostGameMessage(msg)
 	}
 }
 
@@ -270,6 +280,14 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 
 func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
 	s.send(msg, []InboxAddress{InboxAddress{InboxAddressTypeSubArduinoDevice, ""}, InboxAddress{InboxAddressTypeMainArduinoDevice, ""}})
+}
+
+func (s *Srv) handlePostGameMessage(msg *InboxMessage) {
+	switch msg.GetCmd() {
+	case "init":
+		s.sendMsg("init", nil, msg.Address.ID, msg.Address.Type)
+	}
+
 }
 
 func (s *Srv) handleAdminMessage(msg *InboxMessage) {

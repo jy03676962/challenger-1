@@ -89,8 +89,13 @@ func (db *DB) getHistory(count int) []MatchData {
 
 func (db *DB) startAnswer(mid int) *MatchData {
 	var match MatchData
-	db.conn.Where("id = ?", mid).First(&match)
+	db.conn.Preload("Member").Where("id = ?", mid).First(&match)
 	match.AnswerType = MatchAnswering
 	db.conn.Save(&match)
 	return &match
+}
+
+func (db *DB) stopAnswer(mid int) {
+	var match MatchData
+	db.conn.Model(&match).Where("id = ?", mid).Update("answer_type", MatchAnswered)
 }

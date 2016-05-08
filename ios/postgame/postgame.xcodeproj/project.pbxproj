@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */; };
 		700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBA1CC3936200411559 /* LoginTextField.swift */; };
+		701F50561CDF484300642645 /* ReplaceSeuge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50551CDF484300642645 /* ReplaceSeuge.swift */; };
 		7099CE441CDF338F0009B62E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE421CDF338F0009B62E /* Main.storyboard */; };
 		7099CE791CDF39290009B62E /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */; };
 		7099CE7A1CDF39290009B62E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE6C1CDF39290009B62E /* Assets.xcassets */; };
@@ -22,8 +22,8 @@
 		7099CE821CDF39290009B62E /* MatchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE761CDF39290009B62E /* MatchResultCell.swift */; };
 		7099CE831CDF39290009B62E /* PLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE771CDF39290009B62E /* PLViewController.swift */; };
 		7099CE841CDF39290009B62E /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE781CDF39290009B62E /* WsClient.swift */; };
+		7099CE881CDF46F50009B62E /* MatchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE871CDF46F50009B62E /* MatchResultController.swift */; };
 		709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E97981CAA850B00A6F1F2 /* AppDelegate.swift */; };
-		709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709E979A1CAA850B00A6F1F2 /* StatViewController.swift */; };
 		709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */; };
 		70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */; };
 		DB3B4F11DA83751117A49FC0 /* Pods_postgame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9063B00B93805BD31ACAA476 /* Pods_postgame.framework */; };
@@ -32,8 +32,8 @@
 /* Begin PBXFileReference section */
 		3F1CED146C3899622F044FF1 /* Pods-postgame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-postgame.release.xcconfig"; path = "../Pods/Target Support Files/Pods-postgame/Pods-postgame.release.xcconfig"; sourceTree = "<group>"; };
 		472ED4E913FF918F0E347E60 /* Pods-postgame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-postgame.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-postgame/Pods-postgame.debug.xcconfig"; sourceTree = "<group>"; };
-		700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatTableViewCell.swift; sourceTree = "<group>"; };
 		700E0DBA1CC3936200411559 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
+		701F50551CDF484300642645 /* ReplaceSeuge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplaceSeuge.swift; sourceTree = "<group>"; };
 		7099CE431CDF338F0009B62E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 		7099CE6C1CDF39290009B62E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -47,9 +47,9 @@
 		7099CE761CDF39290009B62E /* MatchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchResultCell.swift; sourceTree = "<group>"; };
 		7099CE771CDF39290009B62E /* PLViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLViewController.swift; sourceTree = "<group>"; };
 		7099CE781CDF39290009B62E /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
+		7099CE871CDF46F50009B62E /* MatchResultController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchResultController.swift; sourceTree = "<group>"; };
 		709E97951CAA850B00A6F1F2 /* postgame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = postgame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709E97981CAA850B00A6F1F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		709E979A1CAA850B00A6F1F2 /* StatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewController.swift; sourceTree = "<group>"; };
 		709E97A21CAA850B00A6F1F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		709E97A41CAA850B00A6F1F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -108,6 +108,7 @@
 		7099CE6E1CDF39290009B62E /* src */ = {
 			isa = PBXGroup;
 			children = (
+				7099CE871CDF46F50009B62E /* MatchResultController.swift */,
 				7099CE6F1CDF39290009B62E /* Constants.swift */,
 				7099CE701CDF39290009B62E /* DataManager.swift */,
 				7099CE711CDF39290009B62E /* Extensions */,
@@ -153,12 +154,11 @@
 				7099CE691CDF39290009B62E /* common */,
 				700E0DB91CC3920200411559 /* Views */,
 				709E97981CAA850B00A6F1F2 /* AppDelegate.swift */,
-				709E979A1CAA850B00A6F1F2 /* StatViewController.swift */,
 				709E97A11CAA850B00A6F1F2 /* LaunchScreen.storyboard */,
 				709E97A41CAA850B00A6F1F2 /* Info.plist */,
 				70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */,
-				700E0DAF1CBE963D00411559 /* StatTableViewCell.swift */,
 				7099CE421CDF338F0009B62E /* Main.storyboard */,
+				701F50551CDF484300642645 /* ReplaceSeuge.swift */,
 			);
 			path = postgame;
 			sourceTree = "<group>";
@@ -298,14 +298,14 @@
 			files = (
 				700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */,
 				7099CE811CDF39290009B62E /* MatchData.swift in Sources */,
-				709E979B1CAA850B00A6F1F2 /* StatViewController.swift in Sources */,
+				701F50561CDF484300642645 /* ReplaceSeuge.swift in Sources */,
 				7099CE801CDF39290009B62E /* UIView+IBInspectable.swift in Sources */,
+				7099CE881CDF46F50009B62E /* MatchResultController.swift in Sources */,
 				7099CE821CDF39290009B62E /* MatchResultCell.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
 				7099CE7F1CDF39290009B62E /* String+PL.swift in Sources */,
 				7099CE831CDF39290009B62E /* PLViewController.swift in Sources */,
 				7099CE7D1CDF39290009B62E /* DataManager.swift in Sources */,
-				700E0DB01CBE963D00411559 /* StatTableViewCell.swift in Sources */,
 				7099CE7E1CDF39290009B62E /* DefaultKeys.swift in Sources */,
 				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
 				7099CE841CDF39290009B62E /* WsClient.swift in Sources */,
