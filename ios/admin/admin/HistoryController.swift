@@ -19,8 +19,13 @@ class HistoryController: PLViewController {
 	var data: [MatchData]?
 
 	@IBAction func startAnswer() {
+		let indexPaths = tableView.indexPathsForSelectedRows
+		guard data != nil && indexPaths != nil && indexPaths?.count == 1 else {
+			return
+		}
+		let matchData = data![indexPaths![0].row]
 		HUD.show(.Progress)
-		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"))
+		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id], encoding: .URL, headers: nil)
 			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
 				let md = response.result.value
 				// TODO
