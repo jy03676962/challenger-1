@@ -10,6 +10,7 @@ import UIKit
 import XCGLogger
 import SwiftyUserDefaults
 import ObjectMapper
+import PKHUD
 
 let log = XCGLogger.defaultInstance()
 
@@ -44,6 +45,7 @@ extension AppDelegate: DataReceiver {
 			guard navi?.visibleViewController as? LoginViewController == nil else {
 				return
 			}
+			HUD.hide()
 			matchData = nil
 			let sb = UIStoryboard(name: "Main", bundle: nil)
 			let login = sb.instantiateViewControllerWithIdentifier("LoginViewController")

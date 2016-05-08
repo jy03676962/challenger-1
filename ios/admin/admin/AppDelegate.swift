@@ -27,11 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
 		Defaults[.host] = "localhost:3000"
-		Defaults[.deviceID] = "1"
+		Defaults[.deviceID] = "admin"
 		Defaults[.socketType] = "1"
 		Defaults[.matchID] = 0
+		Defaults[.qCount] = 7
 		WsClient.singleton.connect(PLConstants.getWsAddress())
-		DataManager.singleton.subscribeData([.NewMatch], receiver: self)
+		DataManager.singleton.subscribeData([.NewMatch, .QuestionCount], receiver: self)
 		return true
 	}
 }
@@ -40,6 +41,8 @@ extension AppDelegate: DataReceiver {
 	func onReceivedData(json: [String: AnyObject], type: DataType) {
 		if type == .NewMatch {
 			Defaults[.matchID] = json["data"] as! Int
+		} else if type == .QuestionCount {
+			Defaults[.qCount] = json["data"] as! Int
 		}
 	}
 }

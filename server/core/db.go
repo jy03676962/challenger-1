@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"
+	"net/url"
 	"time"
 )
 
@@ -31,6 +32,8 @@ type PlayerData struct {
 	LevelData    string    `json:"levelData"`
 	HitCount     int       `json:"hitCount"`
 	ControllerID string    `json:"cid"`
+	QuestionInfo string    `json:"questionInfo"`
+	Answered     int       `json:"answered"`
 }
 
 func (PlayerData) TableName() string {
@@ -98,4 +101,15 @@ func (db *DB) startAnswer(mid int) *MatchData {
 func (db *DB) stopAnswer(mid int) {
 	var match MatchData
 	db.conn.Model(&match).Where("id = ?", mid).Update("answer_type", MatchAnswered)
+}
+
+func (db *DB) updateQuestionInfo(pid int, qid string, aid string) *PlayerData {
+	var player PlayerData
+	db.conn.Where("id = ?", pid).First(&player)
+	m, _ := url.ParseQuery(player.QuestionInfo)
+	m.Set(qid, aid)
+	player.QuestionInfo = m.Encode()
+	player.Answered = len(m)
+	db.conn.Save(&player)
+	return &player
 }

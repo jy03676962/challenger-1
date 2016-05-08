@@ -317,6 +317,8 @@ func (m *Match) dumpMatchData() *MatchData {
 		playerData.LevelData = strings.Join(strs, ",")
 		playerData.HitCount = player.HitCount
 		playerData.Name = ""
+		playerData.QuestionInfo = ""
+		playerData.Answered = 0
 		playerData.ControllerID = player.ControllerID
 		m.matchData.Member = append(m.matchData.Member, playerData)
 	}

@@ -23,6 +23,8 @@ public enum DataType: String {
 	case MatchStop = "matchStop"
 	case StartAnswer = "startAnswer"
 	case StopAnswer = "stopAnswer"
+	case UpdatePlayerData = "updatePlayerData"
+	case QuestionCount = "QuestionCount"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"

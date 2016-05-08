@@ -14,4 +14,5 @@ extension DefaultsKeys {
 	static let deviceID = DefaultsKey<String>("deviceID")
 	static let socketType = DefaultsKey<String>("socketType")
 	static let matchID = DefaultsKey<Int>("matchID")
+	static let qCount = DefaultsKey<Int>("qCount")
 }

@@ -22,6 +22,9 @@ struct PLConstants {
 		let p = path.hasPrefix("/") ? path : "/" + path
 		return "http://" + getHost() + p
 	}
+	static func getCid() -> String {
+		return "\(Defaults[.socketType]):\(Defaults[.deviceID])"
+	}
 }
 
 enum GameMode: Int {

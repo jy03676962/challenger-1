@@ -31,6 +31,7 @@ func main() {
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
 	core.GetOptions()
+	core.GetSurvey()
 
 	srv := core.NewSrv()
 	go srv.Run(tcpAddr, udpAddr, dbPath)
@@ -57,6 +58,12 @@ func main() {
 	})
 	ec.Post("/api/stop_answer", func(c echo.Context) error {
 		return srv.MatchStopAnswer(c)
+	})
+	ec.Get("/api/survey", func(c echo.Context) error {
+		return srv.GetSurvey(c)
+	})
+	ec.Post("/api/answer", func(c echo.Context) error {
+		return srv.UpdateQuestionInfo(c)
 	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))

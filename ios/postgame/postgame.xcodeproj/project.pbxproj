@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBA1CC3936200411559 /* LoginTextField.swift */; };
 		701F50561CDF484300642645 /* ReplaceSeuge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50551CDF484300642645 /* ReplaceSeuge.swift */; };
+		701F50601CDF82B100642645 /* Survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F505F1CDF82B100642645 /* Survey.swift */; };
+		701F50641CDF83BC00642645 /* SurveyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50631CDF83BC00642645 /* SurveyController.swift */; };
+		701F50681CDF92F200642645 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50671CDF92F200642645 /* QuestionViewController.swift */; };
+		701F506A1CDF930F00642645 /* QuestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50691CDF930F00642645 /* QuestionTableViewCell.swift */; };
 		7099CE441CDF338F0009B62E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE421CDF338F0009B62E /* Main.storyboard */; };
 		7099CE791CDF39290009B62E /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */; };
 		7099CE7A1CDF39290009B62E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE6C1CDF39290009B62E /* Assets.xcassets */; };
@@ -34,6 +38,10 @@
 		472ED4E913FF918F0E347E60 /* Pods-postgame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-postgame.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-postgame/Pods-postgame.debug.xcconfig"; sourceTree = "<group>"; };
 		700E0DBA1CC3936200411559 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
 		701F50551CDF484300642645 /* ReplaceSeuge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplaceSeuge.swift; sourceTree = "<group>"; };
+		701F505F1CDF82B100642645 /* Survey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Survey.swift; sourceTree = "<group>"; };
+		701F50631CDF83BC00642645 /* SurveyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurveyController.swift; sourceTree = "<group>"; };
+		701F50671CDF92F200642645 /* QuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		701F50691CDF930F00642645 /* QuestionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionTableViewCell.swift; sourceTree = "<group>"; };
 		7099CE431CDF338F0009B62E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 		7099CE6C1CDF39290009B62E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -108,6 +116,7 @@
 		7099CE6E1CDF39290009B62E /* src */ = {
 			isa = PBXGroup;
 			children = (
+				701F505F1CDF82B100642645 /* Survey.swift */,
 				7099CE871CDF46F50009B62E /* MatchResultController.swift */,
 				7099CE6F1CDF39290009B62E /* Constants.swift */,
 				7099CE701CDF39290009B62E /* DataManager.swift */,
@@ -116,6 +125,9 @@
 				7099CE761CDF39290009B62E /* MatchResultCell.swift */,
 				7099CE771CDF39290009B62E /* PLViewController.swift */,
 				7099CE781CDF39290009B62E /* WsClient.swift */,
+				701F50631CDF83BC00642645 /* SurveyController.swift */,
+				701F50671CDF92F200642645 /* QuestionViewController.swift */,
+				701F50691CDF930F00642645 /* QuestionTableViewCell.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -299,8 +311,11 @@
 				700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */,
 				7099CE811CDF39290009B62E /* MatchData.swift in Sources */,
 				701F50561CDF484300642645 /* ReplaceSeuge.swift in Sources */,
+				701F50641CDF83BC00642645 /* SurveyController.swift in Sources */,
 				7099CE801CDF39290009B62E /* UIView+IBInspectable.swift in Sources */,
 				7099CE881CDF46F50009B62E /* MatchResultController.swift in Sources */,
+				701F50681CDF92F200642645 /* QuestionViewController.swift in Sources */,
+				701F50601CDF82B100642645 /* Survey.swift in Sources */,
 				7099CE821CDF39290009B62E /* MatchResultCell.swift in Sources */,
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
 				7099CE7F1CDF39290009B62E /* String+PL.swift in Sources */,
@@ -308,6 +323,7 @@
 				7099CE7D1CDF39290009B62E /* DataManager.swift in Sources */,
 				7099CE7E1CDF39290009B62E /* DefaultKeys.swift in Sources */,
 				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
+				701F506A1CDF930F00642645 /* QuestionTableViewCell.swift in Sources */,
 				7099CE841CDF39290009B62E /* WsClient.swift in Sources */,
 				7099CE7C1CDF39290009B62E /* Constants.swift in Sources */,
 			);

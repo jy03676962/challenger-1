@@ -22,6 +22,9 @@ class PlayerData: Mappable {
 	var levelData: String!
 	var hitCount: Int!
 	var cid: String!
+	var questionInfo: String!
+	var answered: Int!
+	var questionCount: Int!
 	required init?(_ map: Map) {
 	}
 
@@ -38,10 +41,13 @@ class PlayerData: Mappable {
 		levelData <- map["levelData"]
 		hitCount <- map["hitCount"]
 		cid <- map["cid"]
+		questionInfo <- map["questionInfo"]
+		answered <- map["answered"]
+		questionCount <- map["questionCount"]
 	}
 
 	func getName() -> String {
-		if name != nil {
+		if name != nil && name!.characters.count > 0 {
 			return name!
 		} else {
 			return cid.componentsSeparatedByString(":")[1]

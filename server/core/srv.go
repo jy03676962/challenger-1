@@ -94,6 +94,17 @@ func (s *Srv) MatchStopAnswer(c echo.Context) error {
 	return c.JSON(http.StatusOK, mid)
 }
 
+func (s *Srv) GetSurvey(c echo.Context) error {
+	return c.JSON(http.StatusOK, GetSurvey())
+}
+
+func (s *Srv) UpdateQuestionInfo(c echo.Context) error {
+	pid, _ := strconv.Atoi(c.FormValue("pid"))
+	p := s.db.updateQuestionInfo(pid, c.FormValue("qid"), c.FormValue("aid"))
+	s.sendMsgs("updatePlayerData", *p, InboxAddressTypeAdminDevice)
+	return c.JSON(http.StatusOK, nil)
+}
+
 // internal
 
 func (s *Srv) mainLoop() {
@@ -298,6 +309,8 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.queue.TeamQueryData()
 	case "queryControllerData":
 		s.sendMsg("ControllerData", s.getControllerData(), msg.Address.ID, msg.Address.Type)
+	case "queryQuestionCount":
+		s.sendMsg("QuestionCount", len(GetSurvey().Questions), msg.Address.ID, msg.Address.Type)
 	case "teamCutLine":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCutLine(teamID)
