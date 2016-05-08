@@ -15,8 +15,10 @@ const FrontView = CSSModules(observer(React.createClass({
     let number = this.props.front.number
     return (
       <div styleName='root'>
-        <label>人数:</label>
-        <input type='text' ref='count'></input><br/>
+        <input type='radio' name='num' ref='p1' value='p1' defaultChecked />1人
+        <input type='radio' name='num' ref='p2' value='p2' />2人
+        <input type='radio' name='num' ref='p3' value='p3'/>3人
+        <input type='radio' name='num' ref='p4' value='p4' />4人<br/><br/><br/>
         <input type='radio' name='mode' ref='gold' value='gold' defaultChecked />赏金<br/>
         <input type='radio' name='mode' ref='survival' value='survival' />生存<br/>
         <button onClick={this.addTeam}>取号</button><br/><br/>
@@ -30,8 +32,18 @@ const FrontView = CSSModules(observer(React.createClass({
   },
   addTeam: function(e) {
     let front = this.props.front
+    var c = 1
+    if (this.refs.p1.checked) {
+      c = 1
+    } else if (this.refs.p2.checked) {
+      c = 2
+    } else if (this.refs.p3.checked) {
+      c = 3
+    } else {
+      c = 4
+    }
     let param = {
-      count: this.refs.count.value,
+      count: c,
       mode: this.refs.gold.checked ? 'g' : 's'
     }
     $.post('/api/addteam', param, function(data) {
