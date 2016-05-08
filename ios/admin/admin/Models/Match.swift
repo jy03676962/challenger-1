@@ -21,7 +21,7 @@ struct Position: Mappable {
 	}
 }
 
-struct Player: Mappable {
+class Player: Mappable {
 	var pos: Position!
 	var dir: String!
 	var button: String!
@@ -37,10 +37,10 @@ struct Player: Mappable {
 	var comboCount: Int!
 	var controllerID: String!
 
-	init?(_ map: Map) {
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		pos <- map["pos"]
 		dir <- map["dir"]
 		button <- map["button"]
@@ -58,7 +58,7 @@ struct Player: Mappable {
 	}
 }
 
-struct Match: Mappable {
+class Match: Mappable {
 	var member: [Player]!
 	var stage: String!
 	var totalTime: Double!
@@ -73,10 +73,10 @@ struct Match: Mappable {
 	var teamID: String!
 	var maxEnergy: Int!
 
-	init?(_ map: Map) {
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		member <- map["member"]
 		stage <- map["stage"]
 		totalTime <- map["totalTime"]

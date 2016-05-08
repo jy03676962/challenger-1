@@ -38,10 +38,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HallTableHeader" translatesAutoresizingMaskIntoConstraints="NO" id="Y7y-ve-9zq">
-                                <rect key="frame" x="30" y="80" width="660" height="30"/>
+                                <rect key="frame" x="30" y="80" width="660" height="36"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9Bn-00-0EL">
-                                <rect key="frame" x="30" y="110" width="660" height="529"/>
+                                <rect key="frame" x="30" y="116" width="660" height="523"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="500" id="0L3-Q4-74k"/>
@@ -1056,30 +1056,12 @@
                     <connections>
                         <outlet property="startAnswerButton" destination="X3X-tO-hMh" id="TMn-s8-b6Y"/>
                         <outlet property="tableView" destination="Hrd-db-EKC" id="zJS-AF-Ljo"/>
-                        <segue destination="i7b-A2-ZBM" kind="presentation" identifier="PresentMatchResult" id="ihL-hv-XEw"/>
+                        <segue destination="3uG-BT-UVb" kind="presentation" identifier="PresentMatchResult" id="ihL-hv-XEw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2k1-So-H47" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1296" y="1156"/>
-        </scene>
-        <!--Match Result Controller-->
-        <scene sceneID="39e-Y9-TUq">
-            <objects>
-                <viewController id="i7b-A2-ZBM" customClass="MatchResultController" customModule="admin" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="wWn-pV-V0F"/>
-                        <viewControllerLayoutGuide type="bottom" id="SDE-yu-2oQ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="4od-xd-j2h">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="nYZ-ao-Frv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2577" y="1156"/>
         </scene>
         <!--设置-->
         <scene sceneID="tJU-4E-OfY">
@@ -1249,29 +1231,37 @@
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
         </scene>
+        <!--MatchResult-->
+        <scene sceneID="3Cu-kB-lAv">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MatchResult" id="3uG-BT-UVb" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4Yb-m2-mCG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2577" y="1156"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="AddPlayer" width="30" height="30"/>
-        <image name="CallButton" width="30" height="30"/>
-        <image name="DelayButton" width="30" height="30"/>
-        <image name="ForceEndButton" width="30" height="30"/>
-        <image name="FunIcon" width="30" height="30"/>
-        <image name="HallTableCellBg" width="30" height="30"/>
-        <image name="HallTableHeader" width="30" height="30"/>
-        <image name="HistoryHeader" width="30" height="30"/>
-        <image name="MapHeader" width="30" height="30"/>
-        <image name="MatchDataHeader" width="30" height="30"/>
-        <image name="ModeChangeIcon" width="30" height="30"/>
-        <image name="PCOffline" width="30" height="30"/>
-        <image name="PCSelected" width="30" height="30"/>
-        <image name="PlayerTableHeader" width="30" height="30"/>
-        <image name="PowerIcon" width="30" height="30"/>
-        <image name="PrepareButton" width="30" height="30"/>
-        <image name="PrepareDoneButton" width="30" height="30"/>
-        <image name="RemovePlayer" width="30" height="30"/>
-        <image name="StartAnswer" width="30" height="30"/>
-        <image name="StartMatch" width="30" height="30"/>
-        <image name="StartMatchDisabled" width="30" height="30"/>
-        <image name="TopTeamBackground" width="30" height="30"/>
+        <image name="AddPlayer" width="110" height="35"/>
+        <image name="CallButton" width="110" height="35"/>
+        <image name="DelayButton" width="110" height="35"/>
+        <image name="ForceEndButton" width="110" height="35"/>
+        <image name="FunIcon" width="41" height="41"/>
+        <image name="HallTableCellBg" width="656" height="39"/>
+        <image name="HallTableHeader" width="660" height="36"/>
+        <image name="HistoryHeader" width="505" height="36"/>
+        <image name="MapHeader" width="660" height="36"/>
+        <image name="MatchDataHeader" width="272" height="36"/>
+        <image name="ModeChangeIcon" width="24" height="24"/>
+        <image name="PCOffline" width="25" height="25"/>
+        <image name="PCSelected" width="25" height="25"/>
+        <image name="PlayerTableHeader" width="272" height="36"/>
+        <image name="PowerIcon" width="23" height="28"/>
+        <image name="PrepareButton" width="273" height="33"/>
+        <image name="PrepareDoneButton" width="273" height="33"/>
+        <image name="RemovePlayer" width="110" height="35"/>
+        <image name="StartAnswer" width="133" height="36"/>
+        <image name="StartMatch" width="273" height="33"/>
+        <image name="StartMatchDisabled" width="273" height="33"/>
+        <image name="TopTeamBackground" width="616" height="40"/>
     </resources>
 </document>

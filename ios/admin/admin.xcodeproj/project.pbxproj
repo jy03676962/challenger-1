@@ -11,7 +11,9 @@
 		700AD71C1CDC8C750044C977 /* MatchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AD71B1CDC8C750044C977 /* MatchData.swift */; };
 		700AD71E1CDCB1690044C977 /* MatchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AD71D1CDCB1690044C977 /* MatchResultController.swift */; };
 		700AD7201CDCB2530044C977 /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700AD71F1CDCB2530044C977 /* HistoryTableViewCell.swift */; };
+		700AD7221CDEE5BA0044C977 /* MatchResult.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 700AD7211CDEE5BA0044C977 /* MatchResult.storyboard */; };
 		70130ADF1CCBD1540081003E /* PLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70130ADE1CCBD1540081003E /* PLViewController.swift */; };
+		701B0C951CDF2090003ADDC4 /* MatchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701B0C941CDF2090003ADDC4 /* MatchResultCell.swift */; };
 		7079BC541CC9243B005878AE /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */; };
 		7079BC591CC924E9005878AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7079BC581CC924E9005878AE /* Assets.xcassets */; };
 		7079BC5C1CCB670C005878AE /* HallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */; };
@@ -42,7 +44,9 @@
 		700AD71B1CDC8C750044C977 /* MatchData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchData.swift; sourceTree = "<group>"; };
 		700AD71D1CDCB1690044C977 /* MatchResultController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchResultController.swift; sourceTree = "<group>"; };
 		700AD71F1CDCB2530044C977 /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
+		700AD7211CDEE5BA0044C977 /* MatchResult.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MatchResult.storyboard; sourceTree = "<group>"; };
 		70130ADE1CCBD1540081003E /* PLViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLViewController.swift; sourceTree = "<group>"; };
+		701B0C941CDF2090003ADDC4 /* MatchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchResultCell.swift; sourceTree = "<group>"; };
 		7079BC521CC9243B005878AE /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
 		7079BC581CC924E9005878AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HallTableViewCell.swift; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 		70B4DAE41CC7B31700159C81 /* res */ = {
 			isa = PBXGroup;
 			children = (
+				700AD7211CDEE5BA0044C977 /* MatchResult.storyboard */,
 				7079BC581CC924E9005878AE /* Assets.xcassets */,
 				70B4DAE51CC7B31700159C81 /* alienleaguebold.ttf */,
 			);
@@ -188,6 +193,7 @@
 				70B4DAE91CC7B31700159C81 /* WsClient.swift */,
 				7080B8501CCE6A8600E63CB5 /* DataManager.swift */,
 				70130ADE1CCBD1540081003E /* PLViewController.swift */,
+				701B0C941CDF2090003ADDC4 /* MatchResultCell.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -263,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70B4DAEA1CC7B31700159C81 /* alienleaguebold.ttf in Resources */,
+				700AD7221CDEE5BA0044C977 /* MatchResult.storyboard in Resources */,
 				70B4DAD11CC7B10A00159C81 /* LaunchScreen.storyboard in Resources */,
 				70B4DACC1CC7B10A00159C81 /* Main.storyboard in Resources */,
 				7079BC591CC924E9005878AE /* Assets.xcassets in Resources */,
@@ -345,6 +352,7 @@
 				7079BC541CC9243B005878AE /* UIView+IBInspectable.swift in Sources */,
 				7079BC5C1CCB670C005878AE /* HallTableViewCell.swift in Sources */,
 				70B4DAEB1CC7B31700159C81 /* Constants.swift in Sources */,
+				701B0C951CDF2090003ADDC4 /* MatchResultCell.swift in Sources */,
 				7079BC601CCB87AA005878AE /* ConfigController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -24,15 +24,15 @@ struct Address: Mappable {
 	}
 }
 
-struct PlayerController: Mappable {
+class PlayerController: Mappable {
 	var address: Address!
 	var id: String!
 	var matchID: Int!
 
-	init?(_ map: Map) {
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		address <- map["address"]
 		id <- map["id"]
 		matchID <- map["matchID"]

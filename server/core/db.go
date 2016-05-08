@@ -18,18 +18,19 @@ const (
 )
 
 type PlayerData struct {
-	ID        uint      `json:"id"`
-	CreatedAt time.Time `json:"createdAt"`
-	MatchID   int       `json:"-"`
-	Name      string    `json:"name"`
-	Gold      int       `json:"gold"`
-	LostGold  int       `json:"lostGold"`
-	Energy    float64   `json:"energy"`
-	Combo     int       `json:"combo"`
-	Grade     string    `json:"grade"`
-	Level     int       `json:"level"`
-	LevelData string    `json:"levelData"`
-	HitCount  int       `json:"hitCount"`
+	ID           uint      `json:"id"`
+	CreatedAt    time.Time `json:"createdAt"`
+	MatchID      int       `json:"-"`
+	Name         string    `json:"name"`
+	Gold         int       `json:"gold"`
+	LostGold     int       `json:"lostGold"`
+	Energy       float64   `json:"energy"`
+	Combo        int       `json:"combo"`
+	Grade        string    `json:"grade"`
+	Level        int       `json:"level"`
+	LevelData    string    `json:"levelData"`
+	HitCount     int       `json:"hitCount"`
+	ControllerID string    `json:"cid"`
 }
 
 func (PlayerData) TableName() string {

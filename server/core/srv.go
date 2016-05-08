@@ -86,7 +86,7 @@ func (s *Srv) MatchStartAnswer(c echo.Context) error {
 	return c.JSON(http.StatusOK, d)
 }
 
-// MARK: internal
+// internal
 
 func (s *Srv) mainLoop() {
 	for {

@@ -11,6 +11,8 @@ import Alamofire
 import AlamofireObjectMapper
 import PKHUD
 
+let segueIDPresentMatchResult = "PresentMatchResult"
+
 class HistoryController: PLViewController {
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var startAnswerButton: UIButton!
@@ -28,7 +30,6 @@ class HistoryController: PLViewController {
 		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id], encoding: .URL, headers: nil)
 			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
 				let md = response.result.value
-				// TODO
 				if self.data != nil && md != nil {
 					for (i, d) in self.data!.enumerate() {
 						if d.id == md!.id {
@@ -39,7 +40,7 @@ class HistoryController: PLViewController {
 				}
 				HUD.hide()
 		})
-		performSegueWithIdentifier("PresentMatchResult", sender: nil)
+		performSegueWithIdentifier(segueIDPresentMatchResult, sender: matchData)
 	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -63,6 +64,13 @@ class HistoryController: PLViewController {
 				}
 				self.refreshControl.endRefreshing()
 		})
+	}
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		if segue.identifier == segueIDPresentMatchResult {
+			let vc = segue.destinationViewController as! MatchResultController
+			vc.matchData = sender as? MatchData
+		}
 	}
 }
 

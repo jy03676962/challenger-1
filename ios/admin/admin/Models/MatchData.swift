@@ -9,10 +9,10 @@
 import Foundation
 import ObjectMapper
 
-struct PlayerData: Mappable {
+class PlayerData: Mappable {
 	var id: UInt!
 	var createdAt: String!
-	var name: String!
+	var name: String?
 	var gold: Int!
 	var lostGold: Int!
 	var energy: Double!
@@ -21,10 +21,11 @@ struct PlayerData: Mappable {
 	var level: Int!
 	var levelData: String!
 	var hitCount: Int!
-	init?(_ map: Map) {
+	var cid: String!
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		id <- map["id"]
 		createdAt <- map["createdAt"]
 		name <- map["name"]
@@ -36,6 +37,15 @@ struct PlayerData: Mappable {
 		level <- map["level"]
 		levelData <- map["levelData"]
 		hitCount <- map["hitCount"]
+		cid <- map["cid"]
+	}
+
+	func getName() -> String {
+		if name != nil {
+			return name!
+		} else {
+			return cid.componentsSeparatedByString(":")[1]
+		}
 	}
 }
 
@@ -43,7 +53,7 @@ enum MatchAnswerType: Int {
 	case NotAnswer = 0, Answering, Answered
 }
 
-struct MatchData: Mappable {
+class MatchData: Mappable {
 	var id: UInt!
 	var createdAt: String!
 	var mode: String!
@@ -54,10 +64,10 @@ struct MatchData: Mappable {
 	var answerType: MatchAnswerType!
 	var teamID: String!
 
-	init?(_ map: Map) {
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		id <- map["id"]
 		createdAt <- map["createdAt"]
 		mode <- map["mode"]
@@ -70,14 +80,14 @@ struct MatchData: Mappable {
 	}
 }
 
-struct MatchResult: Mappable {
+class MatchResult: Mappable {
 	var matchID: Int!
 	var teamID: String!
 	var matchData: MatchData!
-	init?(_ map: Map) {
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		matchID <- map["matchID"]
 		teamID <- map["teamID"]
 		matchData <- map["matchData"]

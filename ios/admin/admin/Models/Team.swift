@@ -13,7 +13,7 @@ enum TeamStatus: Int {
 	case Waiting = 0, Prepare, Playing, After, Finished
 }
 
-struct Team: Mappable {
+class Team: Mappable {
 	var size: Int!
 	var id: String!
 	var delayCount: Int!
@@ -21,10 +21,10 @@ struct Team: Mappable {
 	var waitTime: Int!
 	var mode: String!
 
-	init?(_ map: Map) {
+	required init?(_ map: Map) {
 	}
 
-	mutating func mapping(map: Map) {
+	func mapping(map: Map) {
 		size <- map["size"]
 		id <- map["id"]
 		delayCount <- map["delayCount"]
