@@ -16,6 +16,7 @@ import ObjectMapper
 class ConfigController: PLViewController {
 
 	@IBOutlet weak var wrapperView: UIView!
+	@IBOutlet weak var idTextField: UITextField!
 	@IBOutlet weak var hostTextField: UITextField!
 	@IBOutlet weak var modeControl: UISegmentedControl!
 	@IBOutlet weak var arduinoView: UIView!
@@ -29,10 +30,16 @@ class ConfigController: PLViewController {
 			"mode": sender.selectedSegmentIndex
 			]))
 	}
+	@IBAction func saveID() {
+		if idTextField.text != nil && idTextField.text?.characters.count > 0 {
+			Defaults[.deviceID] = idTextField.text!
+			WsClient.singleton.connect(PLConstants.getWsAddress())
+		}
+	}
 
 	@IBAction func saveConfig() {
 		if hostTextField.text != nil && hostTextField.text?.characters.count > 0 {
-			Defaults[.host] = hostTextField.text
+			Defaults[.host] = hostTextField.text!
 			WsClient.singleton.connect(PLConstants.getWsAddress())
 		}
 	}

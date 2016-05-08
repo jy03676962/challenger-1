@@ -10,14 +10,10 @@ import Foundation
 import SwiftyUserDefaults
 
 struct PLConstants {
-	static let host = "localhost:3000"
 	static let usualFont = "Alien League Bold"
 	static let maxTeamSize = 4
 	static func getHost() -> String {
-		if let h = Defaults[.host] {
-			return h
-		}
-		return host
+		return Defaults[.host]
 	}
 	static func getWsAddress() -> String {
 		return "ws://" + getHost() + "/ws"

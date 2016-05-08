@@ -103,8 +103,8 @@ extension WsClient: WebSocketDelegate {
 		log.debug("socket connected")
 		let json = JSON([
 			"cmd": "init",
-			"ID": AdminConstants.socketID,
-			"TYPE": "1",
+			"ID": Defaults[.deviceID],
+			"TYPE": Defaults[.socketType],
 		])
 		self.sendJSON(json)
 	}

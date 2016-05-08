@@ -41,10 +41,10 @@ class LoginViewController: PLViewController {
 		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
 			if let host = weakAlert?.textFields![0].text {
 				Defaults[.host] = host
-				WsClient.singleton.connect(PLConstants.getAdminWsAddress())
+				WsClient.singleton.connect(PLConstants.getWsAddress())
 			}
 			if let num = weakAlert?.textFields![1].text {
-				Defaults[.deviceID] = Int(num) ?? 0
+				Defaults[.deviceID] = num
 			}
 		}
 		alert.addAction(doneAction)

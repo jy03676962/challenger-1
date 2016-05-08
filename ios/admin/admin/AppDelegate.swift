@@ -26,6 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UITabBar.appearance().barTintColor = UIColor.clearColor()
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
+		Defaults[.host] = "localhost:3000"
+		Defaults[.deviceID] = "1"
+		Defaults[.socketType] = "1"
+		Defaults[.matchID] = 0
 		WsClient.singleton.connect(PLConstants.getWsAddress())
 		DataManager.singleton.subscribeData([.NewMatch], receiver: self)
 		return true

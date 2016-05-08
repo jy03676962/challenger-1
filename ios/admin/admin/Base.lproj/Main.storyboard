@@ -1078,8 +1078,18 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uxj-jc-lX9">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="719"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="HOST" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qSS-Jh-Wtj">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GPc-rK-fUL">
                                         <rect key="frame" x="412" y="80" width="200" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="ei6-Fd-8ei"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="lXt-YR-Nj2"/>
+                                        </constraints>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="HOST" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qSS-Jh-Wtj">
+                                        <rect key="frame" x="412" y="120" width="200" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="bfQ-At-Vj9"/>
                                         </constraints>
@@ -1088,7 +1098,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="WIS-97-uSB">
-                                        <rect key="frame" x="382" y="130" width="260" height="29"/>
+                                        <rect key="frame" x="382" y="170" width="260" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="260" id="9TS-Re-uCx"/>
                                             <constraint firstAttribute="height" constant="28" id="Cgp-cb-Vtn"/>
@@ -1104,7 +1114,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oai-mN-5yU">
-                                        <rect key="frame" x="60" y="180" width="904" height="400"/>
+                                        <rect key="frame" x="60" y="220" width="904" height="400"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="全关模式" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8L-dp-Bea">
                                                 <rect key="frame" x="50" y="373" width="56" height="17"/>
@@ -1153,7 +1163,7 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OgJ-A9-ePy">
-                                        <rect key="frame" x="642" y="80" width="60" height="30"/>
+                                        <rect key="frame" x="642" y="120" width="60" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="9Fb-ex-hGs"/>
                                         </constraints>
@@ -1164,23 +1174,42 @@
                                             <action selector="saveConfig" destination="G7o-3x-up7" eventType="touchUpInside" id="8gs-jq-G0y"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SKw-MB-yZh">
+                                        <rect key="frame" x="642" y="80" width="60" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="Jdg-Et-ZDp"/>
+                                        </constraints>
+                                        <state key="normal" title="保存">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="saveConfig" destination="G7o-3x-up7" eventType="touchUpInside" id="1PI-4q-N9g"/>
+                                            <action selector="saveID" destination="G7o-3x-up7" eventType="touchUpInside" id="OgT-dB-qw7"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Oai-mN-5yU" secondAttribute="trailing" constant="60" id="8dh-Rn-cKr"/>
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="15" id="IS4-kh-FBV"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="Ihj-3R-v99"/>
+                                    <constraint firstItem="GPc-rK-fUL" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="Wpf-Cb-aFH"/>
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="top" secondItem="qSS-Jh-Wtj" secondAttribute="top" id="Wq3-0V-EZO"/>
+                                    <constraint firstItem="qSS-Jh-Wtj" firstAttribute="top" secondItem="GPc-rK-fUL" secondAttribute="bottom" constant="10" id="asr-5p-Y4Q"/>
                                     <constraint firstItem="Oai-mN-5yU" firstAttribute="leading" secondItem="uxj-jc-lX9" secondAttribute="leading" constant="60" id="bgA-ce-7HB"/>
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="leading" secondItem="qSS-Jh-Wtj" secondAttribute="trailing" constant="30" id="c77-fC-HEZ"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="80" id="gHd-fs-edP"/>
                                     <constraint firstItem="WIS-97-uSB" firstAttribute="top" secondItem="qSS-Jh-Wtj" secondAttribute="bottom" constant="20" id="hGS-sV-iUW"/>
                                     <constraint firstItem="WIS-97-uSB" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="kvd-ji-se3"/>
+                                    <constraint firstItem="SKw-MB-yZh" firstAttribute="leading" secondItem="OgJ-A9-ePy" secondAttribute="leading" id="qrw-B8-EGx"/>
                                     <constraint firstAttribute="trailing" secondItem="OgJ-A9-ePy" secondAttribute="trailing" constant="22" id="tuq-xI-6tt"/>
                                     <constraint firstItem="Oai-mN-5yU" firstAttribute="top" secondItem="WIS-97-uSB" secondAttribute="bottom" constant="22" id="tuz-rH-7ZW"/>
+                                    <constraint firstItem="GPc-rK-fUL" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="80" id="vBe-JG-TEJ"/>
+                                    <constraint firstItem="SKw-MB-yZh" firstAttribute="top" secondItem="GPc-rK-fUL" secondAttribute="top" id="zTp-hP-lXN"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="gHd-fs-edP"/>
                                         <exclude reference="IS4-kh-FBV"/>
                                         <exclude reference="tuq-xI-6tt"/>
                                     </mask>
@@ -1199,6 +1228,7 @@
                     <connections>
                         <outlet property="arduinoView" destination="Oai-mN-5yU" id="w8s-jW-JRB"/>
                         <outlet property="hostTextField" destination="qSS-Jh-Wtj" id="tdJ-kT-rlr"/>
+                        <outlet property="idTextField" destination="GPc-rK-fUL" id="PI2-UU-GBc"/>
                         <outlet property="modeControl" destination="WIS-97-uSB" id="TWt-6j-qqe"/>
                         <outlet property="wrapperView" destination="uxj-jc-lX9" id="xuY-I9-o9F"/>
                     </connections>

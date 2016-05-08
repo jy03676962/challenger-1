@@ -8,6 +8,7 @@
 
 import UIKit
 import XCGLogger
+import SwiftyUserDefaults
 
 let log = XCGLogger.defaultInstance()
 
@@ -22,13 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		#else
 			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
-		self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-		let vc = LoginViewController()
-		let navi = UINavigationController(rootViewController: vc)
-		navi.navigationBarHidden = true
-		self.window?.rootViewController = navi
-		self.window?.makeKeyAndVisible()
-		WsClient.singleton.connect(PLConstants.getClientWsAddress())
+		Defaults[.host] = "localhost:3000"
+		Defaults[.deviceID] = "1"
+		Defaults[.socketType] = "4"
+		Defaults[.matchID] = 0
+		WsClient.singleton.connect(PLConstants.getWsAddress())
 		return true
 	}
 }

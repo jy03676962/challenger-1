@@ -10,7 +10,8 @@ import Foundation
 import SwiftyUserDefaults
 
 extension DefaultsKeys {
-	static let host = DefaultsKey<String?>("host")
-	static let deviceID = DefaultsKey<Int>("deviceID")
+	static let host = DefaultsKey<String>("host")
+	static let deviceID = DefaultsKey<String>("deviceID")
+	static let socketType = DefaultsKey<String>("socketType")
 	static let matchID = DefaultsKey<Int>("matchID")
 }
