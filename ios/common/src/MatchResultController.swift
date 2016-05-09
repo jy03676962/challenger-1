@@ -84,14 +84,35 @@ class MatchResultController: PLViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscribeData([.UpdatePlayerData], receiver: self)
-		adjust()
-		renderData()
+		adjustViews()
+		if isAdmin {
+			DataManager.singleton.subscribeData([.UpdatePlayerData], receiver: self)
+			renderData()
+		} else if matchData == nil {
+			HUD.show(.Progress)
+			Alamofire.request(.GET, PLConstants.getHttpAddress("api/answering"))
+				.responseJSON(completionHandler: { response in
+					HUD.hide()
+					if let err = response.result.error {
+						HUD.show(.LabeledError(title: err.localizedDescription, subtitle: nil))
+					} else if let d = response.result.value {
+						let code = d["code"] as! Int
+						if code == 0 {
+							self.matchData = Mapper<MatchData>().map(d["data"])
+						}
+						self.renderData()
+					}
+			})
+		} else {
+			renderData()
+		}
 	}
 
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
-		DataManager.singleton.unsubscribe(self)
+		if isAdmin {
+			DataManager.singleton.unsubscribe(self)
+		}
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -102,7 +123,7 @@ class MatchResultController: PLViewController {
 		}
 	}
 
-	func adjust() {
+	func adjustViews() {
 		if isAdmin {
 			stopAnswerButton.hidden = false
 			startSurveyButton.hidden = true

@@ -105,6 +105,18 @@ func (s *Srv) UpdateQuestionInfo(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
+func (s *Srv) GetAnsweringMatchData(c echo.Context) error {
+	d := s.db.getAnsweringMatchData()
+	ret := make(map[string]interface{})
+	if d == nil {
+		ret["code"] = 1
+	} else {
+		ret["code"] = 0
+		ret["data"] = d
+	}
+	return c.JSON(http.StatusOK, ret)
+}
+
 // internal
 
 func (s *Srv) mainLoop() {

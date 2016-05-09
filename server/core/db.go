@@ -113,3 +113,11 @@ func (db *DB) updateQuestionInfo(pid int, qid string, aid string) *PlayerData {
 	db.conn.Save(&player)
 	return &player
 }
+
+func (db *DB) getAnsweringMatchData() *MatchData {
+	var data MatchData
+	if db.conn.Preload("Member").Where("answer_type = ?", MatchAnswering).First(&data).RecordNotFound() {
+		return nil
+	}
+	return &data
+}
