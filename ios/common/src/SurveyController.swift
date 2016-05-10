@@ -60,6 +60,7 @@ extension SurveyController: QuestionViewControllerDelegate {
 			"total": String(self.survey.questions.count)
 		]
 		Alamofire.request(.POST, PLConstants.getHttpAddress("api/answer"), parameters: p, encoding: .URL, headers: nil)
+			.validate()
 			.responseJSON(completionHandler: { resp in
 				if !sender.isLastQuestion {
 					var frame = self.scrollView.frame

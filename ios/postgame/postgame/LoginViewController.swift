@@ -12,6 +12,7 @@ import AutoKeyboardScrollView
 import SVProgressHUD
 import EasyPeasy
 import SwiftyUserDefaults
+import PKHUD
 
 let SegueIDShowMatchResult = "ShowMatchResult"
 
@@ -70,19 +71,18 @@ class LoginViewController: PLViewController {
 	}
 
 	@IBAction func login() {
-//		let parameters: [String: AnyObject] = [
-//			"username": usernameTextField.text!,
-//			"password": passwordTextField.text!
-//		]
-//		SVProgressHUD.show()
-		// TODO login
-//		Alamofire.request(.POST, PLConstants.getHttpAddress("api/login"), parameters: parameters)
-//			.responseJSON { response in
-//				SVProgressHUD.dismiss()
-//				if let JSON = response.result.value {
-//					log.debug("\(JSON["username"]) has logined")
-//				}
-//		}
+		HUD.show(.Progress)
+		Alamofire.request(.GET, PLConstants.getWebsiteAddress("user/login"))
+			.validate()
+			.responseJSON(completionHandler: { response in
+				HUD.hide()
+				if let value = response.result.value {
+					let code = value["code"] as! Int
+					if code == 0 {
+					} else {
+					}
+				}
+		})
 	}
 	@IBAction func skip() {
 		performSegueWithIdentifier(SegueIDShowMatchResult, sender: nil)

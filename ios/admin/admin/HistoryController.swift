@@ -28,6 +28,7 @@ class HistoryController: PLViewController {
 		let matchData = data![indexPaths![0].row]
 		HUD.show(.Progress)
 		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id], encoding: .URL, headers: nil)
+			.validate()
 			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
 				HUD.hide()
 				let md = response.result.value
@@ -55,6 +56,7 @@ class HistoryController: PLViewController {
 
 	func refreshHistory() {
 		Alamofire.request(.GET, PLConstants.getHttpAddress("api/history"))
+			.validate()
 			.responseArray(completionHandler: { (response: Response<[MatchData], NSError>) in
 				self.data = response.result.value
 				if self.data != nil {

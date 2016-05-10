@@ -61,6 +61,7 @@ class MatchController: PLViewController {
 		DataManager.singleton.subscribeData([.UpdateMatch, .MatchStop], receiver: self)
 		if mapView.image == nil {
 			Alamofire.request(.GET, PLConstants.getHttpAddress("api/asset/map.png"))
+				.validate()
 				.responseImage(completionHandler: { response in
 					if let image = response.result.value {
 						self.mapView.image = image

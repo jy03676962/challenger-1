@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Defaults[.deviceID] = "1"
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0
+		Defaults[.websiteHost] = "puapi.hualinfor.com"
 		DataManager.singleton.subscribeData([.StartAnswer, .StopAnswer], receiver: self)
 		WsClient.singleton.connect(PLConstants.getWsAddress())
 		return true

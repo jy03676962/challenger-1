@@ -41,6 +41,7 @@ class MatchResultController: PLViewController {
 	@IBAction func startSurvey() {
 		HUD.show(.Progress)
 		Alamofire.request(.GET, PLConstants.getHttpAddress("api/survey"))
+			.validate()
 			.responseObject(completionHandler: { (response: Response<Survey, NSError>) in
 				HUD.hide()
 				if let err = response.result.error {
@@ -63,6 +64,7 @@ class MatchResultController: PLViewController {
 		}
 		HUD.show(.Progress)
 		Alamofire.request(.POST, PLConstants.getHttpAddress("api/stop_answer"), parameters: ["mid": matchData!.id], encoding: .URL, headers: nil)
+			.validate()
 			.responseJSON(completionHandler: { res in
 				HUD.hide()
 				if let err = res.result.error {
@@ -91,6 +93,7 @@ class MatchResultController: PLViewController {
 		} else if matchData == nil {
 			HUD.show(.Progress)
 			Alamofire.request(.GET, PLConstants.getHttpAddress("api/answering"))
+				.validate()
 				.responseJSON(completionHandler: { response in
 					HUD.hide()
 					if let err = response.result.error {
