@@ -281,9 +281,10 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 }
 
 func (s *Srv) handleWearableMessage(msg *InboxMessage) {
-	//head := msg.GetStr("head")
-	//loc := msg.GetStr("loc")
-	//status := msg.GetStr("status")
+	msg.SetCmd("wearableLoc")
+	for k,m := s.mDict {
+		m.OnMatchCmdArrived(msg)
+	}
 }
 
 func (s *Srv) handleArduinoMessage(msg *InboxMessage) {

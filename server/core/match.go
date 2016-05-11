@@ -244,6 +244,13 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		if player := m.getPlayer(msg.Address.String()); player != nil {
 			player.moving = false
 		}
+	case "wearableLoc":
+		if player := m.getPlayer(msg.Address.String()); player != nil {
+			loc, _ := strconv.Atoi(msg.GetStr("loc"))
+			if loc > 0 {
+				player.updateLoc(loc)
+			}
+		}
 	}
 }
 

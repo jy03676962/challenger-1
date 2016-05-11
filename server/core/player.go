@@ -2,6 +2,8 @@ package core
 
 import (
 	"log"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -26,6 +28,7 @@ type Player struct {
 	moving      bool
 	lastButton  string
 	lastHitTime time.Time
+	isSimulator bool
 }
 
 func NewPlayer(cid string) *Player {
@@ -35,10 +38,24 @@ func NewPlayer(cid string) *Player {
 	p.ControllerID = cid
 	p.LevelData = [4]int{0, 0, 0, 0}
 	p.lastHitTime = time.Unix(0, 0)
+	str := strconv.Itoa(InboxAddressTypeSimulatorDevice)
+	if string.HasPrefix(cid, str) {
+		p.isSimulator = true
+	} else {
+		p.isSimulator = false
+	}
 	return &p
 }
 
+func (p *Player) updateLoc(loc int) {
+	opt := GetOptions()
+	p.Pos := opt.RealPosition(opt.IntToTile(loc))
+}
+
 func (p *Player) UpdatePos(sec float64, options *MatchOptions) bool {
+	if p.isSimulator {
+		return false
+	}
 	if !p.moving {
 		return false
 	}
