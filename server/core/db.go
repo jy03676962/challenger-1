@@ -22,6 +22,7 @@ type PlayerData struct {
 	ID           uint      `json:"id"`
 	CreatedAt    time.Time `json:"createdAt"`
 	MatchID      int       `json:"-"`
+	ExternalID   string    `gorm:"index" json:"ExternalID"`
 	Name         string    `json:"name"`
 	Gold         int       `json:"gold"`
 	LostGold     int       `json:"lostGold"`
@@ -50,6 +51,7 @@ type MatchData struct {
 	RampageCount int             `json:"rampageCount"`
 	AnswerType   MatchAnswerType `json:"answerType"`
 	TeamID       string          `json:"teamID"`
+	ExternalID   string          `gorm:"index" json:"externalID"`
 }
 
 func (MatchData) TableName() string {
@@ -114,10 +116,27 @@ func (db *DB) updateQuestionInfo(pid int, qid string, aid string) *PlayerData {
 	return &player
 }
 
+func (db *DB) updatePlayerData(pid int, name string, uid string) *PlayerData {
+	var player PlayerData
+	db.conn.Where("id = ?", pid).First(&player)
+	player.Name = name
+	player.ExternalID = uid
+	db.conn.Save(&player)
+	return &player
+}
+
 func (db *DB) getAnsweringMatchData() *MatchData {
 	var data MatchData
 	if db.conn.Preload("Member").Where("answer_type = ?", MatchAnswering).First(&data).RecordNotFound() {
 		return nil
 	}
 	return &data
+}
+
+func (db *DB) updateMatchData(mid int, eid string) *MatchData {
+	var match MatchData
+	db.conn.Where("id = ?", mid).First(&match)
+	match.ExternalID = eid
+	db.conn.Save(&match)
+	return &match
 }

@@ -105,6 +105,19 @@ func (s *Srv) UpdateQuestionInfo(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
+func (s *Srv) UpdatePlayerData(c echo.Context) error {
+	pid, _ := strconv.Atoi(c.FormValue("pid"))
+	p := s.db.updatePlayerData(pid, c.FormValue("name"), c.FormValue("uid"))
+	s.sendMsgs("updatePlayerData", *p, InboxAddressTypeAdminDevice, InboxAddressTypePostgameDevice)
+	return c.JSON(http.StatusOK, nil)
+}
+
+func (s *Srv) UpdateMatchData(c echo.Context) error {
+	mid, _ := strconv.Atoi(c.FormValue("mid"))
+	s.db.updateMatchData(mid, c.FormValue("eid"))
+	return c.JSON(http.StatusOK, nil)
+}
+
 func (s *Srv) GetAnsweringMatchData(c echo.Context) error {
 	d := s.db.getAnsweringMatchData()
 	ret := make(map[string]interface{})
@@ -262,7 +275,15 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.handleArduinoMessage(msg)
 	case InboxAddressTypePostgameDevice:
 		s.handlePostGameMessage(msg)
+	case InboxAddressTypeWearableDevice:
+		s.handleWearableMessage(msg)
 	}
+}
+
+func (s *Srv) handleWearableMessage(msg *InboxMessage) {
+	//head := msg.GetStr("head")
+	//loc := msg.GetStr("loc")
+	//status := msg.GetStr("status")
 }
 
 func (s *Srv) handleArduinoMessage(msg *InboxMessage) {

@@ -304,6 +304,7 @@ func (m *Match) dumpMatchData() *MatchData {
 	m.matchData.RampageCount = m.RampageCount
 	m.matchData.AnswerType = MatchNotAnswer
 	m.matchData.TeamID = m.TeamID
+	m.matchData.ExternalID = ""
 	for _, player := range m.Member {
 		playerData := PlayerData{}
 		playerData.Gold = player.Gold
@@ -319,6 +320,7 @@ func (m *Match) dumpMatchData() *MatchData {
 		playerData.Name = ""
 		playerData.QuestionInfo = ""
 		playerData.Answered = 0
+		playerData.ExternalID = ""
 		playerData.ControllerID = player.ControllerID
 		m.matchData.Member = append(m.matchData.Member, playerData)
 	}

@@ -68,6 +68,12 @@ func main() {
 	ec.Get("/api/answering", func(c echo.Context) error {
 		return srv.GetAnsweringMatchData(c)
 	})
+	ec.Post("/api/update_player", func(c echo.Context) error {
+		return srv.UpdatePlayerData(c)
+	})
+	ec.Post("/api/update_match", func(c echo.Context) error {
+		return srv.UpdateMatchData(c)
+	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))
 }
