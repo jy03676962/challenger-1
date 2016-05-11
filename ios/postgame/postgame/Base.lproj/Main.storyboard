@@ -42,7 +42,6 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="textFieldValueChanged:" destination="H6z-UT-JCw" eventType="valueChanged" id="Fhq-54-baJ"/>
-                                            <action selector="usernameEditEnd:" destination="H6z-UT-JCw" eventType="editingDidEnd" id="U4n-4S-vNr"/>
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密码" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GoW-hv-DVq" userLabel="LoginTextField" customClass="LoginTextField" customModule="postgame" customModuleProvider="target">
@@ -62,7 +61,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="passwordEditEnd:" destination="H6z-UT-JCw" eventType="editingDidEnd" id="agJ-71-EJ2"/>
                                             <action selector="textFieldValueChanged:" destination="H6z-UT-JCw" eventType="valueChanged" id="9Z2-L5-zhf"/>
                                         </connections>
                                     </textField>

@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import AlamofireObjectMapper
 import AutoKeyboardScrollView
 import SVProgressHUD
 import EasyPeasy
@@ -54,14 +55,6 @@ class LoginViewController: PLViewController {
 		presentViewController(alert, animated: true, completion: nil)
 	}
 
-	@IBAction func usernameEditEnd(sender: UITextField) {
-		passwordTextField.becomeFirstResponder()
-	}
-
-	@IBAction func passwordEditEnd(sender: UITextField) {
-		login()
-	}
-
 	@IBAction func textFieldValueChanged(sender: UITextField) {
 		if usernameTextField.text?.characters.count > 0 && passwordTextField.text?.characters.count > 0 {
 			self.loginButton.enabled = true
@@ -72,14 +65,22 @@ class LoginViewController: PLViewController {
 
 	@IBAction func login() {
 		HUD.show(.Progress)
-		Alamofire.request(.GET, PLConstants.getWebsiteAddress("user/login"))
+		let p = [
+			"username": self.usernameTextField.text!,
+			"password": self.passwordTextField.text!
+		]
+		Alamofire.request(.POST, PLConstants.getWebsiteAddress("user/login"), parameters: p, encoding: .URL, headers: nil)
 			.validate()
-			.responseJSON(completionHandler: { response in
+			.responseObject(completionHandler: { (resp: Response<LoginModel, NSError>) in
 				HUD.hide()
-				if let value = response.result.value {
-					let code = value["code"] as! Int
-					if code == 0 {
+				if let _ = resp.result.error {
+					HUD.flash(.Error, delay: 2)
+				} else {
+					let m = resp.result.value!
+					if m.code != nil && m.code == 0 {
+						self.performSegueWithIdentifier(SegueIDShowMatchResult, sender: m)
 					} else {
+						HUD.flash(.LabeledError(title: m.error, subtitle: nil), delay: 2)
 					}
 				}
 		})
@@ -94,6 +95,7 @@ class LoginViewController: PLViewController {
 			let app = UIApplication.sharedApplication().delegate as! AppDelegate
 			vc.matchData = app.matchData
 			vc.isAdmin = false
+			vc.loginInfo = sender as? LoginModel
 		}
 	}
 }

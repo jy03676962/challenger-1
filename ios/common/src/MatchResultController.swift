@@ -24,6 +24,7 @@ class MatchResultController: PLViewController {
 		}
 	}
 	var playerData: PlayerData?
+	var loginInfo: LoginModel?
 	var isAdmin: Bool = false
 
 	@IBOutlet weak var headerImageView: UIImageView!
@@ -96,18 +97,20 @@ class MatchResultController: PLViewController {
 				.validate()
 				.responseJSON(completionHandler: { response in
 					HUD.hide()
-					if let err = response.result.error {
-						HUD.show(.LabeledError(title: err.localizedDescription, subtitle: nil))
+					if let _ = response.result.error {
+						self.showLoading()
 					} else if let d = response.result.value {
 						let code = d["code"] as! Int
 						if code == 0 {
 							self.matchData = Mapper<MatchData>().map(d["data"])
+							self.uploadAndRender()
+						} else {
+							self.showLoading()
 						}
-						self.renderData()
 					}
 			})
 		} else {
-			renderData()
+			uploadAndRender()
 		}
 	}
 
@@ -144,6 +147,23 @@ class MatchResultController: PLViewController {
 		}
 	}
 
+	func uploadAndRender() {
+		if let userInfo = self.loginInfo {
+			let p: [String: AnyObject] = [
+				"match_id": self.matchData!.id,
+				"user_id": userInfo.userID,
+				"username": userInfo.username,
+			]
+			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/adduser"), parameters: p, encoding: .URL, headers: nil)
+				.validate()
+				.responseObject(completionHandler: { (resp: Response<BaseModel, NSError>) in
+					self.renderData()
+			})
+		} else {
+			renderData()
+		}
+	}
+
 	func renderData() {
 		if let data = matchData {
 			HUD.hide()
@@ -167,9 +187,11 @@ class MatchResultController: PLViewController {
 					self.playersLabel[i].text = "\(pd.getName()): \(pd.answered)/\(Defaults[.qCount])"
 				}
 			}
-		} else {
-			HUD.show(.LabeledProgress(title: "等待数据中...", subtitle: nil))
 		}
+	}
+
+	func showLoading() {
+		HUD.show(.LabeledProgress(title: "等待数据中...", subtitle: nil))
 	}
 }
 

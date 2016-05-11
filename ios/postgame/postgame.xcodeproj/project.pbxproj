@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		700E0DBB1CC3936200411559 /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700E0DBA1CC3936200411559 /* LoginTextField.swift */; };
+		7010256E1CE18E8600064923 /* WebsiteModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7010256D1CE18E8600064923 /* WebsiteModels.swift */; };
 		701F50561CDF484300642645 /* ReplaceSeuge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50551CDF484300642645 /* ReplaceSeuge.swift */; };
 		701F50601CDF82B100642645 /* Survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F505F1CDF82B100642645 /* Survey.swift */; };
 		701F50641CDF83BC00642645 /* SurveyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50631CDF83BC00642645 /* SurveyController.swift */; };
@@ -37,6 +38,7 @@
 		3F1CED146C3899622F044FF1 /* Pods-postgame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-postgame.release.xcconfig"; path = "../Pods/Target Support Files/Pods-postgame/Pods-postgame.release.xcconfig"; sourceTree = "<group>"; };
 		472ED4E913FF918F0E347E60 /* Pods-postgame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-postgame.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-postgame/Pods-postgame.debug.xcconfig"; sourceTree = "<group>"; };
 		700E0DBA1CC3936200411559 /* LoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
+		7010256D1CE18E8600064923 /* WebsiteModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsiteModels.swift; sourceTree = "<group>"; };
 		701F50551CDF484300642645 /* ReplaceSeuge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplaceSeuge.swift; sourceTree = "<group>"; };
 		701F505F1CDF82B100642645 /* Survey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Survey.swift; sourceTree = "<group>"; };
 		701F50631CDF83BC00642645 /* SurveyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurveyController.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				701F50631CDF83BC00642645 /* SurveyController.swift */,
 				701F50671CDF92F200642645 /* QuestionViewController.swift */,
 				701F50691CDF930F00642645 /* QuestionTableViewCell.swift */,
+				7010256D1CE18E8600064923 /* WebsiteModels.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				709E97991CAA850B00A6F1F2 /* AppDelegate.swift in Sources */,
 				7099CE7F1CDF39290009B62E /* String+PL.swift in Sources */,
 				7099CE831CDF39290009B62E /* PLViewController.swift in Sources */,
+				7010256E1CE18E8600064923 /* WebsiteModels.swift in Sources */,
 				7099CE7D1CDF39290009B62E /* DataManager.swift in Sources */,
 				7099CE7E1CDF39290009B62E /* DefaultKeys.swift in Sources */,
 				70B91E401CC6306F00E98E53 /* LoginViewController.swift in Sources */,
