@@ -9,6 +9,7 @@ module.exports = {
     app: './src/app.jsx',
     api: './src/api.jsx',
     front: './src/front.jsx',
+    ingame: './src/ingame.jsx',
   },
   output: {
     path: path.join(__dirname, 'dist/js'),
@@ -31,6 +32,11 @@ module.exports = {
       template: 'src/assets/front.ejs',
       inject: false,
       filename: '../front.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/assets/ingame.ejs',
+      inject: false,
+      filename: '../ingame.html'
     }),
     new CleanWebpackPlugin(['dist'])
   ],
