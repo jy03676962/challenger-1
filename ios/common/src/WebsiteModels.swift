@@ -12,11 +12,27 @@ import ObjectMapper
 class BaseResult: Mappable {
 	var code: Int?
 	var error: String?
+	let codeTransform = TransformOf<Int, AnyObject>(fromJSON: { (value: AnyObject?) -> Int? in
+		if value == nil {
+			return 0
+		} else if let i = value as? Int {
+			return i
+		} else if let s = value as? String {
+			return Int(s)
+		} else {
+			return -1
+		}
+		}, toJSON: { (value: Int?) -> AnyObject? in
+		if let value = value {
+			return String(value)
+		}
+		return nil
+	})
 	required init?(_ map: Map) {
 	}
 
 	func mapping(map: Map) {
-		code <- map["code"]
+		code <- (map["code"], codeTransform)
 		error <- map["error"]
 	}
 }

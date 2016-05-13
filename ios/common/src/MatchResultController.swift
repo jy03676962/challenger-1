@@ -134,9 +134,6 @@ class MatchResultController: PLViewController {
 			stopAnswerButton.hidden = false
 			startSurveyButton.hidden = true
 			passSurveyButton.hidden = true
-			for label in self.playersLabel {
-				label.hidden = false
-			}
 		} else {
 			stopAnswerButton.hidden = true
 			startSurveyButton.hidden = false
@@ -183,8 +180,14 @@ class MatchResultController: PLViewController {
 					}
 				}
 			} else {
-				for (i, pd) in data.member.enumerate() {
-					self.playersLabel[i].text = "\(pd.getName()): \(pd.answered)/\(Defaults[.qCount])"
+				for (i, label) in self.playersLabel.enumerate() {
+					if i < data.member.count {
+						let pd = data.member[i]
+						label.text = "\(pd.getName()): \(pd.answered)/\(Defaults[.qCount])"
+						label.hidden = false
+					} else {
+						label.hidden = true
+					}
 				}
 			}
 		}

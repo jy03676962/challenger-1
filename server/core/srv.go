@@ -82,7 +82,7 @@ func (s *Srv) GetHistory(c echo.Context) error {
 
 func (s *Srv) MatchStartAnswer(c echo.Context) error {
 	mid, _ := strconv.Atoi(c.FormValue("mid"))
-	d := s.db.startAnswer(mid)
+	d := s.db.startAnswer(mid, c.FormValue("eid"))
 	s.sendMsgs("startAnswer", *d, InboxAddressTypePostgameDevice)
 	return c.JSON(http.StatusOK, d)
 }

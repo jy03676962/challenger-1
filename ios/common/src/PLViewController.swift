@@ -19,7 +19,6 @@ class PLViewController: UIViewController {
 		imageView <- Edges()
 		timeLabel = UILabel()
 		timeLabel.font = UIFont(name: PLConstants.usualFont, size: 30)
-		timeLabel.textColor = WsClient.singleton.didInit ? UIColor.whiteColor() : UIColor.redColor()
 		imageView.addSubview(timeLabel)
 		timeLabel <- [
 			CenterX(0),
@@ -30,6 +29,7 @@ class PLViewController: UIViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		timeLabel.textColor = WsClient.singleton.didInit ? UIColor.whiteColor() : UIColor.redColor()
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsInited), name: WsClient.WsInitedNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsConnecting), name: WsClient.WsConnectingNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsDisconnected), name: WsClient.WsDisconnectedNotification, object: nil)

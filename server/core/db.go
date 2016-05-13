@@ -92,10 +92,11 @@ func (db *DB) getHistory(count int) []MatchData {
 	return matches
 }
 
-func (db *DB) startAnswer(mid int) *MatchData {
+func (db *DB) startAnswer(mid int, eid string) *MatchData {
 	var match MatchData
 	db.conn.Preload("Member").Where("id = ?", mid).First(&match)
 	match.AnswerType = MatchAnswering
+	match.ExternalID = eid
 	db.conn.Save(&match)
 	return &match
 }

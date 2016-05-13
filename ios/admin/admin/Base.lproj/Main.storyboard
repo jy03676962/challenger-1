@@ -1084,7 +1084,6 @@
                                             <constraint firstAttribute="width" constant="200" id="ei6-Fd-8ei"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="lXt-YR-Nj2"/>
                                         </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -1093,7 +1092,6 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="bfQ-At-Vj9"/>
                                         </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>

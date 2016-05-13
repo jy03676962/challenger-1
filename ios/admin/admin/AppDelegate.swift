@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UITabBar.appearance().barTintColor = UIColor.clearColor()
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
-		Defaults[.host] = "localhost:3000"
+		Defaults[.host] = "192.168.1.4:3000"
 		Defaults[.deviceID] = "admin"
 		Defaults[.socketType] = "1"
 		Defaults[.matchID] = 0
