@@ -11,12 +11,13 @@ import (
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "localhost:4040")
+	conn, err := net.Dial("tcp", "localhost:4000")
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)
 	}
-	ch := make(chan string)
+	ch := make(chan string, 1)
+	ch <- "[UR]0000[ID]TCPTester[MD]00"
 	go read(conn, ch)
 	go write(conn, ch)
 	for {

@@ -241,6 +241,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 			controller.Online = false
 			controller.ScoreUpdated = false
 		}
+		s.sendMsgs("removeTCP", msg.RemoveAddress, InboxAddressTypeArduinoTestDevice)
 	}
 
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsArduinoControllerType() {
@@ -253,6 +254,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		} else {
 			log.Printf("Warning: get arduino connection not belong to list:%v\n", msg.AddAddress.String())
 		}
+		s.sendMsgs("addTCP", msg.AddAddress, InboxAddressTypeArduinoTestDevice)
 	}
 
 	if msg.Address == nil {
@@ -282,7 +284,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 
 func (s *Srv) handleWearableMessage(msg *InboxMessage) {
 	msg.SetCmd("wearableLoc")
-	for k,m := s.mDict {
+	for _, m := range s.mDict {
 		m.OnMatchCmdArrived(msg)
 	}
 }
@@ -294,6 +296,9 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		if controller := s.aDict[msg.Address.String()]; controller != nil {
 			controller.ScoreUpdated = true
 		}
+	}
+	if msg.GetCmd() != "init" {
+		s.sends(msg, InboxAddressTypeArduinoTestDevice)
 	}
 }
 
@@ -324,7 +329,7 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 }
 
 func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
-	s.send(msg, []InboxAddress{InboxAddress{InboxAddressTypeSubArduinoDevice, ""}, InboxAddress{InboxAddressTypeMainArduinoDevice, ""}})
+	s.sends(msg, InboxAddressTypeSubArduinoDevice, InboxAddressTypeMainArduinoDevice, InboxAddressTypeArduinoTestDevice)
 }
 
 func (s *Srv) handlePostGameMessage(msg *InboxMessage) {
@@ -405,7 +410,7 @@ func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string, 
 	for _, id := range controllerIDs {
 		s.pDict[id].MatchID = mid
 	}
-	m := NewMatch(s, controllerIDs, md, mode, teamID)
+	m := NewMatch(s, controllerIDs, md, mode, teamID, isSimulator)
 	s.mDict[mid] = m
 	go m.Run()
 	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)

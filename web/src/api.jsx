@@ -27,13 +27,18 @@ class Api {
       this._reset()
       return
     }
-    let uri = wsAddressWithPath('api')
+    let uri = wsAddressWithPath('ws')
     let sock = new WebSocket(uri)
     console.log('socket is ' + uri)
     this.state = 'connecting...'
     sock.onopen = () => {
       console.log('connected to ' + uri)
-      this.state = 'connected'
+      let data = {
+        cmd: 'init',
+        ID: 'api_test',
+        TYPE: '3',
+      }
+      sock.send(JSON.stringify(data))
     }
     sock.onclose = (e) => {
       console.log('connection closed (' + e.code + ')')
@@ -48,15 +53,14 @@ class Api {
     console.log('got socket message: ' + msg)
     let data = JSON.parse(msg)
     switch (data.cmd) {
+      case 'init':
+        this.state = 'connected'
       case 'addTCP':
-        this.addr = data.addr
-        this.log = `新连接: ${this.addr}\n` + this.log
+        this.addr = data.data
+        this.log = `新连接: ${this.addr.id}\n` + this.log
         break
-      case 'delTCP':
+      case 'removeTCP':
         this._reset()
-        break
-      case 'errTCP':
-        this.log = `错误: ${data.msg}\n` + this.log
         break
       default:
         this.addr = data.addr
@@ -73,12 +77,13 @@ class Api {
 const ApiView = CSSModules(observer(React.createClass({
   render() {
     let c = this.props.api.state == 'connected' ? '断开' : '连接'
+    let a = this.props.api.addr == null ? '' : this.props.api.addr.id
     return (
       <div styleName='root'>
         <div styleName='left'>
           <div styleName='block'>
             <label styleName='content'>地址</label>
-            <label>{this.props.api.addr}</label>
+            <label>{a}</label>
             <label styleName='content'>状态</label>
             <label>{this.props.api.state}</label>
             <button onClick={this.connect}>{c}</button>
@@ -104,6 +109,10 @@ const ApiView = CSSModules(observer(React.createClass({
           <div styleName='block'>
             <label styleName='title'>按键</label>
             <input type='checkbox' ref='btn'/>可用<br/>
+            <label styleName='content'>mode</label>
+            <input type='text' ref='btn_mode'></input><br/>
+            <label styleName='content'>stage</label>
+            <input type='text' ref='btn_stage'></input><br/>
             <button onClick={this.btnCtrl}>发送</button>
           </div>
           <div styleName='block'>
@@ -158,7 +167,9 @@ const ApiView = CSSModules(observer(React.createClass({
   btnCtrl: function(e) {
     let d = {
       cmd: 'btn_ctrl',
-      useful: this.refs.btn.checked ? '1' : '0'
+      useful: this.refs.btn.checked ? '1' : '0',
+      mode: this.refs.btn_mode.value,
+      stage: this.refs.btn_stage.value,
     }
     this.props.api.send(d)
   },
