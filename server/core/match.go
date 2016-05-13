@@ -50,14 +50,15 @@ type Match struct {
 	msgCh         chan *InboxMessage
 	closeCh       chan bool
 	matchData     *MatchData
+	isSimulator   bool
 }
 
-func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string) *Match {
+func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string, isSimulator bool) *Match {
 	m := Match{}
 	m.srv = s
 	m.Member = make([]*Player, len(controllerIDs))
 	for i, id := range controllerIDs {
-		m.Member[i] = NewPlayer(id)
+		m.Member[i] = NewPlayer(id, isSimulator)
 	}
 	m.ID = matchData.ID
 	m.matchData = matchData
@@ -68,6 +69,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.closeCh = make(chan bool)
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
+	m.isSimulator = isSimulator
 	return &m
 }
 

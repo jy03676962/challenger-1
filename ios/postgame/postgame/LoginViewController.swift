@@ -71,7 +71,7 @@ class LoginViewController: PLViewController {
 		]
 		Alamofire.request(.POST, PLConstants.getWebsiteAddress("user/login"), parameters: p, encoding: .URL, headers: nil)
 			.validate()
-			.responseObject(completionHandler: { (resp: Response<LoginModel, NSError>) in
+			.responseObject(completionHandler: { (resp: Response<LoginResult, NSError>) in
 				HUD.hide()
 				if let _ = resp.result.error {
 					HUD.flash(.Error, delay: 2)
@@ -95,7 +95,7 @@ class LoginViewController: PLViewController {
 			let app = UIApplication.sharedApplication().delegate as! AppDelegate
 			vc.matchData = app.matchData
 			vc.isAdmin = false
-			vc.loginInfo = sender as? LoginModel
+			vc.loginInfo = sender as? LoginResult
 		}
 	}
 }

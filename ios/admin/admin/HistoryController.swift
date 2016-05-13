@@ -26,29 +26,41 @@ class HistoryController: PLViewController {
 			return
 		}
 		let matchData = data![indexPaths![0].row]
-		HUD.show(.Progress)
-		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id], encoding: .URL, headers: nil)
-			.validate()
-			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
-				HUD.hide()
-				let md = response.result.value
-				if self.data != nil && md != nil {
-					for (i, d) in self.data!.enumerate() {
-						if d.id == md!.id {
-							self.data![i] = md!
-							break
+		if matchData.eid != nil && matchData.eid != "" {
+			self.startAnswerAfterAdd(matchData)
+		} else {
+			HUD.show(.Progress)
+			let p: [String: AnyObject] = [
+				"mode": matchData.mode == "g" ? 0 : 1,
+				"time": Int(matchData.elasped),
+				"gold": matchData.gold,
+				"player_num": matchData.member.count
+			]
+			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/match"), parameters: p, encoding: .URL, headers: nil)
+				.validate()
+				.responseObject(completionHandler: { (response: Response<AddMatchResult, NSError>) in
+					HUD.hide()
+					if let err = response.result.error {
+						HUD.flash(.LabeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
+					} else {
+						if response.result.value?.code != 0 {
+							HUD.flash(.LabeledError(title: response.result.value?.error, subtitle: nil), delay: 2)
+						} else {
+							matchData.eid = String(response.result.value!.matchID)
+							self.startAnswerAfterAdd(matchData)
 						}
 					}
-				}
-				self.performSegueWithIdentifier(segueIDPresentMatchResult, sender: matchData)
-		})
+			})
+		}
 	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		refreshControl = UIRefreshControl()
 		refreshControl.addTarget(self, action: #selector(refreshHistory), forControlEvents: .ValueChanged)
 		tableView.addSubview(refreshControl)
 	}
+
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		refreshHistory()
@@ -63,6 +75,20 @@ class HistoryController: PLViewController {
 					self.tableView.reloadData()
 				}
 				self.refreshControl.endRefreshing()
+		})
+	}
+
+	func startAnswerAfterAdd(matchData: MatchData) {
+		HUD.show(.Progress)
+		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id, "eid": matchData.eid!], encoding: .URL, headers: nil)
+			.validate()
+			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
+				HUD.hide()
+				if let err = response.result.error {
+					HUD.flash(.LabeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
+				} else {
+					self.performSegueWithIdentifier(segueIDPresentMatchResult, sender: matchData)
+				}
 		})
 	}
 

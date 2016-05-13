@@ -25,6 +25,7 @@ class PlayerData: Mappable {
 	var questionInfo: String!
 	var answered: Int!
 	var questionCount: Int!
+	var eid: String?
 	required init?(_ map: Map) {
 	}
 
@@ -44,6 +45,7 @@ class PlayerData: Mappable {
 		questionInfo <- map["questionInfo"]
 		answered <- map["answered"]
 		questionCount <- map["questionCount"]
+		eid <- map["eid"]
 	}
 
 	func getName() -> String {
@@ -69,6 +71,7 @@ class MatchData: Mappable {
 	var rampageCount: Int!
 	var answerType: MatchAnswerType!
 	var teamID: String!
+	var eid: String?
 
 	required init?(_ map: Map) {
 	}
@@ -83,6 +86,7 @@ class MatchData: Mappable {
 		rampageCount <- map["rampageCount"]
 		answerType <- map["answerType"]
 		teamID <- map["teamID"]
+		eid <- map["eid"]
 	}
 }
 

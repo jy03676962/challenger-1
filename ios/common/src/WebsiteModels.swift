@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-class BaseModel: Mappable {
+class BaseResult: Mappable {
 	var code: Int?
 	var error: String?
 	required init?(_ map: Map) {
@@ -21,7 +21,7 @@ class BaseModel: Mappable {
 	}
 }
 
-class LoginModel: BaseModel {
+class LoginResult: BaseResult {
 	var username: String!
 	var userID: Int!
 	var currentCoin: Int!
@@ -34,5 +34,16 @@ class LoginModel: BaseModel {
 		username <- map["username"]
 		userID <- map["user_id"]
 		currentCoin <- map["current_coin"]
+	}
+}
+
+class AddMatchResult: BaseResult {
+	var matchID: Int!
+	required init?(_ map: Map) {
+		super.init(map)
+	}
+	override func mapping(map: Map) {
+		super.mapping(map)
+		matchID <- map["match_id"]
 	}
 }

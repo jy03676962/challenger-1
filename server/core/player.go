@@ -2,8 +2,6 @@ package core
 
 import (
 	"log"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -31,19 +29,14 @@ type Player struct {
 	isSimulator bool
 }
 
-func NewPlayer(cid string) *Player {
+func NewPlayer(cid string, isSimulator bool) *Player {
 	p := Player{}
 	p.Pos = RP{0, 0}
 	p.Direction = "up"
 	p.ControllerID = cid
 	p.LevelData = [4]int{0, 0, 0, 0}
 	p.lastHitTime = time.Unix(0, 0)
-	str := strconv.Itoa(InboxAddressTypeSimulatorDevice)
-	if string.HasPrefix(cid, str) {
-		p.isSimulator = true
-	} else {
-		p.isSimulator = false
-	}
+	p.isSimulator = isSimulator
 	return &p
 }
 

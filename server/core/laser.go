@@ -7,6 +7,8 @@ import (
 
 var _ = log.Printf
 
+var catchByPos = false
+
 type Laser struct {
 	Pos     RP   `json:"pos"`
 	IsPause bool `json:"isPause"`
@@ -128,25 +130,27 @@ func (l *Laser) Tick(dt float64) {
 		H: size,
 	}
 	shouldPause := false
-	for _, player := range l.match.Member {
-		if player.InvincibleTime > 0 {
-			continue
-		}
-		playerSize := float64(l.getOpt().PlayerSize)
-		playerRect := Rect{player.Pos.X - playerSize/2, player.Pos.Y - playerSize/2, playerSize, playerSize}
-		if l.getOpt().Collide(&rect, &playerRect) {
-			shouldPause = true
-			player.InvincibleTime = l.getOpt().PlayerInvincibleTime
-			player.HitCount += 1
-			var punish int
-			if l.match.Mode == "g" {
-				punish = int(float64(l.match.Gold) * l.getOpt().Mode1TouchPunish)
-			} else {
-				punish = l.getOpt().Mode2TouchPunish
+	if catchByPos || l.match.isSimulator {
+		for _, player := range l.match.Member {
+			if player.InvincibleTime > 0 {
+				continue
 			}
-			l.match.Gold = MaxInt(l.match.Gold-punish, 0)
-			player.Gold -= punish
-			player.LostGold += punish
+			playerSize := float64(l.getOpt().PlayerSize)
+			playerRect := Rect{player.Pos.X - playerSize/2, player.Pos.Y - playerSize/2, playerSize, playerSize}
+			if l.getOpt().Collide(&rect, &playerRect) {
+				shouldPause = true
+				player.InvincibleTime = l.getOpt().PlayerInvincibleTime
+				player.HitCount += 1
+				var punish int
+				if l.match.Mode == "g" {
+					punish = int(float64(l.match.Gold) * l.getOpt().Mode1TouchPunish)
+				} else {
+					punish = l.getOpt().Mode2TouchPunish
+				}
+				l.match.Gold = MaxInt(l.match.Gold-punish, 0)
+				player.Gold -= punish
+				player.LostGold += punish
+			}
 		}
 	}
 	if shouldPause {

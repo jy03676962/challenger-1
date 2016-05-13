@@ -22,7 +22,7 @@ type PlayerData struct {
 	ID           uint      `json:"id"`
 	CreatedAt    time.Time `json:"createdAt"`
 	MatchID      int       `json:"-"`
-	ExternalID   string    `gorm:"index" json:"ExternalID"`
+	ExternalID   string    `gorm:"index" json:"eid"`
 	Name         string    `json:"name"`
 	Gold         int       `json:"gold"`
 	LostGold     int       `json:"lostGold"`
@@ -51,7 +51,7 @@ type MatchData struct {
 	RampageCount int             `json:"rampageCount"`
 	AnswerType   MatchAnswerType `json:"answerType"`
 	TeamID       string          `json:"teamID"`
-	ExternalID   string          `gorm:"index" json:"externalID"`
+	ExternalID   string          `gorm:"index" json:"eid"`
 }
 
 func (MatchData) TableName() string {

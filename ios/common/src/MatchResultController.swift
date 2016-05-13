@@ -24,7 +24,7 @@ class MatchResultController: PLViewController {
 		}
 	}
 	var playerData: PlayerData?
-	var loginInfo: LoginModel?
+	var loginInfo: LoginResult?
 	var isAdmin: Bool = false
 
 	@IBOutlet weak var headerImageView: UIImageView!
@@ -156,7 +156,7 @@ class MatchResultController: PLViewController {
 			]
 			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/adduser"), parameters: p, encoding: .URL, headers: nil)
 				.validate()
-				.responseObject(completionHandler: { (resp: Response<BaseModel, NSError>) in
+				.responseObject(completionHandler: { (resp: Response<BaseResult, NSError>) in
 					self.renderData()
 			})
 		} else {
