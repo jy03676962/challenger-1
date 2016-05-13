@@ -42,7 +42,7 @@ func NewPlayer(cid string, isSimulator bool) *Player {
 
 func (p *Player) updateLoc(loc int) {
 	opt := GetOptions()
-	p.Pos := opt.RealPosition(opt.IntToTile(loc))
+	p.Pos = opt.RealPosition(opt.IntToTile(loc))
 }
 
 func (p *Player) UpdatePos(sec float64, options *MatchOptions) bool {
