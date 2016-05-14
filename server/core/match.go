@@ -76,16 +76,18 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 func (m *Match) Run() {
 	dt := 33 * time.Millisecond
 	tickChan := time.Tick(dt)
-	m.Stage = "warmup"
-	m.WarmupTime = m.opt.Warmup
 	if m.Mode == "g" {
 		m.TotalTime = m.opt.Mode1TotalTime
 	} else {
 		m.Gold = m.opt.Mode2InitGold[len(m.Member)-1]
 	}
-	for _, member := range m.Member {
-		member.Pos = m.opt.RealPosition(m.opt.ArenaEntrance)
+	if m.isSimulator {
+		for _, member := range m.Member {
+			member.Pos = m.opt.RealPosition(m.opt.ArenaEntrance)
+		}
 	}
+	m.WarmupTime = m.opt.Warmup
+	m.setStage("warmup-1")
 	for {
 		<-tickChan
 		m.handleInputs()
@@ -115,15 +117,12 @@ func (m *Match) tick(dt time.Duration) {
 	sec := dt.Seconds()
 	m.Elasped += sec
 	if m.Mode == "g" {
-		m.TotalTime -= sec
+		m.TotalTime = math.Max(m.TotalTime-sec, 0)
 	}
-	if m.Stage == "warmup" {
-		m.WarmupTime -= sec
-		if m.WarmupTime <= 0 {
-			m.WarmupTime = 0
-			m.enterOngoing()
-		}
-	} else if m.Stage == "ongoing" {
+	if m.isWarmup() {
+		m.WarmupTime = math.Max(m.WarmupTime-sec, 0)
+	} else if m.isOngoing() {
+		m.RampageTime = math.Max(m.RampageTime-sec, 0)
 		if m.Mode == "s" && m.goldDropTime > 0 {
 			m.goldDropTime -= sec
 			if m.goldDropTime <= 0 {
@@ -145,51 +144,114 @@ func (m *Match) tick(dt time.Duration) {
 	for _, laser := range m.Lasers {
 		laser.Tick(sec)
 	}
-	m.checkRampage(sec)
-	if m.Mode == "g" && m.TotalTime <= 0 || m.Mode == "s" && m.Gold <= 0 {
-		m.enterAfter()
-	}
+	m.updateStage()
 }
 
-func (m *Match) enterOngoing() {
-	m.Stage = "ongoing"
-	if m.Mode == "s" {
-		m.goldDropTime = m.opt.Mode2GoldDropInterval
+func (m *Match) setStage(s string) {
+	if m.Stage == s {
+		return
 	}
-	m.initLasers()
-	m.initButtons()
-}
-
-func (m *Match) checkRampage(sec float64) {
-	if m.RampageTime > 0 {
-		m.RampageTime = math.Max(m.RampageTime-sec, 0)
-		if m.RampageTime == 0 {
-			m.leaveRampage()
+	switch s {
+	case "warmup-1":
+		m.srv.ledControl(1, "3")
+		m.srv.ledControl(2, "23")
+	case "warmup-2":
+		m.srv.ledControl(3, "4", 1, 2, 3)
+	case "ongoing-low":
+		if m.Stage == "ongoing-rampage" {
+			m.initButtons()
+		} else if m.isWarmup() {
+			if m.Mode == "s" {
+				m.goldDropTime = m.opt.Mode2GoldDropInterval
+			}
+			m.initLasers()
+			m.initButtons()
 		}
-	} else if m.Energy >= m.opt.MaxEnergy {
+		m.srv.ledControl(3, "5")
+	case "ongoing-high":
+	case "ongoing-full":
+	case "ongoing-rampage":
+		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
+		for i := 0; i < len(m.opt.Buttons); i++ {
+			k := strconv.Itoa(i)
+			m.OnButtons[k] = true
+		}
+		for _, laser := range m.Lasers {
+			laser.IsPause = true
+			laser.pauseTime = m.RampageTime
+		}
+		m.offButtons = make([]string, 0)
+		m.Energy = 0
+		m.RampageCount += 1
+		for _, player := range m.Member {
+			player.Combo = 0
+			player.lastHitTime = time.Unix(0, 0)
+		}
+	case "ongoing-countdown":
+	case "after":
+	}
+	m.Stage = s
+}
+
+func (m *Match) updateStage() {
+	if m.RampageTime > 0 {
+		m.setStage("ongoing-rampage")
+		return
+	}
+	if m.WarmupTime > 0 {
+		if m.WarmupTime <= m.opt.Warmup-m.opt.WarmupFirstStage {
+			m.setStage("warmup-2")
+		} else {
+			m.setStage("warmup-1")
+		}
+		return
+	}
+	s := m.Stage
+	r := m.Energy / m.opt / MaxEnergy
+	if r < 0.8 {
+		s = "ongoing-low"
+	} else if r < 1 {
+		s = "ongoing-high"
+	} else {
 		if len(m.Member) == 1 {
-			m.enterRampage()
+			s == "ongoing-rampage"
 		} else {
 			together := true
-			p, pBool := m.opt.TilePosition(m.Member[0].Pos)
-			if pBool {
+			if m.isSimulator {
+				p, pBool := m.opt.TilePosition(m.Member[0].Pos)
+				if pBool {
+					for i := 1; i < len(m.Member); i++ {
+						pp, ppBool := m.opt.TilePosition(m.Member[i].Pos)
+						if !ppBool || pp.X != p.X || pp.Y != p.Y {
+							together = false
+							break
+						}
+					}
+				} else {
+					together = false
+				}
+			} else {
+				tp := m.Member[0].tilePos
 				for i := 1; i < len(m.Member); i++ {
-					pp, ppBool := m.opt.TilePosition(m.Member[i].Pos)
-					if !ppBool || pp.X != p.X || pp.Y != p.Y {
+					if m.Member[i].tilePos.X != tp.X || m.Member[i].tilePos.Y != tp.Y {
 						together = false
-						break
 					}
 				}
-				if together {
-					m.enterRampage()
-				}
+			}
+			if together {
+				s = "ongoing-rampage"
+			} else {
+				s = "ongoing-full"
 			}
 		}
 	}
-}
-
-func (m *Match) enterAfter() {
-	m.Stage = "after"
+	if m.Mode == "g" && m.opt.Mode1TotalTime-m.opt.Mode1CountDown < m.Elasped {
+		s = "ongoing-countdown"
+	}
+	if m.Mode == "g" && m.TotalTime <= 0 || m.Mode == "s" && m.Gold <= 0 {
+		s = "after"
+	}
+	m.setStage(s)
 }
 
 func (m *Match) sync() {
@@ -294,7 +356,7 @@ func (m *Match) playerTick(player *Player, sec float64) {
 		player.InvincibleTime = math.Max(player.InvincibleTime-sec, 0)
 	}
 	moved := player.UpdatePos(sec, m.opt)
-	if m.Stage != "ongoing" {
+	if !m.isOngoing() {
 		return
 	}
 	if moved && player.Button != "" {
@@ -431,25 +493,10 @@ func (m *Match) consumeButton(btn string, player *Player) {
 	m.hiddenButtons[key] = t
 }
 
-func (m *Match) enterRampage() {
-	m.RampageTime = m.opt.RampageTime[m.modeIndex()]
-	for i := 0; i < len(m.opt.Buttons); i++ {
-		k := strconv.Itoa(i)
-		m.OnButtons[k] = true
-	}
-	for _, laser := range m.Lasers {
-		laser.IsPause = true
-		laser.pauseTime = m.RampageTime
-	}
-	m.offButtons = make([]string, 0)
-	m.Energy = 0
-	m.RampageCount += 1
-	for _, player := range m.Member {
-		player.Combo = 0
-		player.lastHitTime = time.Unix(0, 0)
-	}
+func (m *Match) isWarmup() {
+	return strings.HasPrefix(m.Stage, "warmup")
 }
 
-func (m *Match) leaveRampage() {
-	m.initButtons()
+func (m *Match) isOngoing() {
+	return strings.HasPrefix(m.Stage, "ongoing")
 }

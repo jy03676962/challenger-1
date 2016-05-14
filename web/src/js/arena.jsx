@@ -62,7 +62,7 @@ const ArenaInfoBar = CSSModules(observer(React.createClass({
       }
     }
     let combo = player ? player.combo : 0
-    if (match.stage == 'warmup') {
+    if (match.stage.startsWith('warmup')) {
       let left = match.warmupTime.toFixed(1)
       msg = '预热阶段'
       timeText = `还剩${left}秒`

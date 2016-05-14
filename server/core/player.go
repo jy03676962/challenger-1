@@ -27,6 +27,7 @@ type Player struct {
 	lastButton  string
 	lastHitTime time.Time
 	isSimulator bool
+	tilePos     P
 }
 
 func NewPlayer(cid string, isSimulator bool) *Player {

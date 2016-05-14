@@ -51,6 +51,7 @@ type MatchOptions struct {
 	ArenaCellSize     int        `json:"arenaCellSize"`
 	ArenaBorder       int        `json:"arenaBorder"`
 	Warmup            float64    `json:"warmup"`
+	WarmupFirstStage  float64    `json:"warmup1"`
 	ArenaEntrance     P          `json:"arenaEntrance"`
 	ArenaExit         P          `json:"arenaExit"`
 	PlayerSize        float64    `json:"playerSize"`
@@ -67,6 +68,7 @@ type MatchOptions struct {
 	Mode2GoldDropRate [4]int     `json:"mode2GoldDropRate"`
 	MaxEnergy         float64    `json:"maxEnergy"`
 	Mode1TotalTime    float64    `json:"mode1TotalTime"`
+	Mode1CountDown    float64    `json:"mode1CountDown"`
 	WallRects         []Rect     `json:"walls"`
 	Buttons           []*Button  `json:"buttons"`
 
@@ -358,4 +360,14 @@ func (m *MatchOptions) laserSpeed(energy float64) float64 {
 	level := int(energy / m.EnergySpeedup)
 	speed := m.LaserSpeed - float64(level)*m.LaserSpeedup
 	return float64(m.ArenaCellSize) / 10 / speed
+}
+
+func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
+	ret := make([]string, 0)
+	for ma := range m.MainArduino {
+		if ma[2:3] == strconv.Itoa(x) && ma[4:5] == strconv.Itoa(y) {
+			ret = append(ret, ma)
+		}
+	}
+	return ret
 }

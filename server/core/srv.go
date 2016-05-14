@@ -245,8 +245,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 	}
 
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsArduinoControllerType() {
-		ac := NewArduinoController(*msg.AddAddress)
-		if controller := s.aDict[ac.ID]; controller != nil {
+		if controller := s.aDict[msg.AddAddress.String()]; controller != nil {
 			controller.Online = true
 			if controller.NeedUpdateScore() {
 				s.updateArduinoControllerScore(controller)
@@ -454,6 +453,49 @@ func (s *Srv) sends(msg *InboxMessage, types ...InboxAddressType) {
 		addrs[i] = InboxAddress{t, ""}
 	}
 	s.send(msg, addrs)
+}
+
+// wall参数, 1主墙, 2小墙, 3二者同时
+func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
+	if wall&1 > 0 {
+		m := NewInboxMessage()
+		m.SetCmd("led_ctrl")
+		li := make([]map[string]string, 0)
+		if ledT == nil {
+			li = append(li, map[string]string{"wall": "M", "let_t": "1", "mode": mode})
+		} else {
+			for t := range ledT {
+				li = append(li, map[string]string{"wall": "M", "let_t": t, "mode": mode})
+			}
+		}
+		m.Set("led", li)
+		s.sends(m, InboxAddressTypeMainArduinoDevice)
+	}
+	if wall&2 > 0 {
+		m := NewInboxMessage()
+		m.SetCmd("led_ctrl")
+		li := make([]map[string]string, 0)
+		li = append(li, map[string]string{"wall": "O1", "let_t": "1", "mode": mode})
+		li = append(li, map[string]string{"wall": "O2", "let_t": "1", "mode": mode})
+		li = append(li, map[string]string{"wall": "O3", "let_t": "1", "mode": mode})
+		m.Set("led", li)
+		s.sends(m, InboxAddressTypeSubArduinoDevice)
+	}
+}
+
+func (s *Srv) ledControlByCell(x int, y int, mode string) {
+	ids := GetOptions().mainArduinosByPos(x, y)
+	m := NewInboxMessage()
+	m.SetCmd("led_ctrl")
+	m.Set("led", map[string]string{"wall": "M", "let_t": "1", "mode": mode})
+	if len(ids) == 0 {
+		return
+	}
+	addrs := make([]InboxAddress, len(ids))
+	for i, id := range ids {
+		addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
+	}
+	s.send(m, addrs)
 }
 
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
