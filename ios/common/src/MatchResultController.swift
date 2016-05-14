@@ -18,14 +18,21 @@ let SegueIDShowSurvey = "ShowSurvey"
 class MatchResultController: PLViewController {
 	var matchData: MatchData? {
 		didSet {
-			if self.viewIfLoaded != nil {
-				renderData()
+			if let data = matchData {
+				for pd in data.member {
+					if pd.cid.componentsSeparatedByString(":")[1] == Defaults[.deviceID] {
+						self.playerData = pd
+					}
+				}
 			}
 		}
 	}
 	var playerData: PlayerData?
 	var loginInfo: LoginResult?
 	var isAdmin: Bool = false
+	var showAnswerStatus: Bool {
+		return isAdmin
+	}
 
 	@IBOutlet weak var headerImageView: UIImageView!
 	@IBOutlet weak var tableHeaderImageView: UIImageView!
@@ -88,8 +95,8 @@ class MatchResultController: PLViewController {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		adjustViews()
+		DataManager.singleton.subscribeData([.UpdatePlayerData], receiver: self)
 		if isAdmin {
-			DataManager.singleton.subscribeData([.UpdatePlayerData], receiver: self)
 			renderData()
 		} else if matchData == nil {
 			HUD.show(.Progress)
@@ -98,14 +105,14 @@ class MatchResultController: PLViewController {
 				.responseJSON(completionHandler: { response in
 					HUD.hide()
 					if let _ = response.result.error {
-						self.showLoading()
+						self.waitingData()
 					} else if let d = response.result.value {
 						let code = d["code"] as! Int
 						if code == 0 {
 							self.matchData = Mapper<MatchData>().map(d["data"])
 							self.uploadAndRender()
 						} else {
-							self.showLoading()
+							self.waitingData()
 						}
 					}
 			})
@@ -116,9 +123,7 @@ class MatchResultController: PLViewController {
 
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
-		if isAdmin {
-			DataManager.singleton.unsubscribe(self)
-		}
+		DataManager.singleton.unsubscribe(self)
 	}
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -154,11 +159,21 @@ class MatchResultController: PLViewController {
 			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/adduser"), parameters: p, encoding: .URL, headers: nil)
 				.validate()
 				.responseObject(completionHandler: { (resp: Response<BaseResult, NSError>) in
-					self.renderData()
+					log.debug(resp.debugDescription)
 			})
-		} else {
-			renderData()
+			if let pd = playerData {
+				Alamofire.request(.POST,
+					PLConstants.getHttpAddress("api/update_player"),
+					parameters: ["pid": String(pd.id), "name": userInfo.username, "eid": String(userInfo.userID)],
+					encoding: .URL,
+					headers: nil)
+					.validate()
+					.responseData(completionHandler: { resp in
+						log.debug(resp.debugDescription)
+				})
+			}
 		}
+		renderData()
 	}
 
 	func renderData() {
@@ -173,17 +188,11 @@ class MatchResultController: PLViewController {
 			}
 			teamIDLabel.text = data.teamID
 			playerTableView.reloadData()
-			if !isAdmin {
-				for pd in data.member {
-					if pd.cid.componentsSeparatedByString(":")[1] == Defaults[.deviceID] {
-						self.playerData = pd
-					}
-				}
-			} else {
+			if isAdmin {
 				for (i, label) in self.playersLabel.enumerate() {
 					if i < data.member.count {
 						let pd = data.member[i]
-						label.text = "\(pd.getName()): \(pd.answered)/\(Defaults[.qCount])"
+						label.text = "\(pd.getName()): \(pd.answered) / \(Defaults[.qCount]) "
 						label.hidden = false
 					} else {
 						label.hidden = true
@@ -193,8 +202,9 @@ class MatchResultController: PLViewController {
 		}
 	}
 
-	func showLoading() {
-		HUD.show(.LabeledProgress(title: "等待数据中...", subtitle: nil))
+	func waitingData() {
+		DataManager.singleton.subscribeData([.StartAnswer], receiver: self)
+		HUD.show(.LabeledProgress(title: "等待数据中 ... ", subtitle: nil))
 	}
 }
 
@@ -220,14 +230,21 @@ extension MatchResultController: DataReceiver {
 		if type == .UpdatePlayerData {
 			if let data = matchData {
 				let playerData = Mapper<PlayerData>().map(json["data"])!
-				for (i, pd) in data.member.enumerate() {
-					if pd.id == playerData.id {
-						self.playersLabel[i].text = "\(playerData.getName()): \(playerData.answered)/\(Defaults[.qCount])"
-						data.member[i] = playerData
-						break
+				if showAnswerStatus {
+					for (i, pd) in data.member.enumerate() {
+						if pd.id == playerData.id {
+							self.playersLabel[i].text = "\(playerData.getName()): \(playerData.answered) / \(Defaults[.qCount]) "
+							data.member[i] = playerData
+							break
+						}
 					}
 				}
+				self.playerTableView.reloadData()
 			}
+		} else if type == .StartAnswer {
+			HUD.hide()
+			matchData = Mapper<MatchData>().map(json["data"])
+			uploadAndRender()
 		}
 	}
 }

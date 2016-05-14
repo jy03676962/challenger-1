@@ -45,8 +45,10 @@ public class DataManager {
 	public func subscribeData(types: [DataType], receiver: DataReceiver) {
 		for type in types {
 			var list = receiversMap[type] ?? [DataReceiver]()
-			list.append(receiver)
-			receiversMap[type] = list
+			if !list.contains({ (rcv) -> Bool in rcv === receiver }) {
+				list.append(receiver)
+				receiversMap[type] = list
+			}
 			if type.shouldQuery {
 				WsClient.singleton.sendCmd(type.queryCmd)
 			}

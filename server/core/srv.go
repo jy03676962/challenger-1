@@ -107,7 +107,7 @@ func (s *Srv) UpdateQuestionInfo(c echo.Context) error {
 
 func (s *Srv) UpdatePlayerData(c echo.Context) error {
 	pid, _ := strconv.Atoi(c.FormValue("pid"))
-	p := s.db.updatePlayerData(pid, c.FormValue("name"), c.FormValue("uid"))
+	p := s.db.updatePlayerData(pid, c.FormValue("name"), c.FormValue("eid"))
 	s.sendMsgs("updatePlayerData", *p, InboxAddressTypeAdminDevice, InboxAddressTypePostgameDevice)
 	return c.JSON(http.StatusOK, nil)
 }

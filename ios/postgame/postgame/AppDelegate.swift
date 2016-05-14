@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var navi: UINavigationController? {
 		return window?.rootViewController as? UINavigationController
 	}
-	var matchData: MatchData?
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		#if DEBUG
@@ -29,12 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		#else
 			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
-		Defaults[.host] = "localhost:3000"
+		Defaults[.host] = "192.168.1.4:3000"
 		Defaults[.deviceID] = "1"
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0
 		Defaults[.websiteHost] = "puapi.hualinfor.com"
-		DataManager.singleton.subscribeData([.StartAnswer, .StopAnswer], receiver: self)
+		DataManager.singleton.subscribeData([.StopAnswer], receiver: self)
 		WsClient.singleton.connect(PLConstants.getWsAddress())
 		return true
 	}
@@ -47,15 +46,9 @@ extension AppDelegate: DataReceiver {
 				return
 			}
 			HUD.hide()
-			matchData = nil
 			let sb = UIStoryboard(name: "Main", bundle: nil)
 			let login = sb.instantiateViewControllerWithIdentifier("LoginViewController")
 			navi?.setViewControllers([login], animated: true)
-		} else if type == .StartAnswer {
-			matchData = Mapper<MatchData>().map(json["data"])
-			if let vc = navi?.visibleViewController as? MatchResultController {
-				vc.matchData = matchData
-			}
 		}
 	}
 }

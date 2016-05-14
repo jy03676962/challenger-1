@@ -92,8 +92,6 @@ class LoginViewController: PLViewController {
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		if segue.identifier == SegueIDShowMatchResult {
 			let vc = segue.destinationViewController as! MatchResultController
-			let app = UIApplication.sharedApplication().delegate as! AppDelegate
-			vc.matchData = app.matchData
 			vc.isAdmin = false
 			vc.loginInfo = sender as? LoginResult
 		}
