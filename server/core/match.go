@@ -169,7 +169,13 @@ func (m *Match) setStage(s string) {
 		}
 		m.srv.ledControl(3, "5")
 	case "ongoing-high":
+		m.srv.ledControl(3, "9")
 	case "ongoing-full":
+		if m.Mode == "g" {
+			m.srv.ledControl(3, "19")
+		} else {
+			m.srv.ledControl(3, "20")
+		}
 	case "ongoing-rampage":
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 		for i := 0; i < len(m.opt.Buttons); i++ {
@@ -187,8 +193,12 @@ func (m *Match) setStage(s string) {
 			player.Combo = 0
 			player.lastHitTime = time.Unix(0, 0)
 		}
+		m.srv.ledControl(3, "21")
 	case "ongoing-countdown":
+		m.srv.ledControl(1, "47")
+		m.srv.ledControl(2, "46")
 	case "after":
+		m.srv.ledFlowEffect()
 	}
 	m.Stage = s
 }

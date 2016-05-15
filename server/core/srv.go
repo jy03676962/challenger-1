@@ -498,6 +498,10 @@ func (s *Srv) ledControlByCell(x int, y int, mode string) {
 	s.send(m, addrs)
 }
 
+func (s *Srv) ledFlowEffect() {
+	// TODO: 需要更新arduino表之后处理
+}
+
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
 	s.inbox.Send(msg, addrs)
 }

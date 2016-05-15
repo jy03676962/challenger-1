@@ -35,7 +35,7 @@ firstComboInterval = [ 5.0, 4.0, 3.0, 2.0 ] # 第一次连击时间间隔, 1-4�
 comboInterval = [ 3.0, 3.0, 2.0, 2.0 ] # 第n次连击时间间隔, n>1, 1-4人
 firstComboExtra = 30.0 # 第一次连击额外能量
 comboExtra = 15.0 # 第n次连击额外能量, n>1
-invincibleTime = 3.0 # 玩家触碰激光后的无敌时间
+invincibleTime = 3.0 # 玩家触碰激光后的无敌时间, 硬件未实现，目前无法配置，固定为3秒
 mode1TouchPunish = 0.3 # 赏金模式触碰激光金币惩罚, 单位百分比
 mode2TouchPunish = 10 # 生存模式触碰激光金币惩罚, 单位个数
 mode2GoldDropInterval = 1.0 # 生存模式每隔几秒金币减少1
@@ -196,5 +196,5 @@ y = 4
 
 # 出口坐标
 [arenaExit]
-x = 6
-y = 0
+x = 0
+y = 4
