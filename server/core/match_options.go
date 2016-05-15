@@ -364,7 +364,7 @@ func (m *MatchOptions) laserSpeed(energy float64) float64 {
 
 func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
 	ret := make([]string, 0)
-	for ma := range m.MainArduino {
+	for _, ma := range m.MainArduino {
 		if ma[2:3] == strconv.Itoa(x+1) && ma[4:5] == strconv.Itoa(y+1) {
 			ret = append(ret, ma)
 		}

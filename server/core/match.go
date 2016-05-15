@@ -153,10 +153,11 @@ func (m *Match) setStage(s string) {
 	}
 	switch s {
 	case "warmup-1":
+		m.srv.setAllWearableStatus("02")
 		m.srv.ledControl(1, "3")
 		m.srv.ledControl(2, "23")
 	case "warmup-2":
-		m.srv.ledControl(3, "4", 1, 2, 3)
+		m.srv.ledControl(3, "4", "1", "2", "3")
 	case "ongoing-low":
 		if m.Stage == "ongoing-rampage" {
 			m.initButtons()
@@ -176,6 +177,7 @@ func (m *Match) setStage(s string) {
 		} else {
 			m.srv.ledControl(3, "20")
 		}
+		m.srv.setAllWearableStatus("03")
 	case "ongoing-rampage":
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 		for i := 0; i < len(m.opt.Buttons); i++ {
@@ -194,6 +196,7 @@ func (m *Match) setStage(s string) {
 			player.lastHitTime = time.Unix(0, 0)
 		}
 		m.srv.ledControl(3, "21")
+		m.srv.setAllWearableStatus("04")
 	case "ongoing-countdown":
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
@@ -217,14 +220,14 @@ func (m *Match) updateStage() {
 		return
 	}
 	s := m.Stage
-	r := m.Energy / m.opt / MaxEnergy
+	r := m.Energy / m.opt.MaxEnergy
 	if r < 0.8 {
 		s = "ongoing-low"
 	} else if r < 1 {
 		s = "ongoing-high"
 	} else {
 		if len(m.Member) == 1 {
-			s == "ongoing-rampage"
+			s = "ongoing-rampage"
 		} else {
 			together := true
 			if m.isSimulator {
@@ -503,10 +506,10 @@ func (m *Match) consumeButton(btn string, player *Player) {
 	m.hiddenButtons[key] = t
 }
 
-func (m *Match) isWarmup() {
+func (m *Match) isWarmup() bool {
 	return strings.HasPrefix(m.Stage, "warmup")
 }
 
-func (m *Match) isOngoing() {
+func (m *Match) isOngoing() bool {
 	return strings.HasPrefix(m.Stage, "ongoing")
 }

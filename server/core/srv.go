@@ -24,6 +24,7 @@ type Srv struct {
 	db               *DB
 	inboxMessageChan chan *InboxMessage
 	mChan            chan MatchEvent
+	wearableMsgChan  chan string
 	pDict            map[string]*PlayerController
 	aDict            map[string]*ArduinoController
 	mDict            map[uint]*Match
@@ -36,6 +37,7 @@ func NewSrv() *Srv {
 	s.db = NewDb()
 	s.inboxMessageChan = make(chan *InboxMessage, 1)
 	s.mChan = make(chan MatchEvent)
+	s.wearableMsgChan = make(chan string, 1)
 	s.pDict = make(map[string]*PlayerController)
 	s.aDict = make(map[string]*ArduinoController)
 	s.mDict = make(map[uint]*Match)
@@ -139,6 +141,12 @@ func (s *Srv) mainLoop() {
 			s.handleInboxMessage(msg)
 		case evt := <-s.mChan:
 			s.handleMatchEvent(evt)
+		case status := <-s.wearableMsgChan:
+			for _, pc := range s.pDict {
+				if pc.Address.Type == InboxAddressTypeWearableDevice {
+					s.setWearableStatus(pc.Address, status)
+				}
+			}
 		}
 	}
 }
@@ -230,6 +238,9 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		pc := NewPlayerController(*msg.AddAddress)
 		s.pDict[pc.ID] = pc
 		shouldUpdatePlayerController = true
+		if msg.AddAddress.Type == InboxAddressTypeWearableDevice {
+			s.setWearableStatus(*msg.AddAddress, "01")
+		}
 	}
 	if shouldUpdatePlayerController {
 		s.sendMsgs("ControllerData", s.getControllerData(), InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
@@ -464,7 +475,7 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		if ledT == nil {
 			li = append(li, map[string]string{"wall": "M", "let_t": "1", "mode": mode})
 		} else {
-			for t := range ledT {
+			for _, t := range ledT {
 				li = append(li, map[string]string{"wall": "M", "let_t": t, "mode": mode})
 			}
 		}
@@ -506,6 +517,10 @@ func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {
 	s.inbox.Send(msg, addrs)
 }
 
+func (s *Srv) sendToOne(msg *InboxMessage, addr InboxAddress) {
+	s.send(msg, []InboxAddress{addr})
+}
+
 func (s *Srv) initArduinoControllers() {
 	for _, main := range GetOptions().MainArduino {
 		addr := InboxAddress{InboxAddressTypeMainArduinoDevice, main}
@@ -528,4 +543,16 @@ func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
 	msg.SetCmd("init_score")
 	msg.Set("score", scoreInfo)
 	s.send(msg, []InboxAddress{controller.Address})
+}
+
+func (s *Srv) setWearableStatus(addr InboxAddress, status string) {
+	m := NewInboxMessage()
+	m.Set("head", "STA")
+	m.Set("id", addr.ID)
+	m.Set("cmd", status)
+	s.sendToOne(m, addr)
+}
+
+func (s *Srv) setAllWearableStatus(status string) {
+	s.wearableMsgChan <- status
 }
