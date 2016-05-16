@@ -306,6 +306,10 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		if controller := s.aDict[msg.Address.String()]; controller != nil {
 			controller.ScoreUpdated = true
 		}
+	case "upload_score":
+		for _, m := range s.mDict {
+			m.OnMatchCmdArrived(msg)
+		}
 	}
 	if msg.GetCmd() != "init" {
 		s.sends(msg, InboxAddressTypeArduinoTestDevice)
@@ -471,12 +475,14 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 	if wall&1 > 0 {
 		m := NewInboxMessage()
 		m.SetCmd("led_ctrl")
-		li := make([]map[string]string, 0)
+		var li []map[string]string
 		if ledT == nil {
-			li = append(li, map[string]string{"wall": "M", "let_t": "1", "mode": mode})
+			li = make([]map[string]string, 1)
+			li[0] = map[string]string{"wall": "M", "let_t": "1", "mode": mode})
 		} else {
-			for _, t := range ledT {
-				li = append(li, map[string]string{"wall": "M", "let_t": t, "mode": mode})
+			li = make([]map[string]string, len(ledT))
+			for i, t := range ledT {
+				li[i] = map[string]string{"wall": "M", "let_t": t, "mode": mode})
 			}
 		}
 		m.Set("led", li)
@@ -485,10 +491,10 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 	if wall&2 > 0 {
 		m := NewInboxMessage()
 		m.SetCmd("led_ctrl")
-		li := make([]map[string]string, 0)
-		li = append(li, map[string]string{"wall": "O1", "let_t": "1", "mode": mode})
-		li = append(li, map[string]string{"wall": "O2", "let_t": "1", "mode": mode})
-		li = append(li, map[string]string{"wall": "O3", "let_t": "1", "mode": mode})
+		li := make([]map[string]string, 3)
+		li[0] = map[string]string{"wall": "O1", "let_t": "1", "mode": mode})
+		li[1] = map[string]string{"wall": "O2", "let_t": "1", "mode": mode})
+		li[2] = map[string]string{"wall": "O3", "let_t": "1", "mode": mode})
 		m.Set("led", li)
 		s.sends(m, InboxAddressTypeSubArduinoDevice)
 	}
@@ -496,12 +502,14 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 
 func (s *Srv) ledControlByCell(x int, y int, mode string) {
 	ids := GetOptions().mainArduinosByPos(x, y)
-	m := NewInboxMessage()
-	m.SetCmd("led_ctrl")
-	m.Set("led", map[string]string{"wall": "M", "let_t": "1", "mode": mode})
 	if len(ids) == 0 {
 		return
 	}
+	m := NewInboxMessage()
+	m.SetCmd("led_ctrl")
+	li := make([]map[string]string, 1)
+	li[0] = map[string]string{"wall": "M", "let_t": "1", "mode": mode}
+	m.Set("led", li)
 	addrs := make([]InboxAddress, len(ids))
 	for i, id := range ids {
 		addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
@@ -511,6 +519,31 @@ func (s *Srv) ledControlByCell(x int, y int, mode string) {
 
 func (s *Srv) ledFlowEffect() {
 	// TODO: 需要更新arduino表之后处理
+}
+
+func (s *Srv) ledRampageEffect() {
+	s.ledControl(2, "21")
+	addrsA := make([]InboxAddress, 0)
+	addrsB := make([]InboxAddress, 0)
+	for i, info := range GetOptions().MainArduinoInfo {
+		if info.Type == "A" {
+			addrsA = append(addrsA, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
+		} else {
+			addrsB = append(addrsB, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
+		}
+	}
+	liA := make([]map[string]string, 1)
+	liA[0] = map[string]string{"wall": "M", "led_t": "1", "mode": "21"}
+	ma := NewInboxMessage()
+	ma.SetCmd("led_ctrl")
+	ma.Set("led", liA)
+	s.sends(ma, addrsA)
+	liB := make([]map[string]string, 1)
+	liB[0] = map[string]string{"wall": "M", "led_t": "1", "mode": "22"}
+	mb := NewInboxMessage()
+	mb.SetCmd("led_ctrl")
+	mb.Set("led", liA)
+	s.sends(mb, addrsB)
 }
 
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {

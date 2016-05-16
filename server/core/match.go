@@ -65,7 +65,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.Stage = "before"
 	m.opt = GetOptions()
 	m.Mode = mode
-	m.msgCh = make(chan *InboxMessage)
+	m.msgCh = make(chan *InboxMessage, 100)
 	m.closeCh = make(chan bool)
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
@@ -195,7 +195,7 @@ func (m *Match) setStage(s string) {
 			player.Combo = 0
 			player.lastHitTime = time.Unix(0, 0)
 		}
-		m.srv.ledControl(3, "21")
+		m.srv.ledRampageEffect()
 		m.srv.setAllWearableStatus("04")
 	case "ongoing-countdown":
 		m.srv.ledControl(1, "47")
@@ -365,18 +365,19 @@ func (m *Match) removePlayer(cid string) {
 }
 
 func (m *Match) playerTick(player *Player, sec float64) {
-	if player.InvincibleTime > 0 {
-		player.InvincibleTime = math.Max(player.InvincibleTime-sec, 0)
-	}
-	moved := player.UpdatePos(sec, m.opt)
-	if !m.isOngoing() {
-		return
-	}
-	if moved && player.Button != "" {
-		m.consumeButton(player.Button, player)
-	}
-	if !moved {
-		player.Stay(sec, m.opt, m.RampageTime > 0)
+	player.InvincibleTime = math.Max(player.InvincibleTime-sec, 0)
+	if m.isSimulator {
+		moved := player.UpdatePos(sec, m.opt)
+		if !m.isOngoing() {
+			return
+		}
+		if moved && player.Button != "" {
+			m.consumeButton(player.Button, player)
+		}
+		if !moved {
+			player.Stay(sec, m.opt, m.RampageTime > 0)
+		}
+	} else {
 	}
 }
 
@@ -439,21 +440,32 @@ func (m *Match) initButtons() {
 		player.ButtonLevel = 0
 		player.ButtonTime = 0
 	}
-	l := len(m.opt.Buttons)
+	count := len(m.opt.Buttons)
 	src := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(src)
-	list := r.Perm(l)
+	randList := r.Perm(count)
 	n := m.opt.InitButtonNum[len(m.Member)-1]
 	m.OnButtons = make(map[string]bool)
-	m.offButtons = make([]string, l-n)
+	m.offButtons = make([]string, count-n)
 	m.hiddenButtons = make(map[string]float64)
-	for i, v := range list {
-		id := strconv.Itoa(v)
+	for i, j := range randList {
+		id := m.opt.Buttons[j].Id
 		if i < n {
 			m.OnButtons[id] = true
 		} else {
 			m.offButtons[i-n] = id
 		}
+	}
+	if !m.isSimulator {
+		for id, _ := range m.OnButtons {
+		}
+	}
+	if m.isSimulator {
+	} else {
+		//count := len(m.opt.MainArduino)
+		//src := rand.NewSource(time.Now().UnixNano())
+		//r := rand.New(src)
+		//list := r.Perm(count)
 	}
 }
 

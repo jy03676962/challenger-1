@@ -47,9 +47,6 @@ func (p *Player) updateLoc(loc int) {
 }
 
 func (p *Player) UpdatePos(sec float64, options *MatchOptions) bool {
-	if p.isSimulator {
-		return false
-	}
 	if !p.moving {
 		return false
 	}

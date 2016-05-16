@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var _ = log.Printf
@@ -28,6 +29,15 @@ type Rect struct {
 	Y float64
 	W float64
 	H float64
+}
+
+type MainArduino struct {
+	ID       string `json:"id"`
+	Dir      int    `json:"dir"`
+	X        int    `json:"x"`
+	Y        int    `json:"y"`
+	Type     string `json:"type"`
+	LaserNum int    `json:"laserNum"`
 }
 
 type Button struct {
@@ -94,6 +104,7 @@ type MatchOptions struct {
 	Mode2GoldDropInterval float64       `json:"-"`
 	MainArduino           []string      `json:"-"`
 	SubArduino            []string      `json:"-"`
+	MainArduinoInfo       []MainArduino `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}
@@ -131,10 +142,26 @@ func DefaultMatchOptions() *MatchOptions {
 		log.Printf("parse config error:%v\n", err.Error())
 		os.Exit(1)
 	}
+	opt.buildMainArduinoInfo()
 	opt.buildWallRects()
 	opt.buildButtons()
 	opt.buildAdjacency()
 	return &opt
+}
+
+func (m *MatchOptions) buildMainArduinoInfo() {
+	m.MainArduinoInfo = make([]MainArduino, len(m.MainArduino))
+	for i, id := range m.MainArduino {
+		info := MainArduino{}
+		info.ID = id
+		li := strings.Split(id, "-")
+		info.X, _ = strconv.Atoi(li[1])
+		info.Y, _ = strconv.Atoi(li[2])
+		info.Dir, _ = strconv.Atoi(li[3])
+		info.Type = li[4]
+		info.LaserNum, _ = strconv.Atoi(li[5])
+		m.MainArduinoInfo[i] = info
+	}
 }
 
 func (m *MatchOptions) buildAdjacency() {
@@ -193,96 +220,39 @@ func (m *MatchOptions) buildWallRects() {
 }
 
 func (m *MatchOptions) buildButtons() {
-	m.Buttons = make([]*Button, 0)
-	// top and bottom wall
-	c := m.ArenaCellSize
-	b := m.ArenaBorder
+	m.Buttons = make([]*Button, len(m.MainArduino))
+	c := float64(m.ArenaCellSize)
+	b := float64(m.ArenaBorder)
 	bw := m.ButtonWidth
 	bh := m.ButtonHeight
-	var x, y, w, h float64
-	id := 0
-	app := func() {
-		m.Buttons = append(m.Buttons, &Button{strconv.Itoa(id), Rect{x, y, w, h}})
-		id = id + 1
-	}
-	for i := 0; i < m.ArenaWidth; i++ {
-		if m.ArenaEntrance.Y == 0 && i == m.ArenaEntrance.X {
-			continue
-		}
-		if m.ArenaExit.Y == 0 && i == m.ArenaExit.X {
-			continue
-		}
-		x = float64(c+b)*(float64(i)+0.5) - 0.5*bw
-		y = float64(b) * 0.5
-		w = bw
-		h = bh
-		app()
-	}
-	for i := 0; i < m.ArenaWidth; i++ {
-		if m.ArenaEntrance.Y == m.ArenaHeight-1 && i == m.ArenaEntrance.X {
-			continue
-		}
-		if m.ArenaExit.Y == m.ArenaHeight-1 && i == m.ArenaExit.X {
-			continue
-		}
-		x = float64(c+b)*(float64(i)+0.5) - 0.5*bw
-		y = float64((c+b)*m.ArenaHeight) - 0.5*float64(b) - bh
-		w = bw
-		h = bh
-		app()
-	}
-	// left and right wall
-	for i := 0; i < m.ArenaHeight; i++ {
-		if m.ArenaEntrance.X == 0 && i == m.ArenaEntrance.Y {
-			continue
-		}
-		if m.ArenaExit.X == 0 && i == m.ArenaExit.Y {
-			continue
-		}
-		x = float64(b) * 0.5
-		y = float64(c+b)*(float64(i)+0.5) - 0.5*bw
-		w = bh
-		h = bw
-		app()
-	}
-	for i := 0; i < m.ArenaHeight; i++ {
-		if m.ArenaEntrance.X == m.ArenaHeight-1 && i == m.ArenaEntrance.Y {
-			continue
-		}
-		if m.ArenaExit.X == m.ArenaHeight-1 && i == m.ArenaExit.Y {
-			continue
-		}
-		x = float64((c+b)*m.ArenaWidth) - 0.5*float64(b) - bh
-		y = float64(c+b)*(float64(i)+0.5) - 0.5*bw
-		w = bh
-		h = bw
-		app()
-	}
-	// inner wall
-	for idx, rect := range m.WallRects {
-		wall := m.Walls[idx]
-		horizontal := wall[0] == wall[2]
-		if horizontal {
+	cb := c + b
+	var t, l, w, h float64
+	for i, info := range m.MainArduinoInfo {
+		x := float64(info.X - 1)
+		y := float64(info.Y - 1)
+		switch info.Dir {
+		case 1:
+			t = (y+1.0)*cb - b/2
+			l = (x+0.5)*cb - bw/2
 			w = bw
 			h = bh
-			x = rect.X + float64(b) + 0.5*(float64(c)-bw)
-			// above
-			y = rect.Y - bh
-			app()
-			// below
-			y = rect.Y + bh
-			app()
-		} else {
+		case 2:
+			t = (y+0.5)*cb + bw/2
+			l = (x+1.0)*cb - b/2 - bh
 			w = bh
 			h = bw
-			y = rect.Y + float64(b) + 0.5*(float64(c)-bw)
-			// left
-			x = rect.X - bh
-			app()
-			// right
-			x = rect.X + bh
-			app()
+		case 3:
+			t = (y)*cb + b/2 + bh
+			l = (x+0.5)*cb - bw/2
+			w = bw
+			h = bh
+		case 4:
+			t = (y+0.5)*cb + bw/2
+			l = (x)*cb + b/2
+			w = bh
+			h = bw
 		}
+		m.Buttons[i] = &Button{info.ID, Rect{l, t, w, h}}
 	}
 }
 
@@ -364,9 +334,9 @@ func (m *MatchOptions) laserSpeed(energy float64) float64 {
 
 func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
 	ret := make([]string, 0)
-	for _, ma := range m.MainArduino {
-		if ma[2:3] == strconv.Itoa(x+1) && ma[4:5] == strconv.Itoa(y+1) {
-			ret = append(ret, ma)
+	for _, info := range m.MainArduinoInfo {
+		if info.X == x+1 && info.Y == y+1 {
+			ret = append(ret, info.ID)
 		}
 	}
 	return ret
