@@ -180,15 +180,16 @@ func (m *Match) setStage(s string) {
 		m.srv.setAllWearableStatus("03")
 	case "ongoing-rampage":
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
-		for i := 0; i < len(m.opt.Buttons); i++ {
-			k := strconv.Itoa(i)
-			m.OnButtons[k] = true
+		m.offButtons = make([]string, 0)
+		m.hiddenButtons = make(map[string]float64)
+		for _, btn := range m.opt.Buttons {
+			m.OnButtons[btn.Id] = true
 		}
+		m.setButtonEffet("2")
 		for _, laser := range m.Lasers {
 			laser.IsPause = true
 			laser.pauseTime = m.RampageTime
 		}
-		m.offButtons = make([]string, 0)
 		m.Energy = 0
 		m.RampageCount += 1
 		for _, player := range m.Member {
@@ -457,23 +458,27 @@ func (m *Match) initButtons() {
 		}
 	}
 	if !m.isSimulator {
-		addrs := make([]InboxAddress, len(m.OnButtons))
-		i := 0
-		for id, _ := range m.OnButtons {
-			addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
-			i += 1
-		}
-		msg := NewInboxMessage()
-		msg.SetCmd("btn_ctrl")
-		msg.Set("useful", "1")
-		if m.Mode == "g" {
-			msg.Set("mode", "1")
-		} else {
-			msg.Set("mode", "2")
-		}
-		msg.Set("stage", "0")
-		m.srv.send(msg, addrs)
+		m.setButtonEffet("0")
 	}
+}
+
+func (m *Match) setButtonEffet(stage string) {
+	addrs := make([]InboxAddress, len(m.OnButtons))
+	i := 0
+	for id, _ := range m.OnButtons {
+		addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
+		i += 1
+	}
+	msg := NewInboxMessage()
+	msg.SetCmd("btn_ctrl")
+	msg.Set("useful", "1")
+	if m.Mode == "g" {
+		msg.Set("mode", "1")
+	} else {
+		msg.Set("mode", "2")
+	}
+	msg.Set("stage", "0")
+	m.srv.send(msg, addrs)
 }
 
 func (m *Match) consumeButton(btn string, player *Player) {
