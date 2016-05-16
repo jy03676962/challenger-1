@@ -152,16 +152,21 @@ func DefaultMatchOptions() *MatchOptions {
 func (m *MatchOptions) buildMainArduinoInfo() {
 	m.MainArduinoInfo = make([]MainArduino, len(m.MainArduino))
 	for i, id := range m.MainArduino {
-		info := MainArduino{}
-		info.ID = id
-		li := strings.Split(id, "-")
-		info.X, _ = strconv.Atoi(li[1])
-		info.Y, _ = strconv.Atoi(li[2])
-		info.Dir, _ = strconv.Atoi(li[3])
-		info.Type = li[4]
-		info.LaserNum, _ = strconv.Atoi(li[5])
-		m.MainArduinoInfo[i] = info
+		info := arduinoInfoFromID(id)
+		m.MainArduinoInfo[i] = *info
 	}
+}
+
+func arduinoInfoFromID(id string) *MainArduinoInfo {
+	info := MainArduino{}
+	info.ID = id
+	li := strings.Split(id, "-")
+	info.X, _ = strconv.Atoi(li[1])
+	info.Y, _ = strconv.Atoi(li[2])
+	info.Dir, _ = strconv.Atoi(li[3])
+	info.Type = li[4]
+	info.LaserNum, _ = strconv.Atoi(li[5])
+	return &info
 }
 
 func (m *MatchOptions) buildAdjacency() {

@@ -135,6 +135,7 @@ func (m *Match) tick(dt time.Duration) {
 			if v <= 0 {
 				delete(m.hiddenButtons, k)
 				m.OnButtons[k] = true
+				m.setSingleButtonEffect(k)
 			}
 		}
 	}
@@ -185,7 +186,7 @@ func (m *Match) setStage(s string) {
 		for _, btn := range m.opt.Buttons {
 			m.OnButtons[btn.Id] = true
 		}
-		m.setButtonEffet("2")
+		m.setButtonEffect("2")
 		for _, laser := range m.Lasers {
 			laser.IsPause = true
 			laser.pauseTime = m.RampageTime
@@ -329,6 +330,14 @@ func (m *Match) handleInput(msg *InboxMessage) {
 				player.updateLoc(loc)
 			}
 		}
+	case "upload_score":
+		info := arduinoInfoFromID(msg.Address.ID)
+		for _, player := m.Member {
+			if player.tilePos.X == info.X - 1 && player.tilePos.Y == info.Y - 1 {
+				consumeButton(info.ID, player)
+				break
+			}
+		}
 	}
 }
 
@@ -458,11 +467,11 @@ func (m *Match) initButtons() {
 		}
 	}
 	if !m.isSimulator {
-		m.setButtonEffet("0")
+		m.setButtonEffect("0")
 	}
 }
 
-func (m *Match) setButtonEffet(stage string) {
+func (m *Match) setButtonEffect(stage string) {
 	addrs := make([]InboxAddress, len(m.OnButtons))
 	i := 0
 	for id, _ := range m.OnButtons {
@@ -479,6 +488,29 @@ func (m *Match) setButtonEffet(stage string) {
 	}
 	msg.Set("stage", "0")
 	m.srv.send(msg, addrs)
+}
+
+func (m *Match) setSingleButtonEffect(id string) {
+	if !m.isOngoing() {
+		return
+	}
+	msg := NewInboxMessage()
+	msg.SetCmd("btn_ctrl")
+	msg.Set("useful", "1")
+	if m.Mode == "g" {
+		msg.Set("mode", "1")
+	} else {
+		msg.Set("mode", "2")
+	}
+	if m.Stage == "ongoing-low" {
+		msg.Set("stage", "0")
+	} else if m.Stage == "ongoing-high" {
+		msg.Set("stage", "1")
+	} else {
+		msg.Set("stage", "2")
+	}
+	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, id}
+	m.srv.sendToOne(msg, addr)
 }
 
 func (m *Match) consumeButton(btn string, player *Player) {
@@ -519,15 +551,16 @@ func (m *Match) consumeButton(btn string, player *Player) {
 	delete(m.OnButtons, btn)
 	if m.RampageTime > 0 {
 		m.offButtons = append(m.offButtons, btn)
-		return
+	} else {
+		src := rand.NewSource(time.Now().UnixNano())
+		r := rand.New(src)
+		i := r.Intn(len(m.offButtons))
+		key := m.offButtons[i]
+		m.offButtons[i] = btn
+		t := m.opt.ButtonHideTime[m.modeIndex()]
+		m.hiddenButtons[key] = t
+
 	}
-	src := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(src)
-	i := r.Intn(len(m.offButtons))
-	key := m.offButtons[i]
-	m.offButtons[i] = btn
-	t := m.opt.ButtonHideTime[m.modeIndex()]
-	m.hiddenButtons[key] = t
 }
 
 func (m *Match) isWarmup() bool {
