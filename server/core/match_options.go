@@ -157,7 +157,7 @@ func (m *MatchOptions) buildMainArduinoInfo() {
 	}
 }
 
-func arduinoInfoFromID(id string) *MainArduinoInfo {
+func arduinoInfoFromID(id string) *MainArduino {
 	info := MainArduino{}
 	info.ID = id
 	li := strings.Split(id, "-")

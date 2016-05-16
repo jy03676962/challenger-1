@@ -478,11 +478,11 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		var li []map[string]string
 		if ledT == nil {
 			li = make([]map[string]string, 1)
-			li[0] = map[string]string{"wall": "M", "let_t": "1", "mode": mode})
+			li[0] = map[string]string{"wall": "M", "let_t": "1", "mode": mode}
 		} else {
 			li = make([]map[string]string, len(ledT))
 			for i, t := range ledT {
-				li[i] = map[string]string{"wall": "M", "let_t": t, "mode": mode})
+				li[i] = map[string]string{"wall": "M", "let_t": t, "mode": mode}
 			}
 		}
 		m.Set("led", li)
@@ -492,9 +492,9 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		m := NewInboxMessage()
 		m.SetCmd("led_ctrl")
 		li := make([]map[string]string, 3)
-		li[0] = map[string]string{"wall": "O1", "let_t": "1", "mode": mode})
-		li[1] = map[string]string{"wall": "O2", "let_t": "1", "mode": mode})
-		li[2] = map[string]string{"wall": "O3", "let_t": "1", "mode": mode})
+		li[0] = map[string]string{"wall": "O1", "let_t": "1", "mode": mode}
+		li[1] = map[string]string{"wall": "O2", "let_t": "1", "mode": mode}
+		li[2] = map[string]string{"wall": "O3", "let_t": "1", "mode": mode}
 		m.Set("led", li)
 		s.sends(m, InboxAddressTypeSubArduinoDevice)
 	}
@@ -525,7 +525,7 @@ func (s *Srv) ledRampageEffect() {
 	s.ledControl(2, "21")
 	addrsA := make([]InboxAddress, 0)
 	addrsB := make([]InboxAddress, 0)
-	for i, info := range GetOptions().MainArduinoInfo {
+	for _, info := range GetOptions().MainArduinoInfo {
 		if info.Type == "A" {
 			addrsA = append(addrsA, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
 		} else {
@@ -537,13 +537,13 @@ func (s *Srv) ledRampageEffect() {
 	ma := NewInboxMessage()
 	ma.SetCmd("led_ctrl")
 	ma.Set("led", liA)
-	s.sends(ma, addrsA)
+	s.send(ma, addrsA)
 	liB := make([]map[string]string, 1)
 	liB[0] = map[string]string{"wall": "M", "led_t": "1", "mode": "22"}
 	mb := NewInboxMessage()
 	mb.SetCmd("led_ctrl")
 	mb.Set("led", liA)
-	s.sends(mb, addrsB)
+	s.send(mb, addrsB)
 }
 
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {

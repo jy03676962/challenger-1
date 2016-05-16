@@ -332,9 +332,9 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		}
 	case "upload_score":
 		info := arduinoInfoFromID(msg.Address.ID)
-		for _, player := m.Member {
-			if player.tilePos.X == info.X - 1 && player.tilePos.Y == info.Y - 1 {
-				consumeButton(info.ID, player)
+		for _, player := range m.Member {
+			if player.tilePos.X == info.X-1 && player.tilePos.Y == info.Y-1 {
+				m.consumeButton(info.ID, player)
 				break
 			}
 		}
