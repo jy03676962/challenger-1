@@ -457,15 +457,22 @@ func (m *Match) initButtons() {
 		}
 	}
 	if !m.isSimulator {
+		addrs := make([]InboxAddress, len(m.OnButtons))
+		i := 0
 		for id, _ := range m.OnButtons {
+			addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
+			i += 1
 		}
-	}
-	if m.isSimulator {
-	} else {
-		//count := len(m.opt.MainArduino)
-		//src := rand.NewSource(time.Now().UnixNano())
-		//r := rand.New(src)
-		//list := r.Perm(count)
+		msg := NewInboxMessage()
+		msg.SetCmd("btn_ctrl")
+		msg.Set("useful", "1")
+		if m.Mode == "g" {
+			msg.Set("mode", "1")
+		} else {
+			msg.Set("mode", "2")
+		}
+		msg.Set("stage", "0")
+		m.srv.send(msg, addrs)
 	}
 }
 
