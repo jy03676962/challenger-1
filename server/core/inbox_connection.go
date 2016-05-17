@@ -64,7 +64,7 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 	if b[0] == 123 { // first byte is '{', json encoding frame
 		json.Unmarshal(b[:len(b)-1], &v.Data)
 	} else { // parse heart beat frame
-		parseTcpHB(string(b), v)
+		parseTcpHB(string(b[:len(b)-1]), v)
 		v.SetCmd("hb")
 		if id := v.GetStr("ID"); id != "" && tcp.id != id {
 			v.AddAddress = &InboxAddress{tcp.at(), id}

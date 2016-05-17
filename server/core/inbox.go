@@ -41,6 +41,7 @@ func (inbox *Inbox) ListenConnection(conn InboxConnection) {
 func (inbox *Inbox) RemoveClient(id int) {
 	inbox.l.Lock()
 	defer inbox.l.Unlock()
+	log.Printf("inbox remove connection:%v, current:%v\n", id, len(inbox.cdict))
 	delete(inbox.cdict, id)
 }
 
