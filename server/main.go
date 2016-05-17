@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	httpAddr = "192.168.1.4:3000"
-	tcpAddr  = "192.168.1.4:4000"
-	udpAddr  = "192.168.1.4:5000"
+	host     = "172.16.10.65"
+	httpAddr = host + ":3000"
+	tcpAddr  = host + ":4000"
+	udpAddr  = host + ":5000"
 	dbPath   = "./challenger.db"
 )
 
