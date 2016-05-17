@@ -32,8 +32,12 @@ func main() {
 	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
+	log.Println("setup log system done")
+
 	core.GetOptions()
 	core.GetSurvey()
+
+	log.Println("reading cfg done")
 
 	srv := core.NewSrv()
 	go srv.Run(tcpAddr, udpAddr, dbPath)

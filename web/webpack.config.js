@@ -9,7 +9,7 @@ module.exports = {
     app: './src/app.jsx',
     api: './src/api.jsx',
     front: './src/front.jsx',
-    ingame: './src/ingame.jsx',
+    //ingame: './src/ingame.jsx',
   },
   output: {
     path: path.join(__dirname, 'dist/js'),
