@@ -1,42 +1,70 @@
 @import './global.css';
 .root {
-  height: 1080px;
-  width: 1920px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.text {
-  font: alien;
+  font-family: alien;
+  width: 100%;
+  padding-bottom: 56.25%
 }
 .tableBg {
-  width: 872px;
-  height: 503px;
+  width: 45.42vw;
+  height: 26.2vw;
   position: absolute;
-  top: 120px;
-  left: 1327px;
+  top: 6.25vw;
+  left: 49.9vw;
+}
+.tableBgImg {
+  width: 100%;
+  height: 100%;
 }
 .tableText {
-  composes: text;
   color: white;
-  font-size: 90px;
+  font-size: 4.6875vw;
   position: absolute;
   display: inline-block;
-  height: 122px;
-  line-height: 122px;
+  height: 6.354vw;
+  line-height: 6.354vw;
 }
 .tableName {
   composes: tableText;
-  left: 90px;
+  left: 4.6875vw;
 }
 .tableEnergy {
   composes: tableText;
-  left: 600px;
+  left: 31.25vw;
 }
 .tableImg {
   position: absolute;
   display: inline-block;
-  width: 74px;
-  height: 90px;
-  left: 490px;
-  top: 16px;
+  width: 3.854vw;
+  height: 4.6875vw;
+  left: 25.52vw;
+  top: 0.8333vw;
+}
+.goldX {
+  position: absolute;
+  color: #424242;
+  font-size: 20.83vw;
+  left: 6.51vw;
+  top: 6.25vw;
+}
+.goldValue {
+  position: absolute;
+  color: white;
+  font-size: 20.83vw;
+  left: 14.583vw;
+  top: 6.25vw;
+}
+.timeValue {
+  position: absolute;
+  color: white;
+  font-size: 10.42vw;
+  left: 6.51vw;
+  top: 24.48vw;
+}
+.bar {
+  position: absolute;
+  display: inline-block;
+  width: 99.22vw;
+  height: 9.95vw;
+  left: 0.42vw;
+  top: 37.5vw;
 }
