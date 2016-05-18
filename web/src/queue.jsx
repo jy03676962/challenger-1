@@ -1,0 +1,6 @@
+import React from 'react'
+import { render } from 'react-dom'
+import { observable, computed } from 'mobx'
+import { observer } from 'mobx-react'
+import CSSModules from 'react-css-modules'
+import styles from '~/styles/queue.css'

@@ -234,25 +234,25 @@ func (m *MatchOptions) buildButtons() {
 	var t, l, w, h float64
 	for i, info := range m.MainArduinoInfo {
 		x := float64(info.X - 1)
-		y := float64(info.Y - 1)
+		y := float64(m.ArenaHeight - info.Y)
 		switch info.Dir {
 		case 1:
-			t = (y+1.0)*cb - b/2
+			t = y*cb + b/2
 			l = (x+0.5)*cb - bw/2
 			w = bw
 			h = bh
 		case 2:
-			t = (y+0.5)*cb + bw/2
+			t = (y+0.5)*cb - bw/2
 			l = (x+1.0)*cb - b/2 - bh
 			w = bh
 			h = bw
 		case 3:
-			t = (y)*cb + b/2 + bh
+			t = (y+1)*cb - b/2 - bh
 			l = (x+0.5)*cb - bw/2
 			w = bw
 			h = bh
 		case 4:
-			t = (y+0.5)*cb + bw/2
+			t = (y+0.5)*cb - bw/2
 			l = (x)*cb + b/2
 			w = bh
 			h = bw

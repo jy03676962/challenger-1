@@ -4,7 +4,7 @@ import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import CSSModules from 'react-css-modules'
 import styles from '~/styles/ingame.css'
-import Game from '~js/game.jsx'
+import Game from '~/js/game.jsx'
 
 var game = new Game()
 

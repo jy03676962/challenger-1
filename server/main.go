@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	host     = "172.16.10.65"
+	host     = "localhost"
 	httpAddr = host + ":3000"
 	tcpAddr  = host + ":4000"
 	udpAddr  = host + ":5000"
@@ -23,6 +23,7 @@ const (
 
 func main() {
 	// setup log system
+	log.Println("start server")
 	logfileName := "log/" + time.Now().Local().Format("2006-01-02-15-04-05") + ".log"
 	os.Mkdir("log", 0777)
 	f, err := os.OpenFile(logfileName, os.O_WRONLY|os.O_CREATE, 0640)

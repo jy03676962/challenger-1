@@ -33,7 +33,6 @@ func (c *InboxClient) Accept(addr InboxAddress) bool {
 func (c *InboxClient) Write(msg *InboxMessage) {
 	go func() {
 		e := c.conn.WriteJSON(msg)
-		log.Printf("write msg:%v", msg.Data)
 		if e != nil {
 			log.Printf("send message error:%v\n", e.Error())
 		}
