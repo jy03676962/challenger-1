@@ -7,14 +7,15 @@ import (
 type InboxAddressType int
 
 const (
-	InboxAddressTypeUnknown           = iota
-	InboxAddressTypeAdminDevice       // 管理员iPad
-	InboxAddressTypeSimulatorDevice   // 模拟器
-	InboxAddressTypeArduinoTestDevice //测试Arduino设备
-	InboxAddressTypePostgameDevice    // 出口处iPad
-	InboxAddressTypeWearableDevice    // 穿戴设备
-	InboxAddressTypeMainArduinoDevice // Arduino主墙设备
-	InboxAddressTypeSubArduinoDevice  // Arduino小墙设备
+	InboxAddressTypeUnknown           = 0
+	InboxAddressTypeAdminDevice       = 1 // 管理员iPad
+	InboxAddressTypeSimulatorDevice   = 2 // 模拟器
+	InboxAddressTypeArduinoTestDevice = 3 //测试Arduino设备
+	InboxAddressTypePostgameDevice    = 4 // 出口处iPad
+	InboxAddressTypeWearableDevice    = 5 // 穿戴设备
+	InboxAddressTypeMainArduinoDevice = 6 // Arduino主墙设备
+	InboxAddressTypeSubArduinoDevice  = 7 // Arduino小墙设备
+	InboxAddressTypeQueueDevice       = 8 // 叫号屏幕
 )
 
 func (t InboxAddressType) IsPlayerControllerType() bool {

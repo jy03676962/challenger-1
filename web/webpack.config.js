@@ -11,7 +11,7 @@ module.exports = {
     api: './src/api.jsx',
     front: './src/front.jsx',
     ingame: './src/ingame.jsx',
-    queuue: './src/queue.jsx'
+    queue: './src/queue.jsx'
   },
   output: {
     path: path.join(__dirname, 'dist/js'),

@@ -29,7 +29,6 @@ class Api {
     }
     let uri = wsAddressWithPath('ws')
     let sock = new WebSocket(uri)
-    console.log('socket is ' + uri)
     this.state = 'connecting...'
     sock.onopen = () => {
       console.log('connected to ' + uri)
