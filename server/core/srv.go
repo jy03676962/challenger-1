@@ -200,7 +200,6 @@ func (s *Srv) onMatchEvent(evt MatchEvent) {
 
 // nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
-	log.Println("on queue updated")
 	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
 }
 
@@ -219,7 +218,7 @@ func (s *Srv) handleMatchEvent(evt MatchEvent) {
 		s.db.saveMatchData(d["matchData"].(*MatchData))
 		s.sendMsgs("matchStop", d, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
 	case MatchEventTypeUpdate:
-		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
+		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice, InboxAddressTypeIngameDevice)
 	}
 }
 
@@ -289,6 +288,8 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.handlePostGameMessage(msg)
 	case InboxAddressTypeWearableDevice:
 		s.handleWearableMessage(msg)
+	case InboxAddressTypeIngameDevice:
+		s.handleIngameMessage(msg)
 	}
 }
 
@@ -296,6 +297,13 @@ func (s *Srv) handleWearableMessage(msg *InboxMessage) {
 	msg.SetCmd("wearableLoc")
 	for _, m := range s.mDict {
 		m.OnMatchCmdArrived(msg)
+	}
+}
+
+func (s *Srv) handleIngameMessage(msg *InboxMessage) {
+	cmd := msg.GetCmd()
+	if cmd == "init" {
+		s.sendToOne(msg, *msg.Address)
 	}
 }
 

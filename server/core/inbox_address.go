@@ -16,6 +16,7 @@ const (
 	InboxAddressTypeMainArduinoDevice = 6 // Arduino主墙设备
 	InboxAddressTypeSubArduinoDevice  = 7 // Arduino小墙设备
 	InboxAddressTypeQueueDevice       = 8 // 叫号屏幕
+	InboxAddressTypeIngameDevice      = 9 // 游戏内屏幕
 )
 
 func (t InboxAddressType) IsPlayerControllerType() bool {

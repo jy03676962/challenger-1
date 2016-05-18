@@ -1,41 +1,42 @@
 @import './global.css';
-div.root {}
-div.left {
-  float: left;
-  width: 50%;
+.root {
+  height: 1080px;
+  width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
 }
-div.right {
-  float: right;
-  margin: 10px;
-  width: 48%;
-  height: 600px;
+.text {
+  font: alien;
 }
-div.block {
-  background-color: #C1C1C1;
-  margin: 10px;
-  padding: 10px;
-  position: relative;
-}
-div.block button {
-  text-align: center;
-  right: 20px;
+.tableBg {
+  width: 872px;
+  height: 503px;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 120px;
+  left: 1327px;
 }
-div.block .content {
+.tableText {
+  composes: text;
+  color: white;
+  font-size: 90px;
+  position: absolute;
   display: inline-block;
-  margin: 5px;
-  width: 100px;
-  text-align: right;
+  height: 122px;
+  line-height: 122px;
 }
-div.block .title {
+.tableName {
+  composes: tableText;
+  left: 90px;
+}
+.tableEnergy {
+  composes: tableText;
+  left: 600px;
+}
+.tableImg {
+  position: absolute;
   display: inline-block;
-  margin: 5px;
-}
-div.right textarea {
-  overflow-y: scroll;
-  height: 100%;
-  width: 100%;
-  resize: none;
+  width: 74px;
+  height: 90px;
+  left: 490px;
+  top: 16px;
 }
