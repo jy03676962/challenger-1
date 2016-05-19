@@ -280,6 +280,7 @@ const QueueView = CSSModules(observer(React.createClass({
     let match = this.props.queue.match
     var count = queue.length
     let preparing = null
+    let callingTeam = null
     for (let team of queue) {
       if (team.status != 0) {
         count--
@@ -287,8 +288,22 @@ const QueueView = CSSModules(observer(React.createClass({
           preparing = team
         }
       } else {
+        if (team.calling > 0) {
+          callingTeam = team
+        }
         break
       }
+    }
+    if (callingTeam) {
+      return (
+        <div styleName='root'>
+        <div styleName='container'>
+          <img styleName='rootImg' src={require('./assets/qbg.png')} />
+          <img styleName='callingImg' src={require('./assets/c_bg.png')} />
+          <div styleName='callingText'>{callingTeam.id}</div>
+        </div>
+      </div>
+      )
     }
     return (
       <div styleName='root'>

@@ -32,6 +32,7 @@ type Team struct {
 	Status     TeamStatus `json:"status"`
 	WaitTime   int        `json:"waitTime"`
 	Mode       string     `json:"mode"`
+	Calling    int        `json:"calling"`
 }
 
 type Queue struct {
@@ -58,7 +59,7 @@ func (q *Queue) AddTeamToQueue(teamSize int, mode string) int {
 	defer q.updateHallData()
 	q.cur += 1
 	id := strconv.Itoa(q.cur)
-	t := Team{Size: teamSize, ID: id, Status: TS_Waiting, Mode: mode}
+	t := Team{Size: teamSize, ID: id, Status: TS_Waiting, Mode: mode, Calling: 0}
 	element := q.li.PushBack(&t)
 	q.dict[id] = element
 	return q.cur
@@ -82,6 +83,7 @@ func (q *Queue) TeamPrepare(teamID string) {
 	team := element.Value.(*Team)
 	if team.Status == TS_Waiting {
 		team.Status = TS_Prepare
+		team.Calling = 0
 	}
 }
 
@@ -114,13 +116,14 @@ func (q *Queue) TeamFinishMatch(teamID string) {
 func (q *Queue) TeamCall(teamID string) {
 	q.lock.RLock()
 	defer q.lock.RUnlock()
+	defer q.updateHallData()
 	element := q.dict[teamID]
 	if element == nil {
 		return
 	}
 	team := element.Value.(*Team)
 	if team.Status == TS_Waiting {
-		// TODO: call team
+		team.Calling = 1
 	}
 }
 
@@ -138,7 +141,7 @@ func (q *Queue) TeamCutLine(teamID string) {
 	}
 	for e := q.li.Front(); e != nil; e = e.Next() {
 		t := e.Value.(*Team)
-		if t.Status == TS_Waiting {
+		if t.Status == TS_Waiting && t.Calling == 0 {
 			q.li.MoveBefore(element, e)
 			return
 		}
@@ -186,6 +189,7 @@ func (q *Queue) TeamDelay(teamID string) {
 		q.li.MoveAfter(element, next)
 		team := element.Value.(*Team)
 		team.DelayCount += 1
+		team.Calling = 0
 	}
 }
 

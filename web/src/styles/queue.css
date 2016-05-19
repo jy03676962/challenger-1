@@ -12,6 +12,20 @@
 .rootImg {
   width: 100%;
 }
+.callingImg {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.callingText {
+  position: absolute;
+  top: 76.2vw;
+  left: 40.1vw;
+  font-family: alien;
+  font-size: 16.2vw;
+  color: #00ff46;
+}
 .label {
   font-family: serif;
   color: white;
