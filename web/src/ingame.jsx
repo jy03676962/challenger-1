@@ -136,7 +136,7 @@ const IngameView = CSSModules(observer(React.createClass({
         barBg = require('./assets/s_b.png')
         barFront = data.match.rampageTime > 0 ? require('./assets/s_r.png') : require('./assets/s_n.png')
       }
-      let r = (1 - data.match.energy / data.match.maxEnergy) * 1905 / 19.2
+      let r = (1 - data.match.energy / data.match.maxEnergy) * 1911 / 19.2
       let clip = `inset(0 ${r}vw 0 0)`
       let s = {
         position: 'absolute',

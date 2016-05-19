@@ -1,7 +1,5 @@
 @import './global.css';
 div.root {
-  width: 1080px;
-  height: 1920px;
-  margin-left: auto;
-  margin-right: auto;
+  font-family: alien;
+  width: 100% height: 177.78vw;
 }
