@@ -88,7 +88,7 @@ func (db *DB) saveMatchData(m *MatchData) {
 
 func (db *DB) getHistory(count int) []MatchData {
 	var matches []MatchData
-	db.conn.Limit(count).Preload("Member").Find(&matches)
+	db.conn.Limit(count).Order("created_at desc").Preload("Member").Find(&matches)
 	return matches
 }
 
