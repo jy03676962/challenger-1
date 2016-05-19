@@ -192,7 +192,7 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 }
 
 func (udp *InboxUdpConnection) WriteJSON(v *InboxMessage) error {
-	str := v.GetStr("head") + v.GetStr("id") + v.GetStr("cmd")
+	str := v.GetCmd() + v.GetStr("id") + v.GetStr("cmd")
 	udp.lock.RLock()
 	c, ok := udp.dict[v.GetStr("id")]
 	udp.lock.RUnlock()

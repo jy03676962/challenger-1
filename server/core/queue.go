@@ -107,8 +107,8 @@ func (q *Queue) TeamFinishMatch(teamID string) {
 	if element == nil {
 		return
 	}
-	team := element.Value.(*Team)
-	team.Status = TS_After
+	q.li.Remove(element)
+	delete(q.dict, teamID)
 }
 
 func (q *Queue) TeamCall(teamID string) {
