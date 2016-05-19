@@ -9,6 +9,7 @@ import { wsAddressWithPath } from '~/js/util.jsx'
 class Queue {
   @ observable data
   @ observable connected
+  @ observable match
   constructor() {
     this._reset()
   }
@@ -17,6 +18,7 @@ class Queue {
     this.sock = null
     this.state = false
     this.data = null
+    this.match = null
   }
 
   connect() {
@@ -51,11 +53,16 @@ class Queue {
         this.connected = true
         break
       case 'matchData':
-        console.log(json.data)
         if (json.data != null && this.connected) {
           this.data = json.data
         }
         break
+      case 'matchStop':
+        this.match = null
+      case 'updateMatch':
+        if (json.data != null && this.connected) {
+          this.match = JSON.parse(json.data)
+        }
     }
   }
 
@@ -65,8 +72,35 @@ class Queue {
       this.sock.send(d)
     }
   }
-
 }
+
+const CurrentMatchView = CSSModules(observer(React.createClass({
+  render() {
+    let match = this.props.match
+    if (match == null) {
+      return null
+    }
+    let bg = match.mode == 'g' ? require('./assets/g_game_bg.png') : require('./assets/s_game_bg.png')
+    let color = match.mode == 'g' ? '#dc8524' : '#03dceb'
+    let min = Math.floor(match.elasped / 60)
+    let sec = Math.floor(match.elasped - 60 * min)
+    let pad = (i) => {
+      return (i < 10 ? '0' : '') + i
+    }
+    let time = pad(min) + ':' + pad(sec)
+    return (
+      <div styleName='matchInfo'>
+        <img src={bg}/>
+        <div style={{color:color}}>
+          <div styleName='matchTimeLabel'>游戏已开始：</div>
+          <div styleName='matchGoldLabel'>当前金币数：</div>
+          <div styleName='matchTimeValue'>{time}</div>
+          <div styleName='matchGoldValue'>{match.gold + 'G'}</div>
+        </div>
+      </div>
+    )
+  }
+})), styles)
 
 const QueueView = CSSModules(observer(React.createClass({
   render() {
@@ -81,6 +115,7 @@ const QueueView = CSSModules(observer(React.createClass({
     }
     let history = this.props.queue.data.history
     let queue = this.props.queue.data.queue
+    let match = this.props.queue.match
     var count = queue.length
     for (let team of queue) {
       if (team.status != 0) {
@@ -99,6 +134,7 @@ const QueueView = CSSModules(observer(React.createClass({
           <div styleName='groupValue'>{count}</div>
           <div styleName='timeUnit'>分钟</div>
           <div styleName='groupUnit'>组</div>
+          <CurrentMatchView match={match} />
         </div>
       </div>
     )

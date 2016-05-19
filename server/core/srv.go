@@ -132,8 +132,6 @@ func (s *Srv) GetAnsweringMatchData(c echo.Context) error {
 	return c.JSON(http.StatusOK, ret)
 }
 
-// internal
-
 func (s *Srv) mainLoop() {
 	for {
 		select {
@@ -198,7 +196,6 @@ func (s *Srv) onMatchEvent(evt MatchEvent) {
 	s.mChan <- evt
 }
 
-// nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
 	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
 	history := s.db.getHistory(3)
@@ -224,9 +221,9 @@ func (s *Srv) handleMatchEvent(evt MatchEvent) {
 		d["matchID"] = evt.ID
 		s.queue.TeamFinishMatch(d["teamID"].(string))
 		s.db.saveMatchData(d["matchData"].(*MatchData))
-		s.sendMsgs("matchStop", d, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice)
+		s.sendMsgs("matchStop", d, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice, InboxAddressTypeIngameDevice, InboxAddressTypeQueueDevice)
 	case MatchEventTypeUpdate:
-		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice, InboxAddressTypeIngameDevice)
+		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice, InboxAddressTypeIngameDevice, InboxAddressTypeQueueDevice)
 	}
 }
 
