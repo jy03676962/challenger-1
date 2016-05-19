@@ -14,11 +14,12 @@ import (
 )
 
 const (
-	host     = "localhost"
-	httpAddr = host + ":3000"
-	tcpAddr  = host + ":4000"
-	udpAddr  = host + ":5000"
-	dbPath   = "./challenger.db"
+	host        = "localhost"
+	httpAddr    = host + ":3000"
+	tcpAddr     = host + ":4000"
+	udpAddr     = host + ":5000"
+	dbPath      = "./challenger.db"
+	isSimulator = true
 )
 
 func main() {
@@ -40,7 +41,7 @@ func main() {
 
 	log.Println("reading cfg done")
 
-	srv := core.NewSrv()
+	srv := core.NewSrv(isSimulator)
 	go srv.Run(tcpAddr, udpAddr, dbPath)
 
 	// setup echo

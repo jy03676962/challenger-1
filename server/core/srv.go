@@ -28,10 +28,12 @@ type Srv struct {
 	pDict            map[string]*PlayerController
 	aDict            map[string]*ArduinoController
 	mDict            map[uint]*Match
+	isSimulator      bool
 }
 
-func NewSrv() *Srv {
+func NewSrv(isSimulator bool) *Srv {
 	s := Srv{}
+	s.isSimulator = isSimulator
 	s.inbox = NewInbox(&s)
 	s.queue = NewQueue(&s)
 	s.db = NewDb()
@@ -356,7 +358,7 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 				ids = append(ids, pc.ID)
 			}
 		}
-		s.startNewMatch(ids, mode, "", true)
+		s.startNewMatch(ids, mode, "")
 	case "stopMatch", "playerMove", "playerStop":
 		mid := uint(msg.Get("matchID").(float64))
 		if match := s.mDict[mid]; match != nil {
@@ -415,7 +417,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		ids := msg.Get("ids").(string)
 		controllerIDs := strings.Split(ids, ",")
 		s.queue.TeamStart(teamID)
-		s.startNewMatch(controllerIDs, mode, teamID, false)
+		s.startNewMatch(controllerIDs, mode, teamID)
 	case "teamCall":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
@@ -441,13 +443,13 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	}
 }
 
-func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string, isSimulator bool) {
+func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string) {
 	md := s.db.newMatch()
 	mid := md.ID
 	for _, id := range controllerIDs {
 		s.pDict[id].MatchID = mid
 	}
-	m := NewMatch(s, controllerIDs, md, mode, teamID, isSimulator)
+	m := NewMatch(s, controllerIDs, md, mode, teamID, s.isSimulator)
 	s.mDict[mid] = m
 	go m.Run()
 	s.sendMsgs("newMatch", mid, InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)
