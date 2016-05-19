@@ -51,7 +51,7 @@ class Queue {
     switch (data.cmd) {
       case 'init':
         this.state = 'connected'
-      case 'queueData':
+      case 'matchData':
         this.data = data.data
     }
   }
@@ -68,7 +68,9 @@ const QueueView = CSSModules(observer(React.createClass({
   render() {
     return (
       <div styleName='root'>
-        <img src={require('./assets/qbg.png')} />
+        <div styleName='container'>
+          <img styleName='rootImg' src={require('./assets/qbg.png')} />
+        </div>
   </div>
     )
   }
