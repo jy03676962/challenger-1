@@ -201,6 +201,12 @@ func (s *Srv) onMatchEvent(evt MatchEvent) {
 // nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
 	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
+	msg := NewInboxMessage()
+	msg.SetCmd("matchData")
+	msg.Set("queue", queueData)
+	passedMatches := s.db.getHistory(3)
+	msg.Set("passed", passedMatches)
+	s.sends(msg, InboxAddressTypeQueueDevice)
 }
 
 func (s *Srv) handleMatchEvent(evt MatchEvent) {
