@@ -169,3 +169,54 @@
   display: block;
   margin: 0 auto;
 }
+.delayImg {
+  position: absolute;
+  display: block;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+.delayText {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 3.333vw;
+  text-align: center;
+  color: white;
+  font-family: alien;
+  font-size: 1.38889vw;
+  top: 0;
+  left: 0;
+}
+.prepareCell {
+  position: absolute;
+  width: 100%;
+  height: 10.926vw;
+  left: 0;
+  top: 68.98vw;
+  color: #00ff46;
+}
+.prepareNumber {
+  position: absolute;
+  color: inherit;
+  font-family: alien;
+  font-size: 7.4vw;
+  left: 13.8889vw;
+  height: 100%;
+  line-height: 10.926vw;
+}
+.prepareBg {
+  position: absolute;
+  right: 6.852vw;
+  top: 0.926vw;
+  height: 9.537vw;
+  width: 68vw;
+}
+.prepareText {
+  position: absolute;
+  color: inherit;
+  font-family: serif;
+  font-size: 24.vw;
+  left: 78.8889vw;
+  top: 7.13vw;
+}

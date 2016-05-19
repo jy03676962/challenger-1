@@ -187,6 +187,58 @@ const CurrentMatchCellView = CSSModules(React.createClass({
   }
 }), styles)
 
+
+const DelayView = CSSModules(React.createClass({
+  render() {
+    let delayImg = (delay) => {
+      switch (delay) {
+        case 0:
+          return require('./assets/late0.png')
+        case 1:
+          return require('./assets/late1.png')
+        case 2:
+          return require('./assets/late2.png')
+        case 3:
+          return require('./assets/late3.png')
+        case 4:
+          return require('./assets/late4.png')
+      }
+    }
+    let count = this.props.count
+    let style = {
+      position: 'absolute',
+      left: this.props.left,
+      top: this.props.top,
+      width: '3.333vw',
+      height: '3.333vw',
+    }
+    return (
+      <div style={style}>
+        <img src={delayImg(count)} styleName='delayImg'/>
+        <div styleName='delayText'>{count}</div>
+      </div>
+    )
+  }
+}), styles)
+
+const PrepareCellView = CSSModules(React.createClass({
+  render() {
+    let team = this.props.team
+    if (team == null) {
+      return null
+    }
+    let bg = team.mode == 'g' ? require('./assets/g_p_bg.png') : require('./assets/s_p_bg.png')
+    return (
+      <div styleName='prepareCell'>
+        <DelayView count={team.delayCount} left={'8.333vw'} top={'3.7vw'} />
+        <div styleName='prepareNumber'>{team.id}</div>
+        <img src={bg} styleName='prepareBg'/>
+        <div styleName='prepareText'>进入等待区...</div>
+      </div>
+    )
+  }
+}), styles)
+
 const QueueView = CSSModules(observer(React.createClass({
   render() {
     if (this.props.queue.data == null) {
