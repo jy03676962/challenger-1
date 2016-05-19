@@ -5,9 +5,60 @@
   height: 100vh;
 }
 .container {
+  position: relative;
   width: 100%;
   height: 177.78vw;
 }
 .rootImg {
   width: 100%;
+}
+.label {
+  font-family: default;
+  color: white;
+  font-size: 2.41vw;
+}
+.timeLabel {
+  composes: label;
+  position: absolute;
+  left: 8.796vw;
+  top: 20.37vw;
+}
+.groupLabel {
+  composes: label;
+  position: absolute;
+  left: 8.796vw;
+  top: 27.778vw;
+}
+.value {
+  color: white;
+  font-size: 7.407vw;
+}
+.timeValue {
+  composes: value;
+  position: absolute;
+  left: 32.4vw;
+  top: 19.2vw;
+}
+.groupValue {
+  composes: value;
+  position: absolute;
+  left: 32.4vw;
+  top: 26.4vw;
+}
+.unit {
+  font-family: default;
+  color: white;
+  font-size: 2.41vw;
+}
+.timeUnit {
+  composes: unit;
+  position: absolute;
+  left: 41.6667vw;
+  top: 20.37vw;
+}
+.groupUnit {
+  composes: unit;
+  position: absolute;
+  left: 41.6667vw;
+  top: 27.778vw;
 }

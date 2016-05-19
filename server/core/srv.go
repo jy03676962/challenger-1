@@ -201,11 +201,13 @@ func (s *Srv) onMatchEvent(evt MatchEvent) {
 // nonblock, 下发queue数据
 func (s *Srv) onQueueUpdated(queueData []Team) {
 	s.sendMsgs("HallData", queueData, InboxAddressTypeAdminDevice)
+	history := s.db.getHistory(3)
 	msg := NewInboxMessage()
 	msg.SetCmd("matchData")
-	msg.Set("queue", queueData)
-	passedMatches := s.db.getHistory(3)
-	msg.Set("passed", passedMatches)
+	data := make(map[string]interface{})
+	data["queue"] = queueData
+	data["history"] = history
+	msg.Set("data", data)
 	s.sends(msg, InboxAddressTypeQueueDevice)
 }
 
@@ -296,6 +298,16 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.handleWearableMessage(msg)
 	case InboxAddressTypeIngameDevice:
 		s.handleIngameMessage(msg)
+	case InboxAddressTypeQueueDevice:
+		s.handleQueueMessage(msg)
+	}
+}
+
+func (s *Srv) handleQueueMessage(msg *InboxMessage) {
+	cmd := msg.GetCmd()
+	if cmd == "init" {
+		s.queue.TeamQueryData()
+		s.sendToOne(msg, *msg.Address)
 	}
 }
 

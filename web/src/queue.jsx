@@ -4,16 +4,18 @@ import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import CSSModules from 'react-css-modules'
 import styles from '~/styles/queue.css'
+import { wsAddressWithPath } from '~/js/util.jsx'
 
 class Queue {
   @ observable data
-  @ observable state
+  @ observable connected
   constructor() {
     this._reset()
   }
 
   _reset() {
-    this.state = 'not connected'
+    this.sock = null
+    this.state = false
     this.data = null
   }
 
@@ -25,9 +27,7 @@ class Queue {
     }
     let uri = wsAddressWithPath('ws')
     let sock = new WebSocket(uri)
-    this.state = 'connecting...'
     sock.onopen = () => {
-      console.log('connected to ' + uri)
       let data = {
         cmd: 'init',
         ID: 'queue',
@@ -36,7 +36,6 @@ class Queue {
       sock.send(JSON.stringify(data))
     }
     sock.onclose = (e) => {
-      console.log('connection closed (' + e.code + ')')
       this._reset()
     }
     sock.onmessage = (e) => {
@@ -46,41 +45,74 @@ class Queue {
   }
 
   onMessage(msg) {
-    console.log('got socket message: ' + msg)
-    let data = JSON.parse(msg)
-    switch (data.cmd) {
+    let json = JSON.parse(msg)
+    switch (json.cmd) {
       case 'init':
-        this.state = 'connected'
+        this.connected = true
+        break
       case 'matchData':
-        this.data = data.data
+        console.log(json.data)
+        if (json.data != null && this.connected) {
+          this.data = json.data
+        }
+        break
     }
   }
 
   send(data) {
-    let d = JSON.stringify(data)
-    this.log = `发送:${d}\n` + this.log
-    this.sock.send(d)
+    if (this.sock) {
+      let d = JSON.stringify(data)
+      this.sock.send(d)
+    }
   }
 
 }
 
 const QueueView = CSSModules(observer(React.createClass({
   render() {
+    if (this.props.queue.data == null) {
+      return (
+        <div styleName='root'>
+        <div styleName='container'>
+          <img styleName='rootImg' src={require('./assets/qbg.png')} />
+        </div>
+      </div>
+      )
+    }
+    let history = this.props.queue.data.history
+    let queue = this.props.queue.data.queue
+    var count = queue.length
+    for (let team of queue) {
+      if (team.status != 0) {
+        count--
+      } else {
+        break
+      }
+    }
     return (
       <div styleName='root'>
         <div styleName='container'>
           <img styleName='rootImg' src={require('./assets/qbg.png')} />
+          <div styleName='timeLabel'>最长等待时间：</div>
+          <div styleName='groupLabel'>当前排队组数：</div>
+          <div styleName='timeValue'>{count * 5}</div>
+          <div styleName='groupValue'>{count}</div>
+          <div styleName='timeUnit'>分钟</div>
+          <div styleName='groupUnit'>组</div>
         </div>
-  </div>
+      </div>
     )
+  },
+  componentDidMount() {
+    this.props.queue.connect()
   }
 })), styles)
 
 var queue = new Queue()
 
 render((
-  <QueueView queue={queue}>
-  </QueueView>
-), document.getElementById('queue'), function() {
-  console.log('render queue')
-});
+    <QueueView queue={queue} />),
+  document.getElementById('queue'),
+  function() {
+    console.log('render queue')
+  });
