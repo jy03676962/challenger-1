@@ -4,7 +4,7 @@ import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import CSSModules from 'react-css-modules'
 import styles from '~/styles/ingame.css'
-import { wsAddressWithPath } from '~/js/util.jsx'
+import * as util from '~/js/util.jsx'
 
 class IngameData {
 
@@ -27,7 +27,7 @@ class IngameData {
       this._reset()
       return
     }
-    let uri = wsAddressWithPath('ws')
+    let uri = util.wsAddressWithPath('ws')
     let sock = new WebSocket(uri)
     sock.onopen = () => {
       let data = {
@@ -121,12 +121,7 @@ const IngameView = CSSModules(observer(React.createClass({
           content.push(<PlayerInfo idx={i} key ={i} />)
         }
       }
-      let min = Math.floor(data.match.elasped / 60)
-      let sec = Math.floor(data.match.elasped - 60 * min)
-      let pad = (i) => {
-        return (i < 10 ? '0' : '') + i
-      }
-      let time = pad(min) + ':' + pad(sec)
+      let time = util.timeStr(data.match.elasped)
       let showGold = data.match.mode == 'g' && data.match.gold > 0
       var barBg, barFront
       if (data.match.mode == 'g') {
