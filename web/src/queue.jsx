@@ -74,7 +74,7 @@ class Queue {
   }
 }
 
-const HistoryCellView = CSSModules(observer(React.createClass({
+const HistoryCellView = CSSModules(React.createClass({
   render() {
     let matchData = this.props.data
     let idx = this.props.idx
@@ -102,16 +102,16 @@ const HistoryCellView = CSSModules(observer(React.createClass({
     return (
       <div style={style}>
         <img src={require('./assets/late0.png')} styleName='historyCellImg' />
-        <div styleName='historyNumber'>{matchData.matchID}</div>
+        <div styleName='historyNumber'>{matchData.teamID}</div>
         <div styleName='historyPlayer'>{playerStr}</div>
         <img src={modeImg} styleName='historyIcon' />
         <div styleName='historyResult'>{result}</div>
       </div>
     )
   }
-})), styles)
+}), styles)
 
-const HistoryView = CSSModules(observer(React.createClass({
+const HistoryView = CSSModules(React.createClass({
   render() {
     let history = this.props.history
     if (history == null || history.length == 0) {
@@ -121,7 +121,7 @@ const HistoryView = CSSModules(observer(React.createClass({
       <div styleName='history'>
         {
         history.sort((a, b) => {
-          return a.teamID > b.teamID
+          return a.id > b.id
         }).map((m, idx) => {
           return <HistoryCellView data={m} idx={idx} key={idx}/>
         })
@@ -129,9 +129,9 @@ const HistoryView = CSSModules(observer(React.createClass({
       </div>
     )
   }
-})), styles)
+}), styles)
 
-const CurrentMatchView = CSSModules(observer(React.createClass({
+const CurrentMatchView = CSSModules(React.createClass({
   render() {
     let match = this.props.match
     if (match == null) {
@@ -152,7 +152,40 @@ const CurrentMatchView = CSSModules(observer(React.createClass({
       </div>
     )
   }
-})), styles)
+}), styles)
+
+const CurrentMatchCellView = CSSModules(React.createClass({
+  render() {
+    let match = this.props.match
+    if (match == null) {
+      return null
+    }
+    if (match.mode == 'g') {
+      var bgImg = require('./assets/g_cell_bg.png')
+      var modeImg = require('./assets/g_icon.png')
+      var color = '#dc8524'
+    } else {
+      var bgImg = require('./assets/s_cell_bg.png')
+      var modeImg = require('./assets/s_icon.png')
+      var color = '#03dceb'
+    }
+    let playerStr = match.member.map((player, idx) => {
+      return 'P' + player.cid.split(':')[1]
+    }).join(' ')
+    return (
+      <div styleName='matchCell'>
+        <img src={bgImg}/>
+        <div style={{color:color}}>
+          <img src={require('./assets/late0.png')} styleName='historyCellImg' />
+          <div styleName='historyNumber'>{match.teamID}</div>
+          <div styleName='historyPlayer'>{playerStr}</div>
+          <img src={modeImg} styleName='historyIcon' />
+          <div styleName='historyResult'>进行中...</div>
+        </div>
+      </div>
+    )
+  }
+}), styles)
 
 const QueueView = CSSModules(observer(React.createClass({
   render() {
@@ -169,9 +202,13 @@ const QueueView = CSSModules(observer(React.createClass({
     let queue = this.props.queue.data.queue
     let match = this.props.queue.match
     var count = queue.length
+    let preparing = null
     for (let team of queue) {
       if (team.status != 0) {
         count--
+        if (team.status == 1) {
+          preparing = team
+        }
       } else {
         break
       }
@@ -188,6 +225,8 @@ const QueueView = CSSModules(observer(React.createClass({
           <div styleName='groupUnit'>组</div>
           <CurrentMatchView match={match} />
           <HistoryView history={history} />
+          <CurrentMatchCellView match={match} />
+          <PrepareCellView team={preparing} />
         </div>
       </div>
     )

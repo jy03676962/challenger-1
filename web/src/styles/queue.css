@@ -13,7 +13,7 @@
   width: 100%;
 }
 .label {
-  font-family: default;
+  font-family: serif;
   color: white;
   font-size: 2.41vw;
 }
@@ -46,7 +46,7 @@
   top: 26.4vw;
 }
 .unit {
-  font-family: default;
+  font-family: serif;
   color: white;
   font-size: 2.41vw;
 }
@@ -71,7 +71,7 @@
 }
 .matchLabel {
   color: inherit;
-  font-family: default;
+  font-family: serif;
   font-size: 26px;
 }
 .matchTimeLabel {
@@ -127,16 +127,18 @@
   position: absolute;
   left: 15.27778vw;
   height: 5.185vw;
+  top: 0;
   line-height: 5.185vw;
 }
 .historyPlayer {
   color: inherit;
-  font-family: default;
-  font-size: 1.85vw;
+  font-family: serif;
+  font-size: 3.24vw;
   position: absolute;
   left: 22.222vw;
   width: 43.98vw;
   height: 5.185vw;
+  top: 0;
   line-height: 5.185vw;
   text-align: center;
 }
@@ -149,10 +151,21 @@
 }
 .historyResult {
   color: inherit;
-  font-family: default;
-  font-size: 1.85vw;
+  font-family: serif;
+  font-size: 2.6vw;
   position: absolute;
   left: 78.7vw;
   height: 5.185vw;
+  top: 0;
   line-height: 5.185vw;
+}
+.matchCell {
+  position: absolute;
+  width: 100%;
+  height: 5.185vw;
+  top: 61.48vw;
+}
+.matchCell img {
+  display: block;
+  margin: 0 auto;
 }
