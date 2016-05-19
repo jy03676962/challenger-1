@@ -239,6 +239,31 @@ const PrepareCellView = CSSModules(React.createClass({
   }
 }), styles)
 
+const WaitingCellView = CSSModules(React.createClass({
+  render() {
+    let team = this.props.team
+    if (team == null) {
+      return null
+    }
+    let style = {
+      position: 'absolute',
+      left: this.props.left,
+      top: this.props.top,
+      height: '5.37vw',
+      width: '45.37vw',
+      color: '#89b2e8',
+    }
+    return (
+      <div style={style}>
+        <DelayView count={team.delayCount} left={'3.7vw'} top={'1.02vw'} />
+        <div styleName='waitingNumber'>{team.id}</div>
+        <div styleName='waitingText'>预计等待：</div>
+        <div styleName='waitingTime'>{this.props.t}</div>
+      </div>
+    )
+  }
+}), styles)
+
 const QueueView = CSSModules(observer(React.createClass({
   render() {
     if (this.props.queue.data == null) {
@@ -279,6 +304,21 @@ const QueueView = CSSModules(observer(React.createClass({
           <HistoryView history={history} />
           <CurrentMatchCellView match={match} />
           <PrepareCellView team={preparing} />
+          {
+            queue.map((team, i) => {
+              let t = 5 *(i + 1) + '分钟'
+              if (i < 10) {
+                let left = '4.259vw'
+                let top = (938 + i * 60) / 10.8 + 'vw'
+                return <WaitingCellView team={team} left={left} top={top} t={t} key={i} />
+              } else if (i < 20) {
+                let left = 544/10.8 + 'vw'
+                let top = (938 + (i -10) * 60) / 10.8 + 'vw'
+                return <WaitingCellView team={team} left={left} top={top} t={t} key={i} />
+              }
+              return null
+            })
+          }
         </div>
       </div>
     )

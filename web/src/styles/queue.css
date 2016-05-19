@@ -220,3 +220,30 @@
   left: 78.8889vw;
   top: 7.13vw;
 }
+.waitingNumber {
+  position: absolute;
+  color: inherit;
+  font-family: alien;
+  font-size: 3.24vw;
+  left: 11.11vw;
+  height: 100%;
+  line-height: 5.37vw;
+}
+.waitingText {
+  position: absolute;
+  color: inherit;
+  font-family: serif;
+  font-size: 1.85vw;
+  left: 20.9vw;
+  height: 100%;
+  line-height: 5.37vw;
+}
+.waitingTime {
+  position: absolute;
+  color: inherit;
+  font-family: serif;
+  font-size: 1.85vw;
+  right: 4.26vw;
+  height: 100%;
+  line-height: 5.37vw;
+}
