@@ -165,7 +165,7 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 		if n >= cmdLen {
 			d := buf[:cmdLen]
 			id := string(d[3:6])
-			v.Set("head", string(d[:3]))
+			v.Set("cmd", string(d[:3]))
 			v.Set("loc", string(d[6:9]))
 			v.Set("status", string(d[9:]))
 			udp.lock.RLock()

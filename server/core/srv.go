@@ -588,7 +588,7 @@ func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
 
 func (s *Srv) setWearableStatus(addr InboxAddress, status string) {
 	m := NewInboxMessage()
-	m.Set("head", "STA")
+	m.SetCmd("STA")
 	m.Set("id", addr.ID)
 	m.Set("cmd", status)
 	s.sendToOne(m, addr)
