@@ -44,6 +44,10 @@ class ConfigController: PLViewController {
 		}
 	}
 
+	@IBAction func debugLaser() {
+		performSegueWithIdentifier("ShowLaserLoop", sender: nil)
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let scrollView = AutoKeyboardScrollView()

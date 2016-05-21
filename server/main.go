@@ -82,6 +82,9 @@ func main() {
 	ec.Post("/api/update_match", func(c echo.Context) error {
 		return srv.UpdateMatchData(c)
 	})
+	ec.Get("/api/sender_list", func(c echo.Context) error {
+		return srv.GetMainArduinoList(c)
+	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))
 }

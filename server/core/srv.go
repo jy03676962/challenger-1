@@ -1,8 +1,11 @@
 package core
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -28,6 +31,8 @@ type Srv struct {
 	pDict            map[string]*PlayerController
 	aDict            map[string]*ArduinoController
 	mDict            map[uint]*Match
+	adminListenLaser bool
+	laserResults     map[string]string
 	isSimulator      bool
 }
 
@@ -43,6 +48,9 @@ func NewSrv(isSimulator bool) *Srv {
 	s.pDict = make(map[string]*PlayerController)
 	s.aDict = make(map[string]*ArduinoController)
 	s.mDict = make(map[uint]*Match)
+	s.adminListenLaser = false
+	s.laserResults = make(map[string]string)
+	s.laserResults["a"] = "b"
 	s.initArduinoControllers()
 	return &s
 }
@@ -120,6 +128,10 @@ func (s *Srv) UpdateMatchData(c echo.Context) error {
 	mid, _ := strconv.Atoi(c.FormValue("mid"))
 	s.db.updateMatchData(mid, c.FormValue("eid"))
 	return c.JSON(http.StatusOK, nil)
+}
+
+func (s *Srv) GetMainArduinoList(c echo.Context) error {
+	return c.JSON(http.StatusOK, GetOptions().MainArduinoInfo)
 }
 
 func (s *Srv) GetAnsweringMatchData(c echo.Context) error {
@@ -335,6 +347,32 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		for _, m := range s.mDict {
 			m.OnMatchCmdArrived(msg)
 		}
+	case "hb":
+		if s.adminListenLaser {
+			ur := msg.GetStr("UR")
+			count := 0
+			idx := 0
+			for i, r := range ur {
+				c := string(r)
+				if c == "1" {
+					count += 1
+					idx = i
+				}
+			}
+			if count > 0 {
+				m := NewInboxMessage()
+				m.SetCmd("laserInfo")
+				m.Set("id", msg.Address.ID)
+				m.Set("ur", ur)
+				m.Set("idx", idx)
+				if count > 1 {
+					m.Set("error", 2)
+				} else {
+					m.Set("error", 0)
+				}
+				s.sends(m, InboxAddressTypeAdminDevice)
+			}
+		}
 	}
 	if msg.GetCmd() != "init" {
 		s.sends(msg, InboxAddressTypeArduinoTestDevice)
@@ -440,6 +478,59 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		if match := s.mDict[mid]; match != nil {
 			match.OnMatchCmdArrived(msg)
 		}
+	case "laserOn":
+		s.adminListenLaser = true
+		id := msg.GetStr("id")
+		num := int(msg.Get("num").(float64))
+		connected := false
+		for _, ac := range s.aDict {
+			if ac.Address.ID == id && ac.Online {
+				connected = true
+				break
+			}
+		}
+		if !connected {
+			dd := NewInboxMessage()
+			dd.SetCmd("laserInfo")
+			dd.Set("id", id)
+			dd.Set("ur", "")
+			dd.Set("error", 1)
+			log.Println("will send error 1")
+			s.sends(dd, InboxAddressTypeAdminDevice)
+			return
+		}
+		laser := make([]map[string]string, 1)
+		d := make(map[string]string)
+		d["laser_n"] = strconv.Itoa(num)
+		d["laser_s"] = strconv.Itoa(1)
+		laser[0] = d
+		dd := NewInboxMessage()
+		dd.SetCmd("laser_ctrl")
+		dd.Set("laser", laser)
+		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
+	case "laserOff":
+		s.adminListenLaser = false
+		id := msg.GetStr("id")
+		num := int(msg.Get("num").(float64))
+		laser := make([]map[string]string, 1)
+		d := make(map[string]string)
+		d["laser_n"] = strconv.Itoa(num)
+		d["laser_s"] = strconv.Itoa(0)
+		laser[0] = d
+		dd := NewInboxMessage()
+		dd.SetCmd("laser_ctrl")
+		dd.Set("laser", laser)
+		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
+	case "stopListenLaser":
+		s.adminListenLaser = false
+		b, _ := json.Marshal(s.laserResults)
+		var out bytes.Buffer
+		json.Indent(&out, b, "", "  ")
+		ioutil.WriteFile("laser.json", out.Bytes(), 0640)
+	case "recordLaser":
+		key := msg.GetStr("from") + ":" + msg.GetStr("from_idx")
+		value := msg.GetStr("to") + ":" + msg.GetStr("to_idx")
+		s.laserResults[key] = value
 	}
 }
 
