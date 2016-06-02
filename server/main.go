@@ -38,6 +38,7 @@ func main() {
 
 	core.GetOptions()
 	core.GetSurvey()
+	core.GetLaserPair()
 
 	log.Println("reading cfg done")
 

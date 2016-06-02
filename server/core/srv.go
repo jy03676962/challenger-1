@@ -1,11 +1,8 @@
 package core
 
 import (
-	"bytes"
-	"encoding/json"
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -50,7 +47,6 @@ func NewSrv(isSimulator bool) *Srv {
 	s.mDict = make(map[uint]*Match)
 	s.adminListenLaser = false
 	s.laserResults = make(map[string]string)
-	s.laserResults["a"] = "b"
 	s.initArduinoControllers()
 	return &s
 }
@@ -526,14 +522,10 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
 	case "stopListenLaser":
 		s.adminListenLaser = false
-		b, _ := json.Marshal(s.laserResults)
-		var out bytes.Buffer
-		json.Indent(&out, b, "", "  ")
-		ioutil.WriteFile("laser.json", out.Bytes(), 0640)
+		GetLaserPair().Save()
 	case "recordLaser":
 		key := msg.GetStr("from") + ":" + msg.GetStr("from_idx")
-		value := msg.GetStr("to") + ":" + msg.GetStr("to_idx")
-		s.laserResults[key] = value
+		GetLaserPair().Record(key, msg.GetStr("to"), msg.GetStr("to_idx"))
 	}
 }
 
