@@ -14,6 +14,7 @@
 		701F50641CDF83BC00642645 /* SurveyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50631CDF83BC00642645 /* SurveyController.swift */; };
 		701F50681CDF92F200642645 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50671CDF92F200642645 /* QuestionViewController.swift */; };
 		701F506A1CDF930F00642645 /* QuestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F50691CDF930F00642645 /* QuestionTableViewCell.swift */; };
+		702F8FAC1D001B2200032C8F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702F8FAB1D001B2200032C8F /* Images.xcassets */; };
 		7099CE441CDF338F0009B62E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE421CDF338F0009B62E /* Main.storyboard */; };
 		7099CE791CDF39290009B62E /* alienleaguebold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */; };
 		7099CE7A1CDF39290009B62E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7099CE6C1CDF39290009B62E /* Assets.xcassets */; };
@@ -44,6 +45,7 @@
 		701F50631CDF83BC00642645 /* SurveyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurveyController.swift; sourceTree = "<group>"; };
 		701F50671CDF92F200642645 /* QuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		701F50691CDF930F00642645 /* QuestionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionTableViewCell.swift; sourceTree = "<group>"; };
+		702F8FAB1D001B2200032C8F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7099CE431CDF338F0009B62E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 		7099CE6C1CDF39290009B62E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				70B91E3F1CC6306F00E98E53 /* LoginViewController.swift */,
 				7099CE421CDF338F0009B62E /* Main.storyboard */,
 				701F50551CDF484300642645 /* ReplaceSeuge.swift */,
+				702F8FAB1D001B2200032C8F /* Images.xcassets */,
 			);
 			path = postgame;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 				7099CE441CDF338F0009B62E /* Main.storyboard in Resources */,
 				7099CE7B1CDF39290009B62E /* MatchResult.storyboard in Resources */,
 				709E97A31CAA850B00A6F1F2 /* LaunchScreen.storyboard in Resources */,
+				702F8FAC1D001B2200032C8F /* Images.xcassets in Resources */,
 				7099CE7A1CDF39290009B62E /* Assets.xcassets in Resources */,
 				7099CE791CDF39290009B62E /* alienleaguebold.ttf in Resources */,
 			);
@@ -442,6 +446,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 472ED4E913FF918F0E347E60 /* Pods-postgame.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer: xin xu (9YZZUBJ3ZD)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = postgame/Info.plist;
@@ -457,6 +463,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3F1CED146C3899622F044FF1 /* Pods-postgame.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: xin xu (96HSW2ZXJP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: xin xu (96HSW2ZXJP)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";

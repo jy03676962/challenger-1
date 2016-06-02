@@ -600,10 +600,12 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="大厅" id="acW-dT-cKf"/>
                     <connections>
+                        <outlet property="addPlayerButton" destination="Yjy-I8-JFj" id="KUT-hW-Z5I"/>
                         <outlet property="modeImageView" destination="Wrt-xC-aqA" id="cTD-Bn-Jsp"/>
                         <outlet property="modeLabel" destination="LQv-Ga-QN3" id="M5C-Qh-vya"/>
                         <outlet property="playerNumberLabel" destination="zaJ-Gh-07s" id="3og-gd-zZ3"/>
                         <outlet property="readyButton" destination="3hb-B2-1Qd" id="Oxh-mO-IPR"/>
+                        <outlet property="removePlayerButton" destination="DYS-xV-1hx" id="1Am-9e-Mrz"/>
                         <outlet property="startButton" destination="WFV-Bd-zVd" id="iH2-vl-jeC"/>
                         <outlet property="teamIDLabel" destination="i9c-nG-6Dj" id="hB6-Wp-L5X"/>
                         <outlet property="teamtableView" destination="9Bn-00-0EL" id="KJn-dw-r4B"/>
