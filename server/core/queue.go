@@ -200,7 +200,7 @@ func (q *Queue) TeamDelay(teamID string) {
 	team.DelayCount += 1
 	team.Calling = 0
 	if team.DelayCount >= 4 {
-		team.DelayCount = 0
+		team.DelayCount = 4
 		q.li.MoveToBack(element)
 	} else {
 		next := element.Next()
