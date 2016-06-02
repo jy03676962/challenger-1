@@ -332,9 +332,12 @@ func (m *MatchOptions) IntToTile(i int) P {
 }
 
 func (m *MatchOptions) laserSpeed(energy float64) float64 {
+	return float64(m.ArenaCellSize) / 10 / m.laserMoveInterval(energy)
+}
+
+func (m *MatchOptions) laserMoveInterval(energy float64) float64 {
 	level := int(energy / m.EnergySpeedup)
-	speed := m.LaserSpeed - float64(level)*m.LaserSpeedup
-	return float64(m.ArenaCellSize) / 10 / speed
+	return m.LaserSpeed - float64(level)*m.LaserSpeedup
 }
 
 func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
@@ -342,6 +345,17 @@ func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
 	for _, info := range m.MainArduinoInfo {
 		if info.X == x+1 && info.Y == y+1 {
 			ret = append(ret, info.ID)
+		}
+	}
+	return ret
+}
+
+func (m *MatchOptions) mainArduinoInfosByPos(intP int) []MainArduino {
+	p := m.IntToTile(intP)
+	ret := make([]MainArduino, 0)
+	for _, info := range m.MainArduinoInfo {
+		if info.X == p.X+1 && info.Y == p.Y+1 {
+			ret = append(ret, info)
 		}
 	}
 	return ret

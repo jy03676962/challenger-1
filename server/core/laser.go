@@ -5,33 +5,52 @@ import (
 	"math"
 )
 
+const laserSize = 10
+
 var _ = log.Printf
 
 var catchByPos = false
 
+type LaserLine struct {
+	ID    string
+	Index int
+	P     int
+}
+
 type Laser struct {
-	Pos     RP   `json:"pos"`
-	IsPause bool `json:"isPause"`
-	//private
-	player    *Player
-	next      int
-	dest      int
-	pathMap   map[int]int
-	p         int
-	match     *Match
-	pauseTime float64
+	IsPause              bool
+	player               *Player
+	dest                 int
+	pathMap              map[int]int
+	p                    int
+	p2                   int
+	match                *Match
+	pauseTime            float64
+	elaspedSinceLastMove float64
+	lines                []LaserLine
+	startupLines         []LaserLine
+	startupingIndex      int
 }
 
 func NewLaser(p P, player *Player, match *Match) *Laser {
 	l := Laser{}
 	l.IsPause = true
 	l.player = player
-	l.next = -1
 	l.dest = -1
 	l.match = match
 	l.pathMap = make(map[int]int)
-	l.p = l.getOpt().TilePosToInt(p)
-	l.Pos = l.getOpt().RealPosition(p)
+	l.p = GetOptions().TilePosToInt(p)
+	l.p2 = -1
+	l.elaspedSinceLastMove = GetOptions().LaserSpeed
+	l.lines = make([]LaserLine, 0)
+	l.startupLines = make([]LaserLine, 0)
+	infos := GetOptions().mainArduinoInfosByPos(l.p)
+	for _, info := range infos {
+		for i := 0; i < info.LaserNum; i++ {
+			l.startupLines = append(l.startupLines, LaserLine{info.ID, i, l.p})
+		}
+	}
+	l.startupingIndex = 0
 	return &l
 }
 
@@ -53,133 +72,101 @@ func (l *Laser) Tick(dt float64) {
 		}
 		return
 	}
-	l.FindPath()
+	opt := GetOptions()
+	l.elaspedSinceLastMove += dt
+	interval := opt.laserMoveInterval(l.match.Energy)
+	if l.elaspedSinceLastMove < interval {
+		return
+	}
+	l.elaspedSinceLastMove = 0
+	if l.startupingIndex < len(l.startupLines) {
+		line := l.startupLines[l.startupingIndex]
+		l.match.openLaser(line.ID, line.Index)
+		l.lines = append(l.lines, line)
+		l.startupingIndex += 1
+	} else {
+		next := l.findPath()
+		if l.p2 < 0 && l.p == next {
+			return
+		}
+		replaceIdx := -1
+		notInNext := 0
+		for i, line := range l.lines {
+			if line.P != next {
+				notInNext += 1
+				if replaceIdx < 0 {
+					replaceIdx = i
+				}
+			}
+		}
+		if replaceIdx >= 0 {
+			infos := opt.mainArduinoInfosByPos(next)
+			for _, info := range infos {
+				for i := 0; i < info.LaserNum; i++ {
+					if !l.contains(info.ID, i) {
+						line := l.lines[replaceIdx]
+						l.match.closeLaser(line.ID, line.Index)
+						l.match.openLaser(info.ID, i)
+						l.lines[replaceIdx] = LaserLine{info.ID, i, next}
+						if notInNext == 1 {
+							l.p = next
+							l.p2 = -1
+						}
+						return
+					}
+				}
+			}
+		}
+	}
+}
+
+func (l *Laser) contains(id string, idx int) bool {
+	for _, line := range l.lines {
+		if line.ID == id && line.Index == idx {
+			return true
+		}
+	}
+	return false
+}
+
+func (l *Laser) findPath() int {
+	l.fillPath()
+	if l.p2 >= 0 {
+		if l.pathMap[l.p2] <= l.pathMap[l.p] {
+			return l.p2
+		} else {
+			return l.p
+		}
+	}
 	next, min := l.p, l.pathMap[l.p]
-	for _, i := range l.getOpt().TileAdjacency[l.p] {
+	for _, i := range opt.TileAdjacency[l.p] {
 		if l.pathMap[i] < min {
 			min = l.pathMap[i]
 			next = i
 		}
 	}
-	currentP := l.getOpt().IntToTile(l.p)
-	nextP := l.getOpt().IntToTile(next)
-	var dir string
-	if nextP.X < currentP.X {
-		dir = "left"
-	} else if nextP.X > currentP.X {
-		dir = "right"
-	} else if nextP.Y < currentP.Y {
-		dir = "up"
-	} else if nextP.Y > currentP.Y {
-		dir = "down"
-	} else {
-		dir = "center"
-	}
-	currentRealP := l.getOpt().RealPosition(currentP)
-	nextRealP := l.getOpt().RealPosition(nextP)
-	speed := l.getOpt().laserSpeed(l.match.Energy)
-	delta := speed * dt
-	var dir2 string
-	dx, dy := l.Pos.X-currentRealP.X, l.Pos.Y-currentRealP.Y
-	if math.Abs(dy) > math.Abs(dx) {
-		if math.Abs(dy) < delta {
-			dir2 = "center"
-		} else if dy < 0 {
-			dir2 = "up"
-		} else {
-			dir2 = "down"
-		}
-	} else {
-		if math.Abs(dx) < delta {
-			dir2 = "center"
-		} else if dx < 0 {
-			dir2 = "left"
-		} else {
-			dir2 = "right"
-		}
-	}
-	var destRealP RP
-	if dir == dir2 || dir2 == "center" { // move to next directly
-		destRealP = nextRealP
-	} else { // move to current first
-		destRealP = currentRealP
-	}
-	dx, dy = destRealP.X-l.Pos.X, destRealP.Y-l.Pos.Y
-	pos := l.Pos
-	if math.Abs(dx) < math.Abs(dy) {
-		if dy > 0 {
-			pos.Y = math.Min(destRealP.Y, l.Pos.Y+delta)
-		} else {
-			pos.Y = math.Max(destRealP.Y, l.Pos.Y-delta)
-		}
-	} else {
-		if dx > 0 {
-			pos.X = math.Min(destRealP.X, l.Pos.X+delta)
-		} else {
-			pos.X = math.Max(destRealP.X, l.Pos.X-delta)
-		}
-	}
-	l.Pos = pos
-	newPos, _ := l.getOpt().TilePosition(l.Pos)
-	l.p = l.getOpt().TilePosToInt(newPos)
-	size := float64(l.getOpt().ArenaCellSize)
-	rect := Rect{
-		X: pos.X - size/2,
-		Y: pos.Y - size/2,
-		W: size,
-		H: size,
-	}
-	shouldPause := false
-	if catchByPos || l.match.isSimulator {
-		for _, player := range l.match.Member {
-			if player.InvincibleTime > 0 {
-				continue
-			}
-			playerSize := float64(l.getOpt().PlayerSize)
-			playerRect := Rect{player.Pos.X - playerSize/2, player.Pos.Y - playerSize/2, playerSize, playerSize}
-			if l.getOpt().Collide(&rect, &playerRect) {
-				shouldPause = true
-				player.InvincibleTime = l.getOpt().PlayerInvincibleTime
-				player.HitCount += 1
-				var punish int
-				if l.match.Mode == "g" {
-					punish = int(float64(l.match.Gold) * l.getOpt().Mode1TouchPunish)
-				} else {
-					punish = l.getOpt().Mode2TouchPunish
-				}
-				l.match.Gold = MaxInt(l.match.Gold-punish, 0)
-				player.Gold -= punish
-				player.LostGold += punish
-			}
-		}
-	}
-	if shouldPause {
-		l.Pause(l.getOpt().LaserPauseTime)
-	}
+	return next
 }
 
-func (l *Laser) FindPath() {
-	p, _ := l.getOpt().TilePosition(l.player.Pos)
-	dest := l.getOpt().TilePosToInt(p)
+func (l *Laser) fillPath() {
+	opt := GetOptions()
+	p, _ := opt.TilePosition(l.player.Pos)
+	dest := opt.TilePosToInt(p)
 	if l.dest == dest {
 		return
 	}
 	l.dest = dest
-	for i := 0; i < l.getOpt().ArenaWidth*l.getOpt().ArenaHeight; i++ {
+	for i := 0; i < opt.ArenaWidth*opt.ArenaHeight; i++ {
 		l.pathMap[i] = 10000
 	}
 	var fill func(x int, v int)
 	fill = func(x int, v int) {
 		l.pathMap[x] = v
-		for _, i := range l.getOpt().TileAdjacency[x] {
+		for _, i := range opt.TileAdjacency[x] {
 			if l.pathMap[i] > v+1 {
 				fill(i, v+1)
 			}
 		}
 	}
 	fill(l.dest, 0)
-}
-
-func (l *Laser) getOpt() *MatchOptions {
-	return l.match.opt
 }

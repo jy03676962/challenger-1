@@ -26,21 +26,21 @@ type MatchEvent struct {
 }
 
 type Match struct {
-	Member       []*Player       `json:"member"`
-	Stage        string          `json:"stage"`
-	TotalTime    float64         `json:"totalTime"`
-	Elasped      float64         `json:"elasped"`
-	WarmupTime   float64         `json:"warmupTime"`
-	RampageTime  float64         `json:"rampageTime"`
-	Mode         string          `json:"mode"`
-	Gold         int             `json:"gold"`
-	Energy       float64         `json:"energy"`
-	OnButtons    map[string]bool `json:"onButtons"`
-	RampageCount int             `json:"rampageCount"`
-	Lasers       []*Laser        `json:"lasers"`
-	ID           uint            `json:"id"`
-	TeamID       string          `json:"teamID"`
-	MaxEnergy    float64         `json:"maxEnergy"`
+	Member       []*Player        `json:"member"`
+	Stage        string           `json:"stage"`
+	TotalTime    float64          `json:"totalTime"`
+	Elasped      float64          `json:"elasped"`
+	WarmupTime   float64          `json:"warmupTime"`
+	RampageTime  float64          `json:"rampageTime"`
+	Mode         string           `json:"mode"`
+	Gold         int              `json:"gold"`
+	Energy       float64          `json:"energy"`
+	OnButtons    map[string]bool  `json:"onButtons"`
+	RampageCount int              `json:"rampageCount"`
+	Lasers       []LaserInterface `json:"lasers"`
+	ID           uint             `json:"id"`
+	TeamID       string           `json:"teamID"`
+	MaxEnergy    float64          `json:"maxEnergy"`
 
 	offButtons    []string
 	hiddenButtons map[string]float64
@@ -188,8 +188,7 @@ func (m *Match) setStage(s string) {
 		}
 		m.setButtonEffect("2")
 		for _, laser := range m.Lasers {
-			laser.IsPause = true
-			laser.pauseTime = m.RampageTime
+			laser.Pause(m.RampageTime)
 		}
 		m.Energy = 0
 		m.RampageCount += 1
@@ -267,6 +266,30 @@ func (m *Match) updateStage() {
 		s = "after"
 	}
 	m.setStage(s)
+}
+
+func (m *Match) openLaser(ID string, idx int) {
+	m.controlLaser(ID, idx, true)
+}
+
+func (m *Match) closeLaser(ID string, idx int) {
+	m.controlLaser(ID, idx, false)
+}
+
+func (m *Match) controlLaser(ID string, idx int, openOrClose bool) {
+	msg := NewInboxMessage()
+	msg.SetCmd("laser_ctrl")
+	laser := make(map[string]string)
+	laser["laser_n"] = strconv.Itoa(idx)
+	if openOrClose {
+		laser["laser_s"] = "1"
+	} else {
+		laser["laser_s"] = "0"
+	}
+	lasers := []map[string]string{laser}
+	msg.Set("laser", lasers)
+	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, ID}
+	m.srv.sendToOne(msg, addr)
 }
 
 func (m *Match) sync() {
@@ -431,14 +454,18 @@ func (m *Match) modeIndex() int {
 }
 
 func (m *Match) initLasers() {
-	m.Lasers = make([]*Laser, len(m.Member))
+	m.Lasers = make([]LaserInterface, len(m.Member))
 	src := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(src)
 	l := r.Perm(m.opt.ArenaWidth * m.opt.ArenaHeight)
 	for i, player := range m.Member {
 		loc := l[i]
 		p := P{loc % m.opt.ArenaWidth, loc / m.opt.ArenaWidth}
-		m.Lasers[i] = NewLaser(p, player, m)
+		if m.isSimulator {
+			m.Lasers[i] = NewSimuLaser(p, player, m)
+		} else {
+			m.Lasers[i] = NewLaser(p, player, m)
+		}
 		m.Lasers[i].Pause(m.opt.LaserAppearTime)
 	}
 }
