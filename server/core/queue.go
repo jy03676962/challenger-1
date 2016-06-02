@@ -184,12 +184,17 @@ func (q *Queue) TeamDelay(teamID string) {
 	if element == nil {
 		return
 	}
-	next := element.Next()
-	if next != nil {
-		q.li.MoveAfter(element, next)
-		team := element.Value.(*Team)
-		team.DelayCount += 1
-		team.Calling = 0
+	team := element.Value.(*Team)
+	team.DelayCount += 1
+	team.Calling = 0
+	if team.DelayCount >= 4 {
+		team.DelayCount = 0
+		q.li.MoveToBack(element)
+	} else {
+		next := element.Next()
+		if next != nil {
+			q.li.MoveAfter(element, next)
+		}
 	}
 }
 
