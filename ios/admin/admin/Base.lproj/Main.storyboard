@@ -601,6 +601,9 @@
                     <tabBarItem key="tabBarItem" title="大厅" id="acW-dT-cKf"/>
                     <connections>
                         <outlet property="addPlayerButton" destination="Yjy-I8-JFj" id="KUT-hW-Z5I"/>
+                        <outlet property="callButton" destination="add-ZT-Spq" id="4cj-F5-cBp"/>
+                        <outlet property="changeModeTGR" destination="Pii-U1-CNG" id="r8c-mz-x7E"/>
+                        <outlet property="delayButton" destination="b7n-tA-aRt" id="Q9Q-i0-VMG"/>
                         <outlet property="modeImageView" destination="Wrt-xC-aqA" id="cTD-Bn-Jsp"/>
                         <outlet property="modeLabel" destination="LQv-Ga-QN3" id="M5C-Qh-vya"/>
                         <outlet property="playerNumberLabel" destination="zaJ-Gh-07s" id="3og-gd-zZ3"/>

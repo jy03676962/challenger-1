@@ -26,12 +26,15 @@ class HallController: PLViewController {
 	@IBOutlet weak var startButton: UIButton!
 	@IBOutlet weak var addPlayerButton: UIButton!
 	@IBOutlet weak var removePlayerButton: UIButton!
+	@IBOutlet var changeModeTGR: UITapGestureRecognizer!
+	@IBOutlet weak var callButton: UIButton!
+	@IBOutlet weak var delayButton: UIButton!
+
 	var refreshControl: UIRefreshControl!
 	var teams: [Team]?
 	var topTeam: Team?
 	var controllers: [PlayerController]?
 	var hasPlayingTeam = false
-	var hasPrepareTeam = false
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -107,14 +110,22 @@ class HallController: PLViewController {
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func ready(sender: UIButton) {
-		guard topTeam != nil && !hasPrepareTeam else {
+		guard topTeam != nil else {
 			return
 		}
-		let json = JSON([
-			"cmd": "teamPrepare",
-			"teamID": topTeam!.id,
-		])
-		WsClient.singleton.sendJSON(json)
+		if topTeam!.status == .Prepare {
+			let json = JSON([
+				"cmd": "teamCancelPrepare",
+				"teamID": topTeam!.id,
+			])
+			WsClient.singleton.sendJSON(json)
+		} else {
+			let json = JSON([
+				"cmd": "teamPrepare",
+				"teamID": topTeam!.id,
+			])
+			WsClient.singleton.sendJSON(json)
+		}
 	}
 	@IBAction func start(sender: AnyObject) {
 		guard topTeam != nil else {
@@ -158,12 +169,20 @@ class HallController: PLViewController {
 			modeLabel.text = "[生存模式]"
 		}
 		if topTeam!.status == .Waiting {
-			readyButton.enabled = true
+			readyButton.setBackgroundImage(UIImage(named: "PrepareButton"), forState: .Normal)
+			callButton.enabled = true
+			delayButton.enabled = true
+			changeModeTGR.enabled = true
+			addPlayerButton.enabled = topTeam!.size < PLConstants.maxTeamSize
+			removePlayerButton.enabled = topTeam!.size > 1
 		} else if topTeam!.status == .Prepare {
-			readyButton.enabled = false
+			readyButton.setBackgroundImage(UIImage(named: "CancelPrepare"), forState: .Normal)
+			callButton.enabled = false
+			delayButton.enabled = false
+			changeModeTGR.enabled = false
+			addPlayerButton.enabled = false
+			removePlayerButton.enabled = false
 		}
-		addPlayerButton.enabled = topTeam!.size < PLConstants.maxTeamSize
-		removePlayerButton.enabled = topTeam!.size > 1
 		startButton.enabled = canStart()
 	}
 
@@ -188,15 +207,11 @@ extension HallController: DataReceiver {
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
 				var topTeamSet = false
-				hasPrepareTeam = false
 				hasPlayingTeam = false
 				for team in teams! {
 					if (team.status == .Waiting || team.status == .Prepare) && !topTeamSet {
 						topTeam = team
 						topTeamSet = true
-					}
-					if team.status == .Prepare {
-						hasPrepareTeam = true
 					}
 					if team.status == .Playing {
 						hasPlayingTeam = true
