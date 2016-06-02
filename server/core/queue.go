@@ -87,6 +87,18 @@ func (q *Queue) TeamPrepare(teamID string) {
 	}
 }
 
+func (q *Queue) TeamCancelPrepare(teamID string) {
+	q.lock.Lock()
+	defer q.lock.Unlock()
+	defer q.updateHallData()
+	element := q.dict[teamID]
+	team := element.Value.(*Team)
+	if team.Status == TS_Prepare {
+		team.Status = TS_Waiting
+		team.Calling = 0
+	}
+}
+
 func (q *Queue) TeamStart(teamID string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()

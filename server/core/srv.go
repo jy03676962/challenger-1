@@ -449,6 +449,9 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	case "teamPrepare":
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamPrepare(teamID)
+	case "teamCancelPrepare":
+		teamID := msg.GetStr("teamID")
+		s.queue.TeamCancelPrepare(teamID)
 	case "teamStart":
 		teamID := msg.GetStr("teamID")
 		mode := msg.GetStr("mode")
