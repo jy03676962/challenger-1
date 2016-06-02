@@ -24,6 +24,8 @@ class HallController: PLViewController {
 	@IBOutlet weak var playerNumberLabel: UILabel!
 	@IBOutlet weak var readyButton: UIButton!
 	@IBOutlet weak var startButton: UIButton!
+	@IBOutlet weak var addPlayerButton: UIButton!
+	@IBOutlet weak var removePlayerButton: UIButton!
 	var refreshControl: UIRefreshControl!
 	var teams: [Team]?
 	var topTeam: Team?
@@ -160,6 +162,8 @@ class HallController: PLViewController {
 		} else if topTeam!.status == .Prepare {
 			readyButton.enabled = false
 		}
+		addPlayerButton.enabled = topTeam!.size < PLConstants.maxTeamSize
+		removePlayerButton.enabled = topTeam!.size > 1
 		startButton.enabled = canStart()
 	}
 
