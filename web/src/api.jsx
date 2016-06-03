@@ -88,6 +88,10 @@ const ApiView = CSSModules(observer(React.createClass({
             <button onClick={this.connect}>{c}</button>
           </div>
           <div styleName='block'>
+            <label styleName='title'>ArduinoID</label>
+            <input type='text' ref='addr'></input><br/>
+          </div>
+          <div styleName='block'>
             <label styleName='title'>灯带效果</label><br/>
             <label styleName='content'>wall</label>
             <input type='text' ref='wall'></input><br/>
@@ -159,7 +163,8 @@ const ApiView = CSSModules(observer(React.createClass({
         wall: this.refs.wall.value,
         led_t: this.refs.led_t.value,
         mode: this.refs.mm.value
-      }]
+      }],
+      addr: this.refs.addr.value,
     }
     this.props.api.send(d)
   },
@@ -169,12 +174,14 @@ const ApiView = CSSModules(observer(React.createClass({
       useful: this.refs.btn.checked ? '1' : '0',
       mode: this.refs.btn_mode.value,
       stage: this.refs.btn_stage.value,
+      addr: this.refs.addr.value,
     }
     this.props.api.send(d)
   },
   musicCtrl: function(e) {
     let d = {
       cmd: 'mp3_ctrl',
+      addr: this.refs.addr.value,
       music: this.refs.music.value
     }
     this.props.api.send(d)
@@ -182,20 +189,23 @@ const ApiView = CSSModules(observer(React.createClass({
   lightCtrl: function(e) {
     let d = {
       cmd: 'light_ctrl',
-      light_mode: this.refs.light.value
+      light_mode: this.refs.light.value,
+      addr: this.refs.addr.value,
     }
     this.props.api.send(d)
   },
   modeCtrl: function(e) {
     let d = {
       cmd: 'mode_change',
-      mode: this.refs.mode.value
+      mode: this.refs.mode.value,
+      addr: this.refs.addr.value,
     }
     this.props.api.send(d)
   },
   scoreCtrl: function(e) {
     let d = {
       cmd: 'init_score',
+      addr: this.refs.addr.value,
       score: [{
         status: 'T1',
         'time': this.refs.t1.value
@@ -215,6 +225,7 @@ const ApiView = CSSModules(observer(React.createClass({
   laserCtrl: function(e) {
     let d = {
       cmd: 'laser_ctrl',
+      addr: this.refs.addr.value,
       laser: [{
         laser_n: this.refs.laser_n.value,
         laser_s: this.refs.laser_s.value,

@@ -402,7 +402,14 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 }
 
 func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
-	s.sends(msg, InboxAddressTypeSubArduinoDevice, InboxAddressTypeMainArduinoDevice, InboxAddressTypeArduinoTestDevice)
+	destID := msg.GetStr("addr")
+	if len(destID) > 0 {
+		mainAddr := InboxAddress{InboxAddressTypeMainArduinoDevice, destID}
+		subAddr := InboxAddress{InboxAddressTypeSubArduinoDevice, destID}
+		s.send(msg, []InboxAddress{mainAddr, subAddr})
+	} else {
+		s.sends(msg, InboxAddressTypeSubArduinoDevice, InboxAddressTypeMainArduinoDevice, InboxAddressTypeArduinoTestDevice)
+	}
 }
 
 func (s *Srv) handlePostGameMessage(msg *InboxMessage) {
