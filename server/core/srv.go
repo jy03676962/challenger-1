@@ -180,6 +180,7 @@ func (s *Srv) listenTcp(address string) {
 	log.Println("listen tcp:", address)
 	for {
 		conn, err := lr.AcceptTCP()
+		conn.SetKeepAlive(true)
 		if err != nil {
 			log.Println("tcp listen error: ", err.Error())
 		} else {
