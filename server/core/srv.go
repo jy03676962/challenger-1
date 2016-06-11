@@ -350,6 +350,15 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 			m.OnMatchCmdArrived(msg)
 		}
 	case "hb":
+		mode := msg.GetStr("MD")
+		if mode != "" {
+			intMode, err := strconv.Atoi(mode)
+			if err == nil {
+				if controller := s.aDict[msg.Address.String()]; controller != nil {
+					controller.Mode = ArduinoMode(intMode)
+				}
+			}
+		}
 		switch s.adminMode {
 		case AdminModeNormal:
 			log.Printf("got mode %v from:%v\n", msg.Get("MD"), msg.Address.ID)
