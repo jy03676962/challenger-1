@@ -352,6 +352,7 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 	case "hb":
 		switch s.adminMode {
 		case AdminModeNormal:
+			log.Printf("got mode %v from:%v\n", msg.Get("MD"), msg.Address.ID)
 			for _, m := range s.mDict {
 				m.OnMatchCmdArrived(msg)
 			}
