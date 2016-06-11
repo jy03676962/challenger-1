@@ -119,7 +119,7 @@ func (tcp *InboxTcpConnection) WriteJSON(v *InboxMessage) error {
 }
 
 func (tcp *InboxTcpConnection) Accept(addr InboxAddress) bool {
-	if !addr.Type.IsArduinoControllerType() {
+	if addr.Type != at(tcp.id) {
 		return false
 	}
 	return addr.ID == "" || addr.ID == tcp.id

@@ -55,7 +55,6 @@ func (inbox *Inbox) Send(msg *InboxMessage, addrs []InboxAddress) {
 	for _, cli := range inbox.cdict {
 		for _, addr := range addrs {
 			if cli.Accept(addr) {
-				log.Printf("client:%v\n", cli.id)
 				cli.Write(msg)
 			}
 		}
