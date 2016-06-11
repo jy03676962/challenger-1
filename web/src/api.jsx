@@ -56,7 +56,7 @@ class Api {
         this.state = 'connected'
       case 'addTCP':
         this.addr = data.data
-        this.log = `新连接: ${this.addr.id}\n` + this.log
+          //this.log = `新连接: ${this.addr.id}\n` + this.log
         break
       case 'removeTCP':
         this._reset()
