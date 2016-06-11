@@ -723,6 +723,7 @@ func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
 	msg := NewInboxMessage()
 	msg.SetCmd("init_score")
 	msg.Set("score", scoreInfo)
+	msg.Set("upload_time", strconv.Itoa(GetOptions().UploadTime))
 	s.send(msg, []InboxAddress{controller.Address})
 }
 

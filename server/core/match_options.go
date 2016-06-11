@@ -105,6 +105,7 @@ type MatchOptions struct {
 	MainArduino           []string      `json:"-"`
 	SubArduino            []string      `json:"-"`
 	MainArduinoInfo       []MainArduino `json:"-"`
+	UploadTime            int           `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}

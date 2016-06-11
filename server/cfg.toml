@@ -20,6 +20,7 @@ laserAppearTime = 3.0 # 激光预警时间
 laserPauseTime = 10.0 # 激光碰人后硬直时间
 energySpeedup = 200.0 # 激光提速每档的能量数
 laserSize = 10 # 激光的宽度
+uploadTime = 10000 # 上传速度
 
 energyBonus = [
 [ 0.0, 0.0, 0.0, 0.0 ], # t0-t1能量奖励, 1人
