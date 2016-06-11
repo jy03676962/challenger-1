@@ -48,7 +48,6 @@ func (c *InboxClient) listenRead() {
 			if e != nil {
 				log.Printf("read message error:%v\n", e.Error())
 			}
-			log.Printf("got message:%v", m)
 			c.inbox.ReceiveMessage(m)
 			if m.ShouldCloseConnection {
 				return
