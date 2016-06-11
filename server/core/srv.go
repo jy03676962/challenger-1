@@ -481,16 +481,15 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am := NewInboxMessage()
 		am.SetCmd("mode_change")
 		am.Set("mode", string(mode))
+		log.Printf("got mode change to:%v\n", string(mode))
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
-		log.Println("got queryArduinoList")
 		arduinolist := make([]ArduinoController, len(s.aDict))
 		i := 0
 		for _, controller := range s.aDict {
 			arduinolist[i] = *controller
 			i += 1
 		}
-		log.Printf("list:%v\n", arduinolist)
 		s.sendMsg("ArduinoList", arduinolist, msg.Address.ID, msg.Address.Type)
 	case "stopMatch":
 		mid := uint(msg.Get("matchID").(float64))
