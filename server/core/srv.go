@@ -11,6 +11,14 @@ import (
 	"strings"
 )
 
+type AdminMode int
+
+const (
+	AdminModeNormal     = iota
+	AdminModeDebug      = iota
+	AdminModeQuickCheck = iota
+)
+
 var _ = log.Println
 
 type pendingMatch struct {
@@ -28,8 +36,7 @@ type Srv struct {
 	pDict            map[string]*PlayerController
 	aDict            map[string]*ArduinoController
 	mDict            map[uint]*Match
-	adminListenLaser bool
-	laserResults     map[string]string
+	adminMode        AdminMode
 	isSimulator      bool
 }
 
@@ -45,8 +52,7 @@ func NewSrv(isSimulator bool) *Srv {
 	s.pDict = make(map[string]*PlayerController)
 	s.aDict = make(map[string]*ArduinoController)
 	s.mDict = make(map[uint]*Match)
-	s.adminListenLaser = false
-	s.laserResults = make(map[string]string)
+	s.adminMode = AdminModeNormal
 	s.initArduinoControllers()
 	return &s
 }
@@ -165,15 +171,15 @@ func (s *Srv) listenTcp(address string) {
 		log.Println("resolve tcp address error:", err.Error())
 		os.Exit(1)
 	}
-	listener, err := net.ListenTCP("tcp", tcpAddress)
+	lr, err := net.ListenTCP("tcp", tcpAddress)
 	if err != nil {
 		log.Println("listen tcp error:", err.Error())
 		os.Exit(1)
 	}
-	defer listener.Close()
+	defer lr.Close()
 	log.Println("listen tcp:", address)
 	for {
-		conn, err := listener.AcceptTCP()
+		conn, err := lr.AcceptTCP()
 		if err != nil {
 			log.Println("tcp listen error: ", err.Error())
 		} else {
@@ -344,7 +350,12 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 			m.OnMatchCmdArrived(msg)
 		}
 	case "hb":
-		if s.adminListenLaser {
+		switch s.adminMode {
+		case AdminModeNormal:
+			for _, m := range s.mDict {
+				m.OnMatchCmdArrived(msg)
+			}
+		case AdminModeDebug:
 			ur := msg.GetStr("UR")
 			count := 0
 			idx := 0
@@ -368,6 +379,7 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 				}
 				s.sends(m, InboxAddressTypeAdminDevice)
 			}
+		case AdminModeQuickCheck:
 		}
 	}
 	if msg.GetCmd() != "init" {
@@ -417,7 +429,6 @@ func (s *Srv) handlePostGameMessage(msg *InboxMessage) {
 	case "init":
 		s.sendMsg("init", nil, msg.Address.ID, msg.Address.Type)
 	}
-
 }
 
 func (s *Srv) handleAdminMessage(msg *InboxMessage) {
@@ -485,7 +496,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 			match.OnMatchCmdArrived(msg)
 		}
 	case "laserOn":
-		s.adminListenLaser = true
+		s.adminMode = AdminModeDebug
 		id := msg.GetStr("id")
 		num := int(msg.Get("num").(float64))
 		connected := false
@@ -515,7 +526,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		dd.Set("laser", laser)
 		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
 	case "laserOff":
-		s.adminListenLaser = false
+		s.adminMode = AdminModeNormal
 		id := msg.GetStr("id")
 		num := int(msg.Get("num").(float64))
 		laser := make([]map[string]string, 1)
@@ -528,11 +539,15 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		dd.Set("laser", laser)
 		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
 	case "stopListenLaser":
-		s.adminListenLaser = false
+		s.adminMode = AdminModeNormal
 		GetLaserPair().Save()
 	case "recordLaser":
 		key := msg.GetStr("from") + ":" + msg.GetStr("from_idx")
 		GetLaserPair().Record(key, msg.GetStr("to"), msg.GetStr("to_idx"))
+	case "startQuickCheck":
+		s.adminMode = AdminModeQuickCheck
+	case "stopQuickCheck":
+		s.adminMode = AdminModeNormal
 	}
 }
 

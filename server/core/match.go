@@ -361,6 +361,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 				break
 			}
 		}
+	case "hb":
 	}
 }
 

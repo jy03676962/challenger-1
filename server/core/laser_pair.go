@@ -16,21 +16,24 @@ type ReceiverInfo struct {
 	Valid int    `json:"valid"`
 }
 
+type _laserMap map[string]ReceiverInfo
+
 type LaserPair struct {
-	m map[string]ReceiverInfo
+	m       _laserMap
+	brokens map[string]int
 }
 
-var laserPair = LoadLaserPair()
+var laserPair = loadLaserPair()
 
 func GetLaserPair() *LaserPair {
 	return laserPair
 }
 
-func LoadLaserPair() *LaserPair {
-	m := make(map[string]ReceiverInfo)
+func loadLaserPair() *LaserPair {
+	m := make(_laserMap)
 	b, e := ioutil.ReadFile("./laser.json")
 	if os.IsNotExist(e) {
-		return &LaserPair{m}
+		return newLaserPair(m)
 	}
 	if e != nil {
 		log.Printf("parse laser pair error:%v\n", e.Error())
@@ -41,7 +44,20 @@ func LoadLaserPair() *LaserPair {
 		log.Printf("parse laser pair error:%v\n", e.Error())
 		os.Exit(1)
 	}
-	return &LaserPair{m}
+	return newLaserPair(m)
+}
+
+func newLaserPair(m _laserMap) *LaserPair {
+	lp := LaserPair{}
+	lp.m = m
+	lp.brokens = make(map[string]int)
+	for _, rcvrs := range m {
+		if rcvrs.Valid == 0 {
+			key := rcvrs.ID + ":" + rcvrs.Idx
+			lp.brokens[key] = 1
+		}
+	}
+	return &lp
 }
 
 func (l *LaserPair) Save() {
@@ -57,4 +73,5 @@ func (l *LaserPair) Record(key string, receiverID string, receiverIdx string) {
 	info.Idx = receiverIdx
 	info.Valid = 1
 	l.m[key] = info
+	l.Save()
 }

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -1191,12 +1192,21 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wI2-dR-c6R">
-                                        <rect key="frame" x="482" y="640" width="60" height="30"/>
+                                        <rect key="frame" x="432" y="640" width="60" height="30"/>
                                         <state key="normal" title="调试激光">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <action selector="debugLaser" destination="G7o-3x-up7" eventType="touchUpInside" id="Hgn-4L-ddp"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p97-XZ-j9W">
+                                        <rect key="frame" x="532" y="640" width="60" height="30"/>
+                                        <state key="normal" title="快速检测">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="quickCheck" destination="G7o-3x-up7" eventType="touchUpInside" id="JIr-4E-Fyr"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1206,6 +1216,7 @@
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="15" id="IS4-kh-FBV"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="Ihj-3R-v99"/>
                                     <constraint firstItem="wI2-dR-c6R" firstAttribute="top" secondItem="Oai-mN-5yU" secondAttribute="bottom" constant="20" id="Je4-S4-cKy"/>
+                                    <constraint firstItem="p97-XZ-j9W" firstAttribute="top" secondItem="wI2-dR-c6R" secondAttribute="top" id="Nij-34-H3N"/>
                                     <constraint firstItem="GPc-rK-fUL" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="Wpf-Cb-aFH"/>
                                     <constraint firstItem="OgJ-A9-ePy" firstAttribute="top" secondItem="qSS-Jh-Wtj" secondAttribute="top" id="Wq3-0V-EZO"/>
                                     <constraint firstItem="qSS-Jh-Wtj" firstAttribute="top" secondItem="GPc-rK-fUL" secondAttribute="bottom" constant="10" id="asr-5p-Y4Q"/>
@@ -1215,10 +1226,11 @@
                                     <constraint firstItem="WIS-97-uSB" firstAttribute="top" secondItem="qSS-Jh-Wtj" secondAttribute="bottom" constant="20" id="hGS-sV-iUW"/>
                                     <constraint firstItem="WIS-97-uSB" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="kvd-ji-se3"/>
                                     <constraint firstItem="SKw-MB-yZh" firstAttribute="leading" secondItem="OgJ-A9-ePy" secondAttribute="leading" id="qrw-B8-EGx"/>
-                                    <constraint firstItem="wI2-dR-c6R" firstAttribute="centerX" secondItem="uxj-jc-lX9" secondAttribute="centerX" id="rVm-ab-7xw"/>
+                                    <constraint firstItem="wI2-dR-c6R" firstAttribute="trailing" secondItem="uxj-jc-lX9" secondAttribute="centerX" constant="-20" id="rVm-ab-7xw"/>
                                     <constraint firstAttribute="trailing" secondItem="OgJ-A9-ePy" secondAttribute="trailing" constant="22" id="tuq-xI-6tt"/>
                                     <constraint firstItem="Oai-mN-5yU" firstAttribute="top" secondItem="WIS-97-uSB" secondAttribute="bottom" constant="22" id="tuz-rH-7ZW"/>
                                     <constraint firstItem="GPc-rK-fUL" firstAttribute="top" secondItem="uxj-jc-lX9" secondAttribute="top" constant="80" id="vBe-JG-TEJ"/>
+                                    <constraint firstItem="p97-XZ-j9W" firstAttribute="leading" secondItem="uxj-jc-lX9" secondAttribute="centerX" constant="20" id="yPb-OO-9or"/>
                                     <constraint firstItem="SKw-MB-yZh" firstAttribute="top" secondItem="GPc-rK-fUL" secondAttribute="top" id="zTp-hP-lXN"/>
                                 </constraints>
                                 <variation key="default">
@@ -1322,19 +1334,19 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TVU-uL-XRC">
                                                     <rect key="frame" x="10" y="11" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AaV-MH-syJ">
                                                     <rect key="frame" x="229" y="11" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8tj-sp-Paa">
                                                     <rect key="frame" x="448" y="11" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
