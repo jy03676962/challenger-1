@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 enum ArduinoMode: Int {
-	case Off = 0, On, Scan, Free
+	case Unknown = -1, Off = 0, On, Scan, Free
 }
 
 class ArduinoController: Mappable {

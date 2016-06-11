@@ -82,8 +82,8 @@ class ConfigController: PLViewController {
 
 	func renderArduinoList(list: [ArduinoController]) {
 		let margin: CGFloat = 10
-		let row = 10
-		let width: CGFloat = 80
+		let row = 8
+		let width: CGFloat = 100
 		let height: CGFloat = 20
 		let firstRender = self.arduinoViewMap.count == 0
 		for (i, controller) in list.enumerate() {
@@ -103,13 +103,15 @@ class ConfigController: PLViewController {
 			}
 			if (controller.online == true) {
 				if controller.mode == .On {
-					label.textColor = UIColor.blackColor()
-				} else if controller.mode == .Off {
 					label.textColor = UIColor.blueColor()
+				} else if controller.mode == .Off {
+					label.textColor = UIColor.blackColor()
 				} else if controller.mode == .Free {
 					label.textColor = UIColor.greenColor()
-				} else {
+				} else if controller.mode == .Scan {
 					label.textColor = UIColor.orangeColor()
+				} else {
+					label.textColor = UIColor.purpleColor()
 				}
 			} else {
 				label.textColor = UIColor.redColor()
