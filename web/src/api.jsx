@@ -147,7 +147,6 @@ const ApiView = CSSModules(observer(React.createClass({
           </div>
         </div>
         <div styleName='right'>
-          <textarea ref='console' readOnly value={this.props.api.log}></textarea>
         </div>
       </div>
     )
