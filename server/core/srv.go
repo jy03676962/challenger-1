@@ -363,7 +363,7 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 			mm = ArduinoModeUnknown
 		}
 		if controller := s.aDict[msg.Address.String()]; controller != nil {
-			controller.Mode = ArduinoMode(intMode)
+			controller.Mode = mm
 		}
 		switch s.adminMode {
 		case AdminModeNormal:
