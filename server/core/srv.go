@@ -429,6 +429,7 @@ func (s *Srv) handleSimulatorMessage(msg *InboxMessage) {
 }
 
 func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
+	log.Printf("got test message:%v\n", msg)
 	destID := msg.GetStr("addr")
 	if len(destID) > 0 {
 		mainAddr := InboxAddress{InboxAddressTypeMainArduinoDevice, destID}
