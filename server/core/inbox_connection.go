@@ -114,9 +114,7 @@ func (tcp *InboxTcpConnection) WriteJSON(v *InboxMessage) error {
 	start := time.Now()
 	_, e = tcp.conn.Write(buf)
 	elapsed := time.Since(start)
-	if v.GetCmd() == "mode_change" {
-		log.Printf("write took %s", elapsed)
-	}
+	log.Printf("write %v took %s", v.GetCmd(), elapsed)
 	return e
 }
 
