@@ -367,7 +367,6 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		}
 		switch s.adminMode {
 		case AdminModeNormal:
-			log.Printf("got mode %v from:%v\n", msg.Get("MD"), msg.Address.ID)
 			for _, m := range s.mDict {
 				m.OnMatchCmdArrived(msg)
 			}
@@ -497,7 +496,6 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am := NewInboxMessage()
 		am.SetCmd("mode_change")
 		am.Set("mode", mode)
-		log.Printf("got mode change to:%v\n", mode)
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
