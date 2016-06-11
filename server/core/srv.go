@@ -477,11 +477,11 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		teamID := msg.GetStr("teamID")
 		s.queue.TeamCall(teamID)
 	case "arduinoModeChange":
-		mode := ArduinoMode(msg.Get("mode").(float64))
+		mode := strconv.Itoa(int(ArduinoMode(msg.Get("mode").(float64))))
 		am := NewInboxMessage()
 		am.SetCmd("mode_change")
-		am.Set("mode", string(mode))
-		log.Printf("got mode change to:%v\n", string(mode))
+		am.Set("mode", mode)
+		log.Printf("got mode change to:%v\n", mode)
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
