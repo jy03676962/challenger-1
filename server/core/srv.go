@@ -355,9 +355,9 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		if mode != "" {
 			intMode, err := strconv.Atoi(mode)
 			if err == nil {
-				mm = ArduinoModeUnknown
-			} else {
 				mm = ArduinoMode(intMode)
+			} else {
+				mm = ArduinoModeUnknown
 			}
 		} else {
 			mm = ArduinoModeUnknown
