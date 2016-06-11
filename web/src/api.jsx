@@ -63,7 +63,7 @@ class Api {
         break
       default:
         this.addr = data.addr
-        this.log = `收到:${msg}\n` + this.log
+          //this.log = `收到:${msg}\n` + this.log
     }
   }
   send(data) {
