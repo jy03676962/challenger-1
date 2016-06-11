@@ -498,6 +498,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am := NewInboxMessage()
 		am.SetCmd("mode_change")
 		am.Set("mode", mode)
+		log.Println("send mode change")
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
