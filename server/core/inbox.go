@@ -54,6 +54,7 @@ func (inbox *Inbox) Send(msg *InboxMessage, addrs []InboxAddress) {
 	defer inbox.l.RUnlock()
 	for _, cli := range inbox.cdict {
 		for _, addr := range addrs {
+			log.Println(addr)
 			if cli.Accept(addr) {
 				cli.Write(msg)
 			}
