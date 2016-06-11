@@ -42,7 +42,7 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 	b, e := tcp.r.ReadBytes(60) // tcp message frame start with '<'
 	if e != nil {
 		if tcp.id != "" {
-			v.RemoveAddress = &InboxAddress{tcp.at(), tcp.id}
+			v.RemoveAddress = &InboxAddress{at(tcp.id), tcp.id}
 			v.ShouldCloseConnection = true
 		}
 		return e
@@ -50,13 +50,13 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 	b, e = tcp.r.ReadBytes(62) // tcp message frame end with '>'
 	if e != nil {
 		if tcp.id != "" {
-			v.RemoveAddress = &InboxAddress{tcp.at(), tcp.id}
+			v.RemoveAddress = &InboxAddress{at(tcp.id), tcp.id}
 			v.ShouldCloseConnection = true
 		}
 		return e
 	}
 	if tcp.id != "" {
-		v.Address = &InboxAddress{tcp.at(), tcp.id}
+		v.Address = &InboxAddress{at(tcp.id), tcp.id}
 	}
 	if len(b) == 1 { // only has '>' delimiter
 		return nil
@@ -67,10 +67,10 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 		parseTcpHB(string(b[:len(b)-1]), v)
 		v.SetCmd("hb")
 		if id := v.GetStr("ID"); id != "" && tcp.id != id {
-			v.AddAddress = &InboxAddress{tcp.at(), id}
+			v.AddAddress = &InboxAddress{at(id), id}
 			v.Address = v.AddAddress
 			if tcp.id != "" {
-				v.RemoveAddress = &InboxAddress{tcp.at(), tcp.id}
+				v.RemoveAddress = &InboxAddress{at(tcp.id), tcp.id}
 			}
 			tcp.id = id
 		}
@@ -78,10 +78,10 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 	return nil
 }
 
-func (tcp *InboxTcpConnection) at() InboxAddressType {
-	if tcp.id == "" {
+func at(id string) InboxAddressType {
+	if id == "" {
 		return InboxAddressTypeUnknown
-	} else if strings.HasPrefix(tcp.id, "M") {
+	} else if strings.HasPrefix(id, "M") {
 		return InboxAddressTypeMainArduinoDevice
 	}
 	return InboxAddressTypeSubArduinoDevice
