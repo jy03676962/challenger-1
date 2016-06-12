@@ -639,7 +639,7 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		var li []map[string]string
 		if ledT == nil {
 			li = make([]map[string]string, 1)
-			li[0] = map[string]string{"wall": "M", "let_t": "1", "mode": mode}
+			li[0] = map[string]string{"wall": "M", "let_t": strconv.Itoa(1), "mode": mode}
 		} else {
 			li = make([]map[string]string, len(ledT))
 			for i, t := range ledT {
