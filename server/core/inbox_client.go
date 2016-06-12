@@ -41,17 +41,14 @@ func (c *InboxClient) Write(msg *InboxMessage) {
 
 func (c *InboxClient) listenRead() {
 	for {
-		select {
-		default:
-			m := NewInboxMessage()
-			e := c.conn.ReadJSON(m)
-			if e != nil {
-				log.Printf("read message error:%v\n", e.Error())
-			}
-			c.inbox.ReceiveMessage(m)
-			if m.ShouldCloseConnection {
-				return
-			}
+		m := NewInboxMessage()
+		e := c.conn.ReadJSON(m)
+		if e != nil {
+			log.Printf("read message error:%v\n", e.Error())
+		}
+		c.inbox.ReceiveMessage(m)
+		if m.ShouldCloseConnection {
+			return
 		}
 	}
 

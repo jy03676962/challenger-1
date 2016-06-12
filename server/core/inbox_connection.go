@@ -161,6 +161,7 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 		return nil
 	default:
 		buf := make([]byte, 1024)
+		udp.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 		n, addr, err := udp.conn.ReadFromUDP(buf)
 		if err != nil {
 			return err
@@ -182,7 +183,7 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 				udp.lock.Unlock()
 				v.AddAddress = &InboxAddress{InboxAddressTypeWearableDevice, id}
 				v.Address = v.AddAddress
-				go udp.ping(cc)
+				//go udp.ping(cc)
 			} else {
 				v.Address = &InboxAddress{InboxAddressTypeWearableDevice, id}
 				select {
