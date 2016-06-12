@@ -658,6 +658,12 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		li[2] = map[string]string{"wall": "O3", "led_t": "1", "mode": mode}
 		m.Set("led", li)
 		s.sends(m, InboxAddressTypeSubArduinoDevice)
+		mm := NewInboxMessage()
+		mm.SetCmd("led_ctrl")
+		mli := make([]map[string]string, 1)
+		mli[0] = map[string]string{"wall": "O1", "led_t": "1", "mode": mode}
+		mm.Set("led", mli)
+		s.sends(mm, InboxAddressTypeMainArduinoDevice)
 	}
 }
 
