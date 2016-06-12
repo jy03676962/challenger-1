@@ -63,6 +63,23 @@ func (l *Laser) IsFollow(cid string) bool {
 	return l.player.ControllerID == cid
 }
 
+func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
+	p = 0
+	touched = false
+	if l.IsPause || l.isStartuping() {
+		return
+	}
+	for _, change := range changes {
+		for _, line := range l.lines {
+			if line.ID == change.id && line.Index == change.idx {
+				p = line.P
+				touched = true
+				return
+			}
+		}
+	}
+}
+
 func (l *Laser) Tick(dt float64) {
 	if l.IsPause {
 		l.pauseTime -= dt
@@ -79,7 +96,7 @@ func (l *Laser) Tick(dt float64) {
 		return
 	}
 	l.elaspedSinceLastMove = 0
-	if l.startupingIndex < len(l.startupLines) {
+	if l.isStartuping() {
 		line := l.startupLines[l.startupingIndex]
 		l.match.openLaser(line.ID, line.Index)
 		l.lines = append(l.lines, line)
@@ -127,6 +144,10 @@ func (l *Laser) contains(id string, idx int) bool {
 		}
 	}
 	return false
+}
+
+func (l *Laser) isStartuping() bool {
+	return l.startupingIndex < len(l.startupLines)
 }
 
 func (l *Laser) findPath() int {

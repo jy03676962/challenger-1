@@ -127,17 +127,7 @@ func (l *SimuLaser) Tick(dt float64) {
 		playerRect := Rect{player.Pos.X - playerSize/2, player.Pos.Y - playerSize/2, playerSize, playerSize}
 		if l.getOpt().Collide(&rect, &playerRect) {
 			shouldPause = true
-			player.InvincibleTime = l.getOpt().PlayerInvincibleTime
-			player.HitCount += 1
-			var punish int
-			if l.match.Mode == "g" {
-				punish = int(float64(l.match.Gold) * l.getOpt().Mode1TouchPunish)
-			} else {
-				punish = l.getOpt().Mode2TouchPunish
-			}
-			l.match.Gold = MaxInt(l.match.Gold-punish, 0)
-			player.Gold -= punish
-			player.LostGold += punish
+			l.match.touchPunish(player)
 		}
 	}
 	if shouldPause {

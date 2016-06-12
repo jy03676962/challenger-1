@@ -369,7 +369,7 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		switch s.adminMode {
 		case AdminModeNormal:
 			for _, m := range s.mDict {
-				m.OnMatchCmdArrived(msg)
+				m.OnLaserInfoArrived(msg)
 			}
 		case AdminModeDebug:
 			ur := msg.GetStr("UR")

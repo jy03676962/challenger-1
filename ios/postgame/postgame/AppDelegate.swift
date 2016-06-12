@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		#else
 			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
-		Defaults[.host] = "192.168.1.4:3000"
+		Defaults[.host] = "192.168.1.5:3000"
 		Defaults[.deviceID] = "1"
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 )
 
 var _ = log.Printf
@@ -65,6 +66,23 @@ func (l *LaserPair) Save() {
 	var out bytes.Buffer
 	json.Indent(&out, b, "", "  ")
 	ioutil.WriteFile("./laser.json", out.Bytes(), 0640)
+}
+
+func (l *LaserPair) GetInitStatus() map[string]bool {
+	ret := make(map[string]bool)
+	for _, receiver := range l.m {
+		if receiver.Valid == 1 {
+			key := receiver.ID + ":" + receiver.Idx
+			ret[key] = false
+		}
+	}
+	return ret
+}
+
+func (l *LaserPair) IsBroken(id string, idx int) bool {
+	key := id + ":" + strconv.Itoa(idx)
+	_, ok := l.brokens[key]
+	return ok
 }
 
 func (l *LaserPair) Record(key string, receiverID string, receiverIdx string) {

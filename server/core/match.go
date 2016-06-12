@@ -25,6 +25,11 @@ type MatchEvent struct {
 	Data interface{}
 }
 
+type laserInfoChange struct {
+	id  string
+	idx int
+}
+
 type Match struct {
 	Member       []*Player        `json:"member"`
 	Stage        string           `json:"stage"`
@@ -48,9 +53,11 @@ type Match struct {
 	opt           *MatchOptions
 	srv           *Srv
 	msgCh         chan *InboxMessage
+	laserInfoCh   chan *InboxMessage
 	closeCh       chan bool
 	matchData     *MatchData
 	isSimulator   bool
+	laserStatus   map[int]bool
 }
 
 func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string, isSimulator bool) *Match {
@@ -65,7 +72,8 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.Stage = "before"
 	m.opt = GetOptions()
 	m.Mode = mode
-	m.msgCh = make(chan *InboxMessage, 100)
+	m.msgCh = make(chan *InboxMessage, 1000)
+	m.laserInfoCh = make(chan *InboxMessage)
 	m.closeCh = make(chan bool)
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
@@ -88,6 +96,9 @@ func (m *Match) Run() {
 	}
 	m.WarmupTime = m.opt.Warmup
 	m.setStage("warmup-1")
+	if !m.isSimulator {
+		go m.handleLaser()
+	}
 	for {
 		<-tickChan
 		m.handleInputs()
@@ -111,6 +122,50 @@ func (m *Match) OnMatchCmdArrived(cmd *InboxMessage) {
 		case <-m.closeCh:
 		}
 	}()
+}
+
+func (m *Match) OnLaserInfoArrived(msg *InboxMessage) {
+	if m.isSimulator {
+		return
+	}
+	m.laserInfoCh <- msg
+}
+
+func (m *Match) handleLaser() {
+	infoMap := GetLaserPair().GetInitStatus()
+	for {
+		select {
+		case msg <- m.laserInfoCh:
+			ur := msg.GetStr("UR")
+			id := msg.GetStr("ID")
+			var changes []laserInfoChange
+			for i, r := range ur {
+				c := string(r)
+				var isOn = false
+				if c == "1" {
+					isOn = true
+				}
+				key := id + ":" + strconv.Itoa(i)
+				old, ok := infoMap[key]
+				if ok && old && !isOn {
+					if changes == nil {
+						changes = make([]laserInfoChange, 1)
+						changes[0] = laserInfoChange{id, i}
+					} else {
+						changes := append(changes, laserInfoChange{id, i})
+					}
+				}
+			}
+			if changes != nil {
+				msg := NewInboxMessage()
+				msg.SetCmd("laserChange")
+				msg.Set("changes", changes)
+				m.OnMatchCmdArrived(msg)
+			}
+		case <-m.closeCh:
+			return
+		}
+	}
 }
 
 func (m *Match) tick(dt time.Duration) {
@@ -361,7 +416,25 @@ func (m *Match) handleInput(msg *InboxMessage) {
 				break
 			}
 		}
-	case "hb":
+	case "laserChange":
+		changes := msg.Get("changes").([]laserInfoChange)
+		for _, laser := range m.Lasers {
+			l := laser.(*Laser)
+			touched, p := l.IsTouched(&changes)
+			if touched {
+				shouldPause := false
+				for _, player := range m.Member {
+					pp := GetOptions().TilePosToInt(player.tilePos)
+					if pp == p && player.InvincibleTime <= 0 {
+						m.touchPunish(player)
+						shouldPause = true
+					}
+				}
+				if shouldPause {
+					l.Pause(GetOptions().LaserPauseTime)
+				}
+			}
+		}
 	}
 }
 
@@ -469,6 +542,21 @@ func (m *Match) initLasers() {
 		}
 		m.Lasers[i].Pause(m.opt.LaserAppearTime)
 	}
+}
+
+func (m *Match) touchPunish(p *Player) {
+	opt := GetOptions()
+	p.InvincibleTime = opt.PlayerInvincibleTime
+	p.HitCount += 1
+	var punish int
+	if m.Mode == "g" {
+		punish = int(float64(l.match.Gold) * opt.Mode1TouchPunish)
+	} else {
+		punish = opt.Mode2TouchPunish
+	}
+	m.Gold = MaxInt(m.Gold-punish, 0)
+	p.Gold -= punish
+	p.LostGold += punish
 }
 
 func (m *Match) initButtons() {
