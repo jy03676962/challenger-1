@@ -597,7 +597,7 @@ func (m *Match) initButtons() {
 		}
 	}
 	if !m.isSimulator {
-		m.setButtonEffect("0")
+		//m.setButtonEffect("0")
 	}
 }
 

@@ -23,18 +23,24 @@ type InboxConnection interface {
 }
 
 type InboxTcpConnection struct {
-	conn *net.TCPConn
-	r    *bufio.Reader
-	id   string
+	conn    *net.TCPConn
+	r       *bufio.Reader
+	id      string
+	ch      chan []byte
+	closeCh chan struct{}
 }
 
 func NewInboxTcpConnection(conn *net.TCPConn) *InboxTcpConnection {
 	tcp := InboxTcpConnection{conn: conn}
 	tcp.r = bufio.NewReader(conn)
+	tcp.ch = make(chan []byte, 1000)
+	tcp.closeCh = make(chan struct{})
+	go tcp.doWrite()
 	return &tcp
 }
 
 func (tcp *InboxTcpConnection) Close() error {
+	close(tcp.closeCh)
 	return tcp.conn.Close()
 }
 
@@ -114,8 +120,23 @@ func (tcp *InboxTcpConnection) WriteJSON(v *InboxMessage) error {
 	}
 	buf[0] = 60
 	buf[len(buf)-1] = 62
-	_, e = tcp.conn.Write(buf)
-	return e
+	select {
+	case tcp.ch <- buf:
+	default:
+	}
+	return nil
+}
+
+func (tcp *InboxTcpConnection) doWrite() {
+	for {
+		select {
+		case <-tcp.closeCh:
+			return
+		case bytes := <-tcp.ch:
+			tcp.conn.Write(bytes)
+
+		}
+	}
 }
 
 func (tcp *InboxTcpConnection) Accept(addr InboxAddress) bool {
