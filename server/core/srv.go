@@ -327,7 +327,6 @@ func (s *Srv) handleQueueMessage(msg *InboxMessage) {
 
 func (s *Srv) handleWearableMessage(msg *InboxMessage) {
 	msg.SetCmd("wearableLoc")
-	log.Printf("got wearable msg:%v\n", msg)
 	for _, m := range s.mDict {
 		m.OnMatchCmdArrived(msg)
 	}
