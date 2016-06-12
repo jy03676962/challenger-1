@@ -161,7 +161,7 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 		return nil
 	default:
 		buf := make([]byte, 1024)
-		udp.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
+		udp.conn.SetReadDeadline(time.Now().Add(5 * time.Second))
 		n, addr, err := udp.conn.ReadFromUDP(buf)
 		if err != nil {
 			return err
@@ -223,7 +223,6 @@ func (udp *InboxUdpConnection) Accept(addr InboxAddress) bool {
 
 func (udp *InboxUdpConnection) ping(c *udpClient) {
 	for {
-		log.Println("ping udp")
 		str := fmt.Sprintf("CAL%v00", c.id)
 		_, e := udp.conn.WriteToUDP([]byte(str), c.addr)
 		if e != nil {
@@ -239,7 +238,6 @@ func (udp *InboxUdpConnection) ping(c *udpClient) {
 		case <-c.ch:
 			time.Sleep(3 * time.Second)
 		case <-timeout:
-			log.Println("got timeout")
 			udp.rmCh <- c
 			return
 		}
