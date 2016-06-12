@@ -405,6 +405,11 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		if player := m.getPlayer(msg.Address.String()); player != nil {
 			loc, _ := strconv.Atoi(msg.GetStr("loc"))
 			if loc > 0 {
+				loc -= 1
+				y := loc / GetOptions().ArenaWidth
+				x := loc % GetOptions().ArenaWidth
+				y = GetOptions().ArenaHeight - 1 - y
+				loc = GetOptions().TilePosToInt(P{x, y})
 				player.updateLoc(loc)
 			}
 		}
