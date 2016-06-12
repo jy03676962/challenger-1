@@ -382,9 +382,6 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 					idx = i
 				}
 			}
-			if msg.Address.ID == "S-1-1" {
-				log.Println(ur)
-			}
 			if count > 0 {
 				m := NewInboxMessage()
 				m.SetCmd("laserInfo")
@@ -549,6 +546,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		dd := NewInboxMessage()
 		dd.SetCmd("laser_ctrl")
 		dd.Set("laser", laser)
+		log.Println(dd)
 		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
 	case "laserOff":
 		s.adminMode = AdminModeNormal
@@ -566,6 +564,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		dd := NewInboxMessage()
 		dd.SetCmd("laser_ctrl")
 		dd.Set("laser", laser)
+		log.Println(dd)
 		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
 	case "stopListenLaser":
 		s.adminMode = AdminModeNormal

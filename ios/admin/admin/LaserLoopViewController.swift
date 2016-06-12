@@ -66,7 +66,7 @@ class LaserLoopViewController: PLViewController {
 	}
 
 	@IBAction func record() {
-		if (infoList.count > 0) {
+		if (infoList.count > 1) {
 			HUD.flash(.LabeledError(title: "有多个数据，无法记录", subtitle: nil), delay: 2)
 			return
 		}
