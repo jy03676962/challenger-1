@@ -153,6 +153,7 @@ func (udp *InboxUdpConnection) Close() error {
 func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 	select {
 	case c := <-udp.rmCh:
+		log.Println("udp remove")
 		udp.lock.Lock()
 		delete(udp.dict, c.id)
 		udp.lock.Unlock()
@@ -221,6 +222,7 @@ func (udp *InboxUdpConnection) Accept(addr InboxAddress) bool {
 
 func (udp *InboxUdpConnection) ping(c *udpClient) {
 	for {
+		log.Println("ping udp")
 		str := fmt.Sprintf("CAL%v00", c.id)
 		_, e := udp.conn.WriteToUDP([]byte(str), c.addr)
 		if e != nil {
