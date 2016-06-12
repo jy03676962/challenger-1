@@ -354,7 +354,7 @@ func (m *Match) sync() {
 	if m.isSimulator {
 		b, _ := json.Marshal(m)
 		m.srv.onMatchEvent(MatchEvent{MatchEventTypeUpdate, m.ID, string(b)})
-	} else if m.syncCount >= 10 {
+	} else if m.syncCount >= 30 {
 		b, _ := json.Marshal(m)
 		m.srv.onMatchEvent(MatchEvent{MatchEventTypeUpdate, m.ID, string(b)})
 		m.syncCount = 0
