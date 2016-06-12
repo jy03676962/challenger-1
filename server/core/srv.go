@@ -517,7 +517,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.adminMode = AdminModeDebug
 		id := msg.GetStr("id")
 		num := int(msg.Get("num").(float64)) + 1
-		info := GetOptions().arduinoInfoFromID(id)
+		info := arduinoInfoFromID(id)
 		if info.LaserNum == 5 {
 			num += 5
 		}
@@ -551,7 +551,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		s.adminMode = AdminModeNormal
 		id := msg.GetStr("id")
 		num := int(msg.Get("num").(float64)) + 1
-		info := GetOptions().arduinoInfoFromID(id)
+		info := arduinoInfoFromID(id)
 		if info.LaserNum == 5 {
 			num += 5
 		}
