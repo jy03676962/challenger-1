@@ -153,7 +153,6 @@ func (udp *InboxUdpConnection) Close() error {
 func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 	select {
 	case c := <-udp.rmCh:
-		log.Println("udp remove")
 		udp.lock.Lock()
 		delete(udp.dict, c.id)
 		udp.lock.Unlock()
@@ -164,6 +163,13 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 		udp.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 		n, addr, err := udp.conn.ReadFromUDP(buf)
 		if err != nil {
+			if err.Timeout() {
+				log.Println("udp timeout remove")
+				udp.lock.Lock()
+				delete(udp.dict, c.id)
+				udp.lock.Unlock()
+				v.RemoveAddress = &InboxAddress{InboxAddressTypeWearableDevice, c.id}
+			}
 			return err
 		}
 		cmdLen := 11
