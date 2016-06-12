@@ -69,7 +69,7 @@ func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
 	if l.IsPause || l.isStartuping() {
 		return
 	}
-	for _, change := range changes {
+	for _, change := range *changes {
 		for _, line := range l.lines {
 			if line.ID == change.id && line.Index == change.idx {
 				p = line.P
@@ -78,6 +78,7 @@ func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
 			}
 		}
 	}
+	return
 }
 
 func (l *Laser) Tick(dt float64) {

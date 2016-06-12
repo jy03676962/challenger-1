@@ -135,7 +135,7 @@ func (m *Match) handleLaser() {
 	infoMap := GetLaserPair().GetInitStatus()
 	for {
 		select {
-		case msg <- m.laserInfoCh:
+		case msg := <-m.laserInfoCh:
 			ur := msg.GetStr("UR")
 			id := msg.GetStr("ID")
 			var changes []laserInfoChange
@@ -152,7 +152,7 @@ func (m *Match) handleLaser() {
 						changes = make([]laserInfoChange, 1)
 						changes[0] = laserInfoChange{id, i}
 					} else {
-						changes := append(changes, laserInfoChange{id, i})
+						changes = append(changes, laserInfoChange{id, i})
 					}
 				}
 			}
@@ -550,7 +550,7 @@ func (m *Match) touchPunish(p *Player) {
 	p.HitCount += 1
 	var punish int
 	if m.Mode == "g" {
-		punish = int(float64(l.match.Gold) * opt.Mode1TouchPunish)
+		punish = int(float64(m.Gold) * opt.Mode1TouchPunish)
 	} else {
 		punish = opt.Mode2TouchPunish
 	}
