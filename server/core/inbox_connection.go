@@ -111,10 +111,10 @@ func (tcp *InboxTcpConnection) WriteJSON(v *InboxMessage) error {
 	}
 	buf[0] = 60
 	buf[len(buf)-1] = 62
-	start := time.Now()
+	//start := time.Now()
 	_, e = tcp.conn.Write(buf)
-	elapsed := time.Since(start)
-	log.Printf("%v write %v took %s", tcp.id, v.GetCmd(), elapsed)
+	//elapsed := time.Since(start)
+	//log.Printf("%v write %v took %s", tcp.id, v.GetCmd(), elapsed)
 	return e
 }
 

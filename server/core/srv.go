@@ -516,7 +516,11 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	case "laserOn":
 		s.adminMode = AdminModeDebug
 		id := msg.GetStr("id")
-		num := int(msg.Get("num").(float64))
+		num := int(msg.Get("num").(float64)) + 1
+		info := GetOptions().arduinoInfoFromID(id)
+		if info.LaserNum == 5 {
+			num += 5
+		}
 		connected := false
 		for _, ac := range s.aDict {
 			if ac.Address.ID == id && ac.Online {
@@ -546,7 +550,11 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	case "laserOff":
 		s.adminMode = AdminModeNormal
 		id := msg.GetStr("id")
-		num := int(msg.Get("num").(float64))
+		num := int(msg.Get("num").(float64)) + 1
+		info := GetOptions().arduinoInfoFromID(id)
+		if info.LaserNum == 5 {
+			num += 5
+		}
 		laser := make([]map[string]string, 1)
 		d := make(map[string]string)
 		d["laser_n"] = strconv.Itoa(num)

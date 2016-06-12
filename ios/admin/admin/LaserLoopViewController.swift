@@ -110,6 +110,12 @@ extension LaserLoopViewController: DataReceiver {
 		if type == .LaserInfo {
 			let info = Mapper<LaserInfo>().map(json)
 			if info != nil {
+				for (i, inf) in infoList.enumerate() {
+					if inf.id == info!.id {
+						infoList.removeAtIndex(i)
+						break
+					}
+				}
 				infoList.append(info!)
 				resultTableView.reloadData()
 			}
