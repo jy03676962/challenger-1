@@ -184,7 +184,7 @@ func (s *Srv) listenTcp(address string) {
 		if err != nil {
 			log.Println("tcp listen error: ", err.Error())
 		} else {
-			log.Println("got new tcp connection")
+			log.Printf("got new tcp connection:%v\n", conn.RemoteAddr())
 			go s.inbox.ListenConnection(NewInboxTcpConnection(conn))
 		}
 	}
@@ -498,7 +498,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am := NewInboxMessage()
 		am.SetCmd("mode_change")
 		am.Set("mode", mode)
-		log.Println("send mode change")
+		log.Printf("send mode change:%v\n", mode)
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
