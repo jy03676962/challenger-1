@@ -134,7 +134,7 @@ func (tcp *InboxTcpConnection) doWrite() {
 			return
 		case bytes := <-tcp.ch:
 			tcp.conn.Write(bytes)
-
+			log.Println(string(bytes))
 		}
 	}
 }
