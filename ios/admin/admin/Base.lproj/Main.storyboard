@@ -1291,13 +1291,6 @@
                                     <action selector="start" destination="OtN-ql-S1g" eventType="touchUpInside" id="URJ-cw-O0E"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFu-nH-47X">
-                                <rect key="frame" x="762" y="50" width="45" height="30"/>
-                                <state key="normal" title="下一个"/>
-                                <connections>
-                                    <action selector="next" destination="OtN-ql-S1g" eventType="touchUpInside" id="toC-ai-2q6"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBW-ce-5qN">
                                 <rect key="frame" x="944" y="20" width="60" height="30"/>
                                 <constraints>
@@ -1310,7 +1303,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KsD-qG-PdJ">
-                                <rect key="frame" x="847" y="50" width="30" height="30"/>
+                                <rect key="frame" x="762" y="50" width="30" height="30"/>
                                 <state key="normal" title="记录"/>
                                 <connections>
                                     <action selector="record" destination="OtN-ql-S1g" eventType="touchUpInside" id="AAP-ah-Au5"/>
@@ -1385,9 +1378,7 @@
                         <constraints>
                             <constraint firstItem="uY9-4b-LXZ" firstAttribute="top" secondItem="qJr-qd-57n" secondAttribute="bottom" constant="44" id="0iV-VH-GEx"/>
                             <constraint firstItem="qJr-qd-57n" firstAttribute="top" secondItem="Pt2-Bn-glZ" secondAttribute="bottom" constant="50" id="5RA-6t-ENP"/>
-                            <constraint firstItem="TFu-nH-47X" firstAttribute="leading" secondItem="AYs-B2-nUh" secondAttribute="trailing" constant="40" id="G7g-EO-om4"/>
-                            <constraint firstItem="TFu-nH-47X" firstAttribute="top" secondItem="qJr-qd-57n" secondAttribute="top" id="GZ5-3Z-sl9"/>
-                            <constraint firstItem="KsD-qG-PdJ" firstAttribute="leading" secondItem="TFu-nH-47X" secondAttribute="trailing" constant="40" id="I8n-Nf-5ys"/>
+                            <constraint firstItem="KsD-qG-PdJ" firstAttribute="leading" secondItem="AYs-B2-nUh" secondAttribute="trailing" constant="40" id="Bc6-2Z-nfk"/>
                             <constraint firstItem="qJr-qd-57n" firstAttribute="centerX" secondItem="iDC-5s-3jd" secondAttribute="centerX" id="OW5-b8-QyU"/>
                             <constraint firstItem="FBW-ce-5qN" firstAttribute="top" secondItem="Pt2-Bn-glZ" secondAttribute="bottom" constant="20" id="Oun-Mi-snt"/>
                             <constraint firstAttribute="trailing" secondItem="FBW-ce-5qN" secondAttribute="trailing" constant="20" id="PEG-bX-fpb"/>
@@ -1398,7 +1389,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="nextButton" destination="TFu-nH-47X" id="QvI-Cq-xIh"/>
                         <outlet property="resultTableView" destination="uY9-4b-LXZ" id="7XO-uX-dxT"/>
                         <outlet property="senderTextField" destination="qJr-qd-57n" id="bLK-HH-TfD"/>
                         <outlet property="startButton" destination="AYs-B2-nUh" id="8zu-HE-6PL"/>

@@ -56,7 +56,7 @@ class LaserLoopViewController: PLViewController {
 		}
 	}
 
-	@IBAction func next() {
+	func next() {
 		laserIdx += 1
 		if laserIdx >= currentSender?.laserNum {
 			senderIdx += 1
@@ -78,6 +78,11 @@ class LaserLoopViewController: PLViewController {
 			"to_idx": String(infoList[0].idx),
 		])
 		WsClient.singleton.sendJSON(json)
+		if (checking) {
+			start()
+		}
+		next()
+		start()
 	}
 	@IBAction func done() {
 		WsClient.singleton.sendCmd("stopListenLaser")
