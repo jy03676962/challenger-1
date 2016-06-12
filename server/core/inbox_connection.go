@@ -106,9 +106,6 @@ func parseTcpHB(hb string, v *InboxMessage) {
 }
 
 func (tcp *InboxTcpConnection) WriteJSON(v *InboxMessage) error {
-	if v.GetCmd() == "led_ctrl" {
-		log.Println(v)
-	}
 	b, e := v.Marshal()
 	if e != nil {
 		return e
