@@ -50,6 +50,7 @@ class MatchController: PLViewController {
 			btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
 			btn.setBackgroundImage(UIImage(named: "PlayerIcon"), forState: .Normal)
 			btn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+			btn.titleLabel?.font = UIFont.systemFontOfSize(6)
 			btn.hidden = true
 			playerViews.append(btn)
 			mapView.addSubview(btn)
@@ -97,7 +98,8 @@ class MatchController: PLViewController {
 					let player = match!.member[i]
 					btn.hidden = false
 					btn.center = CGPoint(x: player.pos.X / 3, y: player.pos.Y / 3)
-					btn.setTitle(player.controllerID, forState: .Normal)
+					let t = player.controllerID.componentsSeparatedByString(":")[1]
+					btn.setTitle(t, forState: .Normal)
 				} else {
 					btn.hidden = true
 				}

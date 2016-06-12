@@ -58,6 +58,7 @@ type Match struct {
 	matchData     *MatchData
 	isSimulator   bool
 	laserStatus   map[int]bool
+	syncCount     int
 }
 
 func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string, isSimulator bool) *Match {
@@ -78,6 +79,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
 	m.isSimulator = isSimulator
+	m.syncCount = 0
 	return &m
 }
 
@@ -348,8 +350,15 @@ func (m *Match) controlLaser(ID string, idx int, openOrClose bool) {
 }
 
 func (m *Match) sync() {
-	b, _ := json.Marshal(m)
-	m.srv.onMatchEvent(MatchEvent{MatchEventTypeUpdate, m.ID, string(b)})
+	m.syncCount += 1
+	if m.isSimulator {
+		b, _ := json.Marshal(m)
+		m.srv.onMatchEvent(MatchEvent{MatchEventTypeUpdate, m.ID, string(b)})
+	} else if m.syncCount >= 10 {
+		b, _ := json.Marshal(m)
+		m.srv.onMatchEvent(MatchEvent{MatchEventTypeUpdate, m.ID, string(b)})
+		m.syncCount = 0
+	}
 }
 
 func (m *Match) reset() {
