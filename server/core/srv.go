@@ -382,6 +382,9 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 					idx = i
 				}
 			}
+			if msg.Address.ID == "S-1-1" {
+				log.Println(ur)
+			}
 			if count > 0 {
 				m := NewInboxMessage()
 				m.SetCmd("laserInfo")
