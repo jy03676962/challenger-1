@@ -16,7 +16,6 @@ import ObjectMapper
 class LaserLoopViewController: PLViewController {
 	@IBOutlet weak var senderTextField: UITextField!
 	@IBOutlet weak var startButton: UIButton!
-	@IBOutlet weak var nextButton: UIButton!
 	@IBOutlet weak var resultTableView: UITableView!
 
 	var senderList: [MainArduinoInfo]?
@@ -33,7 +32,6 @@ class LaserLoopViewController: PLViewController {
 		checking = !checking
 		if checking {
 			startButton.setTitle("停止", forState: .Normal)
-			nextButton.enabled = false
 			let json = JSON([
 				"cmd": "laserOn",
 				"id": currentSender!.id,
@@ -52,7 +50,6 @@ class LaserLoopViewController: PLViewController {
 			])
 			WsClient.singleton.sendJSON(json)
 			startButton.setTitle("开始", forState: .Normal)
-			nextButton.enabled = true
 		}
 	}
 
@@ -66,8 +63,8 @@ class LaserLoopViewController: PLViewController {
 	}
 
 	@IBAction func record() {
-		if (infoList.count > 1) {
-			HUD.flash(.LabeledError(title: "有多个数据，无法记录", subtitle: nil), delay: 2)
+		if (infoList.count == 0 || infoList.count > 1 || infoList[0].err != 0) {
+			HUD.flash(.LabeledError(title: "有错误，无法记录", subtitle: nil), delay: 2)
 			return
 		}
 		let json = JSON([
@@ -82,6 +79,7 @@ class LaserLoopViewController: PLViewController {
 			start()
 		}
 		next()
+		// NSThread.sleepForTimeInterval(0.01)
 		start()
 	}
 	@IBAction func done() {
