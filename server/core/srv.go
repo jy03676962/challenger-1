@@ -639,11 +639,11 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		var li []map[string]string
 		if ledT == nil {
 			li = make([]map[string]string, 1)
-			li[0] = map[string]string{"wall": "M", "let_t": strconv.Itoa(1), "mode": mode}
+			li[0] = map[string]string{"wall": "M", "led_t": "1", "mode": mode}
 		} else {
 			li = make([]map[string]string, len(ledT))
 			for i, t := range ledT {
-				li[i] = map[string]string{"wall": "M", "let_t": t, "mode": mode}
+				li[i] = map[string]string{"wall": "M", "led_t": t, "mode": mode}
 			}
 		}
 		m.Set("led", li)
@@ -653,9 +653,9 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 		m := NewInboxMessage()
 		m.SetCmd("led_ctrl")
 		li := make([]map[string]string, 3)
-		li[0] = map[string]string{"wall": "O1", "let_t": "1", "mode": mode}
-		li[1] = map[string]string{"wall": "O2", "let_t": "1", "mode": mode}
-		li[2] = map[string]string{"wall": "O3", "let_t": "1", "mode": mode}
+		li[0] = map[string]string{"wall": "O1", "led_t": "1", "mode": mode}
+		li[1] = map[string]string{"wall": "O2", "led_t": "1", "mode": mode}
+		li[2] = map[string]string{"wall": "O3", "led_t": "1", "mode": mode}
 		m.Set("led", li)
 		s.sends(m, InboxAddressTypeSubArduinoDevice)
 	}
@@ -669,7 +669,7 @@ func (s *Srv) ledControlByCell(x int, y int, mode string) {
 	m := NewInboxMessage()
 	m.SetCmd("led_ctrl")
 	li := make([]map[string]string, 1)
-	li[0] = map[string]string{"wall": "M", "let_t": "1", "mode": mode}
+	li[0] = map[string]string{"wall": "M", "led_t": "1", "mode": mode}
 	m.Set("led", li)
 	addrs := make([]InboxAddress, len(ids))
 	for i, id := range ids {
