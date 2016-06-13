@@ -97,7 +97,7 @@ class MatchController: PLViewController {
 				if i < match!.member.count {
 					let player = match!.member[i]
 					btn.hidden = false
-					btn.center = CGPoint(x: player.pos.X / 3, y: player.pos.Y / 3)
+					btn.center = CGPoint(x: player.displayPos.X / 3, y: player.displayPos.Y / 3)
 					let t = player.controllerID.componentsSeparatedByString(":")[1]
 					btn.setTitle(t, forState: .Normal)
 				} else {

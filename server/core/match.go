@@ -220,12 +220,12 @@ func (m *Match) setStage(s string) {
 		if m.Stage == "ongoing-rampage" {
 			m.initButtons()
 		} else if m.isWarmup() {
+			m.srv.setWallM2M3Auto(true)
 			if m.Mode == "s" {
 				m.goldDropTime = m.opt.Mode2GoldDropInterval
 			}
 			m.initLasers()
 			m.initButtons()
-			m.srv.setWallM2M3Auto(true)
 		}
 		m.srv.ledControl(3, "5")
 		m.srv.ledControl(1, "0", "2", "3")
@@ -417,19 +417,16 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		if player := m.getPlayer(msg.Address.String()); player != nil {
 			loc, _ := strconv.Atoi(msg.GetStr("loc"))
 			if loc > 0 {
-				loc -= 1
-				y := loc / GetOptions().ArenaWidth
-				x := loc % GetOptions().ArenaWidth
-				y = GetOptions().ArenaHeight - 1 - y
-				loc = GetOptions().TilePosToInt(P{x, y})
 				player.updateLoc(loc)
 			}
 		}
 	case "upload_score":
+		log.Printf("got upload_score:%v\n", msg)
 		info := arduinoInfoFromID(msg.Address.ID)
 		for _, player := range m.Member {
+			log.Printf("player x:%v, y:%v, button x:%v, y:%v, id:%v\n", player.tilePos.X, player.tilePos.Y, info.X-1, info.Y-1, msg.Address.ID)
 			if player.tilePos.X == info.X-1 && player.tilePos.Y == info.Y-1 {
-				m.consumeButton(info.ID, player)
+				m.consumeButton(info.ID, player, msg.GetStr("score"))
 				break
 			}
 		}
@@ -496,7 +493,7 @@ func (m *Match) playerTick(player *Player, sec float64) {
 			return
 		}
 		if moved && player.Button != "" {
-			m.consumeButton(player.Button, player)
+			m.consumeButton(player.Button, player, "")
 		}
 		if !moved {
 			player.Stay(sec, m.opt, m.RampageTime > 0)
@@ -598,7 +595,14 @@ func (m *Match) initButtons() {
 		} else {
 			m.offButtons[i-n] = id
 		}
+		if id == "M-1-5-4-A-5-L" {
+			m.OnButtons[id] = true
+		}
 	}
+	if !m.isSimulator {
+		m.setButtonEffect("0")
+	}
+
 }
 
 func (m *Match) setButtonEffect(stage string) {
@@ -643,9 +647,24 @@ func (m *Match) setSingleButtonEffect(id string) {
 	m.srv.sendToOne(msg, addr)
 }
 
-func (m *Match) consumeButton(btn string, player *Player) {
-	player.LevelData[player.ButtonLevel] += 1
-	if player.ButtonLevel > 0 {
+func (m *Match) consumeButton(btn string, player *Player, lvl string) {
+	level := 0
+	if !m.isSimulator {
+		switch lvl {
+		case "S":
+			level = 1
+		case "A":
+			level = 2
+		case "B":
+			level = 3
+		case "M":
+			level = 0
+		}
+	} else {
+		level = player.ButtonLevel
+	}
+	player.LevelData[level] += 1
+	if level > 0 {
 		m.Gold += m.opt.GoldBonus[m.modeIndex()]
 		player.Gold += 1
 		if m.RampageTime <= 0 {
@@ -669,7 +688,7 @@ func (m *Match) consumeButton(btn string, player *Player) {
 			} else if player.Combo > 1 {
 				extra = m.opt.ComboExtra
 			}
-			delta := m.opt.EnergyBonus[player.ButtonLevel][len(m.Member)-1] + extra
+			delta := m.opt.EnergyBonus[level][len(m.Member)-1] + extra
 			m.Energy = math.Min(m.opt.MaxEnergy, m.Energy+delta)
 			player.Energy += delta
 		}

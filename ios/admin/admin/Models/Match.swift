@@ -36,12 +36,14 @@ class Player: Mappable {
 	var combo: Int!
 	var comboCount: Int!
 	var controllerID: String!
+	var displayPos: Position!
 
 	required init?(_ map: Map) {
 	}
 
 	func mapping(map: Map) {
 		pos <- map["pos"]
+		displayPos <- map["displayPos"]
 		dir <- map["dir"]
 		button <- map["button"]
 		buttonTime <- map["buttonTime"]

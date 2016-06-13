@@ -22,6 +22,7 @@ type Player struct {
 	Combo          int     `json:"combo"`
 	ComboCount     int     `json:"comboCount"`
 	ControllerID   string  `json:"cid"`
+	DisplayPos     RP      `json:"displayPos"`
 
 	moving      bool
 	lastButton  string
@@ -43,8 +44,13 @@ func NewPlayer(cid string, isSimulator bool) *Player {
 
 func (p *Player) updateLoc(loc int) {
 	opt := GetOptions()
+	loc -= 1
 	p.tilePos = opt.IntToTile(loc)
 	p.Pos = opt.RealPosition(p.tilePos)
+	y := loc / opt.ArenaWidth
+	x := loc % opt.ArenaWidth
+	y = opt.ArenaHeight - 1 - y
+	p.DisplayPos = opt.RealPosition(P{x, y})
 }
 
 func (p *Player) UpdatePos(sec float64, options *MatchOptions) bool {

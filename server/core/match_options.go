@@ -134,7 +134,7 @@ func GetScoreInfo() ScoreInfo {
 		},
 		map[string]interface{}{
 			"time":   opt.TRampage,
-			"status": "T4",
+			"status": "TR",
 		},
 	}
 }
