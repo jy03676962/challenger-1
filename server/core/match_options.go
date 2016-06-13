@@ -38,6 +38,7 @@ type MainArduino struct {
 	Y        int    `json:"y"`
 	Type     string `json:"type"`
 	LaserNum int    `json:"laserNum"`
+	LaserDir string `json:"laserDir"`
 }
 
 type Button struct {
@@ -106,6 +107,7 @@ type MatchOptions struct {
 	SubArduino            []string      `json:"-"`
 	MainArduinoInfo       []MainArduino `json:"-"`
 	UploadTime            int           `json:"-"`
+	HeartbeatTime         int           `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}
@@ -167,6 +169,7 @@ func arduinoInfoFromID(id string) *MainArduino {
 	info.Dir, _ = strconv.Atoi(li[3])
 	info.Type = li[4]
 	info.LaserNum, _ = strconv.Atoi(li[5])
+	info.LaserDir = li[6]
 	return &info
 }
 

@@ -227,6 +227,7 @@ func (m *Match) setStage(s string) {
 			m.initButtons()
 		}
 		m.srv.ledControl(3, "5")
+		m.srv.ledControl(1, "0", "2", "3")
 	case "ongoing-high":
 		m.srv.ledControl(3, "9")
 	case "ongoing-full":
@@ -258,7 +259,7 @@ func (m *Match) setStage(s string) {
 	case "ongoing-countdown":
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
-	case "after":
+	case "after", "stop":
 		m.srv.ledFlowEffect()
 	}
 	m.Stage = s
@@ -400,7 +401,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 	cmd := msg.GetCmd()
 	switch cmd {
 	case "stopMatch":
-		m.Stage = "stop"
+		m.setStage("stop")
 	case "playerMove":
 		if player := m.getPlayer(msg.Address.String()); player != nil {
 			player.moving = true

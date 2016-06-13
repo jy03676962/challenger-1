@@ -685,7 +685,36 @@ func (s *Srv) ledControlByCell(x int, y int, mode string) {
 }
 
 func (s *Srv) ledFlowEffect() {
-	// TODO: 需要更新arduino表之后处理
+	opt := GetOptions()
+	ledList := make([]map[string]string, 3)
+	ledList[0] = map[string]string{"wall": "M", "led_t": "2", "mode": "1"}  // M2常亮
+	ledList[1] = map[string]string{"wall": "M", "led_t": "3", "mode": "1"}  // M3常亮
+	ledList[2] = map[string]string{"wall": "O1", "led_t": "1", "mode": "1"} // O1常亮
+	leftList := make([]map[string]string, 4)
+	rightList := make([]map[string]string, 4)
+	copy(leftList, ledList)
+	copy(rightList, ledList)
+	leftList[3] = map[string]string{"wall": "M", "led_t": "1", "mode": "49"}
+	rightList[3] = map[string]string{"wall": "M", "led_t": "1", "mode": "48"}
+	leftArduinos := make([]InboxAddress, 0)
+	rightArduinos := make([]InboxAddress, 0)
+	for _, info := range opt.MainArduinoInfo {
+		addr := InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID}
+		if info.LaserDir == "L" {
+			leftArduinos = append(leftArduinos, addr)
+		} else {
+			rightArduinos = append(rightArduinos, addr)
+		}
+	}
+	leftMsg := NewInboxMessage()
+	leftMsg.SetCmd("led_ctrl")
+	leftMsg.Set("led", leftList)
+	s.send(leftMsg, leftArduinos)
+	rightMsg := NewInboxMessage()
+	rightMsg.SetCmd("led_ctrl")
+	rightMsg.Set("led", rightList)
+	s.send(rightMsg, rightArduinos)
+	s.ledControl(2, "1")
 }
 
 func (s *Srv) ledRampageEffect() {
@@ -743,6 +772,7 @@ func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
 	msg.SetCmd("init_score")
 	msg.Set("score", scoreInfo)
 	msg.Set("upload_time", strconv.Itoa(GetOptions().UploadTime))
+	msg.Set("heartbeat_time", strconv.Itoa(GetOptions().HeartbeatTime))
 	s.send(msg, []InboxAddress{controller.Address})
 }
 
