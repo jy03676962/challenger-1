@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
 	"log"
@@ -633,37 +634,35 @@ func (s *Srv) sends(msg *InboxMessage, types ...InboxAddressType) {
 
 // wall参数, 1主墙, 2小墙, 3二者同时
 func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
+	mainLedList := make([]map[string]string, 0)
+	subLedList := make([]map[string]string, 0)
 	if wall&1 > 0 {
-		m := NewInboxMessage()
-		m.SetCmd("led_ctrl")
-		var li []map[string]string
 		if ledT == nil {
-			li = make([]map[string]string, 1)
-			li[0] = map[string]string{"wall": "M", "led_t": "1", "mode": mode}
+			mainLedList = append(mainLedList, map[string]string{"wall": "M", "led_t": "1", "mode": mode})
 		} else {
-			li = make([]map[string]string, len(ledT))
-			for i, t := range ledT {
-				li[i] = map[string]string{"wall": "M", "led_t": t, "mode": mode}
+			for _, t := range ledT {
+				mainLedList = append(mainLedList, map[string]string{"wall": "M", "led_t": t, "mode": mode})
 			}
 		}
-		m.Set("led", li)
-		s.sends(m, InboxAddressTypeMainArduinoDevice)
 	}
 	if wall&2 > 0 {
-		m := NewInboxMessage()
-		m.SetCmd("led_ctrl")
-		li := make([]map[string]string, 3)
-		li[0] = map[string]string{"wall": "O1", "led_t": "1", "mode": mode}
-		li[1] = map[string]string{"wall": "O2", "led_t": "1", "mode": mode}
-		li[2] = map[string]string{"wall": "O3", "led_t": "1", "mode": mode}
-		m.Set("led", li)
-		s.sends(m, InboxAddressTypeSubArduinoDevice)
-		mm := NewInboxMessage()
-		mm.SetCmd("led_ctrl")
-		mli := make([]map[string]string, 1)
-		mli[0] = map[string]string{"wall": "O1", "led_t": "1", "mode": mode}
-		mm.Set("led", mli)
-		s.sends(mm, InboxAddressTypeMainArduinoDevice)
+		for i := 1; i <= 3; i++ {
+			wall := fmt.Sprintf("O%d", i)
+			subLedList = append(subLedList, map[string]string{"wall": wall, "led_t": "1", "mode": mode})
+		}
+		mainLedList = append(mainLedList, map[string]string{"wall": "O1", "led_t": "1", "mode": mode})
+	}
+	if len(mainLedList) > 0 {
+		mainMsg := NewInboxMessage()
+		mainMsg.SetCmd("led_ctrl")
+		mainMsg.Set("led", mainLedList)
+		s.sends(mainMsg, InboxAddressTypeMainArduinoDevice)
+	}
+	if len(subLedList) > 0 {
+		subMsg := NewInboxMessage()
+		subMsg.SetCmd("led_ctrl")
+		subMsg.Set("led", subLedList)
+		s.sends(subMsg, InboxAddressTypeSubArduinoDevice)
 	}
 }
 
