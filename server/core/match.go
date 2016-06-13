@@ -599,9 +599,6 @@ func (m *Match) initButtons() {
 			m.offButtons[i-n] = id
 		}
 	}
-	if !m.isSimulator {
-		//m.setButtonEffect("0")
-	}
 }
 
 func (m *Match) setButtonEffect(stage string) {

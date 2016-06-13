@@ -11,7 +11,7 @@ touchPunish = [ 30.0, 10.0 ] # 激光触碰惩罚，赏金-生存
 mode2InitGold = [ 60, 90, 120, 150 ] # 生存初始金币， 1-4人
 mode2GoldDropRate = [ 2, 3, 4, 5 ] # 生存金币下降速度, 1-4人
 maxEnergy = 200.0 # 最大能量值
-mode1TotalTime = 60.0 # 赏金模式总时长
+mode1TotalTime = 40.0 # 赏金模式总时长
 mode1CountDown = 10.0 # 赏金模式倒计时长
 laserSpeed = 0.25 # 激光亮起间隔(初始速度)
 laserSpeedup = 0.05 # 激光每档亮起间隔减少值(加速度)
@@ -20,7 +20,7 @@ laserPauseTime = 10.0 # 激光碰人后硬直时间
 energySpeedup = 200.0 # 激光提速每档的能量数
 laserSize = 10 # 激光的宽度
 uploadTime = 3 # 上传速度
-heartbeatTime = 300 # 空闲时上传速度
+heartbeatTime = 100 # 空闲时上传速度
 
 energyBonus = [
 [ 0.0, 0.0, 0.0, 0.0 ], # t0-t1能量奖励, 1人
