@@ -309,6 +309,13 @@ func (m *MatchOptions) RealPosition(p P) RP {
 	return rp
 }
 
+func (m *MatchOptions) Conv(p int) int {
+	y := p / m.ArenaWidth
+	x := p % m.ArenaWidth
+	y = m.ArenaHeight - 1 - y
+	return x + m.ArenaWidth*y
+}
+
 func (m *MatchOptions) TilePosition(rp RP) (P, bool) {
 	u := float64(m.ArenaCellSize + m.ArenaBorder)
 	f := func(a float64) (int, bool) {

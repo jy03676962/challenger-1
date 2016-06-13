@@ -353,6 +353,7 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		}
 	case "hb":
 		mode := msg.GetStr("MD")
+		log.Printf("got heartbeat:%v\n", msg)
 		var mm ArduinoMode
 		if mode != "" {
 			intMode, err := strconv.Atoi(mode)

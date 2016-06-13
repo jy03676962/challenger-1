@@ -18,7 +18,9 @@ type LaserLine struct {
 }
 
 type Laser struct {
-	IsPause              bool
+	IsPause              bool `json:"isPause"`
+	DisplayP             RP   `json:"displayP"`
+	DisplayP2            RP   `json:"displayP2"`
 	player               *Player
 	dest                 int
 	pathMap              map[int]int
@@ -41,6 +43,7 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 	l.pathMap = make(map[int]int)
 	l.p = GetOptions().TilePosToInt(p)
 	l.p2 = -1
+	l.convertDisplay()
 	l.elaspedSinceLastMove = GetOptions().LaserSpeed
 	l.lines = make([]LaserLine, 0)
 	l.startupLines = make([]LaserLine, 0)
@@ -107,6 +110,7 @@ func (l *Laser) Tick(dt float64) {
 		if l.p2 < 0 && l.p == next {
 			return
 		}
+		log.Printf("current:%v, next:%v\n", opt.IntToTile(l.p), opt.IntToTile(next))
 		replaceIdx := -1
 		notInNext := 0
 		for i, line := range l.lines {
@@ -129,12 +133,31 @@ func (l *Laser) Tick(dt float64) {
 						if notInNext == 1 {
 							l.p = next
 							l.p2 = -1
+						} else {
+							l.p2 = next
 						}
+						l.convertDisplay()
 						return
 					}
 				}
 			}
 		}
+	}
+}
+
+func (l *Laser) convertDisplay() {
+	opt := GetOptions()
+	y := l.p / opt.ArenaWidth
+	x := l.p % opt.ArenaWidth
+	y = opt.ArenaHeight - 1 - y
+	l.DisplayP = opt.RealPosition(P{x, y})
+	if l.p2 >= 0 {
+		y := l.p2 / opt.ArenaWidth
+		x := l.p2 % opt.ArenaWidth
+		y = opt.ArenaHeight - 1 - y
+		l.DisplayP2 = opt.RealPosition(P{x, y})
+	} else {
+		l.DisplayP2 = RP{-1, -1}
 	}
 }
 
@@ -152,28 +175,30 @@ func (l *Laser) isStartuping() bool {
 }
 
 func (l *Laser) findPath() int {
+	opt := GetOptions()
 	l.fillPath()
+	pp1 := opt.Conv(l.p)
 	if l.p2 >= 0 {
-		if l.pathMap[l.p2] <= l.pathMap[l.p] {
+		pp2 := opt.Conv(l.p2)
+		if l.pathMap[pp2] <= l.pathMap[pp1] {
 			return l.p2
 		} else {
 			return l.p
 		}
 	}
-	next, min := l.p, l.pathMap[l.p]
-	for _, i := range opt.TileAdjacency[l.p] {
+	next, min := pp1, l.pathMap[pp1]
+	for _, i := range opt.TileAdjacency[pp1] {
 		if l.pathMap[i] < min {
 			min = l.pathMap[i]
 			next = i
 		}
 	}
-	return next
+	return opt.Conv(next)
 }
 
 func (l *Laser) fillPath() {
 	opt := GetOptions()
-	p, _ := opt.TilePosition(l.player.Pos)
-	dest := opt.TilePosToInt(p)
+	dest := opt.TilePosToInt(l.player.tilePos)
 	if l.dest == dest {
 		return
 	}
@@ -190,5 +215,5 @@ func (l *Laser) fillPath() {
 			}
 		}
 	}
-	fill(l.dest, 0)
+	fill(opt.Conv(l.dest), 0)
 }

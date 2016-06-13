@@ -21,6 +21,20 @@ struct Position: Mappable {
 	}
 }
 
+class Laser: Mappable {
+	var isPause: Bool!
+	var displayP: Position!
+	var displayP2: Position!
+	required init?(_ map: Map) {
+	}
+
+	func mapping(map: Map) {
+		isPause <- map["isPause"]
+		displayP <- map["displayP"]
+		displayP2 <- map["displayP2"]
+	}
+}
+
 class Player: Mappable {
 	var pos: Position!
 	var dir: String!
@@ -74,6 +88,8 @@ class Match: Mappable {
 	var id: Int!
 	var teamID: String!
 	var maxEnergy: Int!
+	var isSimulator: Int!
+	var lasers: [Laser]?
 
 	required init?(_ map: Map) {
 	}
@@ -92,5 +108,7 @@ class Match: Mappable {
 		id <- map["id"]
 		teamID <- map["teamID"]
 		maxEnergy <- map["maxEnergy"]
+		isSimulator <- map["isSimulator"]
+		lasers <- map["lasers"]
 	}
 }

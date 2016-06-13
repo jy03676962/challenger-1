@@ -46,6 +46,7 @@ type Match struct {
 	ID           uint             `json:"id"`
 	TeamID       string           `json:"teamID"`
 	MaxEnergy    float64          `json:"maxEnergy"`
+	IsSimulator  int              `json:"isSimulator"`
 
 	offButtons    []string
 	hiddenButtons map[string]float64
@@ -79,6 +80,11 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
 	m.isSimulator = isSimulator
+	if isSimulator {
+		m.IsSimulator = 1
+	} else {
+		m.IsSimulator = 0
+	}
 	m.syncCount = 0
 	return &m
 }
@@ -353,7 +359,6 @@ func (m *Match) controlLaser(ID string, idx int, openOrClose bool) {
 	lasers := []map[string]string{laser}
 	msg.Set("laser", lasers)
 	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, ID}
-	log.Printf("laser ctrl id:%v, idx:%v, open:%v\n", ID, idx, openOrClose)
 	m.srv.sendToOne(msg, addr)
 }
 

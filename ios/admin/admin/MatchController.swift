@@ -30,6 +30,7 @@ class MatchController: PLViewController {
 
 	var match: Match?
 	var playerViews: [UIButton]!
+	var laserViews: [UIView]!
 
 	var mapView: UIImageView = UIImageView()
 
@@ -45,6 +46,7 @@ class MatchController: PLViewController {
 		super.viewDidLoad()
 		playerTableView.backgroundColor = UIColor.clearColor()
 		playerViews = [UIButton]()
+		laserViews = [UIView]()
 		for _ in 1 ... 4 {
 			let btn = UIButton()
 			btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
@@ -104,6 +106,30 @@ class MatchController: PLViewController {
 					btn.hidden = true
 				}
 			}
+			if match!.isSimulator == 0 {
+				for view in laserViews {
+					view.removeFromSuperview()
+				}
+				laserViews.removeAll()
+				if match!.lasers != nil {
+					for laser in match!.lasers! {
+						let view = UIView()
+						view.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
+						view.center = CGPoint(x: laser.displayP.X / 3, y: laser.displayP.Y / 3)
+						view.backgroundColor = UIColor.greenColor()
+						mapView.addSubview(view)
+						laserViews.append(view)
+						if laser.displayP2.X >= 0 {
+							let view = UIView()
+							view.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
+							view.center = CGPoint(x: laser.displayP2.X / 3, y: laser.displayP2.Y / 3)
+							view.backgroundColor = UIColor.greenColor()
+							mapView.addSubview(view)
+							laserViews.append(view)
+						}
+					}
+				}
+			}
 		} else {
 			matchTimeLabel.text = "00: 00"
 			matchStatusLabel.text = "实时状态: 未进行"
@@ -114,6 +140,10 @@ class MatchController: PLViewController {
 			for btn in playerViews {
 				btn.hidden = true
 			}
+			for view in laserViews {
+				view.removeFromSuperview()
+			}
+			laserViews.removeAll()
 		}
 		for btn in playerViews {
 			log.debug("\(btn)")
