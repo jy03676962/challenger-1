@@ -225,6 +225,7 @@ func (m *Match) setStage(s string) {
 			}
 			m.initLasers()
 			m.initButtons()
+			m.srv.setWallM2M3Auto(true)
 		}
 		m.srv.ledControl(3, "5")
 		m.srv.ledControl(1, "0", "2", "3")
@@ -260,6 +261,7 @@ func (m *Match) setStage(s string) {
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
 	case "after", "stop":
+		m.srv.setWallM2M3Auto(false)
 		m.srv.ledFlowEffect()
 	}
 	m.Stage = s

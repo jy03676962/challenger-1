@@ -666,6 +666,19 @@ func (s *Srv) ledControl(wall int, mode string, ledT ...string) {
 	}
 }
 
+func (s *Srv) setWallM2M3Auto(isAuto bool) {
+	msg := NewInboxMessage()
+	msg.SetCmd("btn_ctrl")
+	if isAuto {
+		msg.Set("useful", "0")
+	} else {
+		msg.Set("useful", "2")
+	}
+	msg.Set("mode", "0")
+	msg.Set("stage", "0")
+	s.sends(msg, InboxAddressTypeMainArduinoDevice)
+}
+
 func (s *Srv) ledControlByCell(x int, y int, mode string) {
 	ids := GetOptions().mainArduinosByPos(x, y)
 	if len(ids) == 0 {
