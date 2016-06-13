@@ -703,6 +703,21 @@ func (s *Srv) lightControl(mode string) {
 	s.sends(msg, InboxAddressTypeMainArduinoDevice)
 }
 
+func (s *Srv) musicControlByCell(x int, y int, music string) {
+	ids := GetOptions().mainArduinosByPos(x, y)
+	if len(ids) == 0 {
+		return
+	}
+	msg := NewInboxMessage()
+	msg.SetCmd("mp3_ctrl")
+	msg.Set("music", music)
+	addrs := make([]InboxAddress, len(ids))
+	for i, id := range ids {
+		addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
+	}
+	s.send(msg, addrs)
+}
+
 func (s *Srv) ledFlowEffect() {
 	opt := GetOptions()
 	ledList := make([]map[string]string, 3)

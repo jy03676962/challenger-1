@@ -435,6 +435,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		}
 	case "laserChange":
 		changes := msg.Get("changes").([]laserInfoChange)
+		musicPostions := make(map[int]bool)
 		for _, laser := range m.Lasers {
 			l := laser.(*Laser)
 			touched, p := l.IsTouched(&changes)
@@ -443,6 +444,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 				for _, player := range m.Member {
 					pp := GetOptions().TilePosToInt(player.tilePos)
 					if pp == p && player.InvincibleTime <= 0 {
+						musicPostions[pp] = true
 						m.touchPunish(player)
 						shouldPause = true
 					}
@@ -451,6 +453,10 @@ func (m *Match) handleInput(msg *InboxMessage) {
 					l.Pause(GetOptions().LaserPauseTime)
 				}
 			}
+		}
+		for pos, _ := range musicPostions {
+			tilePos := GetOptions().IntToTile(pos)
+			m.srv.musicControlByCell(tilePos.X, tilePos.Y, "1")
 		}
 	}
 }
