@@ -121,19 +121,19 @@ func GetOptions() *MatchOptions {
 func GetScoreInfo() ScoreInfo {
 	return [4]map[string]interface{}{
 		map[string]interface{}{
-			"time":   opt.T1,
+			"time":   strconv.FormatFloat(opt.T1, 'f', -1, 64),
 			"status": "T1",
 		},
 		map[string]interface{}{
-			"time":   opt.T2,
+			"time":   strconv.FormatFloat(opt.T2, 'f', -1, 64),
 			"status": "T2",
 		},
 		map[string]interface{}{
-			"time":   opt.T3,
+			"time":   strconv.FormatFloat(opt.T3, 'f', -1, 64),
 			"status": "T3",
 		},
 		map[string]interface{}{
-			"time":   opt.TRampage,
+			"time":   strconv.FormatFloat(opt.TRampage, 'f', -1, 64),
 			"status": "TR",
 		},
 	}
