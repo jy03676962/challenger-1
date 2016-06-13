@@ -47,6 +47,7 @@ func (tcp *InboxTcpConnection) Close() error {
 }
 
 func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
+	tcp.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 	b, e := tcp.r.ReadBytes(60) // tcp message frame start with '<'
 	if e != nil {
 		if tcp.id != "" {
@@ -55,6 +56,7 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 		}
 		return e
 	}
+	tcp.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 	b, e = tcp.r.ReadBytes(62) // tcp message frame end with '>'
 	if e != nil {
 		if tcp.id != "" {
