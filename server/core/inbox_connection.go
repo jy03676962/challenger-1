@@ -130,8 +130,12 @@ func (tcp *InboxTcpConnection) doWrite() {
 		case <-tcp.closeCh:
 			return
 		case bytes := <-tcp.ch:
-			tcp.conn.Write(bytes)
-			log.Println(string(bytes))
+			_, err := tcp.conn.Write(bytes)
+			if err != nil {
+				log.Printf("tcp written:%v, error:%v\n", string(bytes), err.Error())
+			} else {
+				log.Printf("tcp written:%v\n", string(bytes))
+			}
 		}
 	}
 }
