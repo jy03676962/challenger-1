@@ -15,6 +15,8 @@ import (
 
 var _ = log.Printf
 
+const tcpSendMinInterval = 50
+
 type InboxConnection interface {
 	ReadJSON(v *InboxMessage) error
 	WriteJSON(v *InboxMessage) error
@@ -137,6 +139,7 @@ func (tcp *InboxTcpConnection) doWrite() {
 				log.Printf("tcp written:%v\n", string(bytes))
 			}
 		}
+		time.Sleep(tcpSendMinInterval * time.Millisecond)
 	}
 }
 
