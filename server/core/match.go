@@ -211,12 +211,14 @@ func (m *Match) setStage(s string) {
 	}
 	switch s {
 	case "warmup-1":
+		m.srv.lightControl("0")
 		m.srv.setAllWearableStatus("02")
 		m.srv.ledControl(1, "3")
 		m.srv.ledControl(2, "23")
 	case "warmup-2":
 		m.srv.ledControl(3, "4", "1", "2", "3")
 	case "ongoing-low":
+		m.srv.lightControl("1")
 		if m.Stage == "ongoing-rampage" {
 			m.initButtons()
 		} else if m.isWarmup() {
@@ -230,6 +232,7 @@ func (m *Match) setStage(s string) {
 		m.srv.ledControl(3, "5")
 		m.srv.ledControl(1, "0", "2", "3")
 	case "ongoing-high":
+		m.srv.lightControl("2")
 		m.srv.ledControl(3, "9")
 	case "ongoing-full":
 		if m.Mode == "g" {
@@ -239,6 +242,7 @@ func (m *Match) setStage(s string) {
 		}
 		m.srv.setAllWearableStatus("03")
 	case "ongoing-rampage":
+		m.srv.lightControl("0")
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 		m.offButtons = make([]string, 0)
 		m.hiddenButtons = make(map[string]float64)
@@ -349,6 +353,7 @@ func (m *Match) controlLaser(ID string, idx int, openOrClose bool) {
 	lasers := []map[string]string{laser}
 	msg.Set("laser", lasers)
 	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, ID}
+	log.Printf("laser ctrl id:%v, idx:%v, open:%v\n", ID, idx, openOrClose)
 	m.srv.sendToOne(msg, addr)
 }
 

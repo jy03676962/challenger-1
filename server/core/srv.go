@@ -696,6 +696,13 @@ func (s *Srv) ledControlByCell(x int, y int, mode string) {
 	s.send(m, addrs)
 }
 
+func (s *Srv) lightControl(mode string) {
+	msg := NewInboxMessage()
+	msg.SetCmd("light_ctrl")
+	msg.Set("light_mode", mode)
+	s.sends(msg, InboxAddressTypeMainArduinoDevice)
+}
+
 func (s *Srv) ledFlowEffect() {
 	opt := GetOptions()
 	ledList := make([]map[string]string, 3)
