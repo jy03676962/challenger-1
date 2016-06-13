@@ -46,7 +46,9 @@ func (c *InboxClient) listenRead() {
 		if e != nil {
 			log.Printf("read message error:%v\n", e.Error())
 		}
-		c.inbox.ReceiveMessage(m)
+		if !m.Empty() {
+			c.inbox.ReceiveMessage(m)
+		}
 		if m.ShouldCloseConnection {
 			return
 		}

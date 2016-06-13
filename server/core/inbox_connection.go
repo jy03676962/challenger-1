@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"golang.org/x/net/websocket"
+	"io"
 	"log"
 	"net"
 	"strconv"
@@ -53,6 +54,8 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 		if tcp.id != "" {
 			v.RemoveAddress = &InboxAddress{at(tcp.id), tcp.id}
 			v.ShouldCloseConnection = true
+		} else if e == io.EOF {
+			v.ShouldCloseConnection = true
 		}
 		return e
 	}
@@ -61,6 +64,8 @@ func (tcp *InboxTcpConnection) ReadJSON(v *InboxMessage) error {
 	if e != nil {
 		if tcp.id != "" {
 			v.RemoveAddress = &InboxAddress{at(tcp.id), tcp.id}
+			v.ShouldCloseConnection = true
+		} else if e == io.EOF {
 			v.ShouldCloseConnection = true
 		}
 		return e
@@ -191,6 +196,9 @@ func (udp *InboxUdpConnection) ReadJSON(v *InboxMessage) error {
 		udp.conn.SetReadDeadline(time.Now().Add(5 * time.Second))
 		n, addr, err := udp.conn.ReadFromUDP(buf)
 		if err != nil {
+			if err, ok := err.(net.Error); ok && err.Timeout() {
+				return nil
+			}
 			return err
 		}
 		cmdLen := 11

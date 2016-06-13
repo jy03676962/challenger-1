@@ -48,3 +48,7 @@ func (message *InboxMessage) Marshal() (b []byte, e error) {
 	b, e = json.Marshal(message.Data)
 	return
 }
+
+func (message *InboxMessage) Empty() bool {
+	return len(message.Data) == 0
+}
