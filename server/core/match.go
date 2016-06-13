@@ -245,7 +245,7 @@ func (m *Match) setStage(s string) {
 		for _, btn := range m.opt.Buttons {
 			m.OnButtons[btn.Id] = true
 		}
-		m.setButtonEffect("2")
+		m.setButtonEffect("2", false)
 		for _, laser := range m.Lasers {
 			laser.Pause(m.RampageTime)
 		}
@@ -421,10 +421,8 @@ func (m *Match) handleInput(msg *InboxMessage) {
 			}
 		}
 	case "upload_score":
-		log.Printf("got upload_score:%v\n", msg)
 		info := arduinoInfoFromID(msg.Address.ID)
 		for _, player := range m.Member {
-			log.Printf("player x:%v, y:%v, button x:%v, y:%v, id:%v\n", player.tilePos.X, player.tilePos.Y, info.X-1, info.Y-1, msg.Address.ID)
 			if player.tilePos.X == info.X-1 && player.tilePos.Y == info.Y-1 {
 				m.consumeButton(info.ID, player, msg.GetStr("score"))
 				break
@@ -595,33 +593,52 @@ func (m *Match) initButtons() {
 		} else {
 			m.offButtons[i-n] = id
 		}
-		if id == "M-1-5-4-A-5-L" {
-			m.OnButtons[id] = true
-		}
 	}
 	if !m.isSimulator {
-		m.setButtonEffect("0")
+		m.setButtonEffect("0", false)
 	}
 
 }
 
-func (m *Match) setButtonEffect(stage string) {
-	addrs := make([]InboxAddress, len(m.OnButtons))
+func (m *Match) setButtonEffect(stage string, immediately bool) {
+	onAddrs := make([]InboxAddress, len(m.OnButtons))
+	offAddrs := make([]InboxAddress, len(m.offButtons))
 	i := 0
 	for id, _ := range m.OnButtons {
-		addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
+		onAddrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
 		i += 1
 	}
-	msg := NewInboxMessage()
-	msg.SetCmd("btn_ctrl")
-	msg.Set("useful", "1")
-	if m.Mode == "g" {
-		msg.Set("mode", "1")
-	} else {
-		msg.Set("mode", "2")
+	for i, id := range m.offButtons {
+		offAddrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, id}
 	}
-	msg.Set("stage", "0")
-	m.srv.send(msg, addrs)
+	if len(onAddrs) > 0 {
+		msg := NewInboxMessage()
+		msg.SetCmd("btn_ctrl")
+		if immediately {
+			msg.Set("useful", "3")
+		} else {
+			msg.Set("useful", "1")
+		}
+		if m.Mode == "g" {
+			msg.Set("mode", "1")
+		} else {
+			msg.Set("mode", "2")
+		}
+		msg.Set("stage", stage)
+		m.srv.send(msg, onAddrs)
+	}
+	if len(offAddrs) > 0 {
+		msg := NewInboxMessage()
+		msg.SetCmd("btn_ctrl")
+		msg.Set("useful", "0")
+		if m.Mode == "g" {
+			msg.Set("mode", "1")
+		} else {
+			msg.Set("mode", "2")
+		}
+		msg.Set("stage", stage)
+		m.srv.send(msg, offAddrs)
+	}
 }
 
 func (m *Match) setSingleButtonEffect(id string) {
