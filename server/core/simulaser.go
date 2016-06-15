@@ -8,8 +8,9 @@ import (
 var _ = log.Printf
 
 type SimuLaser struct {
-	Pos     RP   `json:"pos"`
-	IsPause bool `json:"isPause"`
+	Pos      RP   `json:"pos"`
+	IsPause  bool `json:"isPause"`
+	IsClosed bool `json:"isClosed"`
 	//private
 	player    *Player
 	dest      int
@@ -28,6 +29,7 @@ func NewSimuLaser(p P, player *Player, match *Match) *SimuLaser {
 	l.pathMap = make(map[int]int)
 	l.p = l.getOpt().TilePosToInt(p)
 	l.Pos = l.getOpt().RealPosition(p)
+	l.IsClosed = false
 	return &l
 }
 
@@ -38,6 +40,10 @@ func (l *SimuLaser) Pause(t float64) {
 
 func (l *SimuLaser) IsFollow(cid string) bool {
 	return l.player.ControllerID == cid
+}
+
+func (l *SimuLaser) Close() {
+	l.IsClosed = true
 }
 
 func (l *SimuLaser) Tick(dt float64) {

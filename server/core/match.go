@@ -312,6 +312,9 @@ func (m *Match) setStage(s string) {
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
 	case "after", "stop":
+		for _, laser := range m.Lasers {
+			laser.Close()
+		}
 		m.srv.setWallM2M3Auto(false)
 		m.srv.ledFlowEffect()
 	}

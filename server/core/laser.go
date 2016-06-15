@@ -32,6 +32,7 @@ type Laser struct {
 	lines                []LaserLine
 	startupLines         []LaserLine
 	startupingIndex      int
+	closed               bool
 }
 
 func NewLaser(p P, player *Player, match *Match) *Laser {
@@ -54,16 +55,26 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 		}
 	}
 	l.startupingIndex = 0
+	l.closed = true
 	return &l
 }
 
 func (l *Laser) Pause(t float64) {
+	if l.isStartuping() {
+		return
+	}
 	l.IsPause = true
 	l.pauseTime = math.Max(t, l.pauseTime)
+	l.doClose()
 }
 
 func (l *Laser) IsFollow(cid string) bool {
 	return l.player.ControllerID == cid
+}
+
+func (l *Laser) Close() {
+	l.closed = true
+	l.doClose()
 }
 
 func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
@@ -85,11 +96,15 @@ func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
 }
 
 func (l *Laser) Tick(dt float64) {
+	if l.closed {
+		return
+	}
 	if l.IsPause {
 		l.pauseTime -= dt
 		if l.pauseTime <= 0 {
 			l.IsPause = false
 			l.pauseTime = 0
+			l.doOpen()
 		}
 		return
 	}
@@ -141,6 +156,18 @@ func (l *Laser) Tick(dt float64) {
 				}
 			}
 		}
+	}
+}
+
+func (l *Laser) doClose() {
+	for _, line := range l.lines {
+		l.match.closeLaser(line.ID, line.Index)
+	}
+}
+
+func (l *Laser) doOpen() {
+	for _, line := range l.lines {
+		l.match.openLaser(line.ID, line.Index)
 	}
 }
 
