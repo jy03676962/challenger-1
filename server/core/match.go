@@ -339,27 +339,11 @@ func (m *Match) updateStage() {
 }
 
 func (m *Match) openLaser(ID string, idx int) {
-	m.controlLaser(ID, idx, true)
+	m.srv.laserControl(ID, idx, true)
 }
 
 func (m *Match) closeLaser(ID string, idx int) {
-	m.controlLaser(ID, idx, false)
-}
-
-func (m *Match) controlLaser(ID string, idx int, openOrClose bool) {
-	msg := NewInboxMessage()
-	msg.SetCmd("laser_ctrl")
-	laser := make(map[string]string)
-	laser["laser_n"] = strconv.Itoa(idx)
-	if openOrClose {
-		laser["laser_s"] = "1"
-	} else {
-		laser["laser_s"] = "0"
-	}
-	lasers := []map[string]string{laser}
-	msg.Set("laser", lasers)
-	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, ID}
-	m.srv.sendToOne(msg, addr)
+	m.srv.laserControl(ID, idx, false)
 }
 
 func (m *Match) sync() {

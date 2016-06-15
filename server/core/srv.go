@@ -518,11 +518,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 	case "laserOn":
 		s.adminMode = AdminModeDebug
 		id := msg.GetStr("id")
-		num := int(msg.Get("num").(float64)) + 1
-		info := arduinoInfoFromID(id)
-		if info.LaserNum == 5 {
-			num += 5
-		}
+		idx := int(msg.Get("num").(float64))
 		connected := false
 		for _, ac := range s.aDict {
 			if ac.Address.ID == id && ac.Online {
@@ -536,38 +532,15 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 			dd.Set("id", id)
 			dd.Set("ur", "")
 			dd.Set("error", 1)
-			log.Println("will send error 1")
 			s.sends(dd, InboxAddressTypeAdminDevice)
 			return
 		}
-		laser := make([]map[string]string, 1)
-		d := make(map[string]string)
-		d["laser_n"] = strconv.Itoa(num)
-		d["laser_s"] = strconv.Itoa(1)
-		laser[0] = d
-		dd := NewInboxMessage()
-		dd.SetCmd("laser_ctrl")
-		dd.Set("laser", laser)
-		log.Println(dd)
-		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
+		s.laserControl(id, idx, true)
 	case "laserOff":
 		s.adminMode = AdminModeNormal
 		id := msg.GetStr("id")
-		num := int(msg.Get("num").(float64)) + 1
-		info := arduinoInfoFromID(id)
-		if info.LaserNum == 5 {
-			num += 5
-		}
-		laser := make([]map[string]string, 1)
-		d := make(map[string]string)
-		d["laser_n"] = strconv.Itoa(num)
-		d["laser_s"] = strconv.Itoa(0)
-		laser[0] = d
-		dd := NewInboxMessage()
-		dd.SetCmd("laser_ctrl")
-		dd.Set("laser", laser)
-		log.Println(dd)
-		s.sendToOne(dd, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
+		idx := int(msg.Get("num").(float64))
+		s.laserControl(id, idx, false)
 	case "stopListenLaser":
 		s.adminMode = AdminModeNormal
 		GetLaserPair().Save()
@@ -631,6 +604,27 @@ func (s *Srv) sends(msg *InboxMessage, types ...InboxAddressType) {
 		addrs[i] = InboxAddress{t, ""}
 	}
 	s.send(msg, addrs)
+}
+
+func (s *Srv) laserControl(ID string, idx int, openOrClose bool) {
+	msg := NewInboxMessage()
+	msg.SetCmd("laser_ctrl")
+	laser := make(map[string]string)
+	info := arduinoInfoFromID(ID)
+	idx += 1
+	if info.LaserNum == 5 {
+		idx += 5
+	}
+	laser["laser_n"] = strconv.Itoa(idx)
+	if openOrClose {
+		laser["laser_s"] = "1"
+	} else {
+		laser["laser_s"] = "0"
+	}
+	lasers := []map[string]string{laser}
+	msg.Set("laser", lasers)
+	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, ID}
+	s.sendToOne(msg, addr)
 }
 
 // wall参数, 1主墙, 2小墙, 3二者同时
