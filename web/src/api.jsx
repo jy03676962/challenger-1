@@ -110,8 +110,9 @@ const ApiView = CSSModules(observer(React.createClass({
             <button onClick={this.laserCtrl}>发送</button>
           </div>
           <div styleName='block'>
-            <label styleName='title'>按键</label>
-            <input type='checkbox' ref='btn'/>可用<br/>
+            <label styleName='title'>按键</label><br/>
+            <label styleName='content'>useful</label>
+            <input type='text' ref='useful'></input><br/>
             <label styleName='content'>mode</label>
             <input type='text' ref='btn_mode'></input><br/>
             <label styleName='content'>stage</label>
@@ -171,7 +172,7 @@ const ApiView = CSSModules(observer(React.createClass({
   btnCtrl: function(e) {
     let d = {
       cmd: 'btn_ctrl',
-      useful: this.refs.btn.checked ? '1' : '0',
+      useful: this.refs.useful.value,
       mode: this.refs.btn_mode.value,
       stage: this.refs.btn_stage.value,
       addr: this.refs.addr.value,
