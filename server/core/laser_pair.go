@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var _ = log.Printf
@@ -17,11 +18,10 @@ type ReceiverInfo struct {
 	Valid int    `json:"valid"`
 }
 
-type _laserMap map[string]ReceiverInfo
+type _laserMap map[string]*ReceiverInfo
 
 type LaserPair struct {
-	m       _laserMap
-	brokens map[string]int
+	m _laserMap
 }
 
 var laserPair = loadLaserPair()
@@ -51,13 +51,6 @@ func loadLaserPair() *LaserPair {
 func newLaserPair(m _laserMap) *LaserPair {
 	lp := LaserPair{}
 	lp.m = m
-	lp.brokens = make(map[string]int)
-	for _, rcvrs := range m {
-		if rcvrs.Valid == 0 {
-			key := rcvrs.ID + ":" + rcvrs.Idx
-			lp.brokens[key] = 1
-		}
-	}
 	return &lp
 }
 
@@ -68,7 +61,7 @@ func (l *LaserPair) Save() {
 	ioutil.WriteFile("./laser.json", out.Bytes(), 0640)
 }
 
-func (l *LaserPair) GetInitStatus() map[string]bool {
+func (l *LaserPair) GetValidReceivers() map[string]bool {
 	ret := make(map[string]bool)
 	for _, receiver := range l.m {
 		if receiver.Valid == 1 {
@@ -79,17 +72,41 @@ func (l *LaserPair) GetInitStatus() map[string]bool {
 	return ret
 }
 
-func (l *LaserPair) IsBroken(id string, idx int) bool {
-	key := id + ":" + strconv.Itoa(idx)
-	_, ok := l.brokens[key]
-	return ok
+func (l *LaserPair) GetValidSenders() map[string][]int {
+	ret := make(map[string][]int)
+	for k, receiver := range l.m {
+		if receiver.Valid == 1 {
+			li := strings.Split(k, ":")
+			id := li[0]
+			idx, _ := strconv.Atoi(li[1])
+			value, ok := ret[id]
+			if ok {
+				ret[id] = append(value, idx)
+			} else {
+				ret[id] = []int{idx}
+			}
+		}
+	}
+	return ret
 }
 
-func (l *LaserPair) Record(key string, receiverID string, receiverIdx string) {
+func (l *LaserPair) Record(key string, receiverID string, receiverIdx string, valid int) {
 	info := ReceiverInfo{}
 	info.ID = receiverID
 	info.Idx = receiverIdx
-	info.Valid = 1
-	l.m[key] = info
+	info.Valid = valid
+	l.m[key] = &info
 	l.Save()
+}
+
+func (l *LaserPair) RecordBrokens(brokens []string) {
+	for _, broken := range brokens {
+		li := strings.Split(broken, ":")
+		for _, v := range l.m {
+			if v.ID == li[0] && v.Idx == li[1] {
+				v.Valid = 0
+				break
+			}
+		}
+	}
 }

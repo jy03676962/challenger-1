@@ -181,7 +181,7 @@ func (m *Match) handleLaserCmd() {
 }
 
 func (m *Match) handleLaser() {
-	infoMap := GetLaserPair().GetInitStatus()
+	infoMap := GetLaserPair().GetValidReceivers()
 	for {
 		select {
 		case msg := <-m.laserInfoCh:

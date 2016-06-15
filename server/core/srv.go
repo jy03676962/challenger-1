@@ -15,9 +15,8 @@ import (
 type AdminMode int
 
 const (
-	AdminModeNormal     = iota
-	AdminModeDebug      = iota
-	AdminModeQuickCheck = iota
+	AdminModeNormal = iota
+	AdminModeDebug  = iota
 )
 
 var _ = log.Println
@@ -39,6 +38,7 @@ type Srv struct {
 	mDict            map[uint]*Match
 	adminMode        AdminMode
 	isSimulator      bool
+	qc               *QuickChecker
 }
 
 func NewSrv(isSimulator bool) *Srv {
@@ -368,6 +368,9 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 		if controller := s.aDict[msg.Address.String()]; controller != nil {
 			controller.Mode = mm
 		}
+		if s.qc != nil {
+			s.qc.OnArduinoHeartBeat(msg)
+		}
 		switch s.adminMode {
 		case AdminModeNormal:
 			for _, m := range s.mDict {
@@ -397,7 +400,6 @@ func (s *Srv) handleArduinoMessage(msg *InboxMessage) {
 				}
 				s.sends(m, InboxAddressTypeAdminDevice)
 			}
-		case AdminModeQuickCheck:
 		}
 	}
 	if msg.GetCmd() != "init" {
@@ -546,11 +548,24 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		GetLaserPair().Save()
 	case "recordLaser":
 		key := msg.GetStr("from") + ":" + msg.GetStr("from_idx")
-		GetLaserPair().Record(key, msg.GetStr("to"), msg.GetStr("to_idx"))
+		GetLaserPair().Record(key, msg.GetStr("to"), msg.GetStr("to_idx"), 1)
 	case "startQuickCheck":
-		s.adminMode = AdminModeQuickCheck
+		if s.qc == nil {
+			s.qc = NewQuickChecker(s)
+		}
 	case "stopQuickCheck":
-		s.adminMode = AdminModeNormal
+		if s.qc == nil {
+			return
+		}
+		ch := make(chan struct{})
+		s.qc.Close(ch)
+		<-ch
+		s.qc = nil
+	case "queryQuickCheck":
+		if s.qc == nil {
+			return
+		}
+		s.qc.Query()
 	}
 }
 
