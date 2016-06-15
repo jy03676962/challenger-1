@@ -110,7 +110,6 @@ func (l *Laser) Tick(dt float64) {
 		if l.p2 < 0 && l.p == next {
 			return
 		}
-		log.Printf("current:%v, next:%v\n", opt.IntToTile(l.p), opt.IntToTile(next))
 		replaceIdx := -1
 		notInNext := 0
 		for i, line := range l.lines {

@@ -30,6 +30,12 @@ type laserInfoChange struct {
 	idx int
 }
 
+type laserCommand struct {
+	id   string
+	idx  int
+	isOn bool
+}
+
 type Match struct {
 	Member       []*Player        `json:"member"`
 	Stage        string           `json:"stage"`
@@ -56,6 +62,7 @@ type Match struct {
 	msgCh         chan *InboxMessage
 	laserInfoCh   chan *InboxMessage
 	closeCh       chan bool
+	laserCmdCh    chan *laserCommand
 	matchData     *MatchData
 	isSimulator   bool
 	laserStatus   map[int]bool
@@ -79,6 +86,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.closeCh = make(chan bool)
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
+	m.laserCmdCh = make(chan *laserCommand)
 	m.isSimulator = isSimulator
 	if isSimulator {
 		m.IsSimulator = 1
@@ -106,6 +114,7 @@ func (m *Match) Run() {
 	m.setStage("warmup-1")
 	if !m.isSimulator {
 		go m.handleLaser()
+		go m.handleLaserCmd()
 	}
 	for {
 		<-tickChan
@@ -137,6 +146,38 @@ func (m *Match) OnLaserInfoArrived(msg *InboxMessage) {
 		return
 	}
 	m.laserInfoCh <- msg
+}
+
+func (m *Match) handleLaserCmd() {
+	dict := make(map[string]int)
+	for {
+		select {
+		case cmd := <-m.laserCmdCh:
+			key := cmd.id + ":" + strconv.Itoa(cmd.idx)
+			v, ok := dict[key]
+			sendCmd := false
+			if cmd.isOn {
+				if ok && v > 0 {
+					dict[key] = v + 1
+				} else {
+					dict[key] = 1
+					sendCmd = true
+				}
+			} else {
+				if ok && v > 1 {
+					dict[key] = v - 1
+				} else {
+					dict[key] = 0
+					sendCmd = true
+				}
+			}
+			if sendCmd {
+				m.srv.laserControl(cmd.id, cmd.idx, cmd.isOn)
+			}
+		case <-m.closeCh:
+			return
+		}
+	}
 }
 
 func (m *Match) handleLaser() {
@@ -339,11 +380,11 @@ func (m *Match) updateStage() {
 }
 
 func (m *Match) openLaser(ID string, idx int) {
-	m.srv.laserControl(ID, idx, true)
+	m.laserCmdCh <- &laserCommand{ID, idx, true}
 }
 
 func (m *Match) closeLaser(ID string, idx int) {
-	m.srv.laserControl(ID, idx, false)
+	m.laserCmdCh <- &laserCommand{ID, idx, false}
 }
 
 func (m *Match) sync() {
