@@ -18,9 +18,10 @@ type LaserLine struct {
 }
 
 type Laser struct {
-	IsPause              bool `json:"isPause"`
-	DisplayP             RP   `json:"displayP"`
-	DisplayP2            RP   `json:"displayP2"`
+	IsPause              bool    `json:"isPause"`
+	Warning              float64 `json:"warning"`
+	DisplayP             RP      `json:"displayP"`
+	DisplayP2            RP      `json:"displayP2"`
 	player               *Player
 	dest                 int
 	pathMap              map[int]int
@@ -56,6 +57,8 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 	}
 	l.startupingIndex = 0
 	l.closed = true
+	l.Warning = GetOptions().LaserAppearTime
+	match.musicControlByCell(p.X, p.Y, "4")
 	return &l
 }
 
@@ -96,6 +99,7 @@ func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
 }
 
 func (l *Laser) Tick(dt float64) {
+	opt := GetOptions()
 	if l.closed {
 		return
 	}
@@ -108,7 +112,15 @@ func (l *Laser) Tick(dt float64) {
 		}
 		return
 	}
-	opt := GetOptions()
+	if l.Warning > 0 {
+		l.Warning -= dt
+		if l.Warning < 0 {
+			l.Warning = 0
+			tp := opt.IntToTile(l.p)
+			l.match.musicControlByCell(tp.X, tp.Y, "5")
+		}
+		return
+	}
 	l.elaspedSinceLastMove += dt
 	interval := opt.laserMoveInterval(l.match.Energy)
 	if l.elaspedSinceLastMove < interval {
@@ -120,6 +132,10 @@ func (l *Laser) Tick(dt float64) {
 		l.match.openLaser(line.ID, line.Index)
 		l.lines = append(l.lines, line)
 		l.startupingIndex += 1
+		if !l.isStartuping() {
+			tp := opt.IntToTile(l.p)
+			l.match.musicControlByCell(tp.X, tp.Y, "0")
+		}
 	} else {
 		next := l.findPath()
 		if l.p2 < 0 && l.p == next {

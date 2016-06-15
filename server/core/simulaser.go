@@ -30,6 +30,7 @@ func NewSimuLaser(p P, player *Player, match *Match) *SimuLaser {
 	l.p = l.getOpt().TilePosToInt(p)
 	l.Pos = l.getOpt().RealPosition(p)
 	l.IsClosed = false
+	l.Pause(GetOptions().LaserAppearTime)
 	return &l
 }
 

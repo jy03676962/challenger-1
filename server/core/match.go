@@ -479,6 +479,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 					if pp == p && player.InvincibleTime <= 0 {
 						musicPostions[pp] = true
 						m.touchPunish(player)
+						m.musicControlByCell(player.tilePos.X, player.tilePos.Y, "6")
 						shouldPause = true
 					}
 				}
@@ -596,7 +597,6 @@ func (m *Match) initLasers() {
 		} else {
 			m.Lasers[i] = NewLaser(p, player, m)
 		}
-		m.Lasers[i].Pause(m.opt.LaserAppearTime)
 	}
 }
 
@@ -771,6 +771,10 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 		m.hiddenButtons[key] = t
 
 	}
+}
+
+func (m *Match) musicControlByCell(x int, y int, music string) {
+	m.srv.musicControlByCell(x, y, music)
 }
 
 func (m *Match) isWarmup() bool {
