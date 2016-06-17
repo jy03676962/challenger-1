@@ -837,6 +837,8 @@ func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
 	msg.Set("score", scoreInfo)
 	msg.Set("upload_time", strconv.Itoa(GetOptions().UploadTime))
 	msg.Set("heartbeat_time", strconv.Itoa(GetOptions().HeartbeatTime))
+	msg.Set("s_upload_time", strconv.Itoa(GetOptions().SubUploadTime))
+	msg.Set("s_heartbeat_time", strconv.Itoa(GetOptions().SubHeartbeatTime))
 	s.send(msg, []InboxAddress{controller.Address})
 }
 

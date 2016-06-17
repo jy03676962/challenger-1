@@ -227,7 +227,7 @@ func (m *Match) tick(dt time.Duration) {
 		m.WarmupTime = math.Max(m.WarmupTime-sec, 0)
 	} else if m.isOngoing() {
 		m.RampageTime = math.Max(m.RampageTime-sec, 0)
-		if m.Mode == "s" && m.goldDropTime > 0 {
+		if m.Mode == "s" && m.goldDropTime > 0 && m.RampageTime <= 0 {
 			m.goldDropTime -= sec
 			if m.goldDropTime <= 0 {
 				m.Gold -= m.opt.Mode2GoldDropRate[len(m.Member)-1]
