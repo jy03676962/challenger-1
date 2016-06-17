@@ -301,22 +301,38 @@ func (m *Match) setStage(s string) {
 	case "ongoing-rampage":
 		m.srv.lightControl("0")
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
-		m.offButtons = make([]string, 0)
+		laserPosList := make([]int, len(m.Lasers))
+		offButtons := make(map[string]bool)
+		for i, laser := range m.Lasers {
+			laserPosList[i] = laser.Pause(m.RampageTime)
+		}
+		for _, p := range laserPosList {
+			infos := m.opt.mainArduinoInfosByPos(p)
+			for _, info := range infos {
+				offButtons[info.ID] = true
+			}
+		}
+		m.offButtons = make([]string, len(offButtons))
 		m.hiddenButtons = make(map[string]*float64)
+		addrs := make([]InboxAddress, len(offButtons))
+		offIdx := 0
 		for _, btn := range m.opt.Buttons {
-			m.OnButtons[btn.Id] = true
+			if _, ok := offButtons[btn.Id]; !ok {
+				m.OnButtons[btn.Id] = true
+			} else {
+				m.offButtons[offIdx] = btn.Id
+				addrs[offIdx] = InboxAddress{InboxAddressTypeMainArduinoDevice, btn.Id}
+				offIdx += 1
+			}
 		}
 		m.setButtonEffect("2", false)
-		for _, laser := range m.Lasers {
-			laser.Pause(m.RampageTime)
-		}
 		m.Energy = 0
 		m.RampageCount += 1
 		for _, player := range m.Member {
 			player.Combo = 0
 			player.lastHitTime = time.Unix(0, 0)
 		}
-		m.srv.ledRampageEffect()
+		m.srv.ledRampageEffect(offButtons)
 		m.srv.setAllWearableStatus("04")
 	case "ongoing-countdown":
 		m.srv.ledControl(1, "47")
@@ -773,10 +789,8 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 }
 
 func (m *Match) onButtonPressed(btn string) {
-	delete(m.OnButtons, btn)
-	if m.RampageTime > 0 {
-		m.offButtons = append(m.offButtons, btn)
-	} else {
+	if m.RampageTime <= 0 {
+		delete(m.OnButtons, btn)
 		src := rand.NewSource(time.Now().UnixNano())
 		r := rand.New(src)
 		i := r.Intn(len(m.offButtons))

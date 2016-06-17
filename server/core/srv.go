@@ -689,6 +689,15 @@ func (s *Srv) setWallM2M3Auto(isAuto bool) {
 	s.sends(msg, InboxAddressTypeMainArduinoDevice)
 }
 
+func (s *Srv) ledControlByAddresses(mode string, addrs []InboxAddress) {
+	m := NewInboxMessage()
+	m.SetCmd("led_ctrl")
+	li := make([]map[string]string, 1)
+	li[0] = map[string]string{"wall": "M", "led_t": "1", "mode": mode}
+	m.Set("led", li)
+	s.send(m, addrs)
+}
+
 func (s *Srv) ledControlByCell(x int, y int, mode string) {
 	ids := GetOptions().mainArduinosByPos(x, y)
 	if len(ids) == 0 {
@@ -761,12 +770,17 @@ func (s *Srv) ledFlowEffect() {
 	s.ledControl(2, "1")
 }
 
-func (s *Srv) ledRampageEffect() {
+func (s *Srv) ledRampageEffect(offs map[string]bool) {
 	s.ledControl(2, "21")
 	addrsA := make([]InboxAddress, 0)
 	addrsB := make([]InboxAddress, 0)
+	addrsOff := make([]InboxAddress, len(offs))
+	idx := 0
 	for _, info := range GetOptions().MainArduinoInfo {
-		if info.Type == "A" {
+		if _, ok := offs[info.ID]; ok {
+			addrsOff[idx] = InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID}
+			idx += 1
+		} else if info.Type == "A" {
 			addrsA = append(addrsA, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
 		} else {
 			addrsB = append(addrsB, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
@@ -784,6 +798,12 @@ func (s *Srv) ledRampageEffect() {
 	mb.SetCmd("led_ctrl")
 	mb.Set("led", liA)
 	s.send(mb, addrsB)
+	liO := make([]map[string]string, 1)
+	liO[0] = map[string]string{"wall": "M", "led_t": "1", "mode": "24"}
+	mo := NewInboxMessage()
+	mo.SetCmd("led_ctrl")
+	mo.Set("led", liO)
+	s.send(mo, addrsOff)
 }
 
 func (s *Srv) send(msg *InboxMessage, addrs []InboxAddress) {

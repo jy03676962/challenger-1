@@ -34,9 +34,10 @@ func NewSimuLaser(p P, player *Player, match *Match) *SimuLaser {
 	return &l
 }
 
-func (l *SimuLaser) Pause(t float64) {
+func (l *SimuLaser) Pause(t float64) int {
 	l.IsPause = true
 	l.pauseTime = math.Max(t, l.pauseTime)
+	return l.p
 }
 
 func (l *SimuLaser) IsFollow(cid string) bool {

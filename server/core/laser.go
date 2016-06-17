@@ -48,13 +48,7 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 	l.convertDisplay()
 	l.elaspedSinceLastMove = GetOptions().LaserSpeed
 	l.lines = make([]LaserLine, 0)
-	l.startupLines = make([]LaserLine, 0)
-	infos := GetOptions().mainArduinoInfosByPos(l.p)
-	for _, info := range infos {
-		for i := 0; i < info.LaserNum; i++ {
-			l.startupLines = append(l.startupLines, LaserLine{info.ID, i, l.p})
-		}
-	}
+	l.startupLines = l.linesByP(l.p)
 	l.startupingIndex = 0
 	l.closed = false
 	l.Warning = GetOptions().LaserAppearTime
@@ -63,13 +57,27 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 	return &l
 }
 
-func (l *Laser) Pause(t float64) {
+func (l *Laser) Pause(t float64) int {
 	if l.isStartuping() {
-		return
+		return l.p
 	}
 	l.IsPause = true
 	l.pauseTime = math.Max(t, l.pauseTime)
 	l.doClose()
+	p, p2 := 0, 0
+	for _, line := range l.lines {
+		if line.P == l.p {
+			p += 1
+		} else {
+			p2 += 1
+		}
+	}
+	if p2 > p {
+		l.p = l.p2
+	}
+	l.p2 = -1
+	l.lines = l.linesByP(l.p)
+	return l.p
 }
 
 func (l *Laser) IsFollow(cid string) bool {
@@ -194,6 +202,17 @@ func (l *Laser) doOpen() {
 	for _, line := range l.lines {
 		l.match.openLaser(line.ID, line.Index)
 	}
+}
+
+func (l *Laser) linesByP(p int) []LaserLine {
+	infos := GetOptions().mainArduinoInfosByPos(p)
+	ret := make([]LaserLine, 0)
+	for _, info := range infos {
+		for i := 0; i < info.LaserNum; i++ {
+			ret = append(ret, LaserLine{info.ID, i, l.p})
+		}
+	}
+	return ret
 }
 
 func (l *Laser) convertDisplay() {
