@@ -59,6 +59,7 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 	l.closed = false
 	l.Warning = GetOptions().LaserAppearTime
 	match.musicControlByCell(p.X, p.Y, "4")
+	match.srv.ledControlByCell(p.X, p.Y, "24")
 	return &l
 }
 
@@ -116,8 +117,9 @@ func (l *Laser) Tick(dt float64) {
 		l.Warning -= dt
 		if l.Warning <= 0 {
 			l.Warning = 0
+			l.musicControlByPos(l.p, "5")
 			tp := opt.IntToTile(l.p)
-			l.match.musicControlByCell(tp.X, tp.Y, "5")
+			l.match.srv.ledControlByCell(tp.X, tp.Y, "5")
 		}
 		return
 	}
@@ -132,10 +134,6 @@ func (l *Laser) Tick(dt float64) {
 		l.match.openLaser(line.ID, line.Index)
 		l.lines = append(l.lines, line)
 		l.startupingIndex += 1
-		if !l.isStartuping() {
-			tp := opt.IntToTile(l.p)
-			l.match.musicControlByCell(tp.X, tp.Y, "0")
-		}
 	} else {
 		next := l.findPath()
 		if l.p2 < 0 && l.p == next {
@@ -161,9 +159,15 @@ func (l *Laser) Tick(dt float64) {
 						l.match.openLaser(info.ID, i)
 						l.lines[replaceIdx] = LaserLine{info.ID, i, next}
 						if notInNext == 1 {
+							if l.p != next {
+								l.musicControlByPos(l.p, "0")
+							}
 							l.p = next
 							l.p2 = -1
 						} else {
+							if l.p2 != next {
+								l.musicControlByPos(next, "5")
+							}
 							l.p2 = next
 						}
 						l.convertDisplay()
@@ -173,6 +177,11 @@ func (l *Laser) Tick(dt float64) {
 			}
 		}
 	}
+}
+
+func (l *Laser) musicControlByPos(p int, music string) {
+	tp := opt.IntToTile(p)
+	l.match.musicControlByCell(tp.X, tp.Y, music)
 }
 
 func (l *Laser) doClose() {
