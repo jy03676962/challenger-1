@@ -750,7 +750,7 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 				extra = m.opt.ComboExtra
 			}
 			delta := m.opt.EnergyBonus[level][len(m.Member)-1] + extra
-			m.Energy = math.Min(m.opt.MaxEnergy, m.Energy+delta)
+			m.setEnergy(math.Min(m.opt.MaxEnergy, m.Energy+delta))
 			player.Energy += delta
 		}
 	}
@@ -771,6 +771,17 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 		m.hiddenButtons[key] = &t
 
 	}
+}
+
+func (m *Match) setEnergy(e float64) {
+	max := GetOptions().MaxEnergy
+	before := int(m.Energy/max*100) / 20
+	after := int(e/max*100) / 20
+	if before != after {
+		mode := strconv.Itoa(after + 5)
+		m.srv.ledControl(3, mode)
+	}
+	m.Energy = e
 }
 
 func (m *Match) musicControlByCell(x int, y int, music string) {
