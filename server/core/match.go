@@ -267,6 +267,16 @@ func (m *Match) setStage(s string) {
 	case "ongoing-low":
 		m.srv.lightControl("1")
 		if m.Stage == "ongoing-rampage" {
+			msg := NewInboxMessage()
+			msg.SetCmd("btn_ctrl")
+			msg.Set("useful", "0")
+			if m.Mode == "g" {
+				msg.Set("mode", "1")
+			} else {
+				msg.Set("mode", "2")
+			}
+			msg.Set("stage", "0")
+			m.srv.sends(msg, InboxAddressTypeMainArduinoDevice)
 			m.initButtons()
 		} else if m.isWarmup() {
 			m.srv.setWallM2M3Auto(true)
@@ -466,6 +476,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 				break
 			}
 		}
+		m.onButtonPressed(info.ID)
 	case "laserChange":
 		changes := msg.Get("changes").([]laserInfoChange)
 		musicPostions := make(map[int]bool)
@@ -537,6 +548,7 @@ func (m *Match) playerTick(player *Player, sec float64) {
 		}
 		if moved && player.Button != "" {
 			m.consumeButton(player.Button, player, "")
+			m.onButtonPressed(player.Button)
 		}
 		if !moved {
 			player.Stay(sec, m.opt, m.RampageTime > 0)
@@ -758,6 +770,9 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 	player.ButtonLevel = 0
 	player.Button = ""
 	player.ButtonTime = 0
+}
+
+func (m *Match) onButtonPressed(btn string) {
 	delete(m.OnButtons, btn)
 	if m.RampageTime > 0 {
 		m.offButtons = append(m.offButtons, btn)
@@ -769,7 +784,6 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 		m.offButtons[i] = btn
 		t := m.opt.ButtonHideTime[m.modeIndex()]
 		m.hiddenButtons[key] = &t
-
 	}
 }
 
