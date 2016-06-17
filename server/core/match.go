@@ -286,8 +286,14 @@ func (m *Match) setStage(s string) {
 			m.initLasers()
 			m.initButtons()
 		}
-		m.srv.ledControl(3, "5")
-		m.srv.ledControl(1, "0", "2", "3")
+		if m.Mode == "g" {
+			m.srv.ledControl(3, "5")
+			m.srv.ledControl(1, "0", "2", "3")
+		} else {
+			m.srv.ledControl(3, "12")
+			m.srv.ledControl(1, "0", "2", "3")
+
+		}
 	case "ongoing-high":
 		m.srv.lightControl("2")
 		m.srv.ledControl(3, "9")
@@ -806,7 +812,12 @@ func (m *Match) setEnergy(e float64) {
 	before := int(m.Energy/max*100) / 20
 	after := int(e/max*100) / 20
 	if before != after {
-		mode := strconv.Itoa(after + 5)
+		var mode string
+		if m.Mode == "g" {
+			mode = strconv.Itoa(after + 5)
+		} else {
+			mode = strconv.Itoa(after + 12)
+		}
 		m.srv.ledControl(3, mode)
 	}
 	m.Energy = e
