@@ -56,7 +56,7 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 		}
 	}
 	l.startupingIndex = 0
-	l.closed = true
+	l.closed = false
 	l.Warning = GetOptions().LaserAppearTime
 	match.musicControlByCell(p.X, p.Y, "4")
 	return &l
@@ -114,7 +114,7 @@ func (l *Laser) Tick(dt float64) {
 	}
 	if l.Warning > 0 {
 		l.Warning -= dt
-		if l.Warning < 0 {
+		if l.Warning <= 0 {
 			l.Warning = 0
 			tp := opt.IntToTile(l.p)
 			l.match.musicControlByCell(tp.X, tp.Y, "5")

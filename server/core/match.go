@@ -55,7 +55,7 @@ type Match struct {
 	IsSimulator  int              `json:"isSimulator"`
 
 	offButtons    []string
-	hiddenButtons map[string]float64
+	hiddenButtons map[string]*float64
 	goldDropTime  float64
 	opt           *MatchOptions
 	srv           *Srv
@@ -235,8 +235,8 @@ func (m *Match) tick(dt time.Duration) {
 			}
 		}
 		for k, v := range m.hiddenButtons {
-			v -= sec
-			if v <= 0 {
+			*v -= sec
+			if *v <= 0 {
 				delete(m.hiddenButtons, k)
 				m.OnButtons[k] = true
 				m.setSingleButtonEffect(k)
@@ -292,7 +292,7 @@ func (m *Match) setStage(s string) {
 		m.srv.lightControl("0")
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 		m.offButtons = make([]string, 0)
-		m.hiddenButtons = make(map[string]float64)
+		m.hiddenButtons = make(map[string]*float64)
 		for _, btn := range m.opt.Buttons {
 			m.OnButtons[btn.Id] = true
 		}
@@ -629,7 +629,7 @@ func (m *Match) initButtons() {
 	n := m.opt.InitButtonNum[len(m.Member)-1]
 	m.OnButtons = make(map[string]bool)
 	m.offButtons = make([]string, count-n)
-	m.hiddenButtons = make(map[string]float64)
+	m.hiddenButtons = make(map[string]*float64)
 	for i, j := range randList {
 		id := m.opt.Buttons[j].Id
 		if i < n {
@@ -639,7 +639,7 @@ func (m *Match) initButtons() {
 		}
 	}
 	if !m.isSimulator {
-		m.setButtonEffect("0", false)
+		m.setButtonEffect("0", true)
 	}
 
 }
@@ -768,7 +768,7 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 		key := m.offButtons[i]
 		m.offButtons[i] = btn
 		t := m.opt.ButtonHideTime[m.modeIndex()]
-		m.hiddenButtons[key] = t
+		m.hiddenButtons[key] = &t
 
 	}
 }
