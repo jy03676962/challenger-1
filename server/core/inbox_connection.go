@@ -16,7 +16,7 @@ import (
 
 var _ = log.Printf
 
-const tcpSendMinInterval = 50
+const tcpSendMinInterval = 100
 
 type InboxConnection interface {
 	ReadJSON(v *InboxMessage) error

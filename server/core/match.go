@@ -151,7 +151,7 @@ func (m *Match) OnLaserInfoArrived(msg *InboxMessage) {
 }
 
 func (m *Match) handleLaserCmd() {
-	dict := make(map[string]int)
+	dict := make(map[string]*int)
 	for {
 		select {
 		case cmd := <-m.laserCmdCh:
@@ -159,18 +159,23 @@ func (m *Match) handleLaserCmd() {
 			v, ok := dict[key]
 			sendCmd := false
 			if cmd.isOn {
-				if ok && v > 0 {
-					dict[key] = v + 1
+				if ok {
+					sendCmd = *v == 0
+					*v += 1
 				} else {
-					dict[key] = 1
+					x := 1
+					dict[key] = &x
 					sendCmd = true
 				}
 			} else {
-				if ok && v > 1 {
-					dict[key] = v - 1
+				if ok {
+					*v -= 1
+					sendCmd = *v == 0
+					if *v < 0 {
+						log.Println("warning:laser count less than 0")
+					}
 				} else {
-					dict[key] = 0
-					sendCmd = true
+					log.Println("warning:laser count don't match")
 				}
 			}
 			if sendCmd {
