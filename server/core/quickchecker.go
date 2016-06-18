@@ -15,41 +15,63 @@ const (
 )
 
 type QuickChecker struct {
-	hbCh    chan *InboxMessage
-	qCh     chan struct{}
-	closeCh chan chan struct{}
-	closed  bool
-	srv     *Srv
+	srv       *Srv
+	receivers map[string]bool
+	statusMap map[string]ReceiverStatus
 }
 
 func NewQuickChecker(srv *Srv) *QuickChecker {
 	qc := QuickChecker{}
 	qc.srv = srv
-	qc.hbCh = make(chan *InboxMessage)
-	qc.qCh = make(chan struct{})
-	qc.closeCh = make(chan chan struct{}, 1)
-	qc.closed = false
-	go qc.run()
+	qc.receivers = GetLaserPair().GetValidReceivers()
+	qc.statusMap = make(map[string]ReceiverStatus)
+	for k, _ := range qc.receivers {
+		qc.statusMap[k] = ReceiverStatusUnknown
+	}
+	qc.openAllLasers()
 	return &qc
 }
 
-func (qc *QuickChecker) Close(ret chan struct{}) {
-	if qc.closed {
-		return
+func (qc *QuickChecker) OnArduinoHeartBeat(hb *InboxMessage) {
+	ur := hb.GetStr("UR")
+	id := hb.Address.ID
+	for i, r := range ur {
+		c := string(r)
+		key := id + ":" + strconv.Itoa(i)
+		if c == "1" {
+			if qc.receivers[key] {
+				qc.statusMap[key] = ReceiverStatusNormal
+			} else {
+				qc.statusMap[key] = ReceiverStatusBrokenButReceived
+			}
+		} else {
+			if qc.receivers[key] {
+				qc.statusMap[key] = ReceiverStatusNotReceived
+			} else {
+				qc.statusMap[key] = ReceiverStatusBroken
+			}
+		}
 	}
-	qc.closeCh <- ret
-	qc.closed = true
-}
-
-func (qc *QuickChecker) OnArduinoHeartBeat(msg *InboxMessage) {
-	qc.hbCh <- msg
 }
 
 func (qc *QuickChecker) Query() {
-	qc.qCh <- struct{}{}
+	msg := NewInboxMessage()
+	msg.SetCmd("QuickCheck")
+	msg.Set("data", qc.statusMap)
+	qc.srv.sends(msg, InboxAddressTypeAdminDevice)
 }
 
-func (qc *QuickChecker) run() {
+func (qc *QuickChecker) Record() {
+	ret := make([]string, 0)
+	for k, v := range qc.statusMap {
+		if v == ReceiverStatusNotReceived {
+			ret = append(ret, k)
+		}
+	}
+	GetLaserPair().RecordBrokens(ret)
+}
+
+func (qc *QuickChecker) openAllLasers() {
 	senders := GetLaserPair().GetValidSenders()
 	for id, li := range senders {
 		info := arduinoInfoFromID(id)
@@ -67,48 +89,5 @@ func (qc *QuickChecker) run() {
 			laserList[i] = laser
 		}
 		qc.srv.sendToOne(msg, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
-	}
-	receivers := GetLaserPair().GetValidReceivers()
-	statusMap := make(map[string]ReceiverStatus)
-	for k, _ := range receivers {
-		statusMap[k] = ReceiverStatusUnknown
-	}
-	for {
-		select {
-		case ch := <-qc.closeCh:
-			ret := make([]string, 0)
-			for k, v := range statusMap {
-				if v == ReceiverStatusNotReceived {
-					ret = append(ret, k)
-				}
-			}
-			GetLaserPair().RecordBrokens(ret)
-			ch <- struct{}{}
-		case hb := <-qc.hbCh:
-			ur := hb.GetStr("UR")
-			id := hb.Address.ID
-			for i, r := range ur {
-				c := string(r)
-				key := id + ":" + strconv.Itoa(i)
-				if c == "1" {
-					if receivers[key] {
-						statusMap[key] = ReceiverStatusNormal
-					} else {
-						statusMap[key] = ReceiverStatusBrokenButReceived
-					}
-				} else {
-					if receivers[key] {
-						statusMap[key] = ReceiverStatusNotReceived
-					} else {
-						statusMap[key] = ReceiverStatusBroken
-					}
-				}
-			}
-		case <-qc.qCh:
-			msg := NewInboxMessage()
-			msg.SetCmd("QuickCheck")
-			msg.Set("data", statusMap)
-			qc.srv.sends(msg, InboxAddressTypeAdminDevice)
-		}
 	}
 }

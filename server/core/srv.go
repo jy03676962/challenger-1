@@ -557,9 +557,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		if s.qc == nil {
 			return
 		}
-		ch := make(chan struct{})
-		s.qc.Close(ch)
-		<-ch
+		s.qc.Record()
 		s.qc = nil
 	case "queryQuickCheck":
 		if s.qc == nil {
