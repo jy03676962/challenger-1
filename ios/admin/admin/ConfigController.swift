@@ -127,6 +127,17 @@ class ConfigController: PLViewController {
 	}
 }
 
+// PLViewController
+extension ConfigController {
+	override func onWsDisconnected() {
+		super.onWsDisconnected()
+		for (_, label) in self.arduinoViewMap {
+			label.textColor = UIColor.redColor()
+		}
+		modeControl.selectedSegmentIndex = 0
+	}
+}
+
 extension ConfigController: DataReceiver {
 	func onReceivedData(json: [String: AnyObject], type: DataType) {
 		if type == .ArduinoList {
