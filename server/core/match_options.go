@@ -110,6 +110,8 @@ type MatchOptions struct {
 	HeartbeatTime         int           `json:"-"`
 	SubUploadTime         int           `json:"-"`
 	SubHeartbeatTime      int           `json:"-"`
+	CatchMode             int           `json:"-"`
+	CatchLaserNum         int           `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}

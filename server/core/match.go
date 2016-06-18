@@ -113,7 +113,9 @@ func (m *Match) Run() {
 	m.WarmupTime = m.opt.Warmup
 	m.setStage("warmup-1")
 	if !m.isSimulator {
-		go m.handleLaser()
+		if GetOptions().CatchMode == 1 {
+			go m.handleLaser()
+		}
 		go m.handleLaserCmd()
 	}
 	for {
@@ -142,7 +144,7 @@ func (m *Match) OnMatchCmdArrived(cmd *InboxMessage) {
 }
 
 func (m *Match) OnLaserInfoArrived(msg *InboxMessage) {
-	if m.isSimulator {
+	if m.isSimulator || GetOptions().CatchMode == 0 {
 		return
 	}
 	m.laserInfoCh <- msg
@@ -405,7 +407,7 @@ func (m *Match) updateStage() {
 			}
 		}
 	}
-	if m.Mode == "g" && m.opt.Mode1TotalTime-m.opt.Mode1CountDown < m.Elasped {
+	if m.Mode == "g" && s != "ongoing-rampage" && m.opt.Mode1TotalTime-m.opt.Mode1CountDown < m.Elasped {
 		s = "ongoing-countdown"
 	}
 	if m.Mode == "g" && m.TotalTime <= 0 || m.Mode == "s" && m.Gold <= 0 {
@@ -733,10 +735,8 @@ func (m *Match) setSingleButtonEffect(id string) {
 	}
 	if m.Stage == "ongoing-low" {
 		msg.Set("stage", "0")
-	} else if m.Stage == "ongoing-high" {
-		msg.Set("stage", "1")
 	} else {
-		msg.Set("stage", "2")
+		msg.Set("stage", "1")
 	}
 	addr := InboxAddress{InboxAddressTypeMainArduinoDevice, id}
 	m.srv.sendToOne(msg, addr)

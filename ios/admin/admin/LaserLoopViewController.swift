@@ -28,6 +28,26 @@ class LaserLoopViewController: PLViewController {
 		return senderList?[senderIdx]
 	}
 
+	@IBAction func manuallyChangeSender(sender: UITextField) {
+		if let value = sender.text {
+			let li = value.componentsSeparatedByString(":")
+			if li.count == 2 {
+				let laserID = li[0]
+				let idx: Int? = Int(li[1])
+				if idx != nil {
+					for (i, info) in senderList!.enumerate() {
+						if info.id == laserID && idx! < info.laserNum {
+							senderIdx = i
+							laserIdx = idx!
+							return
+						}
+					}
+				}
+			}
+			HUD.flash(.LabeledError(title: "输入ID有错误", subtitle: nil), delay: 1)
+		}
+	}
+
 	@IBAction func start() {
 		checking = !checking
 		if checking {
@@ -64,7 +84,7 @@ class LaserLoopViewController: PLViewController {
 
 	@IBAction func record() {
 		if (infoList.count == 0 || infoList.count > 1 || infoList[0].err != 0) {
-			HUD.flash(.LabeledError(title: "有错误，无法记录", subtitle: nil), delay: 2)
+			HUD.flash(.LabeledError(title: "有错误，无法记录", subtitle: nil), delay: 1)
 			return
 		}
 		let json = JSON([

@@ -1316,6 +1316,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="manuallyChangeSender:" destination="OtN-ql-S1g" eventType="editingDidEnd" id="0Wn-rK-iWO"/>
+                                </connections>
                             </textField>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uY9-4b-LXZ">
                                 <rect key="frame" x="262" y="124" width="500" height="500"/>
