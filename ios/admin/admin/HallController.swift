@@ -55,10 +55,10 @@ class HallController: PLViewController {
 		DataManager.singleton.queryData(.HallData)
 	}
 	@IBAction func changeMode() {
-		guard topTeam != nil else {
+		guard let team = topTeam else {
 			return
 		}
-		let mode = topTeam!.mode == "g" ? "s" : "g"
+		let mode = team.mode == "g" ? "s" : "g"
 		let json = JSON([
 			"cmd": "teamChangeMode",
 			"teamID": topTeam!.id,
@@ -67,35 +67,35 @@ class HallController: PLViewController {
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func callTeam(sender: UIButton) {
-		guard topTeam != nil else {
+		guard let team = topTeam else {
 			return
 		}
 		let json = JSON([
 			"cmd": "teamCall",
-			"teamID": topTeam!.id,
+			"teamID": team.id,
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func delayTeam(sender: UIButton) {
-		guard topTeam != nil else {
+		guard let team = topTeam else {
 			return
 		}
-		if topTeam!.status != .Waiting {
+		guard team.status == .Waiting else {
 			return
 		}
 		let json = JSON([
 			"cmd": "teamDelay",
-			"teamID": topTeam!.id,
+			"teamID": team.id,
 		])
 		WsClient.singleton.sendJSON(json)
 	}
 	@IBAction func addPlayer(sender: UIButton) {
-		guard topTeam != nil && topTeam!.size < PLConstants.maxTeamSize else {
+		guard let team = topTeam where team.size < PLConstants.maxTeamSize else {
 			return
 		}
 		let json = JSON([
 			"cmd": "teamAddPlayer",
-			"teamID": topTeam!.id,
+			"teamID": team.id,
 		])
 		WsClient.singleton.sendJSON(json)
 	}
