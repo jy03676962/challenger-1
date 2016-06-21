@@ -1,0 +1,14 @@
+@import './global.css';
+.root {
+  font-family: alien;
+  overflow-y: auto;
+  height: 100vh;
+}
+.container {
+  position: relative;
+  width: 100%;
+  height: 177.78vw;
+}
+.rootImg {
+  width: 100%;
+}
