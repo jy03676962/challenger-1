@@ -11,7 +11,8 @@ module.exports = {
     api: './src/api.jsx',
     front: './src/front.jsx',
     ingame: './src/ingame.jsx',
-    queue: './src/queue.jsx'
+    queue: './src/queue.jsx',
+    rank: './src/rank.jsx'
   },
   output: {
     path: path.join(__dirname, 'dist/js'),
@@ -44,6 +45,11 @@ module.exports = {
       template: 'src/assets/queue.ejs',
       inject: false,
       filename: '../queue.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/assets/rank.ejs',
+      inject: false,
+      filename: '../rank.html'
     }),
     new CleanWebpackPlugin(['dist'])
   ],

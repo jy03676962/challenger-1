@@ -238,9 +238,4 @@ const ApiView = CSSModules(observer(React.createClass({
 
 var api = new Api()
 
-render((
-  <ApiView api={api}>
-  </ApiView>
-), document.getElementById('api'), function() {
-  console.log('render api')
-});
+render(<ApiView api={api} />, document.getElementById('api'))

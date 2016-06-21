@@ -67,5 +67,4 @@ var z = require('npm-zepto')
 var front = new Front()
 
 
-render((<FrontView front={front}/>), document.getElementById('front'),
-  function() { console.log('render front') })
+render(<FrontView front={front}/>, document.getElementById('front'))

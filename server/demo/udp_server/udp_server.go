@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	HOST_PORT = "8989"
+	HOST_PORT = "5000"
 	// GUEST_PORT = "8989"
 )
 
@@ -111,7 +111,7 @@ func start_listen_cmd(cmdChan chan string, d *DeviceData) {
 }
 
 func start_listen_UDP(d *DeviceData) {
-	UDPAddress, err := net.ResolveUDPAddr("udp", "192.168.188.5:"+HOST_PORT)
+	UDPAddress, err := net.ResolveUDPAddr("udp", "192.168.1.5:"+HOST_PORT)
 	if err != nil {
 		log.Println("Resolve Server Local Adress Error", err.Error())
 		os.Exit(1)
@@ -129,9 +129,7 @@ func start_listen_UDP(d *DeviceData) {
 	for {
 		n, addr, err := UDPConn.ReadFromUDP(buf)
 		message := string(buf[0:n])
-		if !strings.HasPrefix(message, "HBT") {
-			log.Println(time.Now().String(), "server received", message, "from", addr)
-		}
+		log.Println(time.Now().String(), "server received", message, "from", addr)
 		if err != nil {
 			log.Println("Read Error", err)
 		}

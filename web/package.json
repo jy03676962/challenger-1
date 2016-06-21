@@ -51,6 +51,7 @@
     "webpack-dev-server": "^1.12.1"
   },
   "dependencies": {
+    "es6-enum": "^1.0.3",
     "mobx": "^2.0.1",
     "mobx-react": "^3.0.1",
     "npm-zepto": "^1.1.7",

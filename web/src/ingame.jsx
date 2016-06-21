@@ -165,10 +165,4 @@ const IngameView = CSSModules(observer(React.createClass({
 
 var d = new IngameData()
 
-render(
-  (<IngameView data={d} />),
-  document.getElementById('ingame'),
-  function() {
-    console.log('render ingame')
-  }
-)
+render(<IngameView data={d} />, document.getElementById('ingame'))

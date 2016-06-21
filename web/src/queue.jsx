@@ -345,9 +345,4 @@ const QueueView = CSSModules(observer(React.createClass({
 
 var queue = new Queue()
 
-render((
-    <QueueView queue={queue} />),
-  document.getElementById('queue'),
-  function() {
-    console.log('render queue')
-  });
+render(<QueueView queue={queue} />, document.getElementById('queue'))
