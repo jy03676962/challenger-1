@@ -13,11 +13,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
 const (
-	host        = "192.168.1.5"
+	host        = "localhost"
 	httpAddr    = host + ":3000"
 	tcpAddr     = host + ":4000"
 	udpAddr     = host + ":5000"
@@ -125,7 +126,10 @@ func main() {
 		if rankTestData == nil {
 			return c.JSON(http.StatusOK, nil)
 		}
+		month, _ := strconv.Atoi(c.FormValue("month"))
+		year, _ := strconv.Atoi(c.FormValue("year"))
 		data := rankTestData["survival"].(map[string]interface{})
+		data["season"] = fmt.Sprintf("S%d02%d", year, month)
 		data["code"] = "0"
 		data["error"] = ""
 		return c.JSON(http.StatusOK, data)

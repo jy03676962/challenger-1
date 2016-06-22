@@ -66,5 +66,4 @@ const FrontView = CSSModules(observer(React.createClass({
 var z = require('npm-zepto')
 var front = new Front()
 
-
 render(<FrontView front={front}/>, document.getElementById('front'))
