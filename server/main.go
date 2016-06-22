@@ -2,13 +2,16 @@ package main
 
 import (
 	"challenger/server/core"
+	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo"
 	st "github.com/labstack/echo/engine/standard"
 	mw "github.com/labstack/echo/middleware"
 	"golang.org/x/net/websocket"
 	"io"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"time"
 )
@@ -20,7 +23,23 @@ const (
 	udpAddr     = host + ":5000"
 	dbPath      = "./challenger.db"
 	isSimulator = false
+	testRank    = true
 )
+
+func loadRankTestData() map[string]interface{} {
+	ret := make(map[string]interface{})
+	b, e := ioutil.ReadFile("./ranktest.json")
+	if e != nil {
+		log.Println("load rank test data error:%v\n", e)
+		os.Exit(1)
+	}
+	e = json.Unmarshal(b, &ret)
+	if e != nil {
+		log.Println("parse rank test data error:%v\n", e)
+		os.Exit(1)
+	}
+	return ret
+}
 
 func main() {
 	// setup log system
@@ -33,8 +52,13 @@ func main() {
 		os.Exit(1)
 	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
-
 	log.Println("setup log system done")
+
+	var rankTestData map[string]interface{}
+
+	if testRank {
+		rankTestData = loadRankTestData()
+	}
 
 	core.GetOptions()
 	core.GetSurvey()
@@ -85,6 +109,26 @@ func main() {
 	})
 	ec.Get("/api/sender_list", func(c echo.Context) error {
 		return srv.GetMainArduinoList(c)
+	})
+	ec.Get("/api/allhistory", func(c echo.Context) error {
+		if rankTestData == nil {
+			return c.JSON(http.StatusOK, nil)
+		}
+		data := make(map[string]interface{})
+		data["mode0"] = rankTestData["gold"]
+		data["mode1"] = rankTestData["survival"]
+		data["code"] = "0"
+		data["error"] = ""
+		return c.JSON(http.StatusOK, data)
+	})
+	ec.Post("/api/mode1history", func(c echo.Context) error {
+		if rankTestData == nil {
+			return c.JSON(http.StatusOK, nil)
+		}
+		data := rankTestData["survival"].(map[string]interface{})
+		data["code"] = "0"
+		data["error"] = ""
+		return c.JSON(http.StatusOK, data)
 	})
 	log.Println("listen http:", httpAddr)
 	ec.Run(st.New(httpAddr))
