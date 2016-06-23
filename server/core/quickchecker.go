@@ -57,7 +57,11 @@ func (qc *QuickChecker) OnArduinoHeartBeat(hb *InboxMessage) {
 func (qc *QuickChecker) Query() {
 	msg := NewInboxMessage()
 	msg.SetCmd("QuickCheck")
-	msg.Set("data", qc.statusMap)
+	data := make(map[string]ReceiverStatus)
+	for k, v := range qc.statusMap {
+		data[k] = v
+	}
+	msg.Set("data", data)
 	qc.srv.sends(msg, InboxAddressTypeAdminDevice)
 }
 
