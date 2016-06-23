@@ -105,6 +105,8 @@ type MatchOptions struct {
 	Mode2GoldDropInterval float64       `json:"-"`
 	MainArduino           []string      `json:"-"`
 	SubArduino            []string      `json:"-"`
+	MusicArduino          []string      `json:"-"`
+	DoorArduino           []string      `json:"-"`
 	MainArduinoInfo       []MainArduino `json:"-"`
 	UploadTime            int           `json:"-"`
 	HeartbeatTime         int           `json:"-"`

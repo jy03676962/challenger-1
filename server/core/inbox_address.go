@@ -18,6 +18,7 @@ const (
 	InboxAddressTypeQueueDevice       = 8  // 叫号屏幕
 	InboxAddressTypeIngameDevice      = 9  // 游戏内屏幕
 	InboxAddressTypeMusicArduino      = 10 // music arduino
+	InboxAddressTypeDoorArduino       = 10 // door arduino
 )
 
 func (t InboxAddressType) IsPlayerControllerType() bool {
@@ -25,7 +26,8 @@ func (t InboxAddressType) IsPlayerControllerType() bool {
 }
 
 func (t InboxAddressType) IsArduinoControllerType() bool {
-	return t == InboxAddressTypeMainArduinoDevice || t == InboxAddressTypeSubArduinoDevice
+	return t == InboxAddressTypeMainArduinoDevice || t == InboxAddressTypeSubArduinoDevice ||
+		t == InboxAddressTypeMusicArduino || t == InboxAddressTypeDoorArduino
 }
 
 type InboxAddress struct {

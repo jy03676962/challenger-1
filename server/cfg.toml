@@ -194,6 +194,15 @@ subArduino = [
 "S-7-4"
 ]
 
+musicArduino = [
+"B-1"
+]
+
+doorArduino = [
+"D-1",
+"D-2"
+]
+
 # 入口坐标
 [arenaEntrance]
 x = 0

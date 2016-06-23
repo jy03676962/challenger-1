@@ -828,6 +828,16 @@ func (s *Srv) initArduinoControllers() {
 		controller := NewArduinoController(addr)
 		s.aDict[addr.String()] = controller
 	}
+	for _, music := range GetOptions().MusicArduino {
+		addr := InboxAddress{InboxAddressTypeMusicArduino, music}
+		controller := NewArduinoController(addr)
+		s.aDict[addr.String()] = controller
+	}
+	for _, door := range GetOptions().DoorArduino {
+		addr := InboxAddress{InboxAddressTypeDoorArduino, door}
+		controller := NewArduinoController(addr)
+		s.aDict[addr.String()] = controller
+	}
 }
 
 func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {

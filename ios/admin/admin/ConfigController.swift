@@ -132,6 +132,9 @@ class ConfigController: PLViewController {
 extension ConfigController {
 	override func onWsDisconnected() {
 		super.onWsDisconnected()
+		if self.presentedViewController != nil {
+			self.dismissViewControllerAnimated(false, completion: nil)
+		}
 		for (_, label) in self.arduinoViewMap {
 			label.textColor = UIColor.redColor()
 		}
