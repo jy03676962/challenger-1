@@ -71,15 +71,22 @@ func (l *LaserPair) Save() {
 	ioutil.WriteFile("./laser.json", out.Bytes(), 0640)
 }
 
-func (l *LaserPair) GetValidReceivers() map[string]bool {
+func (l *LaserPair) GetValidReceivers(value bool) map[string]bool {
 	ret := make(map[string]bool)
 	for _, receiver := range l.m {
 		if receiver.Valid == 1 {
 			key := receiver.ID + ":" + receiver.Idx
-			ret[key] = true
+			ret[key] = value
 		}
 	}
 	return ret
+}
+func (l *LaserPair) Get(id string, idx int) *ReceiverInfo {
+	k := id + ":" + strconv.Itoa(idx)
+	if v, ok := l.m[k]; ok {
+		return v
+	}
+	return nil
 }
 
 func (l *LaserPair) GetValidSenders() map[string][]int {
@@ -96,6 +103,14 @@ func (l *LaserPair) GetValidSenders() map[string][]int {
 		}
 	}
 	return ret
+}
+
+func (l *LaserPair) IsValid(senderId string, senderIdx int) bool {
+	key := senderId + ":" + strconv.Itoa(senderIdx)
+	if info, ok := l.m[key]; ok && info.Valid > 0 {
+		return true
+	}
+	return false
 }
 
 func (l *LaserPair) Record(key string, receiverID string, receiverIdx string, valid int) {

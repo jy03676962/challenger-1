@@ -89,15 +89,19 @@ func (l *Laser) Close() {
 	l.doClose()
 }
 
-func (l *Laser) IsTouched(changes *[]laserInfoChange) (touched bool, p int) {
+func (l *Laser) IsTouched(m map[string]bool) (touched bool, p int) {
 	p = 0
 	touched = false
 	if l.IsPause || l.isStartuping() {
 		return
 	}
-	for _, change := range *changes {
+	for k, v := range m {
+		if v {
+			continue
+		}
 		for _, line := range l.lines {
-			if line.ID == change.id && line.Index == change.idx {
+			info := GetLaserPair().Get(line.ID, line.Index)
+			if info != nil && info.Valid > 0 && (info.ID+":"+info.Idx == k) {
 				p = line.P
 				touched = true
 				return

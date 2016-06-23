@@ -31,7 +31,7 @@ type QuickChecker struct {
 func NewQuickChecker(srv *Srv) *QuickChecker {
 	qc := QuickChecker{}
 	qc.srv = srv
-	qc.receivers = GetLaserPair().GetValidReceivers()
+	qc.receivers = GetLaserPair().GetValidReceivers(true)
 	qc.statusMap = make(map[string]ReceiverStatus)
 	qc.enterCh = make(chan string)
 	qc.leaveCh = make(chan string)
@@ -51,7 +51,7 @@ func (qc *QuickChecker) OnArduinoHeartBeat(hb *InboxMessage) {
 		c := string(r)
 		key := id + ":" + strconv.Itoa(i)
 		if c == "1" {
-			if qc.receivers[key] {
+			if _, ok := qc.receivers[key]; ok {
 				if qc.statusMap[key] == ReceiverStatusNotReceived {
 					qc.stopBlink(key)
 				}
@@ -60,7 +60,7 @@ func (qc *QuickChecker) OnArduinoHeartBeat(hb *InboxMessage) {
 				qc.statusMap[key] = ReceiverStatusBrokenButReceived
 			}
 		} else {
-			if qc.receivers[key] {
+			if _, ok := qc.receivers[key]; ok {
 				if qc.statusMap[key] != ReceiverStatusNotReceived {
 					qc.blink(key)
 				}

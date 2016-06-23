@@ -29,6 +29,7 @@ type Player struct {
 	lastHitTime time.Time
 	isSimulator bool
 	tilePos     P
+	status      string
 }
 
 func NewPlayer(cid string, isSimulator bool) *Player {
@@ -39,7 +40,16 @@ func NewPlayer(cid string, isSimulator bool) *Player {
 	p.LevelData = [4]int{0, 0, 0, 0}
 	p.lastHitTime = time.Unix(0, 0)
 	p.isSimulator = isSimulator
+	p.status = ""
 	return &p
+}
+
+func (p *Player) updateStatus(st string) bool {
+	if st == p.status {
+		return false
+	}
+	p.status = st
+	return true
 }
 
 func (p *Player) updateLoc(loc int) {

@@ -60,13 +60,13 @@ type Match struct {
 	opt           *MatchOptions
 	srv           *Srv
 	msgCh         chan *InboxMessage
-	laserInfoCh   chan *InboxMessage
 	closeCh       chan bool
 	laserCmdCh    chan *laserCommand
 	matchData     *MatchData
 	isSimulator   bool
 	laserStatus   map[int]bool
 	syncCount     int
+	receiverMap   map[string]bool
 }
 
 func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string, isSimulator bool) *Match {
@@ -81,8 +81,8 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.Stage = "before"
 	m.opt = GetOptions()
 	m.Mode = mode
+	m.receiverMap = GetLaserPair().GetValidReceivers(false)
 	m.msgCh = make(chan *InboxMessage, 1000)
-	m.laserInfoCh = make(chan *InboxMessage)
 	m.closeCh = make(chan bool)
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
@@ -113,9 +113,6 @@ func (m *Match) Run() {
 	m.WarmupTime = m.opt.Warmup
 	m.setStage("warmup-1")
 	if !m.isSimulator {
-		if GetOptions().CatchMode == 1 {
-			go m.handleLaser()
-		}
 		go m.handleLaserCmd()
 	}
 	for {
@@ -147,7 +144,7 @@ func (m *Match) OnLaserInfoArrived(msg *InboxMessage) {
 	if m.isSimulator || GetOptions().CatchMode == 0 {
 		return
 	}
-	m.laserInfoCh <- msg
+	m.OnMatchCmdArrived(msg)
 }
 
 func (m *Match) handleLaserCmd() {
@@ -180,43 +177,6 @@ func (m *Match) handleLaserCmd() {
 			}
 			if sendCmd {
 				m.srv.laserControl(cmd.id, cmd.idx, cmd.isOn)
-			}
-		case <-m.closeCh:
-			return
-		}
-	}
-}
-
-func (m *Match) handleLaser() {
-	infoMap := GetLaserPair().GetValidReceivers()
-	for {
-		select {
-		case msg := <-m.laserInfoCh:
-			ur := msg.GetStr("UR")
-			id := msg.GetStr("ID")
-			var changes []laserInfoChange
-			for i, r := range ur {
-				c := string(r)
-				var isOn = false
-				if c == "1" {
-					isOn = true
-				}
-				key := id + ":" + strconv.Itoa(i)
-				old, ok := infoMap[key]
-				if ok && old && !isOn {
-					if changes == nil {
-						changes = make([]laserInfoChange, 1)
-						changes[0] = laserInfoChange{id, i}
-					} else {
-						changes = append(changes, laserInfoChange{id, i})
-					}
-				}
-			}
-			if changes != nil {
-				msg := NewInboxMessage()
-				msg.SetCmd("laserChange")
-				msg.Set("changes", changes)
-				m.OnMatchCmdArrived(msg)
 			}
 		case <-m.closeCh:
 			return
@@ -266,7 +226,6 @@ func (m *Match) setStage(s string) {
 	switch s {
 	case "warmup-1":
 		m.srv.lightControl("0")
-		m.srv.setAllWearableStatus("02")
 		m.srv.ledControl(1, "3")
 		m.srv.ledControl(2, "23")
 	case "warmup-2":
@@ -310,7 +269,6 @@ func (m *Match) setStage(s string) {
 		} else {
 			m.srv.ledControl(3, "20")
 		}
-		m.srv.setAllWearableStatus("03")
 	case "ongoing-rampage":
 		m.srv.lightControl("0")
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
@@ -346,13 +304,15 @@ func (m *Match) setStage(s string) {
 			player.lastHitTime = time.Unix(0, 0)
 		}
 		m.srv.ledRampageEffect(offButtons)
-		m.srv.setAllWearableStatus("04")
 	case "ongoing-countdown":
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
 	case "after", "stop":
 		for _, laser := range m.Lasers {
 			laser.Close()
+		}
+		for _, player := range m.Member {
+			m.updatePlayerStatus("01", player)
 		}
 		m.srv.setWallM2M3Auto(false)
 		m.srv.ledFlowEffect()
@@ -506,31 +466,51 @@ func (m *Match) handleInput(msg *InboxMessage) {
 			}
 		}
 		m.onButtonPressed(info.ID)
-	case "laserChange":
-		changes := msg.Get("changes").([]laserInfoChange)
-		musicPostions := make(map[int]bool)
-		for _, laser := range m.Lasers {
-			l := laser.(*Laser)
-			touched, p := l.IsTouched(&changes)
-			if touched {
-				shouldPause := false
-				for _, player := range m.Member {
-					pp := GetOptions().TilePosToInt(player.tilePos)
-					if pp == p && player.InvincibleTime <= 0 {
-						musicPostions[pp] = true
-						m.touchPunish(player)
-						m.musicControlByCell(player.tilePos.X, player.tilePos.Y, "6")
-						shouldPause = true
-					}
-				}
-				if shouldPause {
-					l.Pause(GetOptions().LaserPauseTime)
+	case "hb":
+		ur := msg.GetStr("UR")
+		id := msg.GetStr("ID")
+		changed := false
+		for i, r := range ur {
+			c := string(r)
+			var isOn = false
+			if c == "1" {
+				isOn = true
+			}
+			key := id + ":" + strconv.Itoa(i)
+			if old, ok := m.receiverMap[key]; ok {
+				m.receiverMap[key] = isOn
+				if old != isOn {
+					changed = true
 				}
 			}
 		}
-		for pos, _ := range musicPostions {
-			tilePos := GetOptions().IntToTile(pos)
-			m.srv.musicControlByCell(tilePos.X, tilePos.Y, "1")
+		if changed {
+			musicPostions := make(map[int]bool)
+			for _, laser := range m.Lasers {
+				l := laser.(*Laser)
+				blocked, p := l.IsTouched(m.receiverMap)
+				if blocked {
+					pp := GetOptions().TilePosToInt(m.Member[0].tilePos)
+					log.Printf("laser block:%v, player pos:%v\n", p, pp)
+					shouldPause := false
+					for _, player := range m.Member {
+						pp := GetOptions().TilePosToInt(player.tilePos)
+						if pp == p && player.InvincibleTime <= 0 {
+							musicPostions[pp] = true
+							m.touchPunish(player)
+							m.musicControlByCell(player.tilePos.X, player.tilePos.Y, "6")
+							shouldPause = true
+						}
+					}
+					if shouldPause {
+						l.Pause(GetOptions().LaserPauseTime)
+					}
+				}
+			}
+			for pos, _ := range musicPostions {
+				tilePos := GetOptions().IntToTile(pos)
+				m.srv.musicControlByCell(tilePos.X, tilePos.Y, "1")
+			}
 		}
 	}
 }
@@ -583,6 +563,23 @@ func (m *Match) playerTick(player *Player, sec float64) {
 			player.Stay(sec, m.opt, m.RampageTime > 0)
 		}
 	} else {
+		if player.InvincibleTime > 0 {
+			m.updatePlayerStatus("05", player)
+		} else {
+			if m.Stage == "ongoing-full" {
+				m.updatePlayerStatus("03", player)
+			} else if m.Stage == "ongoing-rampage" {
+				m.updatePlayerStatus("04", player)
+			} else {
+				m.updatePlayerStatus("02", player)
+			}
+		}
+	}
+}
+
+func (m *Match) updatePlayerStatus(st string, p *Player) {
+	if p.updateStatus(st) {
+		m.srv.wearableControl(st, p.ControllerID)
 	}
 }
 

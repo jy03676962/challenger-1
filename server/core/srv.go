@@ -32,7 +32,6 @@ type Srv struct {
 	db               *DB
 	inboxMessageChan chan *InboxMessage
 	mChan            chan MatchEvent
-	wearableMsgChan  chan string
 	pDict            map[string]*PlayerController
 	aDict            map[string]*ArduinoController
 	mDict            map[uint]*Match
@@ -49,7 +48,6 @@ func NewSrv(isSimulator bool) *Srv {
 	s.db = NewDb()
 	s.inboxMessageChan = make(chan *InboxMessage, 1)
 	s.mChan = make(chan MatchEvent)
-	s.wearableMsgChan = make(chan string, 1)
 	s.pDict = make(map[string]*PlayerController)
 	s.aDict = make(map[string]*ArduinoController)
 	s.mDict = make(map[uint]*Match)
@@ -156,12 +154,6 @@ func (s *Srv) mainLoop() {
 			s.handleInboxMessage(msg)
 		case evt := <-s.mChan:
 			s.handleMatchEvent(evt)
-		case status := <-s.wearableMsgChan:
-			for _, pc := range s.pDict {
-				if pc.Address.Type == InboxAddressTypeWearableDevice {
-					s.setWearableStatus(pc.Address, status)
-				}
-			}
 		}
 	}
 }
@@ -261,7 +253,7 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 		s.pDict[pc.ID] = pc
 		shouldUpdatePlayerController = true
 		if msg.AddAddress.Type == InboxAddressTypeWearableDevice {
-			s.setWearableStatus(*msg.AddAddress, "01")
+			s.wearableControl("01", pc.ID)
 		}
 	}
 	if shouldUpdatePlayerController {
@@ -624,7 +616,24 @@ func (s *Srv) sends(msg *InboxMessage, types ...InboxAddressType) {
 	s.send(msg, addrs)
 }
 
+func (s *Srv) wearableControl(status string, cid string) {
+	if pc, ok := s.pDict[cid]; ok {
+		id, _ := strconv.Atoi(pc.Address.ID)
+		idStr := fmt.Sprintf("%03d", id)
+		msg := NewInboxMessage()
+		msg.SetCmd("STA")
+		msg.Set("id", idStr)
+		msg.Set("status", status)
+		log.Println(msg)
+		s.sendToOne(msg, pc.Address)
+	}
+}
+
 func (s *Srv) laserControl(ID string, idx int, openOrClose bool) {
+	valid := GetLaserPair().IsValid(ID, idx)
+	if !valid && openOrClose {
+		return
+	}
 	msg := NewInboxMessage()
 	msg.SetCmd("laser_ctrl")
 	laser := make(map[string]string)
@@ -853,16 +862,4 @@ func (s *Srv) updateArduinoControllerScore(controller *ArduinoController) {
 	msg.Set("s_upload_time", strconv.Itoa(GetOptions().SubUploadTime))
 	msg.Set("s_heartbeat_time", strconv.Itoa(GetOptions().SubHeartbeatTime))
 	s.send(msg, []InboxAddress{controller.Address})
-}
-
-func (s *Srv) setWearableStatus(addr InboxAddress, status string) {
-	m := NewInboxMessage()
-	m.SetCmd("STA")
-	m.Set("id", addr.ID)
-	m.Set("cmd", status)
-	s.sendToOne(m, addr)
-}
-
-func (s *Srv) setAllWearableStatus(status string) {
-	s.wearableMsgChan <- status
 }
