@@ -490,15 +490,12 @@ func (m *Match) handleInput(msg *InboxMessage) {
 				l := laser.(*Laser)
 				blocked, p := l.IsTouched(m.receiverMap)
 				if blocked {
-					pp := GetOptions().TilePosToInt(m.Member[0].tilePos)
-					log.Printf("laser block:%v, player pos:%v\n", p, pp)
 					shouldPause := false
 					for _, player := range m.Member {
 						pp := GetOptions().TilePosToInt(player.tilePos)
 						if pp == p && player.InvincibleTime <= 0 {
 							musicPostions[pp] = true
 							m.touchPunish(player)
-							m.musicControlByCell(player.tilePos.X, player.tilePos.Y, "6")
 							shouldPause = true
 						}
 					}
@@ -509,7 +506,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 			}
 			for pos, _ := range musicPostions {
 				tilePos := GetOptions().IntToTile(pos)
-				m.srv.musicControlByCell(tilePos.X, tilePos.Y, "1")
+				m.srv.musicControlByCell(tilePos.X, tilePos.Y, "6")
 			}
 		}
 	}

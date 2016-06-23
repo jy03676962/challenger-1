@@ -192,6 +192,9 @@ func (l *Laser) Tick(dt float64) {
 }
 
 func (l *Laser) musicControlByPos(p int, music string) {
+	if p < 0 {
+		return
+	}
 	tp := opt.IntToTile(p)
 	l.match.musicControlByCell(tp.X, tp.Y, music)
 }
@@ -200,6 +203,8 @@ func (l *Laser) doClose() {
 	for _, line := range l.lines {
 		l.match.closeLaser(line.ID, line.Index)
 	}
+	l.musicControlByPos(l.p, "0")
+	l.musicControlByPos(l.p2, "0")
 }
 
 func (l *Laser) doOpen() {
