@@ -84,17 +84,15 @@ func (l *LaserPair) GetValidReceivers() map[string]bool {
 
 func (l *LaserPair) GetValidSenders() map[string][]int {
 	ret := make(map[string][]int)
-	for k, receiver := range l.m {
-		if receiver.Valid == 1 {
-			li := strings.Split(k, ":")
-			id := li[0]
-			idx, _ := strconv.Atoi(li[1])
-			value, ok := ret[id]
-			if ok {
-				ret[id] = append(value, idx)
-			} else {
-				ret[id] = []int{idx}
-			}
+	for k, _ := range l.m {
+		li := strings.Split(k, ":")
+		id := li[0]
+		idx, _ := strconv.Atoi(li[1])
+		value, ok := ret[id]
+		if ok {
+			ret[id] = append(value, idx)
+		} else {
+			ret[id] = []int{idx}
 		}
 	}
 	return ret
@@ -111,13 +109,21 @@ func (l *LaserPair) Record(key string, receiverID string, receiverIdx string, va
 
 func (l *LaserPair) RecordBrokens(brokens []string) {
 	for _, broken := range brokens {
-		li := strings.Split(broken, ":")
-		for _, v := range l.m {
-			if v.ID == li[0] && v.Idx == li[1] {
-				v.Valid = 0
-				break
-			}
+		if info, _ := l.FindByReceiver(broken); info != nil {
+			info.Valid = 0
 		}
 	}
 	l.Save()
+}
+
+func (l *LaserPair) FindByReceiver(receiver string) (info *ReceiverInfo, sender string) {
+	li := strings.Split(receiver, ":")
+	sender = ""
+	info = nil
+	for k, v := range l.m {
+		if v.ID == li[0] && v.Idx == li[1] {
+			return v, k
+		}
+	}
+	return
 }
