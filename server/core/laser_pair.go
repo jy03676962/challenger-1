@@ -51,6 +51,16 @@ func loadLaserPair() *LaserPair {
 func newLaserPair(m _laserMap) *LaserPair {
 	lp := LaserPair{}
 	lp.m = m
+	receiverKeys := make(map[string]string)
+	for sender, info := range m {
+		k := info.ID + ":" + info.Idx
+		if s, ok := receiverKeys[k]; ok {
+			log.Printf("got duplicated receiver:%v and %v to %v\n", s, sender, k)
+			//os.Exit(1)
+		} else {
+			receiverKeys[k] = sender
+		}
+	}
 	return &lp
 }
 

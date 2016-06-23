@@ -68,6 +68,21 @@ extension QuickCheckViewController: DataReceiver {
 			for (k, v) in d {
 				self.data[v].append(k)
 			}
+			for (idx, ar) in self.data.enumerate() {
+				switch idx {
+				case 0:
+					self.unknowButton.setTitle("未知:\(ar.count)", forState: .Normal)
+				case 1:
+					self.disableButton.setTitle("无效:\(ar.count)", forState: .Normal)
+				case 2:
+					self.disableOnButton.setTitle("无效亮:\(ar.count)", forState: .Normal)
+				case 3:
+					self.enableOffButton.setTitle("有效不亮:\(ar.count)", forState: .Normal)
+				case 4:
+					self.normalButton.setTitle("正常:\(ar.count)", forState: .Normal)
+				default: break
+				}
+			}
 			self.tableView.reloadData()
 		}
 	}
