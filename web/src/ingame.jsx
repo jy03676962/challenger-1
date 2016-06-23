@@ -123,7 +123,7 @@ const IngameView = CSSModules(observer(React.createClass({
 				}
 			}
 			let time = util.timeStr(data.match.elasped)
-			let showGold = data.match.mode == 'g' && data.match.gold > 0
+			let showGold = data.match.mode == 'g' || data.match.gold > 0
 			var barBg, barFront
 			if (data.match.mode == 'g') {
 				barBg = require('./assets/g_b.png')

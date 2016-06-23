@@ -111,7 +111,6 @@ func (l *Laser) IsTouched(m map[string]bool) (touched bool, p int, senderID stri
 				p = line.P
 				senderID = line.ID + ":" + strconv.Itoa(line.Index)
 				touched = true
-				log.Printf("receiver:%v,s:%v\n", k, v)
 				return
 			}
 		}
