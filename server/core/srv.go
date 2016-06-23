@@ -557,7 +557,10 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		if s.qc == nil {
 			return
 		}
-		s.qc.Record()
+		save := msg.Get("save").(float64)
+		if save > 0 {
+			s.qc.Record()
+		}
 		s.qc = nil
 	case "queryQuickCheck":
 		if s.qc == nil {

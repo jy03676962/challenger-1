@@ -119,4 +119,5 @@ func (l *LaserPair) RecordBrokens(brokens []string) {
 			}
 		}
 	}
+	l.Save()
 }

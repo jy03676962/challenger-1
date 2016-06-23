@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class QuickCheckViewController: UIViewController {
 	static let CellReuseIdentifier = "CellIdentifier"
@@ -40,7 +41,24 @@ class QuickCheckViewController: UIViewController {
 	}
 
 	@IBAction func done() {
-		WsClient.singleton.sendCmd("stopQuickCheck")
+		let alert = UIAlertController(title: "是否保存检测结果", message: nil, preferredStyle: .Alert)
+		let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { action in
+			self.finish(0)
+		}
+		alert.addAction(cancelAction)
+		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
+			self.finish(1)
+		}
+		alert.addAction(doneAction)
+		presentViewController(alert, animated: true, completion: nil)
+	}
+
+	func finish(save: Int) {
+		let json = JSON([
+			"cmd": "stopQuickCheck",
+			"save": save,
+		])
+		WsClient.singleton.sendJSON(json)
 		DataManager.singleton.unsubscribe(self)
 		presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
 	}
