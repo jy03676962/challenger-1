@@ -76,7 +76,7 @@ func (l *LaserPair) GetValidReceivers() map[string]bool {
 	for _, receiver := range l.m {
 		if receiver.Valid == 1 {
 			key := receiver.ID + ":" + receiver.Idx
-			ret[key] = false
+			ret[key] = true
 		}
 	}
 	return ret

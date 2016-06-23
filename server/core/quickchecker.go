@@ -88,6 +88,7 @@ func (qc *QuickChecker) openAllLasers() {
 			laser["laser_n"] = strconv.Itoa(v)
 			laserList[i] = laser
 		}
+		msg.Set("laser", laserList)
 		qc.srv.sendToOne(msg, InboxAddress{InboxAddressTypeMainArduinoDevice, id})
 	}
 }

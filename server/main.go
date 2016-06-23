@@ -55,6 +55,13 @@ func main() {
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 	log.Println("setup log system done")
 
+	defer func() {
+		if err := recover(); err != nil { //catch
+			log.Printf("Exception: %v\n", err)
+			os.Exit(1)
+		}
+	}()
+
 	var rankTestData map[string]interface{}
 
 	if testRank {
