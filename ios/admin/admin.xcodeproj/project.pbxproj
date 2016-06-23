@@ -34,6 +34,7 @@
 		7099CE671CDF39220009B62E /* PLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE5B1CDF39220009B62E /* PLViewController.swift */; };
 		7099CE681CDF39220009B62E /* WsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE5C1CDF39220009B62E /* WsClient.swift */; };
 		7099CE861CDF46ED0009B62E /* MatchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7099CE851CDF46ED0009B62E /* MatchResultController.swift */; };
+		70ADF72C1D1BE21A00D41524 /* QuickCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70ADF72B1D1BE21A00D41524 /* QuickCheckViewController.swift */; };
 		70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */; };
 		70B4DAC71CC7B10A00159C81 /* HallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC61CC7B10A00159C81 /* HallController.swift */; };
 		70B4DAC91CC7B10A00159C81 /* MatchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B4DAC81CC7B10A00159C81 /* MatchController.swift */; };
@@ -76,6 +77,7 @@
 		7099CE5B1CDF39220009B62E /* PLViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PLViewController.swift; sourceTree = "<group>"; };
 		7099CE5C1CDF39220009B62E /* WsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WsClient.swift; sourceTree = "<group>"; };
 		7099CE851CDF46ED0009B62E /* MatchResultController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchResultController.swift; sourceTree = "<group>"; };
+		70ADF72B1D1BE21A00D41524 /* QuickCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickCheckViewController.swift; sourceTree = "<group>"; };
 		70B4DAC11CC7B10A00159C81 /* admin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = admin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B4DAC41CC7B10A00159C81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70B4DAC61CC7B10A00159C81 /* HallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HallController.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				70B4DAC81CC7B10A00159C81 /* MatchController.swift */,
 				70B4DAFD1CC7BD0200159C81 /* HistoryController.swift */,
 				702F8FA11CF0955D00032C8F /* LaserLoopViewController.swift */,
+				70ADF72B1D1BE21A00D41524 /* QuickCheckViewController.swift */,
 				70B4DACA1CC7B10A00159C81 /* Main.storyboard */,
 				70B4DACF1CC7B10A00159C81 /* LaunchScreen.storyboard */,
 				70B4DAD21CC7B10A00159C81 /* Info.plist */,
@@ -378,6 +381,7 @@
 				70E1235E1CE2E2400044EC37 /* WebsiteModels.swift in Sources */,
 				700AD7201CDCB2530044C977 /* HistoryTableViewCell.swift in Sources */,
 				7099CE661CDF39220009B62E /* MatchResultCell.swift in Sources */,
+				70ADF72C1D1BE21A00D41524 /* QuickCheckViewController.swift in Sources */,
 				702F8FA61CF0A78F00032C8F /* LaserResultCell.swift in Sources */,
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,
 				70CF96CC1CDB263D007D821F /* ArduinoController.swift in Sources */,

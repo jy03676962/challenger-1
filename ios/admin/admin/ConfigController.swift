@@ -49,6 +49,7 @@ class ConfigController: PLViewController {
 	}
 
 	@IBAction func quickCheck() {
+		performSegueWithIdentifier("ShowQuickCheck", sender: nil)
 	}
 
 	override func viewDidLoad() {
