@@ -3,6 +3,7 @@ package core
 import (
 	"log"
 	"math"
+	"strconv"
 )
 
 const laserSize = 10
@@ -12,9 +13,10 @@ var _ = log.Printf
 var catchByPos = false
 
 type LaserLine struct {
-	ID    string
-	Index int
-	P     int
+	ID      string
+	Index   int
+	P       int
+	elasped float64
 }
 
 type Laser struct {
@@ -30,8 +32,8 @@ type Laser struct {
 	match                *Match
 	pauseTime            float64
 	elaspedSinceLastMove float64
-	lines                []LaserLine
-	startupLines         []LaserLine
+	lines                []*LaserLine
+	startupLines         []*LaserLine
 	startupingIndex      int
 	closed               bool
 }
@@ -47,7 +49,7 @@ func NewLaser(p P, player *Player, match *Match) *Laser {
 	l.p2 = -1
 	l.convertDisplay()
 	l.elaspedSinceLastMove = GetOptions().LaserSpeed
-	l.lines = make([]LaserLine, 0)
+	l.lines = make([]*LaserLine, 0)
 	l.startupLines = l.linesByP(l.p)
 	l.startupingIndex = 0
 	l.closed = false
@@ -89,9 +91,10 @@ func (l *Laser) Close() {
 	l.doClose()
 }
 
-func (l *Laser) IsTouched(m map[string]bool) (touched bool, p int) {
+func (l *Laser) IsTouched(m map[string]bool) (touched bool, p int, senderID string) {
 	p = 0
 	touched = false
+	senderID = ""
 	if l.IsPause || l.isStartuping() {
 		return
 	}
@@ -100,10 +103,15 @@ func (l *Laser) IsTouched(m map[string]bool) (touched bool, p int) {
 			continue
 		}
 		for _, line := range l.lines {
+			if line.elasped < 1000 {
+				continue
+			}
 			info := GetLaserPair().Get(line.ID, line.Index)
-			if info != nil && info.Valid > 0 && (info.ID+":"+info.Idx == k) {
+			if info != nil && info.Valid > 0 && (info.ID+":"+info.Idx) == k {
 				p = line.P
+				senderID = line.ID + ":" + strconv.Itoa(line.Index)
 				touched = true
+				log.Printf("receiver:%v,s:%v\n", k, v)
 				return
 			}
 		}
@@ -134,6 +142,9 @@ func (l *Laser) Tick(dt float64) {
 			l.match.srv.ledControlByCell(tp.X, tp.Y, "5")
 		}
 		return
+	}
+	for _, line := range l.lines {
+		line.elasped += dt * 1000
 	}
 	l.elaspedSinceLastMove += dt
 	interval := opt.laserMoveInterval(l.match.Energy)
@@ -169,7 +180,7 @@ func (l *Laser) Tick(dt float64) {
 						line := l.lines[replaceIdx]
 						l.match.closeLaser(line.ID, line.Index)
 						l.match.openLaser(info.ID, i)
-						l.lines[replaceIdx] = LaserLine{info.ID, i, next}
+						l.lines[replaceIdx] = &LaserLine{info.ID, i, next, 0}
 						if notInNext == 1 {
 							if l.p != next {
 								l.musicControlByPos(l.p, "0")
@@ -213,12 +224,12 @@ func (l *Laser) doOpen() {
 	}
 }
 
-func (l *Laser) linesByP(p int) []LaserLine {
+func (l *Laser) linesByP(p int) []*LaserLine {
 	infos := GetOptions().mainArduinoInfosByPos(p)
-	ret := make([]LaserLine, 0)
+	ret := make([]*LaserLine, 0)
 	for _, info := range infos {
 		for i := 0; i < info.LaserNum; i++ {
-			ret = append(ret, LaserLine{info.ID, i, l.p})
+			ret = append(ret, &LaserLine{info.ID, i, l.p, 0})
 		}
 	}
 	return ret

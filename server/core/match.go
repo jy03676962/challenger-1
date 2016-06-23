@@ -37,22 +37,23 @@ type laserCommand struct {
 }
 
 type Match struct {
-	Member       []*Player        `json:"member"`
-	Stage        string           `json:"stage"`
-	TotalTime    float64          `json:"totalTime"`
-	Elasped      float64          `json:"elasped"`
-	WarmupTime   float64          `json:"warmupTime"`
-	RampageTime  float64          `json:"rampageTime"`
-	Mode         string           `json:"mode"`
-	Gold         int              `json:"gold"`
-	Energy       float64          `json:"energy"`
-	OnButtons    map[string]bool  `json:"onButtons"`
-	RampageCount int              `json:"rampageCount"`
-	Lasers       []LaserInterface `json:"lasers"`
-	ID           uint             `json:"id"`
-	TeamID       string           `json:"teamID"`
-	MaxEnergy    float64          `json:"maxEnergy"`
-	IsSimulator  int              `json:"isSimulator"`
+	Member         []*Player        `json:"member"`
+	Stage          string           `json:"stage"`
+	TotalTime      float64          `json:"totalTime"`
+	Elasped        float64          `json:"elasped"`
+	WarmupTime     float64          `json:"warmupTime"`
+	RampageTime    float64          `json:"rampageTime"`
+	Mode           string           `json:"mode"`
+	Gold           int              `json:"gold"`
+	Energy         float64          `json:"energy"`
+	OnButtons      map[string]bool  `json:"onButtons"`
+	RampageCount   int              `json:"rampageCount"`
+	Lasers         []LaserInterface `json:"lasers"`
+	ID             uint             `json:"id"`
+	TeamID         string           `json:"teamID"`
+	MaxEnergy      float64          `json:"maxEnergy"`
+	MaxRampageTime float64          `json:"maxRampageTime"`
+	IsSimulator    int              `json:"isSimulator"`
 
 	offButtons    []string
 	hiddenButtons map[string]*float64
@@ -86,6 +87,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.closeCh = make(chan bool)
 	m.TeamID = teamID
 	m.MaxEnergy = GetOptions().MaxEnergy
+	m.MaxRampageTime = m.opt.RampageTime[m.modeIndex()]
 	m.laserCmdCh = make(chan *laserCommand)
 	m.isSimulator = isSimulator
 	if isSimulator {
@@ -169,7 +171,8 @@ func (m *Match) handleLaserCmd() {
 					*v -= 1
 					sendCmd = *v == 0
 					if *v < 0 {
-						log.Println("warning:laser count less than 0")
+						log.Println("warning:laser count less than 0:%v\n", *v)
+						*v = 0
 					}
 				} else {
 					log.Println("warning:laser count don't match")
@@ -228,6 +231,7 @@ func (m *Match) setStage(s string) {
 		m.srv.lightControl("0")
 		m.srv.ledControl(1, "3")
 		m.srv.ledControl(2, "23")
+		m.srv.bgControl("3")
 	case "warmup-2":
 		m.srv.ledControl(3, "4", "1", "2", "3")
 	case "ongoing-low":
@@ -255,21 +259,29 @@ func (m *Match) setStage(s string) {
 		if m.Mode == "g" {
 			m.srv.ledControl(3, "5")
 			m.srv.ledControl(1, "0", "2", "3")
+			m.srv.bgControl("4")
 		} else {
 			m.srv.ledControl(3, "12")
 			m.srv.ledControl(1, "0", "2", "3")
-
+			m.srv.bgControl("6")
 		}
 	case "ongoing-high":
 		m.srv.lightControl("2")
 		m.srv.ledControl(3, "9")
+		if m.Mode == "g" {
+			m.srv.bgControl("5")
+		} else {
+			m.srv.bgControl("7")
+		}
 	case "ongoing-full":
+		m.srv.bgControl("8")
 		if m.Mode == "g" {
 			m.srv.ledControl(3, "19")
 		} else {
 			m.srv.ledControl(3, "20")
 		}
 	case "ongoing-rampage":
+		m.srv.bgControl("9")
 		m.srv.lightControl("0")
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 		laserPosList := make([]int, len(m.Lasers))
@@ -305,9 +317,11 @@ func (m *Match) setStage(s string) {
 		}
 		m.srv.ledRampageEffect(offButtons)
 	case "ongoing-countdown":
+		m.srv.bgControl("11")
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
 	case "after", "stop":
+		m.srv.bgControl("12")
 		for _, laser := range m.Lasers {
 			laser.Close()
 		}
@@ -488,7 +502,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 			musicPostions := make(map[int]bool)
 			for _, laser := range m.Lasers {
 				l := laser.(*Laser)
-				blocked, p := l.IsTouched(m.receiverMap)
+				blocked, p, senderID := l.IsTouched(m.receiverMap)
 				if blocked {
 					shouldPause := false
 					for _, player := range m.Member {
@@ -497,6 +511,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 							musicPostions[pp] = true
 							m.touchPunish(player)
 							shouldPause = true
+							log.Printf("touched sender:%v\n", senderID)
 						}
 					}
 					if shouldPause {
@@ -641,7 +656,7 @@ func (m *Match) touchPunish(p *Player) {
 	p.HitCount += 1
 	var punish int
 	if m.Mode == "g" {
-		punish = int(float64(m.Gold) * opt.Mode1TouchPunish)
+		punish = opt.Mode1TouchPunish
 	} else {
 		punish = opt.Mode2TouchPunish
 	}
@@ -759,8 +774,9 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 	}
 	player.LevelData[level] += 1
 	if level > 0 {
-		m.Gold += m.opt.GoldBonus[m.modeIndex()]
-		player.Gold += 1
+		bonus := m.opt.GoldBonus[m.modeIndex()]
+		m.Gold += bonus
+		player.Gold += bonus
 		if m.RampageTime <= 0 {
 			sec := time.Since(player.lastHitTime).Seconds()
 			player.lastHitTime = time.Now()

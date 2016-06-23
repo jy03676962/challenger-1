@@ -30,5 +30,5 @@ func NewArduinoController(addr InboxAddress) *ArduinoController {
 }
 
 func (c *ArduinoController) NeedUpdateScore() bool {
-	return c.Address.Type == InboxAddressTypeMainArduinoDevice || c.ScoreUpdated == false
+	return c.Address.Type == InboxAddressTypeMainArduinoDevice && c.ScoreUpdated == false
 }

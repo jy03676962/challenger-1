@@ -431,9 +431,11 @@ func (s *Srv) handleArduinoTestMessage(msg *InboxMessage) {
 	if len(destID) > 0 {
 		mainAddr := InboxAddress{InboxAddressTypeMainArduinoDevice, destID}
 		subAddr := InboxAddress{InboxAddressTypeSubArduinoDevice, destID}
-		s.send(msg, []InboxAddress{mainAddr, subAddr})
+		doorAddr := InboxAddress{InboxAddressTypeDoorArduino, destID}
+		musicAddr := InboxAddress{InboxAddressTypeMusicArduino, destID}
+		s.send(msg, []InboxAddress{mainAddr, subAddr, doorAddr, musicAddr})
 	} else {
-		s.sends(msg, InboxAddressTypeSubArduinoDevice, InboxAddressTypeMainArduinoDevice, InboxAddressTypeArduinoTestDevice)
+		s.sends(msg, InboxAddressTypeSubArduinoDevice, InboxAddressTypeMainArduinoDevice, InboxAddressTypeArduinoTestDevice, InboxAddressTypeDoorArduino, InboxAddressTypeMusicArduino)
 	}
 }
 
@@ -495,6 +497,9 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am.SetCmd("mode_change")
 		am.Set("mode", mode)
 		log.Printf("send mode change:%v\n", mode)
+		if mode == "3" {
+			s.bgControl("2")
+		}
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
@@ -624,7 +629,6 @@ func (s *Srv) wearableControl(status string, cid string) {
 		msg.SetCmd("STA")
 		msg.Set("id", idStr)
 		msg.Set("status", status)
-		log.Println(msg)
 		s.sendToOne(msg, pc.Address)
 	}
 }
@@ -732,6 +736,13 @@ func (s *Srv) lightControl(mode string) {
 	msg.SetCmd("light_ctrl")
 	msg.Set("light_mode", mode)
 	s.sends(msg, InboxAddressTypeMainArduinoDevice)
+}
+
+func (s *Srv) bgControl(music string) {
+	msg := NewInboxMessage()
+	msg.SetCmd("mp3_ctrl")
+	msg.Set("music", music)
+	s.sends(msg, InboxAddressTypeMusicArduino)
 }
 
 func (s *Srv) musicControlByCell(x int, y int, music string) {
