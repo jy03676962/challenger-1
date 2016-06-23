@@ -98,9 +98,12 @@ func at(id string) InboxAddressType {
 		return InboxAddressTypeUnknown
 	} else if strings.HasPrefix(id, "M") {
 		return InboxAddressTypeMainArduinoDevice
+	} else if strings.HasPrefix(id, "S") {
+		return InboxAddressTypeSubArduinoDevice
+	} else if strings.HasPrefix(id, "B") {
+		return InboxAddressTypeMusicArduino
 	}
-	return InboxAddressTypeSubArduinoDevice
-
+	return InboxAddressTypeUnknown
 }
 
 // Tcp HB format is [key1]value1[key2]value2
