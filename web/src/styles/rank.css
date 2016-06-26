@@ -1,7 +1,6 @@
 @import './global.css';
 .root {
 	font-family: alien;
-	overflow-y: auto;
 	height: 100vh;
 }
 

@@ -1,263 +1,299 @@
 @import './global.css';
 .root {
-  font-family: alien;
-  overflow-y: auto;
-  height: 100vh;
+	font-family: alien;
+	height: 100vh;
 }
+
 .container {
-  position: relative;
-  width: 100%;
-  height: 177.78vw;
+	position: relative;
+	width: 100%;
+	height: 177.78vw;
 }
+
 .rootImg {
-  width: 100%;
+	width: 100%;
 }
+
 .callingImg {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
+
 .callingText {
-  position: absolute;
-  top: 76.2vw;
-  left: 40.1vw;
-  font-family: alien;
-  font-size: 16.2vw;
-  color: #00ff46;
+	position: absolute;
+	top: 76.2vw;
+	left: 40.1vw;
+	font-family: alien;
+	font-size: 16.2vw;
+	color: #00ff46;
 }
+
 .label {
-  font-family: serif;
-  color: white;
-  font-size: 2.41vw;
+	font-family: serif;
+	color: white;
+	font-size: 2.41vw;
 }
+
 .timeLabel {
-  composes: label;
-  position: absolute;
-  left: 8.796vw;
-  top: 20.37vw;
+	composes: label;
+	position: absolute;
+	left: 8.796vw;
+	top: 20.37vw;
 }
+
 .groupLabel {
-  composes: label;
-  position: absolute;
-  left: 8.796vw;
-  top: 27.778vw;
+	composes: label;
+	position: absolute;
+	left: 8.796vw;
+	top: 27.778vw;
 }
+
 .value {
-  color: white;
-  font-size: 7.407vw;
+	color: white;
+	font-size: 7.407vw;
 }
+
 .timeValue {
-  composes: value;
-  position: absolute;
-  left: 32.4vw;
-  top: 19.2vw;
+	composes: value;
+	position: absolute;
+	left: 32.4vw;
+	top: 19.2vw;
 }
+
 .groupValue {
-  composes: value;
-  position: absolute;
-  left: 32.4vw;
-  top: 26.4vw;
+	composes: value;
+	position: absolute;
+	left: 32.4vw;
+	top: 26.4vw;
 }
+
 .unit {
-  font-family: serif;
-  color: white;
-  font-size: 2.41vw;
+	font-family: serif;
+	color: white;
+	font-size: 2.41vw;
 }
+
 .timeUnit {
-  composes: unit;
-  position: absolute;
-  left: 41.6667vw;
-  top: 20.37vw;
+	composes: unit;
+	position: absolute;
+	left: 41.6667vw;
+	top: 20.37vw;
 }
+
 .groupUnit {
-  composes: unit;
-  position: absolute;
-  left: 41.6667vw;
-  top: 27.778vw;
+	composes: unit;
+	position: absolute;
+	left: 41.6667vw;
+	top: 27.778vw;
 }
+
 .matchInfo {
-  position: absolute;
-  width: 443px;
-  height: 177px;
-  top: 18.52vw;
-  right: 8.333vw;
+	position: absolute;
+	width: 443px;
+	height: 177px;
+	top: 18.52vw;
+	right: 8.333vw;
 }
+
 .matchLabel {
-  color: inherit;
-  font-family: serif;
-  font-size: 26px;
+	color: inherit;
+	font-family: serif;
+	font-size: 26px;
 }
+
 .matchTimeLabel {
-  composes: matchLabel;
-  position: absolute;
-  top: 20px;
-  left: 60px;
+	composes: matchLabel;
+	position: absolute;
+	top: 20px;
+	left: 60px;
 }
+
 .matchGoldLabel {
-  composes: matchLabel;
-  position: absolute;
-  top: 100px;
-  left: 60px;
+	composes: matchLabel;
+	position: absolute;
+	top: 100px;
+	left: 60px;
 }
+
 .matchValue {
-  color: inherit;
-  font-family: alien;
-  font-size: 80px;
-  text-align: right;
+	color: inherit;
+	font-family: alien;
+	font-size: 80px;
+	text-align: right;
 }
+
 .matchTimeValue {
-  composes: matchValue;
-  position: absolute;
-  top: 10px;
-  width: 180px;
-  right: 25px;
+	composes: matchValue;
+	position: absolute;
+	top: 10px;
+	width: 180px;
+	right: 25px;
 }
+
 .matchGoldValue {
-  composes: matchValue;
-  position: absolute;
-  top: 90px;
-  width: 180px;
-  right: 25px;
+	composes: matchValue;
+	position: absolute;
+	top: 90px;
+	width: 180px;
+	right: 25px;
 }
+
 .history {
-  position: absolute;
-  width: 100%;
-  top: 44.91vw;
-  left: 0;
-  color: white;
+	position: absolute;
+	width: 100%;
+	top: 44.91vw;
+	left: 0;
+	color: white;
 }
+
 .historyCellImg {
-  position: absolute;
-  left: 7.87vw;
-  width: 3.333vw;
-  height: 3.333vw;
-  top: 1.111vw;
+	position: absolute;
+	left: 7.87vw;
+	width: 3.333vw;
+	height: 3.333vw;
+	top: 1.111vw;
 }
+
 .historyNumber {
-  color: inherit;
-  font-family: alien;
-  font-size: 3.24vw;
-  position: absolute;
-  left: 15.27778vw;
-  height: 5.185vw;
-  top: 0;
-  line-height: 5.185vw;
+	color: inherit;
+	font-family: alien;
+	font-size: 3.24vw;
+	position: absolute;
+	left: 15.27778vw;
+	height: 5.185vw;
+	top: 0;
+	line-height: 5.185vw;
 }
+
 .historyPlayer {
-  color: inherit;
-  font-family: serif;
-  font-size: 3.24vw;
-  position: absolute;
-  left: 22.222vw;
-  width: 43.98vw;
-  height: 5.185vw;
-  top: 0;
-  line-height: 5.185vw;
-  text-align: center;
+	color: inherit;
+	font-family: serif;
+	font-size: 3.24vw;
+	position: absolute;
+	left: 22.222vw;
+	width: 43.98vw;
+	height: 5.185vw;
+	top: 0;
+	line-height: 5.185vw;
+	text-align: center;
 }
+
 .historyIcon {
-  position: absolute;
-  width: 4.259vw;
-  height: 4.259vw;
-  top: 0.8333vw;
-  left: 66.6667vw;
+	position: absolute;
+	width: 4.259vw;
+	height: 4.259vw;
+	top: 0.8333vw;
+	left: 66.6667vw;
 }
+
 .historyResult {
-  color: inherit;
-  font-family: serif;
-  font-size: 2.6vw;
-  position: absolute;
-  left: 78.7vw;
-  height: 5.185vw;
-  top: 0;
-  line-height: 5.185vw;
+	color: inherit;
+	font-family: serif;
+	font-size: 2.6vw;
+	position: absolute;
+	left: 78.7vw;
+	height: 5.185vw;
+	top: 0;
+	line-height: 5.185vw;
 }
+
 .matchCell {
-  position: absolute;
-  width: 100%;
-  height: 5.185vw;
-  top: 61.48vw;
+	position: absolute;
+	width: 100%;
+	height: 5.185vw;
+	top: 61.48vw;
 }
+
 .matchCell img {
-  display: block;
-  margin: 0 auto;
+	display: block;
+	margin: 0 auto;
 }
+
 .delayImg {
-  position: absolute;
-  display: block;
-  width: 100%;
-  top: 0;
-  left: 0;
+	position: absolute;
+	display: block;
+	width: 100%;
+	top: 0;
+	left: 0;
 }
+
 .delayText {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  line-height: 3.333vw;
-  text-align: center;
-  color: white;
-  font-family: alien;
-  font-size: 1.38889vw;
-  top: 0;
-  left: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	line-height: 3.333vw;
+	text-align: center;
+	color: white;
+	font-family: alien;
+	font-size: 1.38889vw;
+	top: 0;
+	left: 0;
 }
+
 .prepareCell {
-  position: absolute;
-  width: 100%;
-  height: 10.926vw;
-  left: 0;
-  top: 68.98vw;
-  color: #00ff46;
+	position: absolute;
+	width: 100%;
+	height: 10.926vw;
+	left: 0;
+	top: 68.98vw;
+	color: #00ff46;
 }
+
 .prepareNumber {
-  position: absolute;
-  color: inherit;
-  font-family: alien;
-  font-size: 7.4vw;
-  left: 13.8889vw;
-  height: 100%;
-  line-height: 10.926vw;
+	position: absolute;
+	color: inherit;
+	font-family: alien;
+	font-size: 7.4vw;
+	left: 13.8889vw;
+	height: 100%;
+	line-height: 10.926vw;
 }
+
 .prepareBg {
-  position: absolute;
-  right: 6.852vw;
-  top: 0.926vw;
-  height: 9.537vw;
-  width: 68vw;
+	position: absolute;
+	right: 6.852vw;
+	top: 0.926vw;
+	height: 9.537vw;
+	width: 68vw;
 }
+
 .prepareText {
-  position: absolute;
-  color: inherit;
-  font-family: serif;
-  font-size: 24.vw;
-  left: 78.8889vw;
-  top: 7.13vw;
+	position: absolute;
+	color: inherit;
+	font-family: serif;
+	font-size: 24.vw;
+	left: 78.8889vw;
+	top: 7.13vw;
 }
+
 .waitingNumber {
-  position: absolute;
-  color: inherit;
-  font-family: alien;
-  font-size: 3.24vw;
-  left: 11.11vw;
-  height: 100%;
-  line-height: 5.37vw;
+	position: absolute;
+	color: inherit;
+	font-family: alien;
+	font-size: 3.24vw;
+	left: 11.11vw;
+	height: 100%;
+	line-height: 5.37vw;
 }
+
 .waitingText {
-  position: absolute;
-  color: inherit;
-  font-family: serif;
-  font-size: 1.85vw;
-  left: 20.9vw;
-  height: 100%;
-  line-height: 5.37vw;
+	position: absolute;
+	color: inherit;
+	font-family: serif;
+	font-size: 1.85vw;
+	left: 20.9vw;
+	height: 100%;
+	line-height: 5.37vw;
 }
+
 .waitingTime {
-  position: absolute;
-  color: inherit;
-  font-family: serif;
-  font-size: 1.85vw;
-  right: 4.26vw;
-  height: 100%;
-  line-height: 5.37vw;
+	position: absolute;
+	color: inherit;
+	font-family: serif;
+	font-size: 1.85vw;
+	right: 4.26vw;
+	height: 100%;
+	line-height: 5.37vw;
 }
