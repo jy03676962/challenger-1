@@ -20,7 +20,7 @@ class MatchResultController: PLViewController {
 		didSet {
 			if let data = matchData {
 				for pd in data.member {
-					if pd.cid.componentsSeparatedByString(":")[1] == Defaults[.deviceID] {
+					if pd.cid.componentsSeparatedByString(":")[1] == loginInfo?.deviceID {
 						self.playerData = pd
 					}
 				}

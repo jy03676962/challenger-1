@@ -26,6 +26,7 @@ class LoginViewController: PLViewController {
 	@IBOutlet weak var wrapperView: UIView!
 	@IBOutlet weak var usernameTextField: LoginTextField!
 	@IBOutlet weak var passwordTextField: LoginTextField!
+	@IBOutlet weak var deviceIDTextField: LoginTextField!
 	@IBOutlet weak var loginButton: UIButton!
 
 	/**
@@ -56,7 +57,7 @@ class LoginViewController: PLViewController {
 	}
 
 	@IBAction func textFieldValueChanged(sender: UITextField) {
-		if usernameTextField.text?.characters.count > 0 && passwordTextField.text?.characters.count > 0 {
+		if usernameTextField.text?.characters.count > 0 && passwordTextField.text?.characters.count > 0 && deviceIDTextField.text?.characters.count > 0 {
 			self.loginButton.enabled = true
 		} else {
 			self.loginButton.enabled = false
@@ -67,7 +68,7 @@ class LoginViewController: PLViewController {
 		HUD.show(.Progress)
 		let p = [
 			"username": self.usernameTextField.text!,
-			"password": self.passwordTextField.text!
+			"password": self.passwordTextField.text!,
 		]
 		Alamofire.request(.POST, PLConstants.getWebsiteAddress("user/login"), parameters: p, encoding: .URL, headers: nil)
 			.validate()
@@ -78,6 +79,7 @@ class LoginViewController: PLViewController {
 				} else {
 					let m = resp.result.value!
 					if m.code != nil && m.code == 0 {
+						m.deviceID = self.deviceIDTextField.text
 						self.performSegueWithIdentifier(SegueIDShowMatchResult, sender: m)
 					} else {
 						HUD.flash(.LabeledError(title: m.error, subtitle: nil), delay: 2)

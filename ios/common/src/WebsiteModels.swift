@@ -41,6 +41,7 @@ class LoginResult: BaseResult {
 	var username: String!
 	var userID: Int!
 	var currentCoin: Int!
+	var deviceID: String?
 	required init?(_ map: Map) {
 		super.init(map)
 	}

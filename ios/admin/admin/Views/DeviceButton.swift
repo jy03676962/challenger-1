@@ -30,6 +30,7 @@ class DeviceButton: UIButton {
 				setTitle(title, forState: .Selected)
 			} else {
 				enabled = false
+				selected = false
 				setTitle(nil, forState: .Normal)
 			}
 		}
