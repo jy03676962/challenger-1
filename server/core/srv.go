@@ -633,6 +633,50 @@ func (s *Srv) wearableControl(status string, cid string) {
 	}
 }
 
+func (s *Srv) lasersControl(large []int, small []int) {
+	largeAddrs := make([]InboxAddress, 0)
+	smallAddrs := make([]InboxAddress, 0)
+	for _, info := range GetOptions().MainArduinoInfo {
+		if info.LaserNum == 5 {
+			largeAddrs = append(largeAddrs, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
+		} else {
+			smallAddrs = append(smallAddrs, InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID})
+		}
+	}
+	lm := NewInboxMessage()
+	lm.SetCmd("laser_ctrl")
+	ll := make([]map[string]string, len(large))
+	for i, v := range large {
+		idx := i + 1
+		laser := make(map[string]string)
+		laser["laser_n"] = strconv.Itoa(idx)
+		if v > 0 {
+			laser["laser_s"] = "1"
+		} else {
+			laser["laser_s"] = "0"
+		}
+		ll[i] = laser
+	}
+	lm.Set("laser", ll)
+	sm := NewInboxMessage()
+	sm.SetCmd("laser_ctrl")
+	sl := make([]map[string]string, len(small))
+	for i, v := range small {
+		idx := i + 6
+		laser := make(map[string]string)
+		laser["laser_n"] = strconv.Itoa(idx)
+		if v > 0 {
+			laser["laser_s"] = "1"
+		} else {
+			laser["laser_s"] = "0"
+		}
+		sl[i] = laser
+	}
+	sm.Set("laser", ll)
+	s.send(lm, largeAddrs)
+	s.send(sm, smallAddrs)
+}
+
 func (s *Srv) laserControl(ID string, idx int, openOrClose bool) {
 	valid := GetLaserPair().IsValid(ID, idx)
 	if !valid && openOrClose {

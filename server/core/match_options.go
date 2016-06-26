@@ -56,13 +56,24 @@ type RenderInfo struct {
 	PlayerSpeed   float64
 }
 
+type WarmupLaser struct {
+	Time  int
+	Large [10]int
+	Small [5]int
+}
+
+type WarmupInfo struct {
+	WarmupTime           int
+	WarmupButtonInterval int
+	Lasers               []WarmupLaser
+}
+
 type MatchOptions struct {
 	ArenaWidth        int        `json:"arenaWidth"`
 	ArenaHeight       int        `json:"arenaHeight"`
 	ArenaCellSize     int        `json:"arenaCellSize"`
 	ArenaBorder       int        `json:"arenaBorder"`
 	Warmup            float64    `json:"warmup"`
-	WarmupFirstStage  float64    `json:"warmup1"`
 	ArenaEntrance     P          `json:"arenaEntrance"`
 	ArenaExit         P          `json:"arenaExit"`
 	PlayerSize        float64    `json:"playerSize"`
@@ -114,6 +125,8 @@ type MatchOptions struct {
 	SubHeartbeatTime      int           `json:"-"`
 	CatchMode             int           `json:"-"`
 	CatchLaserNum         int           `json:"-"`
+	WarmupButtonInterval  float64       `json:"-"`
+	WarmupLasers          []WarmupLaser `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}
@@ -148,9 +161,17 @@ func GetScoreInfo() ScoreInfo {
 func DefaultMatchOptions() *MatchOptions {
 	var opt MatchOptions
 	if _, err := toml.DecodeFile("cfg.toml", &opt); err != nil {
-		log.Printf("parse config error:%v\n", err.Error())
+		log.Printf("parse cfg.toml error:%v\n", err.Error())
 		os.Exit(1)
 	}
+	var warmupInfo WarmupInfo
+	if _, err := toml.DecodeFile("warmup.toml", &warmupInfo); err != nil {
+		log.Printf("parse warmup.toml error:%v\n", err.Error())
+		os.Exit(1)
+	}
+	opt.Warmup = float64(warmupInfo.WarmupTime) / 1000
+	opt.WarmupButtonInterval = float64(warmupInfo.WarmupButtonInterval)
+	opt.WarmupLasers = warmupInfo.Lasers
 	opt.buildMainArduinoInfo()
 	opt.buildWallRects()
 	opt.buildButtons()

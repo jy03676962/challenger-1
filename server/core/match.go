@@ -19,6 +19,10 @@ const (
 	MatchEventTypeUpdate
 )
 
+const (
+	WarmupTriggerButtonNotStart = -1.0
+)
+
 type MatchEvent struct {
 	Type MatchEventType
 	ID   uint
@@ -68,6 +72,10 @@ type Match struct {
 	laserStatus   map[int]bool
 	syncCount     int
 	receiverMap   map[string]bool
+	// 热身阶段相关状态
+	currentWarmupStage        int
+	warmupTriggerButtonRemain float64
+	warmupCellButtonStatus    []bool
 }
 
 func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string, teamID string, isSimulator bool) *Match {
@@ -90,6 +98,8 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.MaxRampageTime = m.opt.RampageTime[m.modeIndex()]
 	m.laserCmdCh = make(chan *laserCommand)
 	m.isSimulator = isSimulator
+	m.warmupTriggerButtonRemain = WarmupTriggerButtonNotStart
+	m.warmupCellButtonStatus = make([]bool, m.opt.ArenaWidth*m.opt.ArenaHeight)
 	if isSimulator {
 		m.IsSimulator = 1
 	} else {
@@ -113,7 +123,7 @@ func (m *Match) Run() {
 		}
 	}
 	m.WarmupTime = m.opt.Warmup
-	m.setStage("warmup-1")
+	m.setStage("warmup")
 	if !m.isSimulator {
 		go m.handleLaserCmd()
 	}
@@ -195,6 +205,48 @@ func (m *Match) tick(dt time.Duration) {
 	}
 	if m.isWarmup() {
 		m.WarmupTime = math.Max(m.WarmupTime-sec, 0)
+		if m.warmupTriggerButtonRemain != WarmupTriggerButtonNotStart {
+			m.warmupTriggerButtonRemain -= sec * 1000
+			if m.warmupTriggerButtonRemain <= 0 {
+				toOpenTiles := make(map[int]bool)
+				for k, v := range m.warmupCellButtonStatus {
+					if !v {
+						continue
+					}
+					for _, i := range m.opt.TileAdjacency[m.opt.Conv(k)] {
+						toOpenTiles[m.opt.Conv(i)] = true
+					}
+				}
+				for k, _ := range toOpenTiles {
+					if v := m.warmupCellButtonStatus[k]; v {
+						continue
+					}
+					m.warmupCellButtonStatus[k] = true
+					m.buttonControl(k, true)
+				}
+				m.warmupTriggerButtonRemain = m.opt.WarmupButtonInterval
+			}
+		}
+		if m.currentWarmupStage < len(m.opt.WarmupLasers) {
+			warmupLaser := m.opt.WarmupLasers[m.currentWarmupStage]
+			if m.Elasped*1000 >= float64(warmupLaser.Time) {
+				if m.currentWarmupStage == 0 {
+					m.warmupTriggerButtonRemain = m.opt.WarmupButtonInterval
+					for _, player := range m.Member {
+						p := m.opt.TilePosToInt(player.tilePos)
+						m.warmupCellButtonStatus[p] = true
+						m.buttonControl(p, true)
+					}
+				}
+				m.srv.lasersControl(warmupLaser.Large[:], warmupLaser.Small[:])
+				m.currentWarmupStage += 1
+				if m.currentWarmupStage >= len(m.opt.WarmupLasers) {
+					log.Println("stop warmup effect")
+					m.warmupTriggerButtonRemain = WarmupTriggerButtonNotStart
+					m.srv.setWallM2M3Auto(true)
+				}
+			}
+		}
 	} else if m.isOngoing() {
 		m.RampageTime = math.Max(m.RampageTime-sec, 0)
 		if m.Mode == "s" && m.goldDropTime > 0 && m.RampageTime <= 0 {
@@ -227,13 +279,9 @@ func (m *Match) setStage(s string) {
 		return
 	}
 	switch s {
-	case "warmup-1":
-		m.srv.lightControl("0")
-		m.srv.ledControl(1, "3")
-		m.srv.ledControl(2, "23")
+	case "warmup":
 		m.srv.bgControl("3")
-	case "warmup-2":
-		m.srv.ledControl(3, "4", "1", "2", "3")
+		m.srv.ledControl(3, "0", "1", "2", "3")
 	case "ongoing-low":
 		m.srv.lightControl("1")
 		if m.Stage == "ongoing-rampage" {
@@ -249,7 +297,6 @@ func (m *Match) setStage(s string) {
 			m.srv.sends(msg, InboxAddressTypeMainArduinoDevice)
 			m.initButtons()
 		} else if m.isWarmup() {
-			m.srv.setWallM2M3Auto(true)
 			if m.Mode == "s" {
 				m.goldDropTime = m.opt.Mode2GoldDropInterval
 			}
@@ -331,6 +378,7 @@ func (m *Match) setStage(s string) {
 		m.srv.setWallM2M3Auto(false)
 		m.srv.ledFlowEffect()
 	}
+	log.Printf("game stage:%v\n", s)
 	m.Stage = s
 }
 
@@ -340,11 +388,7 @@ func (m *Match) updateStage() {
 		return
 	}
 	if m.WarmupTime > 0 {
-		if m.WarmupTime <= m.opt.Warmup-m.opt.WarmupFirstStage {
-			m.setStage("warmup-2")
-		} else {
-			m.setStage("warmup-1")
-		}
+		m.setStage("warmup")
 		return
 	}
 	s := m.Stage
@@ -472,6 +516,9 @@ func (m *Match) handleInput(msg *InboxMessage) {
 			}
 		}
 	case "upload_score":
+		if !m.isOngoing() {
+			break
+		}
 		info := arduinoInfoFromID(msg.Address.ID)
 		for _, player := range m.Member {
 			if player.tilePos.X == info.X-1 && player.tilePos.Y == info.Y-1 {
@@ -692,6 +739,28 @@ func (m *Match) initButtons() {
 		m.setButtonEffect("0", true)
 	}
 
+}
+
+func (m *Match) buttonControl(p int, isOn bool) {
+	arduinos := m.opt.mainArduinoInfosByPos(p)
+	addrs := make([]InboxAddress, len(arduinos))
+	for i, info := range arduinos {
+		addrs[i] = InboxAddress{InboxAddressTypeMainArduinoDevice, info.ID}
+	}
+	msg := NewInboxMessage()
+	msg.SetCmd("btn_ctrl")
+	if isOn {
+		msg.Set("useful", "3")
+	} else {
+		msg.Set("useful", "0")
+	}
+	if m.Mode == "g" {
+		msg.Set("mode", "1")
+	} else {
+		msg.Set("mode", "2")
+	}
+	msg.Set("stage", "0")
+	m.srv.send(msg, addrs)
 }
 
 func (m *Match) setButtonEffect(stage string, immediately bool) {

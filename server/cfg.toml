@@ -1,7 +1,5 @@
 arenaWidth = 8 # 场地长
 arenaHeight = 6 # 场地高
-warmup = 6.0 # 预热时间
-warmupFirstStage = 3.0 # 预热状态1，用来区分显示效果
 t1 = 0.1 # 按钮读条时间1
 t2 = 0.2 # 按钮读条时间2
 t3 = 0.3 # 按钮读条时间3
@@ -21,7 +19,7 @@ energySpeedup = 200.0 # 激光提速每档的能量数
 laserSize = 10 # 激光的宽度
 uploadTime = 3 # 上传速度
 heartbeatTime = 100 # 空闲时上传速度
-subUploadTime = 100 
+subUploadTime = 100
 subHeartbeatTime = 1000
 catchMode = 1 # 0 is by pos, 1 is by laser receiver
 catchLaserNum = 3 # useful when catchMode is 0
@@ -212,3 +210,9 @@ y = 4
 [arenaExit]
 x = 0
 y = 4
+
+# 出场激光配置
+[[laserConfig]]
+time = 2600
+large = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+small = [1, 1, 1, 0, 0]
