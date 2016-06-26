@@ -32,7 +32,7 @@ class HistoryController: PLViewController {
 			HUD.show(.Progress)
 			let p: [String: AnyObject] = [
 				"mode": matchData.mode == "g" ? 0 : 1,
-				"time": Int(matchData.elasped),
+				"time": Int(matchData.elasped * 1000),
 				"gold": matchData.gold,
 				"player_num": matchData.member.count
 			]
