@@ -46,6 +46,7 @@
 		70E1235E1CE2E2400044EC37 /* WebsiteModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E1235D1CE2E2400044EC37 /* WebsiteModels.swift */; };
 		70E3383B1CD653A000723816 /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E3383A1CD653A000723816 /* PlayerController.swift */; };
 		70E3383F1CD8030A00723816 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E3383E1CD8030A00723816 /* PlayerTableViewCell.swift */; };
+		70E4E3961D1FFFBA00BDC7A4 /* DeviceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E4E3951D1FFFBA00BDC7A4 /* DeviceButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +92,7 @@
 		70E1235D1CE2E2400044EC37 /* WebsiteModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsiteModels.swift; sourceTree = "<group>"; };
 		70E3383A1CD653A000723816 /* PlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerController.swift; sourceTree = "<group>"; };
 		70E3383E1CD8030A00723816 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
+		70E4E3951D1FFFBA00BDC7A4 /* DeviceButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceButton.swift; sourceTree = "<group>"; };
 		8723228B7E2F301F9CE60145 /* Pods_admin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_admin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 				70E3383E1CD8030A00723816 /* PlayerTableViewCell.swift */,
 				700AD71F1CDCB2530044C977 /* HistoryTableViewCell.swift */,
 				702F8FA51CF0A78F00032C8F /* LaserResultCell.swift */,
+				70E4E3951D1FFFBA00BDC7A4 /* DeviceButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				7099CE661CDF39220009B62E /* MatchResultCell.swift in Sources */,
 				70ADF72C1D1BE21A00D41524 /* QuickCheckViewController.swift in Sources */,
 				702F8FA61CF0A78F00032C8F /* LaserResultCell.swift in Sources */,
+				70E4E3961D1FFFBA00BDC7A4 /* DeviceButton.swift in Sources */,
 				70B4DAC51CC7B10A00159C81 /* AppDelegate.swift in Sources */,
 				70CF96CC1CDB263D007D821F /* ArduinoController.swift in Sources */,
 				70E3383F1CD8030A00723816 /* PlayerTableViewCell.swift in Sources */,

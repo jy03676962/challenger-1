@@ -17,7 +17,7 @@ class HallController: PLViewController {
 
 	@IBOutlet weak var teamtableView: UITableView!
 	@IBOutlet weak var teamIDLabel: UILabel!
-	@IBOutlet var controllerButtons: [UIButton]!
+	@IBOutlet var controllerButtons: [DeviceButton]!
 
 	@IBOutlet weak var modeImageView: UIImageView!
 	@IBOutlet weak var modeLabel: UILabel!
@@ -98,6 +98,7 @@ class HallController: PLViewController {
 			"teamID": team.id,
 		])
 		WsClient.singleton.sendJSON(json)
+		sender.enabled = false
 	}
 	@IBAction func removePlayer(sender: UIButton) {
 		guard topTeam != nil && topTeam!.size > 1 else {
@@ -108,6 +109,7 @@ class HallController: PLViewController {
 			"teamID": topTeam!.id,
 		])
 		WsClient.singleton.sendJSON(json)
+		sender.enabled = false
 	}
 	@IBAction func ready(sender: UIButton) {
 		guard topTeam != nil else {
@@ -222,32 +224,30 @@ extension HallController: DataReceiver {
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
 		} else if type == .ControllerData {
-			let controllers = Mapper<PlayerController>().mapArray(json["data"])
-			if controllers != nil {
-				for btn in controllerButtons {
-					btn.enabled = false
-					btn.setTitle(nil, forState: .Normal)
-				}
-				for (i, c) in controllers!.enumerate() {
-					let btn = getBtn(i)
-					btn.enabled = true
-					if c.matchID == 0 {
-						btn.setBackgroundImage(UIImage(named: "PCAvailable"), forState: .Normal)
-					} else {
-						btn.setBackgroundImage(UIImage(named: "PCGaming"), forState: .Normal)
-					}
-					let id: String = c.address.id
-					var title: String?
-					if c.address.type == .Simulator {
-						title = id[0]
-					} else if c.address.type == .Wearable {
-						title = id.last()
-					}
-					btn.setTitle(title, forState: .Normal)
-					btn.setTitle(title, forState: .Selected)
-				}
-				self.controllers = controllers
+			guard let controllers = Mapper<PlayerController>().mapArray(json["data"]) else {
+				return
 			}
+			var controllerMap = [String: PlayerController]()
+			for c in controllers {
+				controllerMap[c.id] = c
+			}
+			for btn in controllerButtons {
+				guard let btnC = btn.controller, let c = controllerMap[btnC.id] else {
+					btn.controller = nil
+					continue
+				}
+				btn.controller = c
+				controllerMap.removeValueForKey(btnC.id)
+			}
+			for (_, v) in controllerMap {
+				for btn in controllerButtons {
+					if btn.controller == nil {
+						btn.controller = v
+						break
+					}
+				}
+			}
+			self.controllers = controllers
 		} else if type == .NewMatch {
 			HUD.hide()
 			for btn in controllerButtons {

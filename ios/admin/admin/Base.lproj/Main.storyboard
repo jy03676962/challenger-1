@@ -360,7 +360,7 @@
                                     <action selector="start:" destination="9pv-A4-QxB" eventType="touchUpInside" id="phA-2z-i38"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="100" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OUC-MD-vfh">
+                            <button opaque="NO" tag="100" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OUC-MD-vfh" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="710" y="428" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="13c-rl-79K"/>
@@ -378,7 +378,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Nhm-1s-lF1"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="101" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QBD-fL-3vR">
+                            <button opaque="NO" tag="101" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QBD-fL-3vR" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="762" y="428" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="3uB-oB-dby"/>
@@ -396,7 +396,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="D3m-lY-ef5"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="102" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5eb-h8-gRw">
+                            <button opaque="NO" tag="102" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5eb-h8-gRw" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="814" y="428" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="SxJ-Rg-oVc"/>
@@ -414,7 +414,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="MNq-ET-xgk"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="103" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mfr-Kz-5HY">
+                            <button opaque="NO" tag="103" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mfr-Kz-5HY" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="866" y="428" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="kYP-Db-Eu3"/>
@@ -432,7 +432,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="pwX-sl-2pf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="104" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13J-N8-igf">
+                            <button opaque="NO" tag="104" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13J-N8-igf" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="710" y="474" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="E52-cy-ra5"/>
@@ -450,7 +450,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Rfy-TU-MZh"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="105" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q2C-wi-lSo">
+                            <button opaque="NO" tag="105" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q2C-wi-lSo" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="762" y="474" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="26" id="9pP-aC-2lm"/>
@@ -468,7 +468,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="u4W-2t-dQG"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="109" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhM-UO-lmv">
+                            <button opaque="NO" tag="109" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhM-UO-lmv" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="762" y="520" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="3G4-5z-6uB"/>
@@ -486,7 +486,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="nHt-1g-atE"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="106" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-dv-7Nl">
+                            <button opaque="NO" tag="106" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-dv-7Nl" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="814" y="474" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="0au-UJ-bf0"/>
@@ -504,7 +504,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="Y1T-6C-hAY"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="107" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2IJ-iE-JnE">
+                            <button opaque="NO" tag="107" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2IJ-iE-JnE" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="866" y="474" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="26" id="C83-Do-EUA"/>
@@ -522,7 +522,7 @@
                                     <action selector="toggleControllerButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="udU-Mt-itR"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="108" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="92g-H4-8Id">
+                            <button opaque="NO" tag="108" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="92g-H4-8Id" customClass="DeviceButton" customModule="admin" customModuleProvider="target">
                                 <rect key="frame" x="710" y="520" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="3IE-pE-aJA"/>

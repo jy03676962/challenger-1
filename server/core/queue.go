@@ -80,6 +80,9 @@ func (q *Queue) TeamPrepare(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	if team.Status == TS_Waiting {
 		team.Status = TS_Prepare
@@ -92,6 +95,9 @@ func (q *Queue) TeamCancelPrepare(teamID string) {
 	defer q.lock.Unlock()
 	defer q.updateHallData()
 	element := q.dict[teamID]
+	if element == nil {
+		return
+	}
 	team := element.Value.(*Team)
 	if team.Status == TS_Prepare {
 		team.Status = TS_Waiting
