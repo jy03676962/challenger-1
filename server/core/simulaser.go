@@ -74,7 +74,7 @@ func (l *SimuLaser) Tick(dt float64) {
 	}
 	currentRealP := l.getOpt().RealPosition(currentP)
 	nextRealP := l.getOpt().RealPosition(nextP)
-	speed := l.getOpt().laserSpeed(l.match.Energy)
+	speed := l.getOpt().laserSpeed(l.match.Energy, len(l.match.Member))
 	delta := speed * dt
 	var dir2 string
 	dx, dy := l.Pos.X-currentRealP.X, l.Pos.Y-currentRealP.Y

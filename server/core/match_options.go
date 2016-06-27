@@ -105,7 +105,7 @@ type MatchOptions struct {
 	FirstComboExtra       float64       `json:"-"`
 	ComboExtra            float64       `json:"-"`
 	LaserSpeed            float64       `json:"-"`
-	LaserSpeedup          float64       `json:"-"`
+	LaserSpeedup          [4]float64    `json:"-"`
 	EnergySpeedup         float64       `json:"-"`
 	LaserAppearTime       float64       `json:"-"`
 	LaserPauseTime        float64       `json:"-"`
@@ -369,13 +369,13 @@ func (m *MatchOptions) IntToTile(i int) P {
 	return P{i % m.ArenaWidth, i / m.ArenaWidth}
 }
 
-func (m *MatchOptions) laserSpeed(energy float64) float64 {
-	return float64(m.ArenaCellSize) / 10 / m.laserMoveInterval(energy)
+func (m *MatchOptions) laserSpeed(energy float64, playerCount int) float64 {
+	return float64(m.ArenaCellSize) / 10 / m.laserMoveInterval(energy, playerCount)
 }
 
-func (m *MatchOptions) laserMoveInterval(energy float64) float64 {
+func (m *MatchOptions) laserMoveInterval(energy float64, playerCount int) float64 {
 	level := int(energy / m.EnergySpeedup)
-	return m.LaserSpeed - float64(level)*m.LaserSpeedup
+	return m.LaserSpeed - float64(level)*m.LaserSpeedup[playerCount-1]
 }
 
 func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {

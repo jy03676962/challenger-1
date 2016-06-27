@@ -146,7 +146,7 @@ func (l *Laser) Tick(dt float64) {
 		line.elasped += dt * 1000
 	}
 	l.elaspedSinceLastMove += dt
-	interval := opt.laserMoveInterval(l.match.Energy)
+	interval := opt.laserMoveInterval(l.match.Energy, len(l.match.Member))
 	if l.elaspedSinceLastMove < interval {
 		return
 	}
