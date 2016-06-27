@@ -229,7 +229,9 @@ extension HallController: DataReceiver {
 			}
 			var controllerMap = [String: PlayerController]()
 			for c in controllers {
-				controllerMap[c.id] = c
+				if c.online! {
+					controllerMap[c.id] = c
+				}
 			}
 			for btn in controllerButtons {
 				guard let btnC = btn.controller, let c = controllerMap[btnC.id] else {

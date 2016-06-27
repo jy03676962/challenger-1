@@ -23,6 +23,7 @@ type Player struct {
 	ComboCount     int     `json:"comboCount"`
 	ControllerID   string  `json:"cid"`
 	DisplayPos     RP      `json:"displayPos"`
+	Offline        int     `json:"offline"`
 
 	moving      bool
 	lastButton  string
@@ -41,15 +42,17 @@ func NewPlayer(cid string, isSimulator bool) *Player {
 	p.lastHitTime = time.Unix(0, 0)
 	p.isSimulator = isSimulator
 	p.status = ""
+	p.Offline = 0
 	return &p
 }
 
-func (p *Player) updateStatus(st string) bool {
-	if st == p.status {
-		return false
-	}
-	p.status = st
-	return true
+func (p *Player) setOffline() {
+	p.Offline = 1
+	p.status = ""
+}
+
+func (p *Player) setOnline() {
+	p.Offline = 0
 }
 
 func (p *Player) updateLoc(loc int) {

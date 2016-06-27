@@ -493,7 +493,11 @@ func (m *Match) handleInputs() bool {
 
 func (m *Match) handleInput(msg *InboxMessage) {
 	if msg.RemoveAddress != nil {
-		m.removePlayer(msg.RemoveAddress.String())
+		m.playerOffline(msg.RemoveAddress.String())
+		return
+	}
+	if msg.AddAddress != nil {
+		m.playerOnline(msg.RemoveAddress.String())
 		return
 	}
 	cmd := msg.GetCmd()
@@ -511,6 +515,9 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		}
 	case "wearableLoc":
 		if player := m.getPlayer(msg.Address.String()); player != nil {
+			if status := msg.GetStr("status"); len(status) > 0 {
+				player.status = status
+			}
 			loc, _ := strconv.Atoi(msg.GetStr("loc"))
 			if loc > 0 {
 				player.updateLoc(loc)
@@ -584,27 +591,19 @@ func (m *Match) getPlayer(controllerID string) *Player {
 	return nil
 }
 
-func (m *Match) removePlayer(cid string) {
-	destIdx := -1
-	for idx, player := range m.Member {
+func (m *Match) playerOffline(cid string) {
+	for _, player := range m.Member {
 		if player.ControllerID == cid {
-			destIdx = idx
+			player.setOffline()
 		}
 	}
-	if destIdx >= 0 {
-		m.Member = append(m.Member[:destIdx], m.Member[destIdx+1:]...)
-		idx := -1
-		for i, laser := range m.Lasers {
-			if laser.IsFollow(cid) {
-				idx = i
-			}
+}
+
+func (m *Match) playerOnline(cid string) {
+	for _, player := range m.Member {
+		if player.ControllerID == cid {
+			player.setOnline()
 		}
-		if idx >= 0 {
-			m.Lasers = append(m.Lasers[:idx], m.Lasers[idx+1:]...)
-		}
-	}
-	if len(m.Member) == 0 {
-		m.Stage = "stop"
 	}
 }
 
@@ -638,7 +637,7 @@ func (m *Match) playerTick(player *Player, sec float64) {
 }
 
 func (m *Match) updatePlayerStatus(st string, p *Player) {
-	if p.updateStatus(st) {
+	if p.status != st {
 		m.srv.wearableControl(st, p.ControllerID)
 	}
 }

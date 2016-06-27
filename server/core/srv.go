@@ -241,20 +241,29 @@ func (s *Srv) handleInboxMessage(msg *InboxMessage) {
 	shouldUpdatePlayerController := false
 	if msg.RemoveAddress != nil && msg.RemoveAddress.Type.IsPlayerControllerType() {
 		cid := msg.RemoveAddress.String()
-		pc := s.pDict[cid]
-		if pc.MatchID > 0 {
-			s.mDict[pc.MatchID].OnMatchCmdArrived(msg)
+		if pc, ok := s.pDict[cid]; ok {
+			pc.Online = false
+			if pc.MatchID > 0 {
+				s.mDict[pc.MatchID].OnMatchCmdArrived(msg)
+			}
+			shouldUpdatePlayerController = true
 		}
-		delete(s.pDict, cid)
-		shouldUpdatePlayerController = true
 	}
 	if msg.AddAddress != nil && msg.AddAddress.Type.IsPlayerControllerType() {
-		pc := NewPlayerController(*msg.AddAddress)
-		s.pDict[pc.ID] = pc
-		shouldUpdatePlayerController = true
-		if msg.AddAddress.Type == InboxAddressTypeWearableDevice {
-			s.wearableControl("01", pc.ID)
+		cid := msg.AddAddress.String()
+		if pc, ok := s.pDict[cid]; ok {
+			pc.Online = true
+			if pc.MatchID > 0 {
+				s.mDict[pc.MatchID].OnMatchCmdArrived(msg)
+			}
+		} else {
+			pc := NewPlayerController(*msg.AddAddress)
+			s.pDict[pc.ID] = pc
+			if msg.AddAddress.Type == InboxAddressTypeWearableDevice {
+				s.wearableControl("01", pc.ID)
+			}
 		}
+		shouldUpdatePlayerController = true
 	}
 	if shouldUpdatePlayerController {
 		s.sendMsgs("ControllerData", s.getControllerData(), InboxAddressTypeAdminDevice, InboxAddressTypeSimulatorDevice)

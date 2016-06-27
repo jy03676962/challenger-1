@@ -157,6 +157,9 @@ func (l *Laser) Tick(dt float64) {
 		l.lines = append(l.lines, line)
 		l.startupingIndex += 1
 	} else {
+		if l.player.Offline > 0 {
+			return
+		}
 		next := l.findPath()
 		if l.p2 < 0 && l.p == next {
 			return

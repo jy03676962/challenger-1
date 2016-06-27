@@ -28,6 +28,7 @@ class PlayerController: Mappable {
 	var address: Address!
 	var id: String!
 	var matchID: Int!
+	var online: Bool!
 
 	required init?(_ map: Map) {
 	}
@@ -36,5 +37,6 @@ class PlayerController: Mappable {
 		address <- map["address"]
 		id <- map["id"]
 		matchID <- map["matchID"]
+		online <- map["online"]
 	}
 }
