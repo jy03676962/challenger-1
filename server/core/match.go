@@ -199,10 +199,6 @@ func (m *Match) handleLaserCmd() {
 
 func (m *Match) tick(dt time.Duration) {
 	sec := dt.Seconds()
-	m.Elasped += sec
-	if m.Mode == "g" {
-		m.TotalTime = math.Max(m.TotalTime-sec, 0)
-	}
 	if m.isWarmup() {
 		m.WarmupTime = math.Max(m.WarmupTime-sec, 0)
 		if m.warmupTriggerButtonRemain != WarmupTriggerButtonNotStart {
@@ -229,7 +225,8 @@ func (m *Match) tick(dt time.Duration) {
 		}
 		if m.currentWarmupStage < len(m.opt.WarmupLasers) {
 			warmupLaser := m.opt.WarmupLasers[m.currentWarmupStage]
-			if m.Elasped*1000 >= float64(warmupLaser.Time) {
+			elasped := m.opt.Warmup - m.WarmupTime
+			if elasped*1000 >= float64(warmupLaser.Time) {
 				if m.currentWarmupStage == 0 {
 					m.warmupTriggerButtonRemain = m.opt.WarmupButtonInterval
 					for _, player := range m.Member {
@@ -248,6 +245,10 @@ func (m *Match) tick(dt time.Duration) {
 			}
 		}
 	} else if m.isOngoing() {
+		m.Elasped += sec
+		if m.Mode == "g" {
+			m.TotalTime = math.Max(m.TotalTime-sec, 0)
+		}
 		m.RampageTime = math.Max(m.RampageTime-sec, 0)
 		if m.Mode == "s" && m.goldDropTime > 0 && m.RampageTime <= 0 {
 			m.goldDropTime -= sec
