@@ -9,12 +9,7 @@ export function wsAddressWithPath(path) {
 }
 
 export function timeStr(elasped) {
-	let min = Math.floor(elasped / 60)
-	let sec = Math.floor(elasped - 60 * min)
-	let pad = (i) => {
-		return (i < 10 ? '0' : '') + i
-	}
-	return pad(min) + ':' + pad(sec)
+	return elasped.toFixed(3) + 'S'
 }
 
 export function cssCreate(styles, specs) {
