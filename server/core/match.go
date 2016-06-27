@@ -283,7 +283,29 @@ func (m *Match) setStage(s string) {
 	case "warmup":
 		m.srv.bgControl("3")
 		m.srv.ledControl(3, "0", "1", "2", "3")
+		if m.Mode == "g" {
+			m.srv.doorControl("", "5", "D-1")
+			m.srv.doorControl("", "5", "D-2")
+			m.srv.doorControl("", "5", "D-3")
+			m.srv.doorControl("", "5", "D-4")
+		} else {
+			m.srv.doorControl("", "12", "D-1")
+			m.srv.doorControl("", "12", "D-2")
+			m.srv.doorControl("", "12", "D-3")
+			m.srv.doorControl("", "12", "D-4")
+		}
 	case "ongoing-low":
+		if m.Mode == "g" {
+			m.srv.doorControl("5", "5", "D-1")
+			m.srv.doorControl("5", "5", "D-2")
+			m.srv.doorControl("", "5", "D-3")
+			m.srv.doorControl("", "5", "D-4")
+		} else {
+			m.srv.doorControl("12", "12", "D-1")
+			m.srv.doorControl("12", "12", "D-2")
+			m.srv.doorControl("", "12", "D-3")
+			m.srv.doorControl("", "12", "D-4")
+		}
 		m.srv.lightControl("1")
 		if m.Stage == "ongoing-rampage" {
 			msg := NewInboxMessage()
@@ -317,6 +339,13 @@ func (m *Match) setStage(s string) {
 		m.srv.lightControl("2")
 		m.srv.ledControl(3, "9")
 		if m.Mode == "g" {
+			m.srv.doorControl("9", "", "D-1")
+			m.srv.doorControl("9", "", "D-2")
+		} else {
+			m.srv.doorControl("16", "", "D-1")
+			m.srv.doorControl("16", "", "D-2")
+		}
+		if m.Mode == "g" {
 			m.srv.bgControl("5")
 		} else {
 			m.srv.bgControl("7")
@@ -331,6 +360,8 @@ func (m *Match) setStage(s string) {
 	case "ongoing-rampage":
 		m.srv.bgControl("9")
 		m.srv.lightControl("0")
+		m.srv.doorControl("42", "", "D-1")
+		m.srv.doorControl("42", "", "D-2")
 		m.RampageTime = m.opt.RampageTime[m.modeIndex()]
 		laserPosList := make([]int, len(m.Lasers))
 		offButtons := make(map[string]bool)
@@ -370,6 +401,10 @@ func (m *Match) setStage(s string) {
 		m.srv.ledControl(2, "46")
 	case "after", "stop":
 		m.srv.bgControl("12")
+		m.srv.doorControl("23", "1", "D-1")
+		m.srv.doorControl("46", "1", "D-2")
+		m.srv.doorControl("", "1", "D-3")
+		m.srv.doorControl("", "1", "D-4")
 		for _, laser := range m.Lasers {
 			laser.Close()
 		}

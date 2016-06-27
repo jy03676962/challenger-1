@@ -197,7 +197,9 @@ musicArduino = [
 
 doorArduino = [
 "D-1",
-"D-2"
+"D-2",
+"D-3",
+"D-4"
 ]
 
 # 入口坐标

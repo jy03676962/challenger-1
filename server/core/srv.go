@@ -508,6 +508,10 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		log.Printf("send mode change:%v\n", mode)
 		if mode == "3" {
 			s.bgControl("2")
+			s.doorControl("23", "23", "D-1")
+			s.doorControl("23", "23", "D-2")
+			s.doorControl("", "23", "D-3")
+			s.doorControl("", "23", "D-4")
 		}
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
 	case "queryArduinoList":
@@ -640,6 +644,29 @@ func (s *Srv) wearableControl(status string, cid string) {
 		msg.Set("status", status)
 		s.sendToOne(msg, pc.Address)
 	}
+}
+
+func (s *Srv) doorControl(IL string, OL string, ID string) {
+	addr := InboxAddress{InboxAddressTypeDoorArduino, ID}
+	msg := NewInboxMessage()
+	msg.SetCmd("led_ctrl")
+	controls := make([]map[string]string, 0)
+	if len(IL) > 0 {
+		controls = append(controls, map[string]string{
+			"wall":  "IL",
+			"led_t": "1",
+			"mode":  IL,
+		})
+	}
+	if len(OL) > 0 {
+		controls = append(controls, map[string]string{
+			"wall":  "IL",
+			"led_t": "1",
+			"mode":  OL,
+		})
+	}
+	msg.Set("led", controls)
+	s.sendToOne(msg, addr)
 }
 
 func (s *Srv) lasersControl(large []int, small []int) {
