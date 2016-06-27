@@ -702,10 +702,11 @@ func (m *Match) touchPunish(p *Player) {
 	p.InvincibleTime = opt.PlayerInvincibleTime
 	p.HitCount += 1
 	var punish int
+	playerCount := len(m.Member)
 	if m.Mode == "g" {
-		punish = opt.Mode1TouchPunish
+		punish = opt.Mode1TouchPunish[playerCount-1]
 	} else {
-		punish = opt.Mode2TouchPunish
+		punish = opt.Mode2TouchPunish[playerCount-1]
 	}
 	m.Gold = MaxInt(m.Gold-punish, 0)
 	p.Gold -= punish

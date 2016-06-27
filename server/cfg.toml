@@ -5,7 +5,6 @@ t2 = 0.2 # 按钮读条时间2
 t3 = 0.3 # 按钮读条时间3
 tRampage = 0.05 # 暴走读条时间
 goldBonus = [ 20, 20 ] # 按钮金币奖励，赏金-生存
-touchPunish = [ 30.0, 10.0 ] # 激光触碰惩罚，赏金-生存
 mode2InitGold = [ 600, 900, 1200, 1500 ] # 生存初始金币， 1-4人
 mode2GoldDropRate = [ 20, 30, 40, 50 ] # 生存金币下降速度, 1-4人
 maxEnergy = 500.0 # 最大能量值
@@ -39,8 +38,8 @@ comboInterval = [ 3.0, 3.0, 2.0, 2.0 ] # 第n次连击时间间隔, n>1, 1-4人
 firstComboExtra = 30.0 # 第一次连击额外能量
 comboExtra = 15.0 # 第n次连击额外能量, n>1
 invincibleTime = 3.0 # 玩家触碰激光后的无敌时间, 硬件未实现，目前无法配置，固定为3秒
-mode1TouchPunish = 60 # 赏金模式触碰激光金币惩罚, 单位百分比
-mode2TouchPunish = 60 # 生存模式触碰激光金币惩罚, 单位个数
+mode1TouchPunish = [100, 100, 100, 100] # 赏金模式触碰激光金币惩罚
+mode2TouchPunish = [100, 100, 100, 100] # 生存模式触碰激光金币惩罚
 mode2GoldDropInterval = 1.0 # 生存模式每隔几秒金币减少1
 
 

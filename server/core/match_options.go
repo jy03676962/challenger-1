@@ -111,8 +111,8 @@ type MatchOptions struct {
 	LaserPauseTime        float64       `json:"-"`
 	TileAdjacency         map[int][]int `json:"-"`
 	PlayerInvincibleTime  float64       `json:"-"`
-	Mode1TouchPunish      int           `json:"-"`
-	Mode2TouchPunish      int           `json:"-"`
+	Mode1TouchPunish      [4]int        `json:"-"`
+	Mode2TouchPunish      [4]int        `json:"-"`
 	Mode2GoldDropInterval float64       `json:"-"`
 	MainArduino           []string      `json:"-"`
 	SubArduino            []string      `json:"-"`
