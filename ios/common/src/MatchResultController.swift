@@ -18,18 +18,19 @@ let SegueIDShowSurvey = "ShowSurvey"
 class MatchResultController: PLViewController {
 	var matchData: MatchData? {
 		didSet {
+			guard !isAdmin else {
+				return
+			}
 			if let data = matchData {
-				for pd in data.member {
-					if pd.cid.componentsSeparatedByString(":")[1] == loginInfo?.deviceID {
-						self.playerData = pd
-					}
-				}
+				let idx: Int = Int(Defaults[.deviceID])!
+				self.playerData = data.member[idx - 1]
 			}
 		}
 	}
 	var playerData: PlayerData?
 	var loginInfo: LoginResult?
 	var isAdmin: Bool = false
+	var surveyStarted: Bool = false
 	var showAnswerStatus: Bool {
 		return isAdmin
 	}
@@ -43,7 +44,6 @@ class MatchResultController: PLViewController {
 
 	@IBOutlet weak var stopAnswerButton: UIButton!
 	@IBOutlet weak var startSurveyButton: UIButton!
-	@IBOutlet weak var passSurveyButton: UIButton!
 	@IBOutlet var playersLabel: [UILabel]!
 
 	@IBAction func startSurvey() {
@@ -56,14 +56,9 @@ class MatchResultController: PLViewController {
 					HUD.show(.LabeledError(title: err.localizedDescription, subtitle: nil))
 				} else if let survey = response.result.value {
 					self.performSegueWithIdentifier(SegueIDShowSurvey, sender: survey)
+					self.surveyStarted = true
 				}
 		})
-	}
-
-	@IBAction func passSurvey() {
-		let sb = UIStoryboard(name: "Main", bundle: nil)
-		let login = sb.instantiateViewControllerWithIdentifier("LoginViewController")
-		navigationController?.setViewControllers([login], animated: true)
 	}
 
 	@IBAction func endAnswer() {
@@ -138,11 +133,9 @@ class MatchResultController: PLViewController {
 		if isAdmin {
 			stopAnswerButton.hidden = false
 			startSurveyButton.hidden = true
-			passSurveyButton.hidden = true
 		} else {
 			stopAnswerButton.hidden = true
-			startSurveyButton.hidden = false
-			passSurveyButton.hidden = false
+			startSurveyButton.hidden = self.surveyStarted
 			for label in self.playersLabel {
 				label.hidden = true
 			}

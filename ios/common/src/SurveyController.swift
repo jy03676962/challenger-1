@@ -69,9 +69,7 @@ extension SurveyController: QuestionViewControllerDelegate {
 					self.scrollView.scrollRectToVisible(frame, animated: true)
 					self.pageControl.currentPage = idx + 1
 				} else {
-					let sb = UIStoryboard(name: "Main", bundle: nil)
-					let login = sb.instantiateViewControllerWithIdentifier("LoginViewController")
-					self.navigationController?.setViewControllers([login], animated: true)
+					self.navigationController?.popViewControllerAnimated(true)
 				}
 		})
 	}

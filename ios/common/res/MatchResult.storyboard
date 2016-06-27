@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="i7b-A2-ZBM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="i7b-A2-ZBM">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -155,7 +155,7 @@
                                         <rect key="frame" x="0.0" y="28" width="960" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IDK-Rc-JRe" id="gxD-vQ-TLp">
-                                            <rect key="frame" x="0.0" y="0.0" width="960" height="59"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="960" height="59.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tassar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p5d-IE-fOl">
@@ -263,7 +263,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="usJ-Ry-CWd">
-                                <rect key="frame" x="268" y="653" width="184" height="35"/>
+                                <rect key="frame" x="420" y="653" width="184" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="1lm-NS-sjb"/>
                                     <constraint firstAttribute="width" constant="184" id="v22-Rs-cK2"/>
@@ -271,17 +271,6 @@
                                 <state key="normal" backgroundImage="SurveyStart"/>
                                 <connections>
                                     <action selector="startSurvey" destination="i7b-A2-ZBM" eventType="touchUpInside" id="74B-Q5-Wsc"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uPI-16-0Li">
-                                <rect key="frame" x="572" y="653" width="184" height="35"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="cs4-JJ-Ntc"/>
-                                    <constraint firstAttribute="width" constant="184" id="ykW-Kf-Wo6"/>
-                                </constraints>
-                                <state key="normal" backgroundImage="SurveyPass"/>
-                                <connections>
-                                    <action selector="passSurvey" destination="i7b-A2-ZBM" eventType="touchUpInside" id="nO0-4Q-AXR"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1P 1/7" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v6e-09-oR5">
@@ -334,13 +323,11 @@
                             <constraint firstItem="9kC-D3-uyz" firstAttribute="bottom" secondItem="v6e-09-oR5" secondAttribute="bottom" id="VDk-yM-xic"/>
                             <constraint firstItem="SDE-yu-2oQ" firstAttribute="top" secondItem="Ijr-jg-9ll" secondAttribute="bottom" constant="80" id="XYu-fe-qNU"/>
                             <constraint firstItem="wNU-MY-lYE" firstAttribute="leading" secondItem="4od-xd-j2h" secondAttribute="centerX" constant="50" id="YKm-Qa-3us"/>
-                            <constraint firstItem="usJ-Ry-CWd" firstAttribute="trailing" secondItem="4od-xd-j2h" secondAttribute="centerX" constant="-60" id="ZKD-IN-DRz"/>
+                            <constraint firstItem="usJ-Ry-CWd" firstAttribute="centerX" secondItem="4od-xd-j2h" secondAttribute="centerX" id="ZKD-IN-DRz"/>
                             <constraint firstItem="k2j-nN-dXH" firstAttribute="top" secondItem="h9V-YT-iYN" secondAttribute="bottom" constant="17" id="bhP-0V-Mc2"/>
-                            <constraint firstItem="uPI-16-0Li" firstAttribute="centerY" secondItem="Ijr-jg-9ll" secondAttribute="centerY" id="ehs-Pt-XFS"/>
                             <constraint firstItem="9kC-D3-uyz" firstAttribute="leading" secondItem="v6e-09-oR5" secondAttribute="leading" id="ghy-GL-VF5"/>
                             <constraint firstItem="wNU-MY-lYE" firstAttribute="top" secondItem="v6e-09-oR5" secondAttribute="top" id="iSM-KE-7WE"/>
                             <constraint firstItem="k2j-nN-dXH" firstAttribute="leading" secondItem="eeg-p1-WvP" secondAttribute="trailing" constant="-583" id="ifL-uW-hQF"/>
-                            <constraint firstItem="uPI-16-0Li" firstAttribute="leading" secondItem="4od-xd-j2h" secondAttribute="centerX" constant="60" id="l2V-V8-90J"/>
                             <constraint firstItem="v6e-09-oR5" firstAttribute="trailing" secondItem="4od-xd-j2h" secondAttribute="centerX" constant="-50" id="mO7-9g-Qm7"/>
                             <constraint firstItem="k2j-nN-dXH" firstAttribute="width" secondItem="h9V-YT-iYN" secondAttribute="width" id="oCP-y7-tIv"/>
                             <constraint firstItem="v6e-09-oR5" firstAttribute="top" secondItem="eeg-p1-WvP" secondAttribute="bottom" constant="20" id="oF1-P7-FQ4"/>
@@ -360,7 +347,6 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
                         <outlet property="headerImageView" destination="h9V-YT-iYN" id="XUf-og-X7k"/>
-                        <outlet property="passSurveyButton" destination="uPI-16-0Li" id="oLI-Gj-yYl"/>
                         <outlet property="playerTableView" destination="eeg-p1-WvP" id="V3e-7F-g3A"/>
                         <outlet property="scoreLabel" destination="0MC-f3-PA2" id="owg-lp-IyJ"/>
                         <outlet property="startSurveyButton" destination="usJ-Ry-CWd" id="nYz-Q4-1fU"/>
@@ -570,7 +556,6 @@
         <image name="PowerIcon" width="23" height="28"/>
         <image name="SurveyHeader" width="960" height="36"/>
         <image name="SurveyOK" width="184" height="33"/>
-        <image name="SurveyPass" width="184" height="33"/>
         <image name="SurveyStart" width="184" height="33"/>
         <image name="endAnswer" width="110" height="35"/>
     </resources>

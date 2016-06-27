@@ -87,6 +87,9 @@ class MatchData: Mappable {
 		answerType <- map["answerType"]
 		teamID <- map["teamID"]
 		eid <- map["eid"]
+		member.sortInPlace { (p1, p2) -> Bool in
+			return p1.cid.compare(p2.cid) == .OrderedAscending
+		}
 	}
 }
 

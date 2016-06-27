@@ -79,7 +79,6 @@ class LoginViewController: PLViewController {
 				} else {
 					let m = resp.result.value!
 					if m.code != nil && m.code == 0 {
-						m.deviceID = self.deviceIDTextField.text
 						self.performSegueWithIdentifier(SegueIDShowMatchResult, sender: m)
 					} else {
 						HUD.flash(.LabeledError(title: m.error, subtitle: nil), delay: 2)

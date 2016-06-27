@@ -65,7 +65,7 @@
                                         </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bGu-MU-gFS">
-                                        <rect key="frame" x="372" y="495" width="130" height="34"/>
+                                        <rect key="frame" x="372" y="461" width="130" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="130" id="MkJ-Et-JLm"/>
                                             <constraint firstAttribute="height" constant="34" id="VeB-4Y-oxK"/>
@@ -77,7 +77,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zf2-5C-Kqg">
-                                        <rect key="frame" x="522" y="495" width="130" height="34"/>
+                                        <rect key="frame" x="522" y="461" width="130" height="34"/>
                                         <state key="normal" backgroundImage="SkipButtonEnabled"/>
                                         <state key="disabled" backgroundImage="SkipButtonDisabled"/>
                                         <connections>
@@ -96,51 +96,23 @@
                                             <outletCollection property="gestureRecognizers" destination="e5K-uP-vTn" appends="YES" id="vuc-Mg-HrC"/>
                                         </connections>
                                     </view>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="设备编号" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="f58-jK-mAH" userLabel="LoginTextField" customClass="LoginTextField" customModule="postgame" customModuleProvider="target">
-                                        <rect key="frame" x="387" y="433" width="250" height="35"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="250" id="0zH-b6-vFW"/>
-                                            <constraint firstAttribute="height" constant="35" id="EtT-rT-Eo6"/>
-                                        </constraints>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" red="0.29411764709999999" green="0.42352941179999998" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                                <color key="value" red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="textFieldValueChanged:" destination="H6z-UT-JCw" eventType="valueChanged" id="HSm-yw-blD"/>
-                                        </connections>
-                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="bGu-MU-gFS" firstAttribute="trailing" secondItem="GoW-hv-DVq" secondAttribute="centerX" constant="-10" id="8jf-wn-yce"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="leading" secondItem="s6A-yU-aSM" secondAttribute="leading" id="Kpj-4R-vE6"/>
-                                    <constraint firstItem="f58-jK-mAH" firstAttribute="top" secondItem="GoW-hv-DVq" secondAttribute="bottom" constant="-1" id="LRf-4V-9sX"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="height" secondItem="bGu-MU-gFS" secondAttribute="height" id="PtS-Dv-npE"/>
                                     <constraint firstItem="GJl-ei-bHk" firstAttribute="top" secondItem="4Gk-Is-E3Q" secondAttribute="top" id="QrM-FO-yiw"/>
-                                    <constraint firstItem="f58-jK-mAH" firstAttribute="leading" secondItem="s6A-yU-aSM" secondAttribute="leading" id="SUe-sb-8Bb"/>
+                                    <constraint firstItem="bGu-MU-gFS" firstAttribute="top" secondItem="GoW-hv-DVq" secondAttribute="bottom" constant="27" id="TaR-rK-7qe"/>
                                     <constraint firstItem="bGu-MU-gFS" firstAttribute="top" secondItem="GoW-hv-DVq" secondAttribute="bottom" constant="27" id="W5v-O1-KNd"/>
                                     <constraint firstAttribute="trailing" secondItem="GJl-ei-bHk" secondAttribute="trailing" id="aLA-nq-dJd"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="width" secondItem="bGu-MU-gFS" secondAttribute="width" id="agB-LD-FNt"/>
-                                    <constraint firstItem="bGu-MU-gFS" firstAttribute="top" secondItem="f58-jK-mAH" secondAttribute="bottom" constant="27" id="aw9-OB-Rch"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="top" secondItem="bGu-MU-gFS" secondAttribute="top" id="ddn-36-tUN"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="top" secondItem="s6A-yU-aSM" secondAttribute="bottom" constant="-1" id="eFi-ph-MMc"/>
                                     <constraint firstItem="s6A-yU-aSM" firstAttribute="top" secondItem="4Gk-Is-E3Q" secondAttribute="top" constant="365" id="fZa-dS-lgU"/>
-                                    <constraint firstItem="f58-jK-mAH" firstAttribute="height" secondItem="s6A-yU-aSM" secondAttribute="height" id="gO1-x1-jaK"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="leading" secondItem="GoW-hv-DVq" secondAttribute="centerX" constant="10" id="gSZ-L7-s56"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="width" secondItem="s6A-yU-aSM" secondAttribute="width" id="ijx-hQ-Qeq"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="height" secondItem="s6A-yU-aSM" secondAttribute="height" id="ki7-Ne-nTV"/>
-                                    <constraint firstItem="f58-jK-mAH" firstAttribute="width" secondItem="s6A-yU-aSM" secondAttribute="width" id="lip-pC-Gn5"/>
                                     <constraint firstItem="s6A-yU-aSM" firstAttribute="centerX" secondItem="4Gk-Is-E3Q" secondAttribute="centerX" id="qSR-3e-8ch"/>
                                     <constraint firstItem="s6A-yU-aSM" firstAttribute="centerY" secondItem="4Gk-Is-E3Q" secondAttribute="centerY" id="z6H-GZ-9zZ"/>
                                 </constraints>
@@ -162,7 +134,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="1hD-Kf-6xd"/>
                     <connections>
-                        <outlet property="deviceIDTextField" destination="f58-jK-mAH" id="kiF-oi-yHZ"/>
                         <outlet property="loginButton" destination="bGu-MU-gFS" id="jfL-3O-EEk"/>
                         <outlet property="passwordTextField" destination="GoW-hv-DVq" id="rdq-sY-YNk"/>
                         <outlet property="usernameTextField" destination="s6A-yU-aSM" id="u3l-tP-ISX"/>

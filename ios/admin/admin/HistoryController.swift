@@ -95,8 +95,8 @@ class HistoryController: PLViewController {
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		if segue.identifier == segueIDPresentMatchResult {
 			let vc = segue.destinationViewController as! MatchResultController
-			vc.matchData = sender as? MatchData
 			vc.isAdmin = true
+			vc.matchData = sender as? MatchData
 		}
 	}
 }
