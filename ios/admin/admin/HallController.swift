@@ -135,11 +135,10 @@ class HallController: PLViewController {
 		}
 		var selectedControllerIds = [String]()
 		for btn in controllerButtons {
-			if btn.selected {
-				let idx = btn.tag - HallController.controllerButtonTagStart
-				let playerController = self.controllers![idx]
-				selectedControllerIds.append(playerController.id)
+			guard let pc = btn.controller where btn.selected else {
+				continue
 			}
+			selectedControllerIds.append(pc.id)
 		}
 
 		let json = JSON([
