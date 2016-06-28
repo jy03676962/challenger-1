@@ -507,7 +507,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		am.Set("mode", mode)
 		log.Printf("send mode change:%v\n", mode)
 		if mode == "3" {
-			s.bgControl("2")
+			s.bgControl(GetOptions().BgIdle)
 		}
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice, InboxAddressTypeDoorArduino, InboxAddressTypeMusicArduino)
 	case "queryArduinoList":

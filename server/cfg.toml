@@ -51,6 +51,17 @@ webScale = 0.5 # 模拟器显示缩放比例
 buttonWidth = 60.0 # 按钮宽度
 buttonHeight = 30.0 # 按钮高度
 playerSpeed = 200.0 # 玩家移动速度
+
+# 音乐配置
+bgIdle = "2"
+bgWarmup = ["3", "3"]
+bgNormal = ["3", "3"]
+bgHigh = ["3", "3"]
+bgFull = ["3", "3"]
+bgRampage = ["3", "3"]
+bgCountdown = ["3", "3"]
+bgLeave = ["3", "3"]
+
 #墙壁信息
 
 walls = [

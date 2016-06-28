@@ -281,7 +281,7 @@ func (m *Match) setStage(s string) {
 	}
 	switch s {
 	case "warmup":
-		m.srv.bgControl("3")
+		m.srv.bgControl(m.opt.BgWarmup[m.modeIndex()])
 		m.srv.ledControl(3, "0", "1", "2", "3")
 		if m.Mode == "g" {
 			m.srv.doorControl("5", "5", "D-1")
@@ -326,37 +326,35 @@ func (m *Match) setStage(s string) {
 			m.initLasers()
 			m.initButtons()
 		}
+		m.srv.bgControl(m.opt.BgNormal[m.modeIndex()])
 		if m.Mode == "g" {
 			m.srv.ledControl(3, "5")
 			m.srv.ledControl(1, "0", "2", "3")
-			m.srv.bgControl("4")
 		} else {
 			m.srv.ledControl(3, "12")
 			m.srv.ledControl(1, "0", "2", "3")
-			m.srv.bgControl("6")
 		}
 	case "ongoing-high":
 		m.srv.lightControl("2")
+		m.srv.bgControl(m.opt.BgHigh[m.modeIndex()])
 		if m.Mode == "g" {
 			m.srv.doorControl("9", "", "D-1")
 			m.srv.doorControl("9", "", "D-2")
-			m.srv.bgControl("5")
 			m.srv.ledControl(3, "9")
 		} else {
-			m.srv.bgControl("7")
 			m.srv.doorControl("16", "", "D-1")
 			m.srv.doorControl("16", "", "D-2")
 			m.srv.ledControl(3, "16")
 		}
 	case "ongoing-full":
-		m.srv.bgControl("8")
+		m.srv.bgControl(m.opt.BgFull[m.modeIndex()])
 		if m.Mode == "g" {
 			m.srv.ledControl(3, "19")
 		} else {
 			m.srv.ledControl(3, "20")
 		}
 	case "ongoing-rampage":
-		m.srv.bgControl("9")
+		m.srv.bgControl(m.opt.BgRampage[m.modeIndex()])
 		m.srv.lightControl("0")
 		m.srv.doorControl("42", "", "D-1")
 		m.srv.doorControl("42", "", "D-2")
@@ -394,11 +392,11 @@ func (m *Match) setStage(s string) {
 		}
 		m.srv.ledRampageEffect(offButtons)
 	case "ongoing-countdown":
-		m.srv.bgControl("11")
+		m.srv.bgControl(m.opt.BgCountdown[m.modeIndex()])
 		m.srv.ledControl(1, "47")
 		m.srv.ledControl(2, "46")
 	case "after", "stop":
-		m.srv.bgControl("12")
+		m.srv.bgControl(m.opt.BgLeave[m.modeIndex()])
 		m.srv.doorControl("23", "1", "D-1")
 		m.srv.doorControl("46", "1", "D-2")
 		m.srv.doorControl("", "1", "D-3")

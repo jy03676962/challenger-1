@@ -127,6 +127,14 @@ type MatchOptions struct {
 	CatchLaserNum         int           `json:"-"`
 	WarmupButtonInterval  float64       `json:"-"`
 	WarmupLasers          []WarmupLaser `json:"-"`
+	BgIdle                string        `json:"-"`
+	BgWarmup              [2]string     `json:"-"`
+	BgNormal              [2]string     `json:"-"`
+	BgHigh                [2]string     `json:"-"`
+	BgFull                [2]string     `json:"-"`
+	BgRampage             [2]string     `json:"-"`
+	BgCountdown           [2]string     `json:"-"`
+	BgLeave               [2]string     `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}
