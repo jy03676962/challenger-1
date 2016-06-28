@@ -84,7 +84,7 @@ const HistoryCellView = CSSModules(React.createClass({
 			var result = `获得：${matchData.gold}G`
 		} else {
 			var modeImg = require('./assets/s_icon.png')
-			var result = `生存：${util.timeStr(matchData.elasped)}`
+			var result = `生存：${util.timeStr(matchData.elasped, 2)}`
 		}
 		let playerStr = matchData.member.map((player, idx) => {
 			if (player.name) {

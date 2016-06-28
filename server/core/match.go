@@ -47,6 +47,7 @@ type Match struct {
 	Elasped        float64          `json:"elasped"`
 	WarmupTime     float64          `json:"warmupTime"`
 	RampageTime    float64          `json:"rampageTime"`
+	Mode1MaxTime   float64          `json:"mode1MaxTime"`
 	Mode           string           `json:"mode"`
 	Gold           int              `json:"gold"`
 	Energy         float64          `json:"energy"`
@@ -89,6 +90,7 @@ func NewMatch(s *Srv, controllerIDs []string, matchData *MatchData, mode string,
 	m.matchData = matchData
 	m.Stage = "before"
 	m.opt = GetOptions()
+	m.Mode1MaxTime = m.opt.Mode1TotalTime
 	m.Mode = mode
 	m.receiverMap = GetLaserPair().GetValidReceivers(false)
 	m.msgCh = make(chan *InboxMessage, 1000)
@@ -528,7 +530,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 		return
 	}
 	if msg.AddAddress != nil {
-		m.playerOnline(msg.RemoveAddress.String())
+		m.playerOnline(msg.AddAddress.String())
 		return
 	}
 	cmd := msg.GetCmd()

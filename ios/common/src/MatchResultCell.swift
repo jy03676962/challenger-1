@@ -25,7 +25,7 @@ class MatchResultCell: UITableViewCell {
 		idLabel.text = data.getName()
 		levelLabel.text = "LEVEL.\(data.level)"
 		gradeLabel.text = data.grade.uppercaseString
-		goldLabel.text = "\(data.gold)/-\(data.lostGold)"
+		goldLabel.text = "\(data.gold)/\(data.lostGold)"
 		energyLabel.text = "\(Int(data.energy))"
 		comboLabel.text = "\(data.combo)"
 	}

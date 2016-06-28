@@ -271,12 +271,12 @@ func (udp *InboxUdpConnection) ping(c *udpClient) {
 		}
 		timeout := make(chan struct{}, 1)
 		go func() {
-			time.Sleep(10 * time.Second)
+			time.Sleep(5 * time.Second)
 			timeout <- struct{}{}
 		}()
 		select {
 		case <-c.ch:
-			time.Sleep(3 * time.Second)
+			time.Sleep(1500 * time.Millisecond)
 		case <-timeout:
 			udp.rmCh <- c
 			return

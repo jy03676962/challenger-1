@@ -8,8 +8,8 @@ export function wsAddressWithPath(path) {
 	return uri
 }
 
-export function timeStr(elasped) {
-	return elasped.toFixed(3) + 'S'
+export function timeStr(t, p) {
+	return t.toFixed(p) + 'S'
 }
 
 export function cssCreate(styles, specs) {

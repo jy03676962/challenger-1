@@ -71,7 +71,7 @@ const RankCellView = util.cssCreate(styles, {
 		}).join('...')
 
 		if (this.props.data.time) {
-			var result = util.timeStr(this.props.data.time)
+			var result = util.timeStr(this.props.data.time, 2)
 		} else {
 			var result = this.props.data.gold + 'G'
 		}

@@ -55,12 +55,12 @@ playerSpeed = 200.0 # 玩家移动速度
 # 音乐配置
 bgIdle = "2"
 bgWarmup = ["3", "3"]
-bgNormal = ["3", "3"]
-bgHigh = ["3", "3"]
-bgFull = ["3", "3"]
-bgRampage = ["3", "3"]
-bgCountdown = ["3", "3"]
-bgLeave = ["3", "3"]
+bgNormal = ["5", "7"]
+bgHigh = ["5", "7"]
+bgFull = ["6", "8"]
+bgRampage = ["10", "10"]
+bgCountdown = ["11", "11"]
+bgLeave = ["12", "12"]
 
 #墙壁信息
 

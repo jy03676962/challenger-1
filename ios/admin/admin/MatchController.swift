@@ -95,17 +95,6 @@ class MatchController: PLViewController {
 			totalCoinLabel.text = "总金币:\(match!.gold)G"
 			energyLabel.text = String(format: "%.1f/%d", match!.energy, match!.maxEnergy)
 			playerTableView.reloadData()
-			for (i, btn) in playerViews.enumerate() {
-				if i < match!.member.count {
-					let player = match!.member[i]
-					btn.hidden = false
-					btn.center = CGPoint(x: player.displayPos.X / 3, y: player.displayPos.Y / 3)
-					let t = player.controllerID.componentsSeparatedByString(":")[1]
-					btn.setTitle(t, forState: .Normal)
-				} else {
-					btn.hidden = true
-				}
-			}
 			if match!.isSimulator == 0 {
 				for view in laserViews {
 					view.removeFromSuperview()
@@ -128,6 +117,18 @@ class MatchController: PLViewController {
 							laserViews.append(view)
 						}
 					}
+				}
+			}
+			for (i, btn) in playerViews.enumerate() {
+				if i < match!.member.count {
+					let player = match!.member[i]
+					btn.hidden = false
+					btn.center = CGPoint(x: player.displayPos.X / 3, y: player.displayPos.Y / 3)
+					let t = player.controllerID.componentsSeparatedByString(":")[1]
+					btn.setTitle(t, forState: .Normal)
+					mapView.bringSubviewToFront(btn)
+				} else {
+					btn.hidden = true
 				}
 			}
 		} else {

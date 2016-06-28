@@ -123,9 +123,9 @@ const IngameView = CSSModules(observer(React.createClass({
 				}
 			}
 			if (data.match.mode == 'g') {
-				var time = util.timeStr(data.match.totalTime - data.match.elasped)
+				var time = util.timeStr(data.match.totalTime, 0)
 			} else {
-				var time = util.timeStr(data.match.elasped)
+				var time = util.timeStr(data.match.elasped, 0)
 			}
 			let showGold = data.match.gold > 0
 			var barBg, barFront
