@@ -284,13 +284,13 @@ func (m *Match) setStage(s string) {
 		m.srv.bgControl("3")
 		m.srv.ledControl(3, "0", "1", "2", "3")
 		if m.Mode == "g" {
-			m.srv.doorControl("", "5", "D-1")
-			m.srv.doorControl("", "5", "D-2")
+			m.srv.doorControl("5", "5", "D-1")
+			m.srv.doorControl("5", "5", "D-2")
 			m.srv.doorControl("", "5", "D-3")
 			m.srv.doorControl("", "5", "D-4")
 		} else {
-			m.srv.doorControl("", "12", "D-1")
-			m.srv.doorControl("", "12", "D-2")
+			m.srv.doorControl("12", "12", "D-1")
+			m.srv.doorControl("12", "12", "D-2")
 			m.srv.doorControl("", "12", "D-3")
 			m.srv.doorControl("", "12", "D-4")
 		}
@@ -590,7 +590,7 @@ func (m *Match) handleInput(msg *InboxMessage) {
 			musicPostions := make(map[int]bool)
 			for _, laser := range m.Lasers {
 				l := laser.(*Laser)
-				blocked, p, senderID := l.IsTouched(m.receiverMap)
+				blocked, p, _ := l.IsTouched(m.receiverMap)
 				if blocked {
 					shouldPause := false
 					for _, player := range m.Member {
@@ -599,7 +599,6 @@ func (m *Match) handleInput(msg *InboxMessage) {
 							musicPostions[pp] = true
 							m.touchPunish(player)
 							shouldPause = true
-							log.Printf("touched sender:%v\n", senderID)
 						}
 					}
 					if shouldPause {

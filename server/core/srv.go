@@ -656,7 +656,7 @@ func (s *Srv) doorControl(IL string, OL string, ID string) {
 	}
 	if len(OL) > 0 {
 		controls = append(controls, map[string]string{
-			"wall":  "IL",
+			"wall":  "OL",
 			"led_t": "1",
 			"mode":  OL,
 		})
