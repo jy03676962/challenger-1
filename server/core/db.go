@@ -82,8 +82,12 @@ func (db *DB) newMatch() *MatchData {
 	return &m
 }
 
-func (db *DB) saveMatchData(m *MatchData) {
-	db.conn.Save(m)
+func (db *DB) saveOrDelMatchData(m *MatchData) {
+	if m.Elasped > 0 && len(m.Member) > 0 {
+		db.conn.Save(m)
+	} else {
+		db.conn.Delete(m)
+	}
 }
 
 func (db *DB) getHistory(count int) []MatchData {

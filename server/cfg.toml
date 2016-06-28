@@ -58,7 +58,7 @@ bgWarmup = ["3", "3"]
 bgNormal = ["5", "7"]
 bgHigh = ["5", "7"]
 bgFull = ["6", "8"]
-bgRampage = ["10", "10"]
+bgRampage = ["9", "9"]
 bgCountdown = ["11", "11"]
 bgLeave = ["12", "12"]
 

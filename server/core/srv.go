@@ -230,7 +230,7 @@ func (s *Srv) handleMatchEvent(evt MatchEvent) {
 		d := evt.Data.(map[string]interface{})
 		d["matchID"] = evt.ID
 		s.queue.TeamFinishMatch(d["teamID"].(string))
-		s.db.saveMatchData(d["matchData"].(*MatchData))
+		s.db.saveOrDelMatchData(d["matchData"].(*MatchData))
 		s.sendMsgs("matchStop", d, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice, InboxAddressTypeIngameDevice, InboxAddressTypeQueueDevice)
 	case MatchEventTypeUpdate:
 		s.sendMsgs("updateMatch", evt.Data, InboxAddressTypeSimulatorDevice, InboxAddressTypeAdminDevice, InboxAddressTypeIngameDevice, InboxAddressTypeQueueDevice)
