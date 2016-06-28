@@ -337,18 +337,16 @@ func (m *Match) setStage(s string) {
 		}
 	case "ongoing-high":
 		m.srv.lightControl("2")
-		m.srv.ledControl(3, "9")
 		if m.Mode == "g" {
 			m.srv.doorControl("9", "", "D-1")
 			m.srv.doorControl("9", "", "D-2")
-		} else {
-			m.srv.doorControl("16", "", "D-1")
-			m.srv.doorControl("16", "", "D-2")
-		}
-		if m.Mode == "g" {
 			m.srv.bgControl("5")
+			m.srv.ledControl(3, "9")
 		} else {
 			m.srv.bgControl("7")
+			m.srv.doorControl("16", "", "D-1")
+			m.srv.doorControl("16", "", "D-2")
+			m.srv.ledControl(3, "16")
 		}
 	case "ongoing-full":
 		m.srv.bgControl("8")

@@ -508,12 +508,8 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 		log.Printf("send mode change:%v\n", mode)
 		if mode == "3" {
 			s.bgControl("2")
-			s.doorControl("23", "23", "D-1")
-			s.doorControl("23", "23", "D-2")
-			s.doorControl("", "23", "D-3")
-			s.doorControl("", "23", "D-4")
 		}
-		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice)
+		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice, InboxAddressTypeDoorArduino, InboxAddressTypeMusicArduino)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
 		i := 0
