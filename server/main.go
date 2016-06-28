@@ -13,7 +13,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -26,6 +28,13 @@ const (
 	isSimulator = false
 	testRank    = true
 )
+
+func redirectStderr(f *os.File) {
+	err := syscall.Dup2(int(f.Fd()), int(os.Stderr.Fd()))
+	if err != nil {
+		log.Fatalf("Failed to redirect stderr to file: %v", err)
+	}
+}
 
 func loadRankTestData() map[string]interface{} {
 	ret := make(map[string]interface{})
@@ -51,6 +60,14 @@ func main() {
 	if err != nil {
 		fmt.Println("error open log file", err)
 		os.Exit(1)
+	}
+	if runtime.GOOS != "windows" {
+		pf, err := os.OpenFile("panic.log", os.O_WRONLY|os.O_CREATE, 0640)
+		if err != nil {
+			fmt.Println("error open panic file", err)
+			os.Exit(1)
+		}
+		redirectStderr(pf)
 	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 	log.Println("setup log system done")

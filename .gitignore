@@ -2,6 +2,7 @@
 /web/npm-debug.log
 /web/dist
 /server/server
+*.log
 *.sublime-workspace
 .DS_Store
 *.zip
