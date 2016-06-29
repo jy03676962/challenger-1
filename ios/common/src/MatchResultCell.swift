@@ -15,18 +15,42 @@ class MatchResultCell: UITableViewCell {
 	@IBOutlet weak var goldLabel: UILabel!
 	@IBOutlet weak var energyLabel: UILabel!
 	@IBOutlet weak var comboLabel: UILabel!
+	@IBOutlet weak var energyIcon: UIImageView!
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		backgroundColor = UIColor.clearColor()
 	}
 
-	func setData(data: PlayerData) {
-		idLabel.text = data.getName()
-		levelLabel.text = "LEVEL.\(data.level)"
-		gradeLabel.text = data.grade.uppercaseString
-		goldLabel.text = "\(data.gold)/\(data.lostGold)"
-		energyLabel.text = "\(Int(data.energy))"
-		comboLabel.text = "\(data.combo)"
+	func setData(data: PlayerData?, current: Bool) {
+		var c: UIColor
+		if current {
+			energyIcon.image = UIImage(named: "PowerIcon")
+			c = UIColor.whiteColor()
+		} else {
+			energyIcon.image = UIImage(named: "PowerIconOff")
+			c = UIColor(red: 113 / 255.0, green: 146 / 255.0, blue: 191 / 255.0, alpha: 1)
+		}
+		idLabel.textColor = c
+		levelLabel.textColor = c
+		gradeLabel.textColor = c
+		goldLabel.textColor = c
+		energyLabel.textColor = c
+		comboLabel.textColor = c
+		if let d = data {
+			idLabel.text = d.getName()
+			levelLabel.text = "LEVEL.\(d.level)"
+			gradeLabel.text = d.grade.uppercaseString
+			goldLabel.text = "\(d.gold)/\(d.lostGold)"
+			energyLabel.text = "\(Int(d.energy))"
+			comboLabel.text = "\(d.combo)"
+		} else {
+			idLabel.text = "--"
+			levelLabel.text = "--"
+			gradeLabel.text = "--"
+			goldLabel.text = "--"
+			energyLabel.text = "--"
+			comboLabel.text = "--"
+		}
 	}
 }

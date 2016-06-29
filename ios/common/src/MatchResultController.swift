@@ -23,7 +23,9 @@ class MatchResultController: PLViewController {
 			}
 			if let data = matchData {
 				let idx: Int = Int(Defaults[.deviceID])!
-				self.playerData = data.member[idx - 1]
+				if idx <= data.member.count {
+					self.playerData = data.member[idx - 1]
+				}
 			}
 		}
 	}
@@ -42,6 +44,7 @@ class MatchResultController: PLViewController {
 	@IBOutlet weak var teamIDLabel: UILabel!
 	@IBOutlet weak var scoreLabel: UILabel!
 	@IBOutlet weak var personalScoreLabel: UILabel!
+	@IBOutlet weak var personalScoreHeader: UILabel!
 
 	@IBOutlet weak var stopAnswerButton: UIButton!
 	@IBOutlet weak var startSurveyButton: UIButton!
@@ -176,9 +179,11 @@ class MatchResultController: PLViewController {
 			if data.mode == "g" {
 				headerImageView.image = UIImage(named: "FunImage")
 				tableHeaderImageView.image = UIImage(named: "MatchGoldResultHeader")
+				scoreLabel.text = "\(data.gold)G"
 			} else {
 				headerImageView.image = UIImage(named: "SurvivalImage")
 				tableHeaderImageView.image = UIImage(named: "MatchResultHeader")
+				scoreLabel.text = String(format: "%.2fS", data.elasped)
 			}
 			teamIDLabel.text = data.teamID
 			playerTableView.reloadData()
@@ -192,6 +197,12 @@ class MatchResultController: PLViewController {
 						label.hidden = true
 					}
 				}
+				self.personalScoreLabel.hidden = true
+				self.personalScoreHeader.hidden = true
+			} else if let pd = self.playerData {
+				self.personalScoreLabel.hidden = false
+				self.personalScoreHeader.hidden = false
+				self.personalScoreLabel.text = "\(pd.gold - pd.lostGold)G"
 			}
 		}
 	}
@@ -208,13 +219,23 @@ extension MatchResultController: UITableViewDataSource, UITableViewDelegate {
 	}
 
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return matchData == nil ? 0 : matchData!.member.count
+		return 4
 	}
 
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("MatchResultCell") as! MatchResultCell
-		let data = matchData!.member[indexPath.row]
-		cell.setData(data)
+		if matchData == nil {
+			cell.setData(nil, current: false)
+		} else if indexPath.row < matchData!.member.count {
+			let data = matchData!.member[indexPath.row]
+			var current = false
+			if let pd = self.playerData {
+				current = data.cid == pd.cid
+			}
+			cell.setData(data, current: current)
+		} else {
+			cell.setData(nil, current: false)
+		}
 		return cell
 	}
 }

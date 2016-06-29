@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
 		Defaults[.host] = "192.168.1.5:3000"
-		Defaults[.deviceID] = "1"
+		Defaults[.deviceID] = "2"
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0
 		Defaults[.websiteHost] = "puapi.hualinfor.com"

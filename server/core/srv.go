@@ -510,6 +510,7 @@ func (s *Srv) handleAdminMessage(msg *InboxMessage) {
 			s.bgControl(GetOptions().BgIdle)
 		}
 		s.sends(am, InboxAddressTypeMainArduinoDevice, InboxAddressTypeSubArduinoDevice, InboxAddressTypeDoorArduino, InboxAddressTypeMusicArduino)
+		s.sendMsgs("reset", nil, InboxAddressTypeIngameDevice)
 	case "queryArduinoList":
 		arduinolist := make([]ArduinoController, len(s.aDict))
 		i := 0

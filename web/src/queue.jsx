@@ -179,11 +179,11 @@ const CurrentMatchCellView = CSSModules(React.createClass({
 			<div styleName='matchCell'>
         <img src={bgImg}/>
         <div style={{color:color}}>
-          <img src={require('./assets/late0.png')} styleName='historyCellImg' />
-          <div styleName='historyNumber'>{match.teamID}</div>
+          <img src={require('./assets/late0.png')} styleName='currentCellImg' />
+          <div styleName='currentNumber'>{match.teamID}</div>
           <div styleName='currentPlayer'>{playerStr}</div>
-          <img src={modeImg} styleName='historyIcon' />
-          <div styleName='historyResultTitle'>进行中...</div>
+          <img src={modeImg} styleName='currentIcon' />
+          <div styleName='currentResultTitle'>进行中...</div>
         </div>
       </div>
 		)

@@ -35,16 +35,16 @@ class LoginViewController: PLViewController {
 	@IBAction func showConfig(sender: UITapGestureRecognizer) {
 		let alert = UIAlertController(title: "设置", message: nil, preferredStyle: .Alert)
 		alert.addTextFieldWithConfigurationHandler { (textfield) in
-			textfield.placeholder = "输入HOST"
+			textfield.placeholder = Defaults[.host]
 		}
 		alert.addTextFieldWithConfigurationHandler { textfield in
-			textfield.placeholder = "输入编号"
+			textfield.placeholder = Defaults[.deviceID]
 		}
 		let cancelAction = UIAlertAction(title: "取消", style: .Cancel, handler: nil)
 		alert.addAction(cancelAction)
 		weak var weakAlert = alert
 		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
-			if let host = weakAlert?.textFields![0].text {
+			if let host = weakAlert?.textFields![0].text where host != "" {
 				Defaults[.host] = host
 				WsClient.singleton.connect(PLConstants.getWsAddress())
 			}
