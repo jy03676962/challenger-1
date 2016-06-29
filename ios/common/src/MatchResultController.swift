@@ -41,6 +41,7 @@ class MatchResultController: PLViewController {
 	@IBOutlet weak var playerTableView: UITableView!
 	@IBOutlet weak var teamIDLabel: UILabel!
 	@IBOutlet weak var scoreLabel: UILabel!
+	@IBOutlet weak var personalScoreLabel: UILabel!
 
 	@IBOutlet weak var stopAnswerButton: UIButton!
 	@IBOutlet weak var startSurveyButton: UIButton!

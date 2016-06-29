@@ -81,10 +81,12 @@ const HistoryCellView = CSSModules(React.createClass({
 		let top = (idx * 58) / 10.8 + 'vw'
 		if (matchData.mode = 'g') {
 			var modeImg = require('./assets/g_icon.png')
-			var result = `获得：${matchData.gold}G`
+			var resultTitle = '获得:'
+			var result = `${matchData.gold}G`
 		} else {
 			var modeImg = require('./assets/s_icon.png')
-			var result = `生存：${util.timeStr(matchData.elasped, 2)}`
+			var resultTitle = '生存:'
+			var result = `${util.timeStr(matchData.elasped, 2)}`
 		}
 		let playerStr = matchData.member.map((player, idx) => {
 			if (player.name) {
@@ -105,6 +107,7 @@ const HistoryCellView = CSSModules(React.createClass({
         <div styleName='historyNumber'>{matchData.teamID}</div>
         <div styleName='historyPlayer'>{playerStr}</div>
         <img src={modeImg} styleName='historyIcon' />
+		<div styleName='historyResultTitle'>{resultTitle}</div>
         <div styleName='historyResult'>{result}</div>
       </div>
 		)
@@ -178,9 +181,9 @@ const CurrentMatchCellView = CSSModules(React.createClass({
         <div style={{color:color}}>
           <img src={require('./assets/late0.png')} styleName='historyCellImg' />
           <div styleName='historyNumber'>{match.teamID}</div>
-          <div styleName='historyPlayer'>{playerStr}</div>
+          <div styleName='currentPlayer'>{playerStr}</div>
           <img src={modeImg} styleName='historyIcon' />
-          <div styleName='historyResult'>进行中...</div>
+          <div styleName='historyResultTitle'>进行中...</div>
         </div>
       </div>
 		)
@@ -224,17 +227,18 @@ const DelayView = CSSModules(React.createClass({
 const PrepareCellView = CSSModules(React.createClass({
 	render() {
 		let team = this.props.team
+		let empty = util.isEmpty(team)
 		if (team == null) {
 			return null
 		}
 		let bg = team.mode == 'g' ? require('./assets/g_p_bg.png') : require('./assets/s_p_bg.png')
 		return (
 			<div styleName='prepareCell'>
-        <DelayView count={team.delayCount} left={'8.333vw'} top={'3.7vw'} />
-        <div styleName='prepareNumber'>{team.id}</div>
-        <img src={bg} styleName='prepareBg'/>
-        <div styleName='prepareText'>进入等待区...</div>
-      </div>
+				<DelayView count={team.delayCount} left={'8.333vw'} top={'3.7vw'} />
+				<div styleName='prepareNumber'>{team.id}</div>
+				<img src={bg} styleName='prepareBg'/>
+				<div styleName='prepareText'>进入等待区...</div>
+			</div>
 		)
 	}
 }), styles)
@@ -242,9 +246,6 @@ const PrepareCellView = CSSModules(React.createClass({
 const WaitingCellView = CSSModules(React.createClass({
 	render() {
 		let team = this.props.team
-		if (team == null) {
-			return null
-		}
 		let style = {
 			position: 'absolute',
 			left: this.props.left,
@@ -255,10 +256,10 @@ const WaitingCellView = CSSModules(React.createClass({
 		}
 		return (
 			<div style={style}>
-        <DelayView count={team.delayCount} left={'3.7vw'} top={'1.02vw'} />
-        <div styleName='waitingNumber'>{team.id}</div>
-        <div styleName='waitingText'>预计等待：</div>
-        <div styleName='waitingTime'>{this.props.t}</div>
+        <DelayView count={team ? team.delayCount : 0} left={'3.7vw'} top={'1.02vw'} />
+        <div styleName='waitingNumber'>{team ? team.id : '--'}</div>
+        <div styleName='waitingText'>{team ? '预计等待：' : '--'}</div>
+        <div styleName='waitingTime'>{team ? this.props.t: '--'}</div>
       </div>
 		)
 	}
@@ -297,13 +298,17 @@ const QueueView = CSSModules(observer(React.createClass({
 		if (callingTeam) {
 			return (
 				<div styleName='root'>
-        <div styleName='container'>
-          <img styleName='rootImg' src={require('./assets/qbg.png')} />
-          <img styleName='callingImg' src={require('./assets/c_bg.png')} />
-          <div styleName='callingText'>{callingTeam.id}</div>
-        </div>
-      </div>
+					<div styleName='container'>
+						<img styleName='rootImg' src={require('./assets/qbg.png')} />
+						<img styleName='callingImg' src={require('./assets/c_bg.png')} />
+						<div styleName='callingText'>{callingTeam.id}</div>
+					</div>
+				</div>
 			)
+		}
+		let ar = []
+		for (var i = 0; i < 20; i++) {
+			ar.push(i)
 		}
 		return (
 			<div styleName='root'>
@@ -320,20 +325,25 @@ const QueueView = CSSModules(observer(React.createClass({
           <CurrentMatchCellView match={match} />
           <PrepareCellView team={preparing} />
           {
-            queue.map((team, i) => {
-              let t = 5 *(i + 1) + '分钟'
-              if (i < 10) {
-                let left = '4.259vw'
-                let top = (938 + i * 60) / 10.8 + 'vw'
-                return <WaitingCellView team={team} left={left} top={top} t={t} key={i} />
-              } else if (i < 20) {
-                let left = 544/10.8 + 'vw'
-                let top = (938 + (i -10) * 60) / 10.8 + 'vw'
-                return <WaitingCellView team={team} left={left} top={top} t={t} key={i} />
-              }
-              return null
-            })
+			  ar.map(i => {
+				  if (i < queue.length) {
+					  var team = queue[i]
+				  } else {
+					  var team = null
+				  }
+				  let t = 5 *(i + 1) + '分钟'
+				  if (i < 10) {
+					  let left = '4.259vw'
+					  let top = (938 + i * 60) / 10.8 + 'vw'
+					  return <WaitingCellView team={team} left={left} top={top} t={t} key={i} />
+					  } else if (i < 20) {
+						  let left = 544/10.8 + 'vw'
+						  let top = (938 + (i -10) * 60) / 10.8 + 'vw'
+						  return <WaitingCellView team={team} left={left} top={top} t={t} key={i} />
+						  }
+			  })
           }
+		  <img styleName='log' src={require('./assets/queue_log.png')} />
         </div>
       </div>
 		)
