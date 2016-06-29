@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math"
 	"math/rand"
@@ -296,7 +297,7 @@ func (m *Match) setStage(s string) {
 			m.srv.doorControl("", "12", "D-3")
 			m.srv.doorControl("", "12", "D-4")
 		}
-	case "ongoing-low":
+	case "ongoing-low-0":
 		if m.Mode == "g" {
 			m.srv.doorControl("5", "5", "D-1")
 			m.srv.doorControl("5", "5", "D-2")
@@ -336,6 +337,17 @@ func (m *Match) setStage(s string) {
 			m.srv.ledControl(3, "12")
 			m.srv.ledControl(1, "0", "2", "3")
 		}
+	case "ongoing-low-1":
+	case "ongoing-low-2":
+	case "ongoing-low-3":
+		level, _ := strconv.Atoi(strings.Split(s, "-")[2])
+		var mode string
+		if m.Mode == "g" {
+			mode = strconv.Itoa(level + 5)
+		} else {
+			mode = strconv.Itoa(level + 12)
+		}
+		m.srv.ledControl(3, mode)
 	case "ongoing-high":
 		m.srv.lightControl("2")
 		m.srv.bgControl(m.opt.BgHigh[m.modeIndex()])
@@ -426,10 +438,10 @@ func (m *Match) updateStage() {
 		return
 	}
 	s := m.Stage
-	r := m.Energy / m.opt.MaxEnergy
-	if r < 0.8 {
-		s = "ongoing-low"
-	} else if r < 1 {
+	level := int(m.Energy/m.opt.MaxEnergy*100) / 20
+	if level < 4 {
+		s = fmt.Sprintf("ongoing-low-%d", level)
+	} else if level < 5 {
 		s = "ongoing-high"
 	} else {
 		if len(m.Member) == 1 {
@@ -464,7 +476,7 @@ func (m *Match) updateStage() {
 			}
 		}
 	}
-	if m.Mode == "g" && s != "ongoing-rampage" && m.opt.Mode1TotalTime-m.opt.Mode1CountDown < m.Elasped {
+	if m.Mode == "g" && s != "ongoing-rampage" && m.TotalTime < m.opt.Mode1CountDown {
 		s = "ongoing-countdown"
 	}
 	if m.Mode == "g" && m.TotalTime <= 0 || m.Mode == "s" && m.Gold <= 0 {
@@ -848,7 +860,7 @@ func (m *Match) setSingleButtonEffect(id string) {
 	} else {
 		msg.Set("mode", "2")
 	}
-	if m.Stage == "ongoing-low" {
+	if strings.HasPrefix(m.Stage, "ongoing-low") {
 		msg.Set("stage", "0")
 	} else {
 		msg.Set("stage", "1")
@@ -900,7 +912,7 @@ func (m *Match) consumeButton(btn string, player *Player, lvl string) {
 				extra = m.opt.ComboExtra
 			}
 			delta := m.opt.EnergyBonus[level][len(m.Member)-1] + extra
-			m.setEnergy(math.Min(m.opt.MaxEnergy, m.Energy+delta))
+			m.Energy = math.Min(m.opt.MaxEnergy, m.Energy+delta)
 			player.Energy += delta
 		}
 	}
@@ -921,22 +933,6 @@ func (m *Match) onButtonPressed(btn string) {
 		t := m.opt.ButtonHideTime[m.modeIndex()]
 		m.hiddenButtons[key] = &t
 	}
-}
-
-func (m *Match) setEnergy(e float64) {
-	max := GetOptions().MaxEnergy
-	before := int(m.Energy/max*100) / 20
-	after := int(e/max*100) / 20
-	if before != after {
-		var mode string
-		if m.Mode == "g" {
-			mode = strconv.Itoa(after + 5)
-		} else {
-			mode = strconv.Itoa(after + 12)
-		}
-		m.srv.ledControl(3, mode)
-	}
-	m.Energy = e
 }
 
 func (m *Match) musicControlByCell(x int, y int, music string) {

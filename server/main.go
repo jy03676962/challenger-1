@@ -20,12 +20,12 @@ import (
 )
 
 const (
-	host        = "192.168.1.5"
+	host        = "localhost"
 	httpAddr    = host + ":3000"
 	tcpAddr     = host + ":4000"
 	udpAddr     = host + ":5000"
 	dbPath      = "./challenger.db"
-	isSimulator = false
+	isSimulator = true
 	testRank    = true
 )
 
