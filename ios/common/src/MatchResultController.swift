@@ -23,7 +23,9 @@ class MatchResultController: PLViewController {
 			}
 			if let data = matchData {
 				let idx: Int = Int(Defaults[.deviceID])!
-				self.playerData = data.member[idx - 1]
+				if idx <= data.member.count {
+					self.playerData = data.member[idx - 1]
+				}
 			}
 		}
 	}
@@ -217,13 +219,23 @@ extension MatchResultController: UITableViewDataSource, UITableViewDelegate {
 	}
 
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return matchData == nil ? 0 : matchData!.member.count
+		return 4
 	}
 
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCellWithIdentifier("MatchResultCell") as! MatchResultCell
-		let data = matchData!.member[indexPath.row]
-		cell.setData(data)
+		if matchData == nil {
+			cell.setData(nil, current: false)
+		} else if indexPath.row < matchData!.member.count {
+			let data = matchData!.member[indexPath.row]
+			var current = false
+			if let pd = self.playerData {
+				current = data.cid == pd.cid
+			}
+			cell.setData(data, current: current)
+		} else {
+			cell.setData(nil, current: false)
+		}
 		return cell
 	}
 }

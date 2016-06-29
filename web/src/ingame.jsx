@@ -87,18 +87,19 @@ const PlayerInfo = CSSModules(observer(React.createClass({
 		if (player == null) {
 			return (
 				<div style={style}>
-					<div styleName='tableName'>{'----'}</div>
+					<div styleName='greyTableName'>{'----'}</div>
 					<img styleName='tableImg' src={require('./assets/energy_off.png')} />
+					<div styleName='greyTableEnergy'>{'--'}</div>
 				</div>
 			)
 		} else {
 			let name = player.cid.split(':')[1] + 'P'
 			return (
 				<div style={style}>
-        <div styleName='tableName'>{name}</div>
-        <img styleName='tableImg' src={require('./assets/energy_on.png')} />
-        <div styleName='tableEnergy'>{player.energy}</div>
-      </div>
+					<div styleName='tableName'>{name}</div>
+					<img styleName='tableImg' src={require('./assets/energy_on.png')} />
+					<div styleName='tableEnergy'>{player.energy}</div>
+				</div>
 			)
 		}
 	}
@@ -118,7 +119,6 @@ const IngameView = CSSModules(observer(React.createClass({
 			return (
 				<div styleName='root'>
 					<img src={require('./assets/ibg.png')} />
-					<div styleName='goldX'>X</div>
 					<div styleName='tableBg'>
 						<img styleName='tableBgImg' src={require('./assets/itb.png')}/>
 					</div>
@@ -167,7 +167,6 @@ const IngameView = CSSModules(observer(React.createClass({
 			return (
 				<div styleName='root'>
 					<img src={require('./assets/ibg.png')} />
-					{showGold ? null : <div styleName='goldX'>X</div>}
 					{showGold ? <div styleName='goldValue'>{data.match.gold + 'G'}</div> : null}
 					<div styleName='timeValue'>{time}</div>
 					<div styleName='tableBg'>

@@ -230,6 +230,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="comboLabel" destination="Xaf-Fj-Bao" id="wMg-kZ-vKY"/>
+                                            <outlet property="energyIcon" destination="Zok-M5-iol" id="FoF-Wm-72T"/>
                                             <outlet property="energyLabel" destination="vmQ-pS-zkA" id="mO2-hD-XnT"/>
                                             <outlet property="goldLabel" destination="X3e-1L-maG" id="30d-uG-WVm"/>
                                             <outlet property="gradeLabel" destination="c5b-BL-nOY" id="qJ6-Ws-WaB"/>
