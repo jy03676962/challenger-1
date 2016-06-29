@@ -42,6 +42,7 @@ class MatchResultController: PLViewController {
 	@IBOutlet weak var teamIDLabel: UILabel!
 	@IBOutlet weak var scoreLabel: UILabel!
 	@IBOutlet weak var personalScoreLabel: UILabel!
+	@IBOutlet weak var personalScoreHeader: UILabel!
 
 	@IBOutlet weak var stopAnswerButton: UIButton!
 	@IBOutlet weak var startSurveyButton: UIButton!
@@ -176,9 +177,11 @@ class MatchResultController: PLViewController {
 			if data.mode == "g" {
 				headerImageView.image = UIImage(named: "FunImage")
 				tableHeaderImageView.image = UIImage(named: "MatchGoldResultHeader")
+				scoreLabel.text = "\(data.gold)G"
 			} else {
 				headerImageView.image = UIImage(named: "SurvivalImage")
 				tableHeaderImageView.image = UIImage(named: "MatchResultHeader")
+				scoreLabel.text = String(format: "%.2fS", data.elasped)
 			}
 			teamIDLabel.text = data.teamID
 			playerTableView.reloadData()
@@ -192,6 +195,12 @@ class MatchResultController: PLViewController {
 						label.hidden = true
 					}
 				}
+				self.personalScoreLabel.hidden = true
+				self.personalScoreHeader.hidden = true
+			} else if let pd = self.playerData {
+				self.personalScoreLabel.hidden = false
+				self.personalScoreHeader.hidden = false
+				self.personalScoreLabel.text = "\(pd.gold - pd.lostGold)G"
 			}
 		}
 	}

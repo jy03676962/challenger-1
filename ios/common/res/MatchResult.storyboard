@@ -347,6 +347,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
                         <outlet property="headerImageView" destination="h9V-YT-iYN" id="XUf-og-X7k"/>
+                        <outlet property="personalScoreHeader" destination="AdI-tm-vvK" id="3i8-Xg-FjZ"/>
                         <outlet property="personalScoreLabel" destination="hqe-R8-ZJG" id="TAY-NB-tzn"/>
                         <outlet property="playerTableView" destination="eeg-p1-WvP" id="V3e-7F-g3A"/>
                         <outlet property="scoreLabel" destination="0MC-f3-PA2" id="owg-lp-IyJ"/>
