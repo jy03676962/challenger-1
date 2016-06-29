@@ -1,6 +1,5 @@
 @import './global.css';
 .root {
-	font-family: alien;
 	height: 100vh;
 }
 
@@ -31,7 +30,6 @@
 }
 
 .label {
-	font-family: serif;
 	color: white;
 	font-size: 2.41vw;
 }
@@ -51,6 +49,7 @@
 }
 
 .value {
+	font-family: alien;
 	color: white;
 	font-size: 7.407vw;
 }
@@ -58,19 +57,22 @@
 .timeValue {
 	composes: value;
 	position: absolute;
-	left: 32.4vw;
+	right: 59.26vw;
 	top: 19.2vw;
+	width: 13vw;
+	text-align: right;
 }
 
 .groupValue {
 	composes: value;
 	position: absolute;
-	left: 32.4vw;
+	right: 59.26vw;
+	width: 13vw;
 	top: 26.4vw;
+	text-align: right;
 }
 
 .unit {
-	font-family: serif;
 	color: white;
 	font-size: 2.41vw;
 }
@@ -99,7 +101,6 @@
 
 .matchLabel {
 	color: inherit;
-	font-family: serif;
 	font-size: 26px;
 }
 
@@ -169,7 +170,19 @@
 
 .historyPlayer {
 	color: inherit;
-	font-family: serif;
+	font-size: 3.24vw;
+	position: absolute;
+	left: 22.222vw;
+	width: 43.98vw;
+	height: 5.185vw;
+	top: 0;
+	line-height: 5.185vw;
+	text-align: center;
+}
+
+.currentPlayer {
+	color: inherit;
+	font-family: alien;
 	font-size: 3.24vw;
 	position: absolute;
 	left: 22.222vw;
@@ -188,12 +201,22 @@
 	left: 66.6667vw;
 }
 
-.historyResult {
+.historyResultTitle {
 	color: inherit;
-	font-family: serif;
 	font-size: 2.6vw;
 	position: absolute;
-	left: 78.7vw;
+	left: 80.7vw;
+	height: 5.185vw;
+	top: 0;
+	line-height: 5.185vw;
+}
+
+.historyResult {
+	color: inherit;
+	font-family: alien;
+	font-size: 3.24vw;
+	position: absolute;
+	left: 87vw;
 	height: 5.185vw;
 	top: 0;
 	line-height: 5.185vw;
@@ -262,7 +285,6 @@
 .prepareText {
 	position: absolute;
 	color: inherit;
-	font-family: serif;
 	font-size: 24.vw;
 	left: 78.8889vw;
 	top: 7.13vw;
@@ -281,7 +303,6 @@
 .waitingText {
 	position: absolute;
 	color: inherit;
-	font-family: serif;
 	font-size: 1.85vw;
 	left: 20.9vw;
 	height: 100%;
@@ -291,9 +312,15 @@
 .waitingTime {
 	position: absolute;
 	color: inherit;
-	font-family: serif;
 	font-size: 1.85vw;
 	right: 4.26vw;
 	height: 100%;
 	line-height: 5.37vw;
+}
+
+.log {
+	position: absolute;
+	top: 148.4vw;
+	left: 6.85vw;
+	width: 59.26vw
 }

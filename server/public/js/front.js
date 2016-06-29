@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1857714c82b96d4d78b0"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "890ae5fbf7ff1a4735d0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -2793,7 +2793,7 @@
 /* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("exports = module.exports = __webpack_require__(369)();\n// imports\n\n\n// module\nexports.push([module.id, \"@font-face {\\n  font-family: alien;\\n  src: url(\" + __webpack_require__(371) + \");\\n}\\nhtml {\\n  font-family: Helvetica;\\n  width: 100%;\\n  height: 100%;\\n  overflow: hidden;\\n}\\nbody {\\n  font-size: 16px;\\n  width: 100%;\\n  height: 100%;\\n  overflow: hidden;\\n  margin: 0;\\n}\\nhtml, body {\\n  height: 100%;\\n}\\nimg {\\n  max-width: 100%;\\n}\\n\", \"\"]);\n\n// exports\n\n\n/*****************\n ** WEBPACK FOOTER\n ** ./~/css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!./src/styles/global.css\n ** module id = 370\n ** module chunks = 0 1 2 3 4 5\n **/\n//# sourceURL=webpack:///./src/styles/global.css?./~/css-loader?modules&importLoaders=1&localIdentName=%5Bpath%5D___%5Bname%5D__%5Blocal%5D___%5Bhash:base64:5%5D");
+	eval("exports = module.exports = __webpack_require__(369)();\n// imports\n\n\n// module\nexports.push([module.id, \"@font-face {\\n\\tfont-family: alien;\\n\\tsrc: url(\" + __webpack_require__(371) + \");\\n}\\n\\nhtml {\\n\\twidth: 100%;\\n\\theight: 100%;\\n\\toverflow: hidden;\\n}\\n\\nbody {\\n\\tfont-family: \\\"Microsoft YaHei\\\", Arial, Helvetica, sans-serif, \\\"\\\\5B8B\\\\4F53\\\";\\n\\tfont-size: 16px;\\n\\twidth: 100%;\\n\\theight: 100%;\\n\\toverflow: hidden;\\n\\tmargin: 0;\\n}\\n\\nhtml,\\nbody {\\n\\theight: 100%;\\n}\\n\\nimg {\\n\\tmax-width: 100%;\\n}\\n\", \"\"]);\n\n// exports\n\n\n/*****************\n ** WEBPACK FOOTER\n ** ./~/css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!./src/styles/global.css\n ** module id = 370\n ** module chunks = 0 1 2 3 4 5\n **/\n//# sourceURL=webpack:///./src/styles/global.css?./~/css-loader?modules&importLoaders=1&localIdentName=%5Bpath%5D___%5Bname%5D__%5Blocal%5D___%5Bhash:base64:5%5D");
 
 /***/ },
 /* 371 */

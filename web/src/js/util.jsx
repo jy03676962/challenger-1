@@ -19,3 +19,10 @@ export function cssCreate(styles, specs) {
 export function cssMobxCreate(styles, specs) {
 	return CSSModules(observer(React.createClass(specs)), styles)
 }
+
+export function isEmpty(obj) {
+	for (var x in obj) {
+		return false;
+	}
+	return true;
+}
