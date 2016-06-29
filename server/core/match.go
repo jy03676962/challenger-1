@@ -753,7 +753,7 @@ func (m *Match) touchPunish(p *Player) {
 	} else {
 		punish = opt.Mode2TouchPunish[playerCount-1]
 	}
-	m.Gold = MaxInt(m.Gold-punish, 0)
+	m.Gold = m.Gold - punish
 	p.LostGold += punish
 }
 
