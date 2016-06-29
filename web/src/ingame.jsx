@@ -10,6 +10,7 @@ class IngameData {
 
 	@ observable match
 	@ observable connected
+	@ observable leaving
 
 	constructor() {
 		this._reset()
@@ -19,6 +20,7 @@ class IngameData {
 		this.sock = null
 		this.match = null
 		this.connected = false
+		this.leaving = false
 	}
 
 	connect() {
@@ -57,8 +59,13 @@ class IngameData {
 					this.match = JSON.parse(json.data)
 				}
 				break
+			case 'reset':
+				this.match = null
+				this.leaving = false
+				break
 			case 'matchStop':
 				this.match = null
+				this.leaving = true
 				break
 		}
 	}
@@ -80,8 +87,9 @@ const PlayerInfo = CSSModules(observer(React.createClass({
 		if (player == null) {
 			return (
 				<div style={style}>
-          <img styleName='tableImg' src={require('./assets/energy_off.png')} />
-          </div>
+					<div styleName='tableName'>{'----'}</div>
+					<img styleName='tableImg' src={require('./assets/energy_off.png')} />
+				</div>
 			)
 		} else {
 			let name = player.cid.split(':')[1] + 'P'
@@ -100,6 +108,13 @@ const IngameView = CSSModules(observer(React.createClass({
 	render() {
 		let data = this.props.data
 		if (data.match == null) {
+			if (data.leaving) {
+				return (
+					<div styleName='root'>
+					<img src={require('./assets/post_ingame.jpg')} />
+				</div>
+				)
+			}
 			return (
 				<div styleName='root'>
 					<img src={require('./assets/ibg.png')} />
