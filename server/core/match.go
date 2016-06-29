@@ -659,8 +659,9 @@ func (m *Match) playerTick(player *Player, sec float64) {
 			return
 		}
 		if moved && player.Button != "" {
+			btn := player.Button
 			m.consumeButton(player.Button, player, "")
-			m.onButtonPressed(player.Button)
+			m.onButtonPressed(btn)
 		}
 		if !moved {
 			player.Stay(sec, m.opt, m.RampageTime > 0)
