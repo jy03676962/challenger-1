@@ -21,7 +21,7 @@ import (
 
 const (
 	host        = "localhost"
-	httpAddr    = host + ":3000"
+	httpAddr    = host + ":80"
 	tcpAddr     = host + ":4000"
 	udpAddr     = host + ":5000"
 	dbPath      = "./challenger.db"
