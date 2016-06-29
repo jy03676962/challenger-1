@@ -20,8 +20,8 @@ import (
 )
 
 const (
-	host        = "localhost"
-	httpAddr    = host + ":80"
+	host        = "192.168.1.5"
+	httpAddr    = host + ":3000"
 	tcpAddr     = host + ":4000"
 	udpAddr     = host + ":5000"
 	dbPath      = "./challenger.db"
