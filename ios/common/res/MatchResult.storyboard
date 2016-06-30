@@ -155,41 +155,56 @@
                                         <rect key="frame" x="0.0" y="28" width="960" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IDK-Rc-JRe" id="gxD-vQ-TLp">
-                                            <rect key="frame" x="0.0" y="0.0" width="960" height="59.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="960" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tassar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p5d-IE-fOl">
-                                                    <rect key="frame" x="20" y="17" width="68" height="26"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tassar" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p5d-IE-fOl">
+                                                    <rect key="frame" x="0.0" y="17" width="108" height="26"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="108" id="lvQ-4d-BwS"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LEVEL 2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDi-lt-IlK">
-                                                    <rect key="frame" x="181" y="22" width="51" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LEVEL 2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDi-lt-IlK">
+                                                    <rect key="frame" x="175" y="22" width="60" height="17"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="60" id="Ys5-lZ-wQl"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c5b-BL-nOY">
-                                                    <rect key="frame" x="356" y="11" width="19" height="38"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c5b-BL-nOY">
+                                                    <rect key="frame" x="356" y="11" width="20" height="38"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="G2R-RH-x7q"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="38"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="200/-10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X3e-1L-maG">
-                                                    <rect key="frame" x="498" y="17" width="75" height="26"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="200/-10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X3e-1L-maG">
+                                                    <rect key="frame" x="478" y="17" width="115" height="26"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="115" id="VSl-ym-OgB"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vmQ-pS-zkA">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vmQ-pS-zkA">
                                                     <rect key="frame" x="695" y="17" width="42" height="26"/>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xaf-Fj-Bao">
-                                                    <rect key="frame" x="860" y="17" width="12" height="26"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xaf-Fj-Bao">
+                                                    <rect key="frame" x="840" y="17" width="52" height="26"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="52" id="52v-1Q-LiT"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="AlienLeagueBold" family="Alien League Bold" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -209,9 +224,9 @@
                                                 <constraint firstItem="RDi-lt-IlK" firstAttribute="centerY" secondItem="p5d-IE-fOl" secondAttribute="centerY" id="KnY-fR-R1f"/>
                                                 <constraint firstItem="Xaf-Fj-Bao" firstAttribute="centerY" secondItem="p5d-IE-fOl" secondAttribute="centerY" id="OeG-dq-VYD"/>
                                                 <constraint firstItem="p5d-IE-fOl" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leading" constant="25" id="OfO-WT-Aik"/>
-                                                <constraint firstItem="RDi-lt-IlK" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="161" id="Rub-au-0C8"/>
-                                                <constraint firstItem="c5b-BL-nOY" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="336" id="SgE-4f-Jgd"/>
-                                                <constraint firstItem="Zok-M5-iol" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="647" id="V0R-k8-xOF"/>
+                                                <constraint firstItem="RDi-lt-IlK" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="175" id="Rub-au-0C8"/>
+                                                <constraint firstItem="c5b-BL-nOY" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="356" id="SgE-4f-Jgd"/>
+                                                <constraint firstItem="Zok-M5-iol" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="667" id="V0R-k8-xOF"/>
                                                 <constraint firstItem="Zok-M5-iol" firstAttribute="centerY" secondItem="p5d-IE-fOl" secondAttribute="centerY" id="Z3a-HL-g59"/>
                                                 <constraint firstItem="vmQ-pS-zkA" firstAttribute="centerY" secondItem="p5d-IE-fOl" secondAttribute="centerY" id="aDP-uc-jd0"/>
                                                 <constraint firstItem="p5d-IE-fOl" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leading" constant="17" id="jEx-Hf-Pvt"/>
@@ -220,7 +235,7 @@
                                                 <constraint firstItem="p5d-IE-fOl" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" id="unV-OG-TPp"/>
                                                 <constraint firstItem="Xaf-Fj-Bao" firstAttribute="leading" secondItem="gxD-vQ-TLp" secondAttribute="leadingMargin" constant="840" id="w3Y-aE-nxE"/>
                                             </constraints>
-                                            <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="20"/>
+                                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="20"/>
                                             <variation key="default">
                                                 <mask key="constraints">
                                                     <exclude reference="OfO-WT-Aik"/>

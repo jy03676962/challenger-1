@@ -23,9 +23,11 @@
 .callingText {
 	position: absolute;
 	top: 76.2vw;
-	left: 40.1vw;
+	left: 20vw;
+	width: 60vw;
+	text-align: center;
 	font-family: alien;
-	font-size: 16.2vw;
+	font-size: 18.52vw;
 	color: #00ff46;
 }
 
@@ -149,22 +151,6 @@
 	color: white;
 }
 
-.historyCellImg {
-	position: absolute;
-	left: 7.87vw;
-	width: 3.333vw;
-	height: 3.333vw;
-	top: 1.111vw;
-}
-
-.currentCellImg {
-	position: absolute;
-	left: 7.87vw;
-	width: 3.333vw;
-	height: 3.333vw;
-	top: 1.99vw;
-}
-
 .historyNumber {
 	color: inherit;
 	font-family: alien;
@@ -191,7 +177,7 @@
 	color: inherit;
 	font-size: 3.24vw;
 	position: absolute;
-	left: 22.222vw;
+	left: 20vw;
 	width: 43.98vw;
 	height: 5.185vw;
 	top: 0;
@@ -204,7 +190,7 @@
 	font-family: alien;
 	font-size: 3.24vw;
 	position: absolute;
-	left: 22.222vw;
+	left: 20vw;
 	width: 43.98vw;
 	height: 7.315vw;
 	line-height: 7.315vw;
@@ -313,7 +299,7 @@
 
 .prepareBg {
 	position: absolute;
-	right: 6.852vw;
+	right: 4vw;
 	top: 0.926vw;
 	height: 9.537vw;
 	width: 68vw;

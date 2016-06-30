@@ -124,8 +124,7 @@ class MatchController: PLViewController {
 					let player = match!.member[i]
 					btn.hidden = false
 					btn.center = CGPoint(x: player.displayPos.X / 3, y: player.displayPos.Y / 3)
-					let t = player.controllerID.componentsSeparatedByString(":")[1]
-					btn.setTitle(t, forState: .Normal)
+					btn.setTitle(player.displayID, forState: .Normal)
 					mapView.bringSubviewToFront(btn)
 				} else {
 					btn.hidden = true

@@ -93,10 +93,9 @@ const PlayerInfo = CSSModules(observer(React.createClass({
 				</div>
 			)
 		} else {
-			let name = player.cid.split(':')[1] + 'P'
 			return (
 				<div style={style}>
-					<div styleName='tableName'>{name}</div>
+					<div styleName='tableName'>{util.playerStr(player.cid)}</div>
 					<img styleName='tableImg' src={require('./assets/energy_on.png')} />
 					<div styleName='tableEnergy'>{player.energy}</div>
 				</div>
@@ -112,16 +111,13 @@ const IngameView = CSSModules(observer(React.createClass({
 			if (data.leaving) {
 				return (
 					<div styleName='root'>
-					<img src={require('./assets/post_ingame.jpg')} />
+					<img src={require('./assets/ingame_post.jpg')} />
 				</div>
 				)
 			}
 			return (
 				<div styleName='root'>
-					<img src={require('./assets/ibg.png')} />
-					<div styleName='tableBg'>
-						<img styleName='tableBgImg' src={require('./assets/itb.png')}/>
-					</div>
+					<img src={require('./assets/ingame_idle.jpg')} />
 				</div>
 			)
 		} else {

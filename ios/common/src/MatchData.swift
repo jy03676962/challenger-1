@@ -52,7 +52,7 @@ class PlayerData: Mappable {
 		if name != nil && name!.characters.count > 0 {
 			return name!
 		} else {
-			return cid.componentsSeparatedByString(":")[1]
+			return String(format: "[%02d]", Int(cid.componentsSeparatedByString(":")[1])!)
 		}
 	}
 }

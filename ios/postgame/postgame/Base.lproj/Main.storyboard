@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="账号" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="s6A-yU-aSM" userLabel="LoginTextField" customClass="LoginTextField" customModule="postgame" customModuleProvider="target">
-                                        <rect key="frame" x="387" y="365" width="250" height="35"/>
+                                        <rect key="frame" x="387" y="400" width="250" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="250" id="Kwu-Mr-ZJ2"/>
                                             <constraint firstAttribute="height" constant="35" id="xFd-b3-Vqg"/>
@@ -45,7 +45,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密码" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GoW-hv-DVq" userLabel="LoginTextField" customClass="LoginTextField" customModule="postgame" customModuleProvider="target">
-                                        <rect key="frame" x="387" y="399" width="250" height="35"/>
+                                        <rect key="frame" x="387" y="434" width="250" height="35"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="go" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
@@ -65,7 +65,7 @@
                                         </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bGu-MU-gFS">
-                                        <rect key="frame" x="372" y="461" width="130" height="34"/>
+                                        <rect key="frame" x="372" y="496" width="130" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="130" id="MkJ-Et-JLm"/>
                                             <constraint firstAttribute="height" constant="34" id="VeB-4Y-oxK"/>
@@ -77,7 +77,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zf2-5C-Kqg">
-                                        <rect key="frame" x="522" y="461" width="130" height="34"/>
+                                        <rect key="frame" x="522" y="496" width="130" height="34"/>
                                         <state key="normal" backgroundImage="SkipButtonEnabled"/>
                                         <state key="disabled" backgroundImage="SkipButtonDisabled"/>
                                         <connections>
@@ -96,10 +96,19 @@
                                             <outletCollection property="gestureRecognizers" destination="e5K-uP-vTn" appends="YES" id="vuc-Mg-HrC"/>
                                         </connections>
                                     </view>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="34N-mm-anH">
+                                        <rect key="frame" x="212" y="160" width="600" height="180"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="180" id="EJT-bu-Dgl"/>
+                                            <constraint firstAttribute="width" constant="600" id="Vdl-v0-KR4"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="bGu-MU-gFS" firstAttribute="trailing" secondItem="GoW-hv-DVq" secondAttribute="centerX" constant="-10" id="8jf-wn-yce"/>
+                                    <constraint firstItem="34N-mm-anH" firstAttribute="top" secondItem="4Gk-Is-E3Q" secondAttribute="top" constant="160" id="9g6-yC-fdb"/>
+                                    <constraint firstItem="34N-mm-anH" firstAttribute="centerX" secondItem="4Gk-Is-E3Q" secondAttribute="centerX" id="J1p-cP-8Rj"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="leading" secondItem="s6A-yU-aSM" secondAttribute="leading" id="Kpj-4R-vE6"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="height" secondItem="bGu-MU-gFS" secondAttribute="height" id="PtS-Dv-npE"/>
                                     <constraint firstItem="GJl-ei-bHk" firstAttribute="top" secondItem="4Gk-Is-E3Q" secondAttribute="top" id="QrM-FO-yiw"/>
@@ -109,7 +118,7 @@
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="width" secondItem="bGu-MU-gFS" secondAttribute="width" id="agB-LD-FNt"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="top" secondItem="bGu-MU-gFS" secondAttribute="top" id="ddn-36-tUN"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="top" secondItem="s6A-yU-aSM" secondAttribute="bottom" constant="-1" id="eFi-ph-MMc"/>
-                                    <constraint firstItem="s6A-yU-aSM" firstAttribute="top" secondItem="4Gk-Is-E3Q" secondAttribute="top" constant="365" id="fZa-dS-lgU"/>
+                                    <constraint firstItem="s6A-yU-aSM" firstAttribute="top" secondItem="4Gk-Is-E3Q" secondAttribute="top" constant="400" id="fZa-dS-lgU"/>
                                     <constraint firstItem="Zf2-5C-Kqg" firstAttribute="leading" secondItem="GoW-hv-DVq" secondAttribute="centerX" constant="10" id="gSZ-L7-s56"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="width" secondItem="s6A-yU-aSM" secondAttribute="width" id="ijx-hQ-Qeq"/>
                                     <constraint firstItem="GoW-hv-DVq" firstAttribute="height" secondItem="s6A-yU-aSM" secondAttribute="height" id="ki7-Ne-nTV"/>
@@ -182,6 +191,7 @@
     <resources>
         <image name="LoginButtonDisabled" width="130" height="33"/>
         <image name="LoginButtonEnabled" width="130" height="33"/>
+        <image name="Logo" width="601" height="180"/>
         <image name="SkipButtonDisabled" width="130" height="33"/>
         <image name="SkipButtonEnabled" width="130" height="33"/>
     </resources>

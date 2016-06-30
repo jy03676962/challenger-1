@@ -52,6 +52,14 @@ class Player: Mappable {
 	var controllerID: String!
 	var displayPos: Position!
 
+	var displayName: String {
+		return String(format: "[%02d]", Int(controllerID.componentsSeparatedByString(":")[1])!)
+	}
+
+	var displayID: String {
+		return String(format: "%02d", Int(controllerID.componentsSeparatedByString(":")[1])!)
+	}
+
 	required init?(_ map: Map) {
 	}
 

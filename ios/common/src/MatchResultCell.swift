@@ -40,14 +40,14 @@ class MatchResultCell: UITableViewCell {
 		if let d = data {
 			idLabel.text = d.getName()
 			levelLabel.text = "LEVEL.\(d.level)"
-			gradeLabel.text = d.grade.uppercaseString
+			gradeLabel.text = d.grade.characters.count > 0 ? d.grade.uppercaseString : "-"
 			goldLabel.text = "\(d.gold)/\(d.lostGold)"
 			energyLabel.text = "\(Int(d.energy))"
 			comboLabel.text = "\(d.combo)"
 		} else {
 			idLabel.text = "--"
 			levelLabel.text = "--"
-			gradeLabel.text = "--"
+			gradeLabel.text = "-"
 			goldLabel.text = "--"
 			energyLabel.text = "--"
 			comboLabel.text = "--"

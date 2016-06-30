@@ -26,3 +26,8 @@ export function isEmpty(obj) {
 	}
 	return true;
 }
+
+export function playerStr(cid) {
+	let s = '0' + cid.split(':')[1]
+	return `[${s.substr(-2)}]`
+}
