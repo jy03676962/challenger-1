@@ -142,7 +142,6 @@ const IngameView = CSSModules(observer(React.createClass({
 			} else {
 				var time = util.timeStr(data.match.elasped, 0)
 			}
-			let showGold = data.match.gold > 0
 			var barBg, barFront
 			if (data.match.mode == 'g') {
 				barBg = require('./assets/g_b.png')
@@ -167,7 +166,7 @@ const IngameView = CSSModules(observer(React.createClass({
 			return (
 				<div styleName='root'>
 					<img src={require('./assets/ibg.png')} />
-					{showGold ? <div styleName='goldValue'>{data.match.gold + 'G'}</div> : null}
+					<div styleName='goldValue'>{data.match.gold + 'G'}</div>
 					<div styleName='timeValue'>{time}</div>
 					<div styleName='tableBg'>
 						<img styleName='tableBgImg' src={require('./assets/itb.png')}/>
