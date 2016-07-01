@@ -234,7 +234,7 @@ const PrepareCellView = CSSModules(React.createClass({
 		let bg = team.mode == 'g' ? require('./assets/g_p_bg.png') : require('./assets/s_p_bg.png')
 		return (
 			<div styleName='prepareCell'>
-				<DelayView count={0} num={1} left={'8.333vw'} top={'3.7vw'} />
+				<DelayView count={0} num={0} left={'8.333vw'} top={'3.7vw'} />
 				<div styleName='prepareNumber'>{team.id}</div>
 				<img src={bg} styleName='prepareBg'/>
 				<div styleName='prepareText'>进入等待区...</div>
@@ -295,6 +295,7 @@ const QueueView = CSSModules(observer(React.createClass({
 				break
 			}
 		}
+		let waiting = preparing ? queue.slice(1) : queue
 		let ar = []
 		for (var i = 0; i < 20; i++) {
 			ar.push(i)
@@ -315,8 +316,8 @@ const QueueView = CSSModules(observer(React.createClass({
           <PrepareCellView team={preparing} />
           {
 			  ar.map(i => {
-				  if (i < queue.length) {
-					  var team = queue[i]
+				  if (i < waiting.length) {
+					  var team = waiting[i]
 					  var num = i + 1
 				  } else {
 					  var team = null
