@@ -78,7 +78,7 @@ class MatchResultController: PLViewController {
 					HUD.flash(.LabeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
 				} else if let d = res.result.value as? UInt {
 					if d == self.matchData?.id {
-						self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+						self.navigationController?.popViewControllerAnimated(true)
 					}
 				}
 		})
@@ -93,6 +93,7 @@ class MatchResultController: PLViewController {
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		self.navigationItem.hidesBackButton = true
 		adjustViews()
 		DataManager.singleton.subscribeData([.UpdatePlayerData], receiver: self)
 		if isAdmin {

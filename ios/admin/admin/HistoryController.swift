@@ -21,11 +21,10 @@ class HistoryController: PLViewController {
 	var data: [MatchData]?
 
 	@IBAction func startAnswer() {
-		let indexPaths = tableView.indexPathsForSelectedRows
-		guard data != nil && indexPaths != nil && indexPaths?.count == 1 else {
+		guard let data = self.data, let indexPaths = tableView.indexPathsForSelectedRows where indexPaths.count == 1 else {
 			return
 		}
-		let matchData = data![indexPaths![0].row]
+		let matchData = data[indexPaths[0].row]
 		if matchData.eid != nil && matchData.eid != "" {
 			self.startAnswerAfterAdd(matchData)
 		} else {
