@@ -927,14 +927,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="HistoryHeader" translatesAutoresizingMaskIntoConstraints="NO" id="VAi-Tn-2ZL">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HistoryHeader" translatesAutoresizingMaskIntoConstraints="NO" id="VAi-Tn-2ZL">
                                 <rect key="frame" x="260" y="80" width="505" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="VVP-wN-37d"/>
                                     <constraint firstAttribute="width" constant="505" id="ep0-fL-CtF"/>
                                 </constraints>
                             </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hrd-db-EKC">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hrd-db-EKC">
                                 <rect key="frame" x="260" y="116" width="505" height="480"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1027,7 +1027,7 @@
                                     <outlet property="delegate" destination="Iuf-d3-jhp" id="Vns-yx-5Lh"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3X-tO-hMh">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3X-tO-hMh">
                                 <rect key="frame" x="447" y="629" width="130" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="130" id="QtS-Ni-bBu"/>
@@ -1188,7 +1188,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="saveConfig" destination="G7o-3x-up7" eventType="touchUpInside" id="8gs-jq-G0y"/>
+                                            <action selector="saveConfig" destination="G7o-3x-up7" eventType="touchUpInside" id="emB-v8-eKx"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SKw-MB-yZh">
@@ -1200,7 +1200,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="saveConfig" destination="G7o-3x-up7" eventType="touchUpInside" id="1PI-4q-N9g"/>
                                             <action selector="saveID" destination="G7o-3x-up7" eventType="touchUpInside" id="OgT-dB-qw7"/>
                                         </connections>
                                     </button>

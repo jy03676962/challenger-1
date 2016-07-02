@@ -54,6 +54,8 @@ class ConfigController: PLViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		idTextField.placeholder = Defaults[.deviceID]
+		hostTextField.placeholder = Defaults[.host]
 		let scrollView = AutoKeyboardScrollView()
 		scrollView.backgroundColor = UIColor.clearColor()
 		view.addSubview(scrollView)
