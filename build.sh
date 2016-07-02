@@ -1,7 +1,7 @@
 #!/bin/bash
 cd web
 
-webpack
+webpack -p
 
 cp -r 'dist' '../server'
 
