@@ -78,8 +78,8 @@ const HistoryCellView = CSSModules(React.createClass({
 	render() {
 		let matchData = this.props.data
 		let idx = this.props.idx
-		let top = (idx * 58) / 10.8 + 'vw'
-		if (matchData.mode = 'g') {
+		let top = (idx * 58) / 21.6 + 'vw'
+		if (matchData.mode == 'g') {
 			var modeImg = require('./assets/g_icon.png')
 			var resultTitle = '获得:'
 			var result = `${matchData.gold}G`

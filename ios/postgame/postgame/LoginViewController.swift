@@ -48,7 +48,7 @@ class LoginViewController: PLViewController {
 				Defaults[.host] = host
 				WsClient.singleton.connect(PLConstants.getWsAddress())
 			}
-			if let num = weakAlert?.textFields![1].text {
+			if let num = weakAlert?.textFields![1].text where num != "" {
 				Defaults[.deviceID] = num
 			}
 		}

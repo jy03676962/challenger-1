@@ -246,13 +246,13 @@ extension MatchResultController: DataReceiver {
 		if type == .UpdatePlayerData {
 			if let data = matchData {
 				let playerData = Mapper<PlayerData>().map(json["data"])!
-				if showAnswerStatus {
-					for (i, pd) in data.member.enumerate() {
-						if pd.id == playerData.id {
+				for (i, pd) in data.member.enumerate() {
+					if pd.id == playerData.id {
+						if showAnswerStatus {
 							self.playersLabel[i].text = "\(playerData.getName()): \(playerData.answered) / \(Defaults[.qCount]) "
-							data.member[i] = playerData
-							break
 						}
+						data.member[i] = playerData
+						break
 					}
 				}
 				self.playerTableView.reloadData()
