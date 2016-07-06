@@ -583,7 +583,12 @@ func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string) 
 	md := s.db.newMatch()
 	mid := md.ID
 	for _, id := range controllerIDs {
-		s.pDict[id].MatchID = mid
+		if p,ok := s.pDict[id];ok {
+			p.MatchID = mid
+		} else {
+			s.db.saveOrDelMatchData(md)
+			return
+		}
 	}
 	m := NewMatch(s, controllerIDs, md, mode, teamID, s.isSimulator)
 	s.mDict[mid] = m
