@@ -10,6 +10,7 @@ PODS:
   - Instabug (5.2.2)
   - ObjectMapper (1.2.0)
   - PKHUD (3.1.0)
+  - QRCode (0.5)
   - Starscream (1.1.3)
   - SVProgressHUD (2.0.3)
   - SwiftyJSON (2.3.2)
@@ -27,6 +28,7 @@ DEPENDENCIES:
   - Instabug
   - ObjectMapper (~> 1.2)
   - PKHUD
+  - QRCode (~> 0.5)
   - Starscream (~> 1.1.3)
   - SVProgressHUD
   - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
@@ -53,6 +55,7 @@ SPEC CHECKSUMS:
   Instabug: 01bf89d7869b79b15795c847bb0f79ac96d7ae67
   ObjectMapper: b1e9c7c8a9f6400b72690c80072c131504caa66f
   PKHUD: 4167eccdb1b3a892fd80ce2b51cb6ba412a889ab
+  QRCode: a249ed747aeb0f4bf5f9c58b5b001b6b3bc80073
   Starscream: d662732354b40dd19ed1ece3e3c44c80b536b83c
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
@@ -61,6 +64,6 @@ SPEC CHECKSUMS:
   UIColor_Hex_Swift: e91dc51f6bf252ec7bf74c8704ceedeeb7640c1c
   XCGLogger: d6e196e78940ff6daab17d6917107876f973fa31
 
-PODFILE CHECKSUM: 5ecfec272095bfda22f5126c46eaee69fe8996f4
+PODFILE CHECKSUM: bf075008db463595ccb17433149b9d35c1fbf555
 
 COCOAPODS: 1.0.0.beta.8

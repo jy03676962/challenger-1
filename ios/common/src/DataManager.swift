@@ -69,6 +69,20 @@ public class DataManager {
 			receiversMap[t] = nl
 		}
 	}
+	public func unsubscribe(receiver: DataReceiver, type: DataType) {
+		for (t, l) in receiversMap {
+			if t != type {
+				continue
+			}
+			var nl = [DataReceiver]()
+			for r in l {
+				if r !== receiver {
+					nl.append(r)
+				}
+			}
+			receiversMap[t] = nl
+		}
+	}
 
 	public func queryData(type: DataType) {
 		WsClient.singleton.sendCmd(type.queryCmd)

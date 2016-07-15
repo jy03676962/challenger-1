@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import AlamofireObjectMapper
 import PKHUD
+import SwiftyJSON
 
 let segueIDPresentMatchResult = "PresentMatchResult"
 
@@ -44,11 +45,24 @@ class HistoryController: PLViewController {
 			self.startAnswerAfterAdd(matchData)
 		} else {
 			HUD.show(.Progress)
+			var playerDataList: [AnyObject] = []
+			for player in matchData.member {
+				let pd: [String: AnyObject] = [
+					"player_id": player.cid,
+					"player_score": String(player.gold - player.lostGold),
+					"player_catch": String(player.hitCount),
+					"player_rank": player.grade,
+				]
+				playerDataList.append(pd)
+			}
 			let p: [String: AnyObject] = [
-				"mode": matchData.mode == "g" ? 0 : 1,
-				"time": Int(matchData.elasped * 1000),
-				"gold": matchData.gold,
-				"player_num": matchData.member.count
+				"mode": matchData.mode == "g" ? "0" : "1",
+				"time": String(Int(matchData.elasped * 1000)),
+				"gold": String(matchData.gold),
+				"player_num": String(matchData.member.count),
+				"team_rampage": String(matchData.rampageCount),
+				"team_rank": matchData.grade,
+				"player_data": JSON(playerDataList).rawString()!,
 			]
 			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/match"), parameters: p, encoding: .URL, headers: nil)
 				.validate()

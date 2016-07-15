@@ -91,13 +91,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="个人得分:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AdI-tm-vvK">
-                                        <rect key="frame" x="732" y="35" width="69" height="20"/>
+                                        <rect key="frame" x="700" y="35" width="69" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hqe-R8-ZJG">
-                                        <rect key="frame" x="806" y="20" width="65" height="70"/>
+                                        <rect key="frame" x="774" y="20" width="65" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="78" id="78v-vO-hpG"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="69" id="Qz3-qy-OeQ"/>
@@ -115,6 +115,13 @@
                                             </mask>
                                         </variation>
                                     </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jRe-Ca-DC6">
+                                        <rect key="frame" x="860" y="10" width="90" height="90"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="90" id="UPj-l2-t9k"/>
+                                            <constraint firstAttribute="width" constant="90" id="tVr-0r-YSz"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -123,14 +130,16 @@
                                     <constraint firstItem="Twd-UK-UoT" firstAttribute="leading" secondItem="9Wp-kK-wKG" secondAttribute="leading" constant="317" id="EZP-gR-Ogx"/>
                                     <constraint firstItem="AdI-tm-vvK" firstAttribute="top" secondItem="pmw-W0-eQl" secondAttribute="top" id="Krc-Fc-3oh"/>
                                     <constraint firstItem="pmw-W0-eQl" firstAttribute="leading" secondItem="Twd-UK-UoT" secondAttribute="trailing" constant="124" id="V9o-iA-4OZ"/>
+                                    <constraint firstItem="jRe-Ca-DC6" firstAttribute="centerY" secondItem="h9V-YT-iYN" secondAttribute="centerY" id="Zac-1r-WSK"/>
                                     <constraint firstItem="h9V-YT-iYN" firstAttribute="leading" secondItem="9Wp-kK-wKG" secondAttribute="leading" id="Zx7-Jj-ITs"/>
                                     <constraint firstItem="0MC-f3-PA2" firstAttribute="leading" secondItem="pmw-W0-eQl" secondAttribute="trailing" constant="5" id="jAG-bV-NUn"/>
+                                    <constraint firstAttribute="trailing" secondItem="jRe-Ca-DC6" secondAttribute="trailing" constant="10" id="jEv-Ma-YOa"/>
                                     <constraint firstItem="Twd-UK-UoT" firstAttribute="centerY" secondItem="9Wp-kK-wKG" secondAttribute="centerY" id="lu9-iR-3xG"/>
                                     <constraint firstAttribute="height" constant="110" id="n1U-2Z-re2"/>
                                     <constraint firstItem="h9V-YT-iYN" firstAttribute="top" secondItem="9Wp-kK-wKG" secondAttribute="top" id="oKF-hS-5ch"/>
                                     <constraint firstAttribute="width" constant="960" id="of6-pc-yYU"/>
                                     <constraint firstItem="0MC-f3-PA2" firstAttribute="centerY" secondItem="Twd-UK-UoT" secondAttribute="centerY" id="pO1-CN-1iB"/>
-                                    <constraint firstItem="AdI-tm-vvK" firstAttribute="leading" secondItem="9Wp-kK-wKG" secondAttribute="leading" constant="732" id="piS-qM-B2Z"/>
+                                    <constraint firstItem="AdI-tm-vvK" firstAttribute="leading" secondItem="9Wp-kK-wKG" secondAttribute="leading" constant="700" id="piS-qM-B2Z"/>
                                     <constraint firstAttribute="bottom" secondItem="h9V-YT-iYN" secondAttribute="bottom" id="plp-bg-Aht"/>
                                     <constraint firstAttribute="trailing" secondItem="h9V-YT-iYN" secondAttribute="trailing" id="ra0-T9-p39"/>
                                     <constraint firstItem="hqe-R8-ZJG" firstAttribute="leading" secondItem="AdI-tm-vvK" secondAttribute="trailing" constant="5" id="y3j-ja-dZ2"/>
@@ -362,6 +371,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
+                        <outlet property="QRCodeImageView" destination="jRe-Ca-DC6" id="x8z-TD-CdN"/>
                         <outlet property="headerImageView" destination="h9V-YT-iYN" id="XUf-og-X7k"/>
                         <outlet property="personalScoreHeader" destination="AdI-tm-vvK" id="3i8-Xg-FjZ"/>
                         <outlet property="personalScoreLabel" destination="hqe-R8-ZJG" id="TAY-NB-tzn"/>

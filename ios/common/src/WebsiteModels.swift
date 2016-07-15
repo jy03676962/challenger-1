@@ -53,6 +53,20 @@ class LoginResult: BaseResult {
 	}
 }
 
+class AddUserResult: BaseResult {
+	var level: String?
+	var url: String?
+	required init?(_ map: Map) {
+		super.init(map)
+	}
+
+	override func mapping(map: Map) {
+		super.mapping(map)
+		level <- map["level"]
+		url <- map["url"]
+	}
+}
+
 class AddMatchResult: BaseResult {
 	var matchID: Int!
 	required init?(_ map: Map) {

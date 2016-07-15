@@ -23,6 +23,7 @@ pod "PKHUD"
 pod 'AlamofireImage', '~> 2.0'
 pod 'AlamofireObjectMapper', '~> 3.0'
 pod 'Instabug'
+pod "QRCode", "~> 0.5"
 end
 
 project 'admin/admin.xcodeproj'

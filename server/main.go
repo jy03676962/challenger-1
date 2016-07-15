@@ -25,7 +25,7 @@ const (
 	tcpAddr     = host + ":4000"
 	udpAddr     = host + ":5000"
 	dbPath      = "./challenger.db"
-	isSimulator = false
+	isSimulator = true
 	testRank    = true
 )
 

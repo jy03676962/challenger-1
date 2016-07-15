@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			Defaults[.deviceID] = "1"
 		}
 		if Defaults[.websiteHost] == "" {
-			Defaults[.websiteHost] = "puapi.hualinfor.com"
+			Defaults[.websiteHost] = PLConstants.defaultWebsiteHost
 		}
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0

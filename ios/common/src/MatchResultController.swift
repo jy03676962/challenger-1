@@ -12,24 +12,19 @@ import Alamofire
 import AlamofireObjectMapper
 import SwiftyUserDefaults
 import ObjectMapper
+import QRCode
 
 let SegueIDShowSurvey = "ShowSurvey"
 
 class MatchResultController: PLViewController {
-	var matchData: MatchData? {
-		didSet {
-			guard !isAdmin else {
-				return
-			}
-			if let data = matchData {
-				let idx: Int = Int(Defaults[.deviceID])!
-				if idx <= data.member.count {
-					self.playerData = data.member[idx - 1]
-				}
-			}
+	var matchData: MatchData?
+	var playerData: PlayerData? {
+		guard let data = matchData where !isAdmin else {
+			return nil
 		}
+		let idx: Int = Int(Defaults[.deviceID])!
+		return idx <= data.member.count ? data.member[idx - 1]: nil
 	}
-	var playerData: PlayerData?
 	var loginInfo: LoginResult?
 	var isAdmin: Bool = false
 	var surveyStarted: Bool = false
@@ -39,6 +34,7 @@ class MatchResultController: PLViewController {
 
 	@IBOutlet weak var headerImageView: UIImageView!
 	@IBOutlet weak var tableHeaderImageView: UIImageView!
+	@IBOutlet weak var QRCodeImageView: UIImageView!
 
 	@IBOutlet weak var playerTableView: UITableView!
 	@IBOutlet weak var teamIDLabel: UILabel!
@@ -148,28 +144,38 @@ class MatchResultController: PLViewController {
 	}
 
 	func uploadAndRender() {
-		if let userInfo = self.loginInfo {
+		if let userInfo = self.loginInfo, let pd = playerData {
 			let p: [String: AnyObject] = [
-				"match_id": self.matchData!.id,
+				"match_id": self.matchData!.eid!,
 				"user_id": userInfo.userID,
 				"username": userInfo.username,
+				"player_id": pd.cid,
 			]
 			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/adduser"), parameters: p, encoding: .URL, headers: nil)
 				.validate()
-				.responseObject(completionHandler: { (resp: Response<BaseResult, NSError>) in
+				.responseObject(completionHandler: { (resp: Response<AddUserResult, NSError>) in
+					log.debug(resp.debugDescription)
+					guard let data = self.matchData else {
+						return
+					}
+					for p in data.member {
+						if p.id == pd.id {
+							p.level = resp.result.value?.level
+							p.url = resp.result.value?.url
+							break
+						}
+					}
+					self.renderData()
+			})
+			Alamofire.request(.POST,
+				PLConstants.getHttpAddress("api/update_player"),
+				parameters: ["pid": String(pd.id), "name": userInfo.username, "eid": String(userInfo.userID)],
+				encoding: .URL,
+				headers: nil)
+				.validate()
+				.responseData(completionHandler: { resp in
 					log.debug(resp.debugDescription)
 			})
-			if let pd = playerData {
-				Alamofire.request(.POST,
-					PLConstants.getHttpAddress("api/update_player"),
-					parameters: ["pid": String(pd.id), "name": userInfo.username, "eid": String(userInfo.userID)],
-					encoding: .URL,
-					headers: nil)
-					.validate()
-					.responseData(completionHandler: { resp in
-						log.debug(resp.debugDescription)
-				})
-			}
 		}
 		renderData()
 	}
@@ -204,6 +210,12 @@ class MatchResultController: PLViewController {
 				self.personalScoreLabel.hidden = false
 				self.personalScoreHeader.hidden = false
 				self.personalScoreLabel.text = "\(pd.gold - pd.lostGold)G"
+				guard let url = pd.url else {
+					return
+				}
+				var qrCode = QRCode(url)
+				qrCode?.size = CGSize(width: 90, height: 90)
+				self.QRCodeImageView.image = qrCode?.image
 			}
 		}
 	}
@@ -258,6 +270,7 @@ extension MatchResultController: DataReceiver {
 				self.playerTableView.reloadData()
 			}
 		} else if type == .StartAnswer {
+			DataManager.singleton.unsubscribe(self, type: .StartAnswer)
 			HUD.hide()
 			matchData = Mapper<MatchData>().map(json["data"])
 			uploadAndRender()

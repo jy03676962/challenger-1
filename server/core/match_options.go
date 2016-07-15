@@ -135,6 +135,10 @@ type MatchOptions struct {
 	BgRampage             [2]string     `json:"-"`
 	BgCountdown           [2]string     `json:"-"`
 	BgLeave               [2]string     `json:"-"`
+	GoldRank              [4][4]int     `json:"-"`
+	GoldTeamRank          [4][4]int     `json:"-"`
+	SurvivalRank          [4][4]int     `json:"-"`
+	SurvivalTeamRank      [4][4]int     `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}
@@ -394,6 +398,36 @@ func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
 		}
 	}
 	return ret
+}
+
+func (m *MatchOptions) TeamGrade(gold int, teamSize int, mode string) string {
+	if mode == "g" {
+		return m.calcGrade(gold, teamSize, &m.GoldTeamRank)
+	} else {
+		return m.calcGrade(gold, teamSize, &m.SurvivalTeamRank)
+	}
+}
+
+func (m *MatchOptions) PersonGrade(gold int, teamSize int, mode string) string {
+	if mode == "g" {
+		return m.calcGrade(gold, teamSize, &m.GoldRank)
+	} else {
+		return m.calcGrade(gold, teamSize, &m.SurvivalRank)
+	}
+}
+
+func (m *MatchOptions) calcGrade(gold int, teamSize int, data *[4][4]int) string {
+	row := data[teamSize-1]
+	if gold < row[3] {
+		return "D"
+	} else if gold < row[2] {
+		return "C"
+	} else if gold < row[1] {
+		return "B"
+	} else if gold < row[0] {
+		return "A"
+	}
+	return "S"
 }
 
 func (m *MatchOptions) mainArduinoInfosByPos(intP int) []MainArduino {

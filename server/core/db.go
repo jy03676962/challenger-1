@@ -52,6 +52,7 @@ type MatchData struct {
 	AnswerType   MatchAnswerType `json:"answerType"`
 	TeamID       string          `json:"teamID"`
 	ExternalID   string          `gorm:"index" json:"eid"`
+	Grade        string          `json:"grade"`
 }
 
 func (MatchData) TableName() string {
