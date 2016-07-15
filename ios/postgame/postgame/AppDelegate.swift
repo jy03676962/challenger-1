@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+		Instabug.startWithToken("c9b33e734887212b949d3f9944652f22", invocationEvent: IBGInvocationEvent.Shake)
 		#if DEBUG
 			log.setup(.Debug, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#else
@@ -34,9 +35,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if Defaults[.deviceID] == "" {
 			Defaults[.deviceID] = "1"
 		}
+		if Defaults[.websiteHost] == "" {
+			Defaults[.websiteHost] = "puapi.hualinfor.com"
+		}
 		Defaults[.socketType] = "4"
 		Defaults[.matchID] = 0
-		Defaults[.websiteHost] = "puapi.hualinfor.com"
 		DataManager.singleton.subscribeData([.StopAnswer], receiver: self)
 		WsClient.singleton.connect(PLConstants.getWsAddress())
 		return true

@@ -22,6 +22,7 @@ pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
 pod "PKHUD"
 pod 'AlamofireImage', '~> 2.0'
 pod 'AlamofireObjectMapper', '~> 3.0'
+pod 'Instabug'
 end
 
 project 'admin/admin.xcodeproj'
