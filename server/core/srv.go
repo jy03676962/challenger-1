@@ -89,7 +89,7 @@ func (s *Srv) ResetQueue(c echo.Context) error {
 }
 
 func (s *Srv) GetHistory(c echo.Context) error {
-	d := s.db.getHistory(10)
+	d := s.db.getHistory(12)
 	return c.JSON(http.StatusOK, d)
 }
 
