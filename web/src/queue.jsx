@@ -336,6 +336,7 @@ const QueueView = CSSModules(observer(React.createClass({
 			  })
           }
 		  <img styleName='log' src={require('./assets/queue_log.png')} />
+		  <img styleName='wechat' src={require('./assets/wechat.png')} />
 		  {
 			  callingTeam ?  <img styleName='callingImg' src={require('./assets/c_bg.png')} /> : null
 		  }

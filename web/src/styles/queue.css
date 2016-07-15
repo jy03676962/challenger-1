@@ -351,3 +351,11 @@
 	left: 6.85vw;
 	width: 59.26vw
 }
+
+.wechat {
+	position: absolute;
+	top: 149.8vw;
+	width: 16.2vw;
+	height: 16.2vw;
+	right: 8.333vw;
+}
