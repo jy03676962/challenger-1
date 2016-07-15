@@ -583,10 +583,11 @@ func (s *Srv) startNewMatch(controllerIDs []string, mode string, teamID string) 
 	md := s.db.newMatch()
 	mid := md.ID
 	for _, id := range controllerIDs {
-		if p,ok := s.pDict[id];ok {
+		if p, ok := s.pDict[id]; ok {
 			p.MatchID = mid
 		} else {
 			s.db.saveOrDelMatchData(md)
+			s.sends(NewErrorInboxMessage("无效的设备ID"), InboxAddressTypeAdminDevice)
 			return
 		}
 	}

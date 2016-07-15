@@ -44,7 +44,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscribeData([.HallData, .ControllerData, .NewMatch], receiver: self)
+		DataManager.singleton.subscribeData([.HallData, .ControllerData, .NewMatch, .Error], receiver: self)
 	}
 
 	override func viewDidDisappear(animated: Bool) {
@@ -254,6 +254,8 @@ extension HallController: DataReceiver {
 			for btn in controllerButtons {
 				btn.selected = false
 			}
+		} else if type == .Error {
+			HUD.flash(.LabeledError(title: json["msg"] as? String, subtitle: nil), delay: 1)
 		}
 	}
 }

@@ -18,6 +18,13 @@ func NewInboxMessage() *InboxMessage {
 	return &msg
 }
 
+func NewErrorInboxMessage(errMsg string) *InboxMessage {
+	msg := NewInboxMessage()
+	msg.SetCmd("error")
+	msg.Set("msg", errMsg)
+	return msg
+}
+
 func (message *InboxMessage) Get(key string) interface{} {
 	if v, ok := message.Data[key]; ok {
 		return v

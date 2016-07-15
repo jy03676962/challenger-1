@@ -27,6 +27,7 @@ public enum DataType: String {
 	case QuestionCount = "QuestionCount"
 	case LaserInfo = "laserInfo"
 	case QuickCheckInfo = "QuickCheck"
+	case Error = "error"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
