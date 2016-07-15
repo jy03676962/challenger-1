@@ -20,25 +20,27 @@ class HistoryController: PLViewController {
 
 	var refreshControl: UIRefreshControl!
 	var data: [MatchData]?
-	var isAnswering: Bool {
+	var isAnswering: Int? {
 		guard let d = data else {
-			return false
+			return nil
 		}
-		for m in d {
+		for (i, m) in d.enumerate() {
 			if m.answerType == .Answering {
-				return true
+				return i
 			}
 		}
-		return false
+		return nil
 	}
 
 	@IBAction func startAnswer() {
 		guard let data = self.data, let indexPaths = tableView.indexPathsForSelectedRows where indexPaths.count == 1 else {
 			return
 		}
-		guard !isAnswering else {
-			HUD.flash(.LabeledError(title: "有其他正在答题的队伍", subtitle: "请先结束该组答题后重试"), delay: 1)
-			return
+		if let ing = isAnswering {
+			if ing != indexPaths[0].row {
+				HUD.flash(.LabeledError(title: "有其他正在答题的队伍", subtitle: "请先结束该组答题后重试"), delay: 1)
+				return
+			}
 		}
 		let matchData = data[indexPaths[0].row]
 		if matchData.eid != nil && matchData.eid != "" {
