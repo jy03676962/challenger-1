@@ -20,6 +20,7 @@ class ConfigController: PLViewController {
 	@IBOutlet weak var hostTextField: UITextField!
 	@IBOutlet weak var modeControl: UISegmentedControl!
 	@IBOutlet weak var arduinoView: UIView!
+	@IBOutlet weak var webHostTextField: UITextField!
 
 	var arduinoViewMap: [String: UILabel] = [String: UILabel]()
 	var timer = NSTimer()
@@ -44,6 +45,12 @@ class ConfigController: PLViewController {
 		}
 	}
 
+	@IBAction func saveWebHost() {
+		if webHostTextField.text != nil && webHostTextField.text?.characters.count > 0 {
+			Defaults[.websiteHost] = webHostTextField.text!
+		}
+	}
+
 	@IBAction func debugLaser() {
 		performSegueWithIdentifier("ShowLaserLoop", sender: nil)
 	}
@@ -56,6 +63,7 @@ class ConfigController: PLViewController {
 		super.viewDidLoad()
 		idTextField.placeholder = Defaults[.deviceID]
 		hostTextField.placeholder = Defaults[.host]
+		webHostTextField.placeholder = Defaults[.websiteHost]
 		let scrollView = AutoKeyboardScrollView()
 		scrollView.backgroundColor = UIColor.clearColor()
 		view.addSubview(scrollView)

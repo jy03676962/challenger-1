@@ -19,9 +19,24 @@ class HistoryController: PLViewController {
 
 	var refreshControl: UIRefreshControl!
 	var data: [MatchData]?
+	var isAnswering: Bool {
+		guard let d = data else {
+			return false
+		}
+		for m in d {
+			if m.answerType == .Answering {
+				return true
+			}
+		}
+		return false
+	}
 
 	@IBAction func startAnswer() {
 		guard let data = self.data, let indexPaths = tableView.indexPathsForSelectedRows where indexPaths.count == 1 else {
+			return
+		}
+		guard !isAnswering else {
+			HUD.flash(.LabeledError(title: "有其他正在答题的队伍", subtitle: "请先结束该组答题后重试"), delay: 1)
 			return
 		}
 		let matchData = data[indexPaths[0].row]
