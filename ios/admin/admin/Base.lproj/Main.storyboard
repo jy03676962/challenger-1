@@ -343,7 +343,7 @@
                                     <constraint firstAttribute="height" constant="33" id="jI7-0o-i9u"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="PrepareButton"/>
-                                <state key="disabled" backgroundImage="PrepareDoneButton"/>
+                                <state key="disabled" backgroundImage="PrepareButton"/>
                                 <connections>
                                     <action selector="ready:" destination="9pv-A4-QxB" eventType="touchUpInside" id="oK6-Nl-ZmR"/>
                                 </connections>
@@ -1587,7 +1587,6 @@
         <image name="PlayerTableHeader" width="272" height="36"/>
         <image name="PowerIcon" width="23" height="28"/>
         <image name="PrepareButton" width="273" height="33"/>
-        <image name="PrepareDoneButton" width="273" height="33"/>
         <image name="RemovePlayer" width="110" height="35"/>
         <image name="StartAnswer" width="133" height="36"/>
         <image name="StartMatch" width="273" height="33"/>
