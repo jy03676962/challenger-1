@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		Instabug.startWithToken("c22cb54ceb917a9b8c01418b3ce3b9a5", invocationEvent: IBGInvocationEvent.Shake)
+		Instabug.startWithToken("c22cb54ceb917a9b8c01418b3ce3b9a5", invocationEvent: IBGInvocationEvent.None)
 		#if DEBUG
 			log.setup(.Debug, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#else

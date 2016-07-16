@@ -282,7 +282,9 @@ extension HallController: SWTableViewCellDelegate {
 	}
 
 	func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerRightUtilityButtonWithIndex index: Int) {
-		let team = teamFromCell(cell)
+		guard let team = teamFromCell(cell) else {
+			return
+		}
 		if index == 0 {
 			let json = JSON([
 				"cmd": "teamCutLine",
@@ -301,16 +303,20 @@ extension HallController: SWTableViewCellDelegate {
 		return true
 	}
 	func swipeableTableViewCell(cell: SWTableViewCell!, canSwipeToState state: SWCellState) -> Bool {
-		let team = teamFromCell(cell)
+		guard let team = teamFromCell(cell) else {
+			return false
+		}
 		if team.status != .Waiting {
 			return false
 		}
 		return true
 	}
 
-	private func teamFromCell(cell: SWTableViewCell) -> Team {
-		let cellIndex = teamtableView.indexPathForCell(cell)!
-		return teams![cellIndex.row]
+	private func teamFromCell(cell: SWTableViewCell) -> Team? {
+		if let cellIndex = teamtableView.indexPathForCell(cell), let tms = self.teams {
+			return tms[cellIndex.row]
+		}
+		return nil
 	}
 }
 
