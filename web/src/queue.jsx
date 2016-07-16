@@ -282,6 +282,7 @@ const QueueView = CSSModules(observer(React.createClass({
 		var count = queue.length
 		let preparing = null
 		let callingTeam = null
+		let waiting = []
 		for (let team of queue) {
 			if (team.status != 0) {
 				count--
@@ -295,7 +296,11 @@ const QueueView = CSSModules(observer(React.createClass({
 				break
 			}
 		}
-		let waiting = preparing ? queue.slice(1) : queue
+		for (let team of queue) {
+			if (team.status == 0) {
+				waiting.push(team)
+			}
+		}
 		let ar = []
 		for (var i = 0; i < 20; i++) {
 			ar.push(i)
