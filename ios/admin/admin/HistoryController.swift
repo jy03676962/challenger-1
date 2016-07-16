@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import AlamofireObjectMapper
 import PKHUD
+import SwiftyJSON
 
 let segueIDPresentMatchResult = "PresentMatchResult"
 
@@ -19,21 +20,51 @@ class HistoryController: PLViewController {
 
 	var refreshControl: UIRefreshControl!
 	var data: [MatchData]?
+	var isAnswering: Int? {
+		guard let d = data else {
+			return nil
+		}
+		for (i, m) in d.enumerate() {
+			if m.answerType == .Answering {
+				return i
+			}
+		}
+		return nil
+	}
 
 	@IBAction func startAnswer() {
 		guard let data = self.data, let indexPaths = tableView.indexPathsForSelectedRows where indexPaths.count == 1 else {
 			return
+		}
+		if let ing = isAnswering {
+			if ing != indexPaths[0].row {
+				HUD.flash(.LabeledError(title: "有其他正在答题的队伍", subtitle: "请先结束该组答题后重试"), delay: 1)
+				return
+			}
 		}
 		let matchData = data[indexPaths[0].row]
 		if matchData.eid != nil && matchData.eid != "" {
 			self.startAnswerAfterAdd(matchData)
 		} else {
 			HUD.show(.Progress)
+			var playerDataList: [AnyObject] = []
+			for player in matchData.member {
+				let pd: [String: AnyObject] = [
+					"player_id": player.cid,
+					"player_score": String(player.gold - player.lostGold),
+					"player_catch": String(player.hitCount),
+					"player_rank": player.grade,
+				]
+				playerDataList.append(pd)
+			}
 			let p: [String: AnyObject] = [
-				"mode": matchData.mode == "g" ? 0 : 1,
-				"time": Int(matchData.elasped * 1000),
-				"gold": matchData.gold,
-				"player_num": matchData.member.count
+				"mode": matchData.mode == "g" ? "0" : "1",
+				"time": String(Int(matchData.elasped * 1000)),
+				"gold": String(matchData.gold),
+				"player_num": String(matchData.member.count),
+				"team_rampage": String(matchData.rampageCount),
+				"team_rank": matchData.grade,
+				"player_data": JSON(playerDataList).rawString()!,
 			]
 			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/match"), parameters: p, encoding: .URL, headers: nil)
 				.validate()

@@ -39,7 +39,11 @@ class MatchResultCell: UITableViewCell {
 		comboLabel.textColor = c
 		if let d = data {
 			idLabel.text = d.getName()
-			levelLabel.text = "LEVEL.\(d.level)"
+			if let lvl = d.level {
+				levelLabel.text = "LEVEL.\(lvl)"
+			} else {
+				levelLabel.text = "--"
+			}
 			gradeLabel.text = d.grade.characters.count > 0 ? d.grade.uppercaseString : "-"
 			goldLabel.text = "\(d.gold)/\(d.lostGold)"
 			energyLabel.text = "\(Int(d.energy))"

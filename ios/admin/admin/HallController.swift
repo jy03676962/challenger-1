@@ -44,7 +44,7 @@ class HallController: PLViewController {
 	}
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		DataManager.singleton.subscribeData([.HallData, .ControllerData, .NewMatch], receiver: self)
+		DataManager.singleton.subscribeData([.HallData, .ControllerData, .NewMatch, .Error], receiver: self)
 	}
 
 	override func viewDidDisappear(animated: Bool) {
@@ -158,8 +158,16 @@ class HallController: PLViewController {
 
 	private func renderTopWaitingTeam() {
 		guard topTeam != nil else {
+			callButton.enabled = false
+			delayButton.enabled = false
+			changeModeTGR.enabled = false
+			addPlayerButton.enabled = false
+			removePlayerButton.enabled = false
+			startButton.enabled = false
+			readyButton.enabled = false
 			return
 		}
+		readyButton.enabled = true
 		teamIDLabel.text = topTeam!.id
 		playerNumberLabel.text = "\(topTeam!.size)"
 		if topTeam!.mode == "g" {
@@ -205,6 +213,7 @@ class HallController: PLViewController {
 extension HallController: DataReceiver {
 	func onReceivedData(json: [String: AnyObject], type: DataType) {
 		if type == .HallData {
+			topTeam = nil
 			teams = Mapper<Team>().mapArray(json["data"])
 			if teams != nil {
 				var topTeamSet = false
@@ -218,8 +227,8 @@ extension HallController: DataReceiver {
 						hasPlayingTeam = true
 					}
 				}
-				renderTopWaitingTeam()
 			}
+			renderTopWaitingTeam()
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
 		} else if type == .ControllerData {
@@ -254,6 +263,8 @@ extension HallController: DataReceiver {
 			for btn in controllerButtons {
 				btn.selected = false
 			}
+		} else if type == .Error {
+			HUD.flash(.LabeledError(title: json["msg"] as? String, subtitle: nil), delay: 1)
 		}
 	}
 }

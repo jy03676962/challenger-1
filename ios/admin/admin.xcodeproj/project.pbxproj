@@ -62,6 +62,7 @@
 		702F8FA51CF0A78F00032C8F /* LaserResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaserResultCell.swift; sourceTree = "<group>"; };
 		702F8FA71CF0A85800032C8F /* LaserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaserInfo.swift; sourceTree = "<group>"; };
 		702F8FA91D001A9900032C8F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		706F822B1D38D9B4001E0496 /* bridging-header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "bridging-header.h"; sourceTree = "<group>"; };
 		7079BC5B1CCB670C005878AE /* HallTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HallTableViewCell.swift; sourceTree = "<group>"; };
 		7079BC5F1CCB87AA005878AE /* ConfigController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigController.swift; sourceTree = "<group>"; };
 		7080B8581CCFA6C200E63CB5 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -175,6 +176,7 @@
 				7099CE541CDF39220009B62E /* DataManager.swift */,
 				7099CE551CDF39220009B62E /* Extensions */,
 				7099CE591CDF39220009B62E /* MatchData.swift */,
+				706F822B1D38D9B4001E0496 /* bridging-header.h */,
 				7099CE5A1CDF39220009B62E /* MatchResultCell.swift */,
 				7099CE5B1CDF39220009B62E /* PLViewController.swift */,
 				7099CE5C1CDF39220009B62E /* WsClient.swift */,
@@ -465,6 +467,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -505,6 +508,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -523,7 +527,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.admin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 			};
 			name = Debug;
 		};
@@ -539,7 +543,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.admin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 			};
 			name = Release;
 		};

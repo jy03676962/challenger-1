@@ -11,6 +11,7 @@ import SwiftyUserDefaults
 
 struct PLConstants {
 	static let usualFont = "Alien League Bold"
+	static let defaultWebsiteHost = "gameapi.pulupulu.com"
 	static let maxTeamSize = 4
 	static func getHost() -> String {
 		return Defaults[.host]

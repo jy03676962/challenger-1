@@ -46,6 +46,7 @@
 		701F50671CDF92F200642645 /* QuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		701F50691CDF930F00642645 /* QuestionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionTableViewCell.swift; sourceTree = "<group>"; };
 		702F8FAB1D001B2200032C8F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		706F822C1D38DA04001E0496 /* bridging-header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "bridging-header.h"; sourceTree = "<group>"; };
 		7099CE431CDF338F0009B62E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7099CE6B1CDF39290009B62E /* alienleaguebold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = alienleaguebold.ttf; sourceTree = "<group>"; };
 		7099CE6C1CDF39290009B62E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -121,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				701F505F1CDF82B100642645 /* Survey.swift */,
+				706F822C1D38DA04001E0496 /* bridging-header.h */,
 				7099CE871CDF46F50009B62E /* MatchResultController.swift */,
 				7099CE6F1CDF39290009B62E /* Constants.swift */,
 				7099CE701CDF39290009B62E /* DataManager.swift */,
@@ -399,6 +401,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -437,6 +440,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};

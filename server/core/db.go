@@ -52,6 +52,7 @@ type MatchData struct {
 	AnswerType   MatchAnswerType `json:"answerType"`
 	TeamID       string          `json:"teamID"`
 	ExternalID   string          `gorm:"index" json:"eid"`
+	Grade        string          `json:"grade"`
 }
 
 func (MatchData) TableName() string {
@@ -131,11 +132,13 @@ func (db *DB) updatePlayerData(pid int, name string, uid string) *PlayerData {
 }
 
 func (db *DB) getAnsweringMatchData() *MatchData {
-	var data MatchData
-	if db.conn.Preload("Member").Where("answer_type = ?", MatchAnswering).First(&data).RecordNotFound() {
-		return nil
+	matches := db.getHistory(12)
+	for _, match := range matches {
+		if match.AnswerType == MatchAnswering {
+			return &match
+		}
 	}
-	return &data
+	return nil
 }
 
 func (db *DB) updateMatchData(mid int, eid string) *MatchData {

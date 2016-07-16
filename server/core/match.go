@@ -696,6 +696,7 @@ func (m *Match) dumpMatchData() *MatchData {
 	m.matchData.AnswerType = MatchNotAnswer
 	m.matchData.TeamID = m.TeamID
 	m.matchData.ExternalID = ""
+	m.matchData.Grade = m.opt.TeamGrade(m.Gold, len(m.Member), m.Mode)
 	for _, player := range m.Member {
 		playerData := PlayerData{}
 		playerData.Gold = player.Gold
@@ -713,6 +714,7 @@ func (m *Match) dumpMatchData() *MatchData {
 		playerData.Answered = 0
 		playerData.ExternalID = ""
 		playerData.ControllerID = player.ControllerID
+		playerData.Grade = m.opt.PersonGrade(player.Gold-player.LostGold, len(m.Member), m.Mode)
 		m.matchData.Member = append(m.matchData.Member, playerData)
 	}
 	return m.matchData

@@ -78,7 +78,7 @@ const HistoryCellView = CSSModules(React.createClass({
 	render() {
 		let matchData = this.props.data
 		let idx = this.props.idx
-		let top = (idx * 58) / 21.6 + 'vw'
+		let top = (idx * 58) / 10.8 + 'vw'
 		if (matchData.mode == 'g') {
 			var modeImg = require('./assets/g_icon.png')
 			var resultTitle = '获得:'
@@ -103,7 +103,7 @@ const HistoryCellView = CSSModules(React.createClass({
 		}
 		return (
 			<div style={style}>
-				<DelayView count={0} num={0} left={'7.87vw'} top={'1.111vw'} />
+				<DelayView count={0} num={0} left={'7.87vw'} top={'0.926vw'} />
 				<div styleName='historyNumber'>{matchData.teamID}</div>
 				<div styleName='historyPlayer'>{playerStr}</div>
 				<img src={modeImg} styleName='historyIcon' />
@@ -336,6 +336,7 @@ const QueueView = CSSModules(observer(React.createClass({
 			  })
           }
 		  <img styleName='log' src={require('./assets/queue_log.png')} />
+		  <img styleName='wechat' src={require('./assets/wechat.png')} />
 		  {
 			  callingTeam ?  <img styleName='callingImg' src={require('./assets/c_bg.png')} /> : null
 		  }

@@ -18,7 +18,6 @@ class PlayerData: Mappable {
 	var energy: Double!
 	var combo: Int!
 	var grade: String!
-	var level: Int!
 	var levelData: String!
 	var hitCount: Int!
 	var cid: String!
@@ -26,6 +25,8 @@ class PlayerData: Mappable {
 	var answered: Int!
 	var questionCount: Int!
 	var eid: String?
+	var level: String? // 玩家级别
+	var url: String? // 本次游戏玩家专属的url
 	required init?(_ map: Map) {
 	}
 
@@ -72,6 +73,7 @@ class MatchData: Mappable {
 	var answerType: MatchAnswerType!
 	var teamID: String!
 	var eid: String?
+	var grade: String!
 
 	required init?(_ map: Map) {
 	}
@@ -87,6 +89,7 @@ class MatchData: Mappable {
 		answerType <- map["answerType"]
 		teamID <- map["teamID"]
 		eid <- map["eid"]
+		grade <- map["grade"]
 		member.sortInPlace { (p1, p2) -> Bool in
 			return p1.cid.compare(p2.cid) == .OrderedAscending
 		}

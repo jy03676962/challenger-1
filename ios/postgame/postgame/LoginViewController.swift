@@ -40,6 +40,9 @@ class LoginViewController: PLViewController {
 		alert.addTextFieldWithConfigurationHandler { textfield in
 			textfield.placeholder = Defaults[.deviceID]
 		}
+		alert.addTextFieldWithConfigurationHandler { textfield in
+			textfield.placeholder = Defaults[.websiteHost]
+		}
 		let cancelAction = UIAlertAction(title: "取消", style: .Cancel, handler: nil)
 		alert.addAction(cancelAction)
 		weak var weakAlert = alert
@@ -50,6 +53,9 @@ class LoginViewController: PLViewController {
 			}
 			if let num = weakAlert?.textFields![1].text where num != "" {
 				Defaults[.deviceID] = num
+			}
+			if let host = weakAlert?.textFields![2].text where host != "" {
+				Defaults[.websiteHost] = host
 			}
 		}
 		alert.addAction(doneAction)

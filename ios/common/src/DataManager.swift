@@ -27,6 +27,7 @@ public enum DataType: String {
 	case QuestionCount = "QuestionCount"
 	case LaserInfo = "laserInfo"
 	case QuickCheckInfo = "QuickCheck"
+	case Error = "error"
 
 	var queryCmd: String {
 		return "query\(self.rawValue)"
@@ -59,6 +60,20 @@ public class DataManager {
 
 	public func unsubscribe(receiver: DataReceiver) {
 		for (t, l) in receiversMap {
+			var nl = [DataReceiver]()
+			for r in l {
+				if r !== receiver {
+					nl.append(r)
+				}
+			}
+			receiversMap[t] = nl
+		}
+	}
+	public func unsubscribe(receiver: DataReceiver, type: DataType) {
+		for (t, l) in receiversMap {
+			if t != type {
+				continue
+			}
 			var nl = [DataReceiver]()
 			for r in l {
 				if r !== receiver {
