@@ -689,19 +689,20 @@ func (m *Match) updatePlayerStatus(st string, p *Player) {
 
 func (m *Match) dumpMatchData() *MatchData {
 	m.matchData.Mode = m.Mode
-	m.matchData.Gold = m.Gold
 	m.matchData.Elasped = m.Elasped
 	m.matchData.Member = make([]PlayerData, 0)
 	m.matchData.RampageCount = m.RampageCount
 	m.matchData.AnswerType = MatchNotAnswer
 	m.matchData.TeamID = m.TeamID
 	m.matchData.ExternalID = ""
-	m.matchData.Grade = m.opt.TeamGrade(m.Gold, len(m.Member), m.Mode)
+	totalGold := 0
+	m.matchData.Grade = m.opt.TeamGrade(int(m.Elasped*1000), len(m.Member), m.Mode)
 	for _, player := range m.Member {
+		totalGold += player.Gold - player.LostGold
 		playerData := PlayerData{}
 		playerData.Gold = player.Gold
-		playerData.Energy = player.Energy
 		playerData.LostGold = player.LostGold
+		playerData.Energy = player.Energy
 		playerData.Combo = player.ComboCount
 		strs := make([]string, 4)
 		for i, c := range player.LevelData {
@@ -717,6 +718,7 @@ func (m *Match) dumpMatchData() *MatchData {
 		playerData.Grade = m.opt.PersonGrade(player.Gold-player.LostGold, len(m.Member), m.Mode)
 		m.matchData.Member = append(m.matchData.Member, playerData)
 	}
+	m.matchData.Gold = totalGold
 	return m.matchData
 }
 
