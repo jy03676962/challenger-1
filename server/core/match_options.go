@@ -381,6 +381,15 @@ func (m *MatchOptions) IntToTile(i int) P {
 	return P{i % m.ArenaWidth, i / m.ArenaWidth}
 }
 
+func (m *MatchOptions) TryIntToTile(i int) (p P, valid bool) {
+	valid = false
+	p = P{0, 0}
+	if i >= 0 && i < m.ArenaWidth*m.ArenaHeight {
+		return m.IntToTile(i), true
+	}
+	return
+}
+
 func (m *MatchOptions) laserSpeed(energy float64, playerCount int) float64 {
 	return float64(m.ArenaCellSize) / 10 / m.laserMoveInterval(energy, playerCount)
 }
