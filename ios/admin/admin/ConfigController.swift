@@ -51,12 +51,17 @@ class ConfigController: PLViewController {
 		}
 	}
 
-	@IBAction func debugLaser() {
-		performSegueWithIdentifier("ShowLaserLoop", sender: nil)
-	}
-
-	@IBAction func quickCheck() {
-		performSegueWithIdentifier("ShowQuickCheck", sender: nil)
+	@IBAction func showLaserMenu(sender: UITapGestureRecognizer) {
+		let alert = UIAlertController(title: "激光控制", message: nil, preferredStyle: .ActionSheet)
+		alert.addAction(UIAlertAction(title: "调试激光", style: .Default, handler: { (action) in
+			self.performSegueWithIdentifier("ShowLaserLoop", sender: nil)
+			}));
+		alert.addAction(UIAlertAction(title: "检测激光", style: .Default, handler: { (action) in
+			self.performSegueWithIdentifier("ShowQuickCheck", sender: nil)
+			}));
+		alert.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil));
+		alert.popoverPresentationController?.sourceView = sender.view;
+		presentViewController(alert, animated: true, completion: nil)
 	}
 
 	override func viewDidLoad() {
