@@ -68,6 +68,11 @@ type WarmupInfo struct {
 	Lasers               []WarmupLaser
 }
 
+type LocationTransfer struct {
+	From int
+	To   int
+}
+
 type MatchOptions struct {
 	ArenaWidth        int        `json:"arenaWidth"`
 	ArenaHeight       int        `json:"arenaHeight"`
@@ -94,51 +99,52 @@ type MatchOptions struct {
 	WallRects         []Rect     `json:"walls"`
 	Buttons           []*Button  `json:"buttons"`
 
-	PlayerSpeed           float64       `json:"-"`
-	Walls                 [][]int       `json:"-"`
-	EnergyBonus           [4][4]float64 `json:"-"`
-	InitButtonNum         [4]int        `json:"-"`
-	ButtonHideTime        [2]float64    `json:"-"`
-	RampageTime           [2]float64    `json:"-"`
-	FirstComboInterval    [4]float64    `json:"-"`
-	ComboInterval         [4]float64    `json:"-"`
-	FirstComboExtra       float64       `json:"-"`
-	ComboExtra            float64       `json:"-"`
-	LaserSpeed            float64       `json:"-"`
-	LaserSpeedup          [4]float64    `json:"-"`
-	EnergySpeedup         float64       `json:"-"`
-	LaserAppearTime       float64       `json:"-"`
-	LaserPauseTime        float64       `json:"-"`
-	TileAdjacency         map[int][]int `json:"-"`
-	PlayerInvincibleTime  float64       `json:"-"`
-	Mode1TouchPunish      [4]int        `json:"-"`
-	Mode2TouchPunish      [4]int        `json:"-"`
-	Mode2GoldDropInterval float64       `json:"-"`
-	MainArduino           []string      `json:"-"`
-	SubArduino            []string      `json:"-"`
-	MusicArduino          []string      `json:"-"`
-	DoorArduino           []string      `json:"-"`
-	MainArduinoInfo       []MainArduino `json:"-"`
-	UploadTime            int           `json:"-"`
-	HeartbeatTime         int           `json:"-"`
-	SubUploadTime         int           `json:"-"`
-	SubHeartbeatTime      int           `json:"-"`
-	CatchMode             int           `json:"-"`
-	CatchLaserNum         int           `json:"-"`
-	WarmupButtonInterval  float64       `json:"-"`
-	WarmupLasers          []WarmupLaser `json:"-"`
-	BgIdle                string        `json:"-"`
-	BgWarmup              [2]string     `json:"-"`
-	BgNormal              [2]string     `json:"-"`
-	BgHigh                [2]string     `json:"-"`
-	BgFull                [2]string     `json:"-"`
-	BgRampage             [2]string     `json:"-"`
-	BgCountdown           [2]string     `json:"-"`
-	BgLeave               [2]string     `json:"-"`
-	GoldRank              [4][4]int     `json:"-"`
-	GoldTeamRank          [4][4]int     `json:"-"`
-	SurvivalRank          [4][4]int     `json:"-"`
-	SurvivalTeamRank      [4][4]int     `json:"-"`
+	PlayerSpeed           float64            `json:"-"`
+	Walls                 [][]int            `json:"-"`
+	EnergyBonus           [4][4]float64      `json:"-"`
+	InitButtonNum         [4]int             `json:"-"`
+	ButtonHideTime        [2]float64         `json:"-"`
+	RampageTime           [2]float64         `json:"-"`
+	FirstComboInterval    [4]float64         `json:"-"`
+	ComboInterval         [4]float64         `json:"-"`
+	FirstComboExtra       float64            `json:"-"`
+	ComboExtra            float64            `json:"-"`
+	LaserSpeed            float64            `json:"-"`
+	LaserSpeedup          [4]float64         `json:"-"`
+	EnergySpeedup         float64            `json:"-"`
+	LaserAppearTime       float64            `json:"-"`
+	LaserPauseTime        float64            `json:"-"`
+	TileAdjacency         map[int][]int      `json:"-"`
+	PlayerInvincibleTime  float64            `json:"-"`
+	Mode1TouchPunish      [4]int             `json:"-"`
+	Mode2TouchPunish      [4]int             `json:"-"`
+	Mode2GoldDropInterval float64            `json:"-"`
+	MainArduino           []string           `json:"-"`
+	SubArduino            []string           `json:"-"`
+	MusicArduino          []string           `json:"-"`
+	DoorArduino           []string           `json:"-"`
+	MainArduinoInfo       []MainArduino      `json:"-"`
+	UploadTime            int                `json:"-"`
+	HeartbeatTime         int                `json:"-"`
+	SubUploadTime         int                `json:"-"`
+	SubHeartbeatTime      int                `json:"-"`
+	CatchMode             int                `json:"-"`
+	CatchLaserNum         int                `json:"-"`
+	WarmupButtonInterval  float64            `json:"-"`
+	WarmupLasers          []WarmupLaser      `json:"-"`
+	BgIdle                string             `json:"-"`
+	BgWarmup              [2]string          `json:"-"`
+	BgNormal              [2]string          `json:"-"`
+	BgHigh                [2]string          `json:"-"`
+	BgFull                [2]string          `json:"-"`
+	BgRampage             [2]string          `json:"-"`
+	BgCountdown           [2]string          `json:"-"`
+	BgLeave               [2]string          `json:"-"`
+	GoldRank              [4][4]int          `json:"-"`
+	GoldTeamRank          [4][4]int          `json:"-"`
+	SurvivalRank          [4][4]int          `json:"-"`
+	SurvivalTeamRank      [4][4]int          `json:"-"`
+	LocationTransfers     []LocationTransfer `json:"-"`
 }
 
 type ScoreInfo [4]map[string]interface{}
@@ -379,6 +385,15 @@ func (m *MatchOptions) TilePosToInt(p P) int {
 
 func (m *MatchOptions) IntToTile(i int) P {
 	return P{i % m.ArenaWidth, i / m.ArenaWidth}
+}
+
+func (m *MatchOptions) TransferWearableLocation(i int) int {
+	for _, t := range m.LocationTransfers {
+		if t.From == i {
+			return t.To
+		}
+	}
+	return i
 }
 
 func (m *MatchOptions) TryIntToTile(i int) (p P, valid bool) {

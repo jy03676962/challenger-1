@@ -57,7 +57,7 @@ func (p *Player) setOnline() {
 
 func (p *Player) updateLoc(loc int) {
 	opt := GetOptions()
-	loc -= 1
+	loc = opt.TransferWearableLocation(loc) - 1
 	if tp, valid := opt.TryIntToTile(loc); valid {
 		p.tilePos = tp
 		p.Pos = opt.RealPosition(p.tilePos)

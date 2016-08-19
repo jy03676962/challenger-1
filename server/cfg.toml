@@ -258,3 +258,8 @@ y = 4
 time = 2600
 large = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 small = [1, 1, 1, 0, 0]
+
+# wearable location Transfer
+[[locationTransfers]]
+from = 3
+to = 3
