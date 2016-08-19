@@ -82,11 +82,11 @@ const HistoryCellView = CSSModules(React.createClass({
 		if (matchData.mode == 'g') {
 			var modeImg = require('./assets/g_icon.png')
 			var resultTitle = '获得:'
-			var result = `${matchData.gold}G`
+			var result = `${matchData.gold}[G]`
 		} else {
 			var modeImg = require('./assets/s_icon.png')
 			var resultTitle = '生存:'
-			var result = `${util.timeStr(matchData.elasped, 2)}`
+			var result = `${matchData.elasped.toFixed(2)}[S]`
 		}
 		let playerStr = matchData.member.map((player, idx) => {
 			if (player.name) {
