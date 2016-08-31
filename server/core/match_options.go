@@ -424,11 +424,11 @@ func (m *MatchOptions) mainArduinosByPos(x int, y int) []string {
 	return ret
 }
 
-func (m *MatchOptions) TeamGrade(gold int, teamSize int, mode string) string {
+func (m *MatchOptions) TeamGrade(gold int, elasped float64, teamSize int, mode string) string {
 	if mode == "g" {
 		return m.calcGrade(gold, teamSize, &m.GoldTeamRank)
 	} else {
-		return m.calcGrade(gold, teamSize, &m.SurvivalTeamRank)
+		return m.calcGrade(int(elasped*1000), teamSize, &m.SurvivalTeamRank)
 	}
 }
 

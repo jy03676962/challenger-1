@@ -696,7 +696,7 @@ func (m *Match) dumpMatchData() *MatchData {
 	m.matchData.TeamID = m.TeamID
 	m.matchData.ExternalID = ""
 	totalGold := 0
-	m.matchData.Grade = m.opt.TeamGrade(int(m.Elasped*1000), len(m.Member), m.Mode)
+	m.matchData.Grade = m.opt.TeamGrade(m.Gold, m.Elasped, len(m.Member), m.Mode)
 	for _, player := range m.Member {
 		totalGold += player.Gold - player.LostGold
 		playerData := PlayerData{}
