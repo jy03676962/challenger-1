@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 enum TeamStatus: Int {
-	case Waiting = 0, Prepare, Playing, After, Finished
+	case waiting = 0, prepare, playing, after, finished
 }
 
 class Team: Mappable {
@@ -21,7 +21,7 @@ class Team: Mappable {
 	var waitTime: Int!
 	var mode: String!
 
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {

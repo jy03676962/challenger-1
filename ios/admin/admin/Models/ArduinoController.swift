@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 enum ArduinoMode: Int {
-	case Unknown = -1, Off = 0, On, Scan, Free
+	case unknown = -1, off = 0, on, scan, free
 }
 
 class ArduinoController: Mappable {
@@ -21,7 +21,7 @@ class ArduinoController: Mappable {
 	var online: Bool!
 	var scoreUpdated: Bool!
 
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {

@@ -24,8 +24,8 @@ class SurveyController: PLViewController {
 		scrollView.contentSize = CGSize(width: 960 * self.survey.questions.count, height: 430)
 		vcs = [QuestionViewController]()
 		let sb = UIStoryboard(name: "MatchResult", bundle: nil)
-		for (i, q) in survey.questions.enumerate() {
-			let vc = sb.instantiateViewControllerWithIdentifier("QuestionViewController") as! QuestionViewController
+		for (i, q) in survey.questions.enumerated() {
+			let vc = sb.instantiateViewController(withIdentifier: "QuestionViewController") as! QuestionViewController
 			vc.question = q
 			vc.questionIndex = i
 			vc.isLastQuestion = i == survey.questions.count - 1
@@ -38,7 +38,7 @@ class SurveyController: PLViewController {
 				Left(left),
 				Top(0)
 			]
-			vc.didMoveToParentViewController(self)
+			vc.didMove(toParentViewController: self)
 			vc.delegate = self
 			vcs.append(vc)
 		}
@@ -51,7 +51,7 @@ class SurveyController: PLViewController {
 }
 
 extension SurveyController: QuestionViewControllerDelegate {
-	func okAction(sender: QuestionViewController, answer: String) {
+	func okAction(_ sender: QuestionViewController, answer: String) {
 		let idx = sender.questionIndex
 		let p = [
 			"pid": String(playerData.id),
@@ -59,7 +59,7 @@ extension SurveyController: QuestionViewControllerDelegate {
 			"aid": answer,
 			"total": String(self.survey.questions.count)
 		]
-		Alamofire.request(.POST, PLConstants.getHttpAddress("api/answer"), parameters: p, encoding: .URL, headers: nil)
+        request(PLConstants.getHttpAddress("api/answer"), method: .post, parameters: p, encoding: URLEncoding.default, headers: nil)
 			.validate()
 			.responseJSON(completionHandler: { resp in
 				if !sender.isLastQuestion {
@@ -69,7 +69,7 @@ extension SurveyController: QuestionViewControllerDelegate {
 					self.scrollView.scrollRectToVisible(frame, animated: true)
 					self.pageControl.currentPage = idx + 1
 				} else {
-					self.navigationController?.popViewControllerAnimated(true)
+					self.navigationController?.popViewController(animated: true)
 				}
 		})
 	}

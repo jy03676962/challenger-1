@@ -10,12 +10,12 @@ import UIKit
 import EasyPeasy
 
 class PLViewController: UIViewController {
-	private var timeLabel: UILabel!
+	fileprivate var timeLabel: UILabel!
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let imageView = UIImageView()
 		imageView.image = UIImage(named: "GlobalBackground")
-		view.insertSubview(imageView, atIndex: 0)
+		view.insertSubview(imageView, at: 0)
 		imageView <- Edges()
 		timeLabel = UILabel()
 		timeLabel.font = UIFont(name: PLConstants.usualFont, size: 30)
@@ -24,42 +24,42 @@ class PLViewController: UIViewController {
 			CenterX(0),
 			Top(10)
 		]
-		NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(PLViewController.tickTime), userInfo: nil, repeats: true)
+		Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(PLViewController.tickTime), userInfo: nil, repeats: true)
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		timeLabel.textColor = WsClient.singleton.didInit ? UIColor.whiteColor() : UIColor.redColor()
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsInited), name: WsClient.WsInitedNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsConnecting), name: WsClient.WsConnectingNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onWsDisconnected), name: WsClient.WsDisconnectedNotification, object: nil)
+		timeLabel.textColor = WsClient.singleton.didInit ? UIColor.white : UIColor.red
+		NotificationCenter.default.addObserver(self, selector: #selector(onWsInited), name: NSNotification.Name(rawValue: WsClient.WsInitedNotification), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(onWsConnecting), name: NSNotification.Name(rawValue: WsClient.WsConnectingNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onWsDisconnected), name: NSNotification.Name(rawValue: WsClient.WsDisconnectedNotification), object: nil)
 	}
 
-	override func viewDidDisappear(animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	func onWsInited() {
-		timeLabel.textColor = UIColor.whiteColor()
+		timeLabel.textColor = UIColor.white
 	}
 
 	func onWsConnecting() {
-		timeLabel.textColor = UIColor.greenColor()
+		timeLabel.textColor = UIColor.green
 	}
 
 	func onWsDisconnected() {
-		timeLabel.textColor = UIColor.redColor()
+		timeLabel.textColor = UIColor.red
 	}
 
 	func tickTime() {
-		let now = NSDate()
-		let fmt = NSDateFormatter()
+		let now = Date()
+		let fmt = DateFormatter()
 		fmt.dateFormat = "HH:mm"
-		let str = fmt.stringFromDate(now)
+		let str = fmt.string(from: now)
 		timeLabel.text = "TIME \(str)"
 	}
-	override func prefersStatusBarHidden() -> Bool {
+	override var prefersStatusBarHidden : Bool {
 		return true
 	}
 }

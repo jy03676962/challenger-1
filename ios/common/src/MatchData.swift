@@ -27,7 +27,7 @@ class PlayerData: Mappable {
 	var eid: String?
 	var level: String? // 玩家级别
 	var url: String? // 本次游戏玩家专属的url
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {
@@ -53,14 +53,15 @@ class PlayerData: Mappable {
 		if name != nil && name!.characters.count > 0 {
 			return name!
 		} else {
-			return String(format: "[%02d]", Int(cid.componentsSeparatedByString(":")[1])!)
+			return String(format: "[%02d]", Int(cid.components(separatedBy: ":")[1])!)
 		}
 	}
 }
 
 enum MatchAnswerType: Int {
-	case NotAnswer = 0, Answering, Answered
+	case notAnswer = 0, answering, answered
 }
+
 
 class MatchData: Mappable {
 	var id: UInt!
@@ -75,7 +76,7 @@ class MatchData: Mappable {
 	var eid: String?
 	var grade: String!
 
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {
@@ -90,17 +91,28 @@ class MatchData: Mappable {
 		teamID <- map["teamID"]
 		eid <- map["eid"]
 		grade <- map["grade"]
-		member.sortInPlace { (p1, p2) -> Bool in
-			return p1.cid.compare(p2.cid) == .OrderedAscending
+		member.sort { (p1, p2) -> Bool in
+			return p1.cid.compare(p2.cid) == .orderedAscending
 		}
 	}
+}
+
+struct AnsweringResponse: Mappable {
+    var code: Int!
+    var data: MatchData!
+    init?(map: Map) {
+    }
+    mutating func mapping(map: Map) {
+        code <- map["code"]
+        data <- map["data"]
+    }
 }
 
 class MatchResult: Mappable {
 	var matchID: Int!
 	var teamID: String!
 	var matchData: MatchData!
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {

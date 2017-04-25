@@ -14,7 +14,7 @@ class LaserInfo: Mappable {
 	var ur: String!
 	var idx: Int!
 	var err: Int!
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 	func mapping(map: Map) {
 		id <- map["id"]

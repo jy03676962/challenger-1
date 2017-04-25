@@ -10,7 +10,7 @@ import Foundation
 extension String {
 
 	subscript(i: Int) -> Character {
-		return self[self.startIndex.advancedBy(i)]
+		return self[self.characters.index(self.startIndex, offsetBy: i)]
 	}
 
 	subscript(i: Int) -> String {
@@ -18,12 +18,12 @@ extension String {
 	}
 
 	subscript(r: Range<Int>) -> String {
-		let start = startIndex.advancedBy(r.startIndex)
-		let end = start.advancedBy(r.endIndex - r.startIndex)
+		let start = characters.index(startIndex, offsetBy: r.lowerBound)
+        let end = characters.index(start, offsetBy: r.upperBound - r.lowerBound)
 		return self[Range(start ..< end)]
 	}
 
 	func last() -> String {
-		return String(self[self.endIndex.predecessor()])
+		return String(self[self.characters.index(before: self.endIndex)])
 	}
 }

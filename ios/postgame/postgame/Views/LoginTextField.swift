@@ -52,8 +52,8 @@ class LoginTextField: UITextField {
 
 	func commonInit() {
 		leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
-		leftViewMode = .Always
-		let btn = valueForKey("_clearButton")
-		btn?.setImage(UIImage(named: "TextFieldClear"), forState: .Normal)
+		leftViewMode = .always
+		let btn = value(forKey: "_clearButton") as? UIButton
+		btn?.setImage(UIImage(named: "TextFieldClear"), for: UIControlState())
 	}
 }

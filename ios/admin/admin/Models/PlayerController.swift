@@ -10,13 +10,13 @@ import Foundation
 import ObjectMapper
 
 enum AddressType: Int {
-	case Unknown = 0, Admin, Simulator, ArduinoTest, Postgame, Wearable, MainArduino, SubArduino, QueueDevice, IngameDevice, MusicArduino, DoorArduino
+	case unknown = 0, admin, simulator, arduinoTest, postgame, wearable, mainArduino, subArduino, queueDevice, ingameDevice, musicArduino, doorArduino
 }
 
 struct Address: Mappable {
 	var type: AddressType!
 	var id: String!
-	init?(_ map: Map) {
+	init?(map: Map) {
 	}
 	mutating func mapping(map: Map) {
 		type <- map["type"]
@@ -30,7 +30,7 @@ class PlayerController: Mappable {
 	var matchID: Int!
 	var online: Bool!
 
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {

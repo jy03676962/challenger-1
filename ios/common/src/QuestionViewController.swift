@@ -9,7 +9,7 @@
 import UIKit
 
 protocol QuestionViewControllerDelegate: class {
-	func okAction(sender: QuestionViewController, answer: String)
+	func okAction(_ sender: QuestionViewController, answer: String)
 }
 
 class QuestionViewController: UIViewController {
@@ -24,7 +24,7 @@ class QuestionViewController: UIViewController {
 	@IBAction func okAction() {
 		let idx = tableView.indexPathsForSelectedRows![0].row
 		var ans = ""
-		ans.append(Character(UnicodeScalar(idx + 17)))
+		ans.append(Character(UnicodeScalar(idx + 17)!))
 		delegate?.okAction(self, answer: ans)
 	}
 
@@ -33,31 +33,31 @@ class QuestionViewController: UIViewController {
 		titleLabel.text = question.q
 		tableView.reloadData()
 		if isLastQuestion {
-			okButton.setBackgroundImage(UIImage(named: "SurveyDone"), forState: .Normal)
+			okButton.setBackgroundImage(UIImage(named: "SurveyDone"), for: UIControlState())
 		} else {
-			okButton.setBackgroundImage(UIImage(named: "SurveyOK"), forState: .Normal)
+			okButton.setBackgroundImage(UIImage(named: "SurveyOK"), for: UIControlState())
 		}
 	}
 }
 
 extension QuestionViewController: UITableViewDataSource, UITableViewDelegate {
 
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return question.options.count
 	}
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("QuestionTableViewCell") as! QuestionTableViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "QuestionTableViewCell") as! QuestionTableViewCell
 		cell.setData(question.options[indexPath.row])
 		return cell
 	}
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		okButton.enabled = true
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		okButton.isEnabled = true
 	}
-	func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-		okButton.enabled = false
+	func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		okButton.isEnabled = false
 	}
 }

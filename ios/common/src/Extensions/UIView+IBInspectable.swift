@@ -27,10 +27,10 @@ extension UIView {
 			guard layer.borderColor != nil else {
 				return nil
 			}
-			return UIColor(CGColor: layer.borderColor!)
+			return UIColor(cgColor: layer.borderColor!)
 		}
 		set {
-			layer.borderColor = newValue?.CGColor
+			layer.borderColor = newValue?.cgColor
 		}
 	}
 

@@ -44,26 +44,26 @@ class MatchController: PLViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		playerTableView.backgroundColor = UIColor.clearColor()
+		playerTableView.backgroundColor = UIColor.clear
 		playerViews = [UIButton]()
 		laserViews = [UIView]()
 		for _ in 1 ... 4 {
 			let btn = UIButton()
 			btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-			btn.setBackgroundImage(UIImage(named: "PlayerIcon"), forState: .Normal)
-			btn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-			btn.titleLabel?.font = UIFont.systemFontOfSize(6)
-			btn.hidden = true
+			btn.setBackgroundImage(UIImage(named: "PlayerIcon"), for: UIControlState())
+			btn.setTitleColor(UIColor.white, for: UIControlState())
+			btn.titleLabel?.font = UIFont.systemFont(ofSize: 6)
+			btn.isHidden = true
 			playerViews.append(btn)
 			mapView.addSubview(btn)
 		}
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		DataManager.singleton.subscribeData([.UpdateMatch, .MatchStop], receiver: self)
 		if mapView.image == nil {
-			Alamofire.request(.GET, PLConstants.getHttpAddress("api/asset/map.png"))
+			Alamofire.request(PLConstants.getHttpAddress("api/asset/map.png"))
 				.validate()
 				.responseImage(completionHandler: { response in
 					if let image = response.result.value {
@@ -78,7 +78,7 @@ class MatchController: PLViewController {
 		}
 	}
 
-	override func viewDidDisappear(animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		DataManager.singleton.unsubscribe(self)
 	}
@@ -105,29 +105,29 @@ class MatchController: PLViewController {
 						let view = UIView()
 						view.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
 						view.center = CGPoint(x: laser.displayP.X / 3, y: laser.displayP.Y / 3)
-						view.backgroundColor = UIColor.greenColor()
+						view.backgroundColor = UIColor.green
 						mapView.addSubview(view)
 						laserViews.append(view)
 						if laser.displayP2.X >= 0 {
 							let view = UIView()
 							view.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
 							view.center = CGPoint(x: laser.displayP2.X / 3, y: laser.displayP2.Y / 3)
-							view.backgroundColor = UIColor.greenColor()
+							view.backgroundColor = UIColor.green
 							mapView.addSubview(view)
 							laserViews.append(view)
 						}
 					}
 				}
 			}
-			for (i, btn) in playerViews.enumerate() {
+			for (i, btn) in playerViews.enumerated() {
 				if i < match!.member.count {
 					let player = match!.member[i]
-					btn.hidden = false
+					btn.isHidden = false
 					btn.center = CGPoint(x: player.displayPos.X / 3, y: player.displayPos.Y / 3)
-					btn.setTitle(player.displayID, forState: .Normal)
-					mapView.bringSubviewToFront(btn)
+					btn.setTitle(player.displayID, for: UIControlState())
+					mapView.bringSubview(toFront: btn)
 				} else {
-					btn.hidden = true
+					btn.isHidden = true
 				}
 			}
 		} else {
@@ -138,7 +138,7 @@ class MatchController: PLViewController {
 			energyLabel.text = ""
 			playerTableView.reloadData()
 			for btn in playerViews {
-				btn.hidden = true
+				btn.isHidden = true
 			}
 			for view in laserViews {
 				view.removeFromSuperview()
@@ -152,14 +152,14 @@ class MatchController: PLViewController {
 }
 
 extension MatchController: DataReceiver {
-	func onReceivedData(json: [String: AnyObject], type: DataType) {
+	func onReceivedData(_ json: [String: Any], type: DataType) {
 		if type == .UpdateMatch {
-			match = Mapper<Match>().map(json["data"] as! String)
+            match = Mapper<Match>().map(JSONString: json["data"] as! String)
 			if match != nil && match?.id == Defaults[.matchID] {
 				renderMatch()
 			}
 		} else if type == .MatchStop {
-			let matchResult = Mapper<MatchResult>().map(json["data"])
+			let matchResult = Mapper<MatchResult>().map(JSONString: json["data"] as! String)
 			if matchResult != nil {
 				if matchResult?.matchID == Defaults[.matchID] {
 					match = nil
@@ -171,7 +171,7 @@ extension MatchController: DataReceiver {
 }
 
 extension MatchController: UITableViewDelegate, UITableViewDataSource {
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if match == nil {
 			return 0
 		} else {
@@ -179,12 +179,12 @@ extension MatchController: UITableViewDelegate, UITableViewDataSource {
 		}
 	}
 
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("PlayerTableViewCell") as! PlayerTableViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "PlayerTableViewCell") as! PlayerTableViewCell
 		cell.setData(match!.member[indexPath.row])
 		return cell
 	}

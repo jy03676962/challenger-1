@@ -12,6 +12,30 @@ import Alamofire
 import AlamofireObjectMapper
 import SwiftyJSON
 import ObjectMapper
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 
 class LaserLoopViewController: PLViewController {
 	@IBOutlet weak var senderTextField: UITextField!
@@ -28,14 +52,14 @@ class LaserLoopViewController: PLViewController {
 		return senderList?[senderIdx]
 	}
 
-	@IBAction func manuallyChangeSender(sender: UITextField) {
+	@IBAction func manuallyChangeSender(_ sender: UITextField) {
 		if let value = sender.text {
-			let li = value.componentsSeparatedByString(":")
+			let li = value.components(separatedBy: ":")
 			if li.count == 2 {
 				let laserID = li[0]
 				let idx: Int? = Int(li[1])
 				if idx != nil {
-					for (i, info) in senderList!.enumerate() {
+					for (i, info) in senderList!.enumerated() {
 						if info.id == laserID && idx! < info.laserNum {
 							senderIdx = i
 							laserIdx = idx!
@@ -44,14 +68,14 @@ class LaserLoopViewController: PLViewController {
 					}
 				}
 			}
-			HUD.flash(.LabeledError(title: "输入ID有错误", subtitle: nil), delay: 1)
+			HUD.flash(.labeledError(title: "输入ID有错误", subtitle: nil), delay: 1)
 		}
 	}
 
 	@IBAction func start() {
 		checking = !checking
 		if checking {
-			startButton.setTitle("停止", forState: .Normal)
+			startButton.setTitle("停止", for: UIControlState())
 			let json = JSON([
 				"cmd": "laserOn",
 				"id": currentSender!.id,
@@ -69,7 +93,7 @@ class LaserLoopViewController: PLViewController {
 				"num": laserIdx,
 			])
 			WsClient.singleton.sendJSON(json)
-			startButton.setTitle("开始", forState: .Normal)
+			startButton.setTitle("开始", for: UIControlState())
 		}
 	}
 
@@ -84,7 +108,7 @@ class LaserLoopViewController: PLViewController {
 
 	@IBAction func record() {
 		if (infoList.count == 0 || infoList.count > 1 || infoList[0].err != 0) {
-			HUD.flash(.LabeledError(title: "有错误，无法记录", subtitle: nil), delay: 1)
+			HUD.flash(.labeledError(title: "有错误，无法记录", subtitle: nil), delay: 1)
 			return
 		}
 		let json = JSON([
@@ -105,16 +129,16 @@ class LaserLoopViewController: PLViewController {
 	@IBAction func done() {
 		WsClient.singleton.sendCmd("stopListenLaser")
 		DataManager.singleton.unsubscribe(self)
-		presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+		presentingViewController?.dismiss(animated: true, completion: nil)
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		HUD.show(.Progress)
+		HUD.show(.progress)
 		DataManager.singleton.subscribeData([.LaserInfo], receiver: self)
-		Alamofire.request(.GET, PLConstants.getHttpAddress("api/sender_list"))
+        request(PLConstants.getHttpAddress("api/sender_list"))
 			.validate()
-			.responseArray(completionHandler: { (response: Response<[MainArduinoInfo], NSError>) in
+            .responseArray(completionHandler: { (response: DataResponse<[MainArduinoInfo]>) in
 				HUD.hide()
 				self.senderList = response.result.value
 				if self.senderList != nil {
@@ -129,13 +153,13 @@ class LaserLoopViewController: PLViewController {
 }
 
 extension LaserLoopViewController: DataReceiver {
-	func onReceivedData(json: [String: AnyObject], type: DataType) {
+	func onReceivedData(_ json: [String: Any], type: DataType) {
 		if type == .LaserInfo {
-			let info = Mapper<LaserInfo>().map(json)
+            let info = Mapper<LaserInfo>().map(JSONObject:json)
 			if info != nil {
-				for (i, inf) in infoList.enumerate() {
+				for (i, inf) in infoList.enumerated() {
 					if inf.id == info!.id {
-						infoList.removeAtIndex(i)
+						infoList.remove(at: i)
 						break
 					}
 				}
@@ -147,14 +171,14 @@ extension LaserLoopViewController: DataReceiver {
 }
 
 extension LaserLoopViewController: UITableViewDataSource, UITableViewDelegate {
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.infoList.count
 	}
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("LaserResultCell") as! LaserResultCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "LaserResultCell") as! LaserResultCell
 		cell.renderData(infoList[indexPath.row])
 		return cell
 	}

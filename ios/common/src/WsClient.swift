@@ -12,26 +12,26 @@ import SwiftyUserDefaults
 import SwiftyJSON
 
 public protocol WsClientDelegate: class {
-	func wsClientDidInit(client: WsClient, data: [String: AnyObject])
-	func wsClientDidReceiveMessage(client: WsClient, cmd: String, data: [String: AnyObject])
-	func wsClientDidDisconnect(client: WsClient, error: NSError?)
+	func wsClientDidInit(_ client: WsClient, data: [String: Any])
+	func wsClientDidReceiveMessage(_ client: WsClient, cmd: String, data: [String: Any])
+	func wsClientDidDisconnect(_ client: WsClient, error: NSError?)
 }
 
-public class WsClient {
+open class WsClient {
 	// notification
-	public static let WsInitedNotification = "WsInited"
-	public static let WsDisconnectedNotification = "WsDisconnected"
-	public static let WsConnectingNotification = "WsConnecting"
+	open static let WsInitedNotification = "WsInited"
+	open static let WsDisconnectedNotification = "WsDisconnected"
+	open static let WsConnectingNotification = "WsConnecting"
 
-	public static let singleton = WsClient()
-	public weak var delegate: WsClientDelegate?
-	public var didInit: Bool = false
+	open static let singleton = WsClient()
+	open weak var delegate: WsClientDelegate?
+	open var didInit: Bool = false
 
-	private static let ERROR_WAIT_SECOND: UInt64 = 10
-	private var socket: WebSocket?
-	private var address: String?
+	fileprivate static let ERROR_WAIT_SECOND: UInt64 = 10
+	fileprivate var socket: WebSocket?
+	fileprivate var address: String?
 
-	public func sendCmd(cmd: String) {
+	open func sendCmd(_ cmd: String) {
 		if !didInit {
 			return
 		}
@@ -41,12 +41,12 @@ public class WsClient {
 		sendJSON(json)
 	}
 
-	public func sendJSON(json: JSON) {
-		let str = json.rawString(NSUTF8StringEncoding, options: [])!
-		socket!.writeString(str)
+	open func sendJSON(_ json: JSON) {
+		let str = json.rawString(String.Encoding.utf8, options: [])!
+        socket!.write(string: str)
 	}
 
-	public func connect(addr: String) {
+	open func connect(_ addr: String) {
 		if address == addr && socket != nil && socket!.isConnected {
 			return
 		}
@@ -76,23 +76,23 @@ public class WsClient {
 		doConnect()
 	}
 
-	private init() {
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.appDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WsClient.appWillEnterForeground), name: UIApplicationWillEnterForegroundNotification, object: nil)
+	fileprivate init() {
+		NotificationCenter.default.addObserver(self, selector: #selector(WsClient.appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(WsClient.appWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 	}
 
 	deinit {
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NotificationCenter.default.removeObserver(self)
 	}
 
-	private func initSocket() {
-		socket = WebSocket(url: NSURL(string: address!)!)
+	fileprivate func initSocket() {
+		socket = WebSocket(url: URL(string: address!)!)
 		socket?.delegate = self
 	}
 
-	private func doConnect() {
+	fileprivate func doConnect() {
 		socket!.connect()
-		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsConnectingNotification, object: nil)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: WsClient.WsConnectingNotification), object: nil)
 	}
 }
 
@@ -109,14 +109,14 @@ extension WsClient: WebSocketDelegate {
 		self.sendJSON(json)
 	}
 
-	public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
+	public func websocketDidReceiveData(socket: WebSocket, data: Data) {
 	}
 
 	public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
 		self.didInit = false
 		delegate?.wsClientDidDisconnect(self, error: error)
-		NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsDisconnectedNotification, object: nil)
-		if UIApplication.sharedApplication().applicationState == .Background {
+		NotificationCenter.default.post(name: Notification.Name(rawValue: WsClient.WsDisconnectedNotification), object: nil)
+		if UIApplication.shared.applicationState == .background {
 			return
 		}
 		if socket.currentURL.absoluteString != address {
@@ -125,7 +125,7 @@ extension WsClient: WebSocketDelegate {
 		if error == nil {
 			doConnect()
 		} else {
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(WsClient.ERROR_WAIT_SECOND * NSEC_PER_SEC)), dispatch_get_main_queue(), {
+			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(WsClient.ERROR_WAIT_SECOND * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
 				self.doConnect()
 			})
 		}
@@ -133,21 +133,21 @@ extension WsClient: WebSocketDelegate {
 
 	public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
 		log.debug("socket got:\(text)")
-		let dataFromString = text.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+		let dataFromString = text.data(using: String.Encoding.utf8, allowLossyConversion: false)
 		guard dataFromString != nil else {
 			return
 		}
 		let json = JSON(data: dataFromString!)
-		guard json.type == .Dictionary else {
-			return
-		}
+        guard json.type == .dictionary else {
+            return
+        }
 		let cmd = json["cmd"].string
 		guard cmd != nil else {
 			return
 		}
 		if cmd == "init" {
 			self.didInit = true
-			NSNotificationCenter.defaultCenter().postNotificationName(WsClient.WsInitedNotification, object: nil)
+			NotificationCenter.default.post(name: Notification.Name(rawValue: WsClient.WsInitedNotification), object: nil)
 			self.delegate?.wsClientDidInit(self, data: json.dictionaryObject!)
 		} else if self.didInit {
 			self.delegate?.wsClientDidReceiveMessage(self, cmd: cmd!, data: json.dictionaryObject!)

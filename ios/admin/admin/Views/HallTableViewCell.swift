@@ -21,32 +21,32 @@ class HallTableViewCell: SWTableViewCell {
 	@IBOutlet weak var activeImageView: UIImageView!
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		backgroundColor = UIColor.clearColor()
+		backgroundColor = UIColor.clear
 	}
 
-	override func setSelected(selected: Bool, animated: Bool) {
+	override func setSelected(_ selected: Bool, animated: Bool) {
 		super.setSelected(selected, animated: animated)
 
 		// Configure the view for the selected state
 	}
 
-	func setData(team: Team, number: Int, active: Bool) {
+	func setData(_ team: Team, number: Int, active: Bool) {
 		teamIDLabel.text = team.id
 		teamSizeLabel.text = String(team.size)
 		delayCountLabel.text = "- \(team.delayCount) -"
-		if team.status == .Prepare {
+		if team.status == .prepare {
 			waitTimeLabel.text = "准备中..."
-		} else if team.status == .Playing {
+		} else if team.status == .playing {
 			waitTimeLabel.text = "游戏中..."
-		} else if team.status == .After {
+		} else if team.status == .after {
 			waitTimeLabel.text = "答题中..."
-		} else if team.status == .Waiting {
+		} else if team.status == .waiting {
 			waitTimeLabel.text = String(format: "预计等待 %d分钟", team.waitTime / 60)
 		}
 		let delayImageName = "IconLate\(team.delayCount)"
 		let delayImage = UIImage(named: delayImageName)
 		delayCountImageView.image = delayImage
 		numberLabel.text = String(number + 1)
-		activeImageView.hidden = !active
+		activeImageView.isHidden = !active
 	}
 }

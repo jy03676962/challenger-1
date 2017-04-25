@@ -14,7 +14,7 @@ class LaserResultCell: UITableViewCell {
 	@IBOutlet weak var urLabel: UILabel!
 	@IBOutlet weak var errLabel: UILabel!
 
-	func renderData(data: LaserInfo) {
+	func renderData(_ data: LaserInfo) {
 		idLabel.text = data.id
 		urLabel.text = data.ur
 		if data.err == 1 {

@@ -12,7 +12,7 @@ import ObjectMapper
 struct SurveyQuestion: Mappable {
 	var q: String!
 	var options: [String]!
-	init?(_ map: Map) {
+	init?(map: Map) {
 	}
 	mutating func mapping(map: Map) {
 		q <- map["q"]
@@ -22,7 +22,7 @@ struct SurveyQuestion: Mappable {
 
 class Survey: Mappable {
 	var questions: [SurveyQuestion]!
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 	func mapping(map: Map) {
 		questions <- map["questions"]

@@ -19,11 +19,11 @@ struct PLConstants {
 	static func getWsAddress() -> String {
 		return "ws://" + getHost() + "/ws"
 	}
-	static func getHttpAddress(path: String) -> String {
+	static func getHttpAddress(_ path: String) -> String {
 		let p = path.hasPrefix("/") ? path : "/" + path
 		return "http://" + getHost() + p
 	}
-	static func getWebsiteAddress(path: String) -> String {
+	static func getWebsiteAddress(_ path: String) -> String {
 		let p = path.hasPrefix("/") ? path : "/" + path
 		return "http://" + Defaults[.websiteHost] + p
 	}
@@ -33,5 +33,5 @@ struct PLConstants {
 }
 
 enum GameMode: Int {
-	case Fun = 1, Survival
+	case fun = 1, survival
 }

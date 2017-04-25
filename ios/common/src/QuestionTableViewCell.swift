@@ -14,16 +14,16 @@ class QuestionTableViewCell: UITableViewCell {
 	@IBOutlet weak var contentLabel: UILabel!
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		backgroundColor = UIColor.clearColor()
-		selectionStyle = .None
+		backgroundColor = UIColor.clear
+		selectionStyle = .none
 	}
 
-	override func setSelected(selected: Bool, animated: Bool) {
+	override func setSelected(_ selected: Bool, animated: Bool) {
 		super.setSelected(selected, animated: animated)
 		iconImageView.image = selected ? UIImage(named: "OptionOn") : UIImage(named: "OptionOff")
 	}
 
-	func setData(data: String?) {
+	func setData(_ data: String?) {
 		contentLabel.text = data
 	}
 }

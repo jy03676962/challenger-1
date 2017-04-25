@@ -12,7 +12,7 @@ import ObjectMapper
 class BaseResult: Mappable {
 	var code: Int?
 	var error: String?
-	let codeTransform = TransformOf<Int, AnyObject>(fromJSON: { (value: AnyObject?) -> Int? in
+	let codeTransform = TransformOf<Int, Any>(fromJSON: { (value: Any?) -> Int? in
 		if value == nil {
 			return 0
 		} else if let i = value as? Int {
@@ -22,13 +22,13 @@ class BaseResult: Mappable {
 		} else {
 			return -1
 		}
-		}, toJSON: { (value: Int?) -> AnyObject? in
+		}, toJSON: { (value: Int?) -> Any? in
 		if let value = value {
 			return String(value)
 		}
 		return nil
 	})
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {
@@ -41,12 +41,12 @@ class LoginResult: BaseResult {
 	var username: String!
 	var userID: Int!
 	var currentCoin: Int!
-	required init?(_ map: Map) {
-		super.init(map)
+	required init?(map: Map) {
+		super.init(map: map)
 	}
 
 	override func mapping(map: Map) {
-		super.mapping(map)
+		super.mapping(map: map)
 		username <- map["username"]
 		userID <- map["user_id"]
 		currentCoin <- map["current_coin"]
@@ -56,12 +56,12 @@ class LoginResult: BaseResult {
 class AddUserResult: BaseResult {
 	var level: String?
 	var url: String?
-	required init?(_ map: Map) {
-		super.init(map)
+	required init?(map: Map) {
+		super.init(map: map)
 	}
 
 	override func mapping(map: Map) {
-		super.mapping(map)
+		super.mapping(map: map)
 		level <- map["level"]
 		url <- map["url"]
 	}
@@ -69,11 +69,11 @@ class AddUserResult: BaseResult {
 
 class AddMatchResult: BaseResult {
 	var matchID: Int!
-	required init?(_ map: Map) {
-		super.init(map)
+	required init?(map: Map) {
+		super.init(map: map)
 	}
 	override func mapping(map: Map) {
-		super.mapping(map)
+		super.mapping(map: map)
 		matchID <- map["match_id"]
 	}
 }

@@ -16,7 +16,7 @@ class MainArduinoInfo: Mappable {
 	var y: Int!
 	var type: String!
 	var laserNum: Int!
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {

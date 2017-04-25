@@ -12,7 +12,7 @@ import ObjectMapper
 struct Position: Mappable {
 	var X: Double!
 	var Y: Double!
-	init?(_ map: Map) {
+	init?(map: Map) {
 	}
 
 	mutating func mapping(map: Map) {
@@ -25,7 +25,7 @@ class Laser: Mappable {
 	var isPause: Bool!
 	var displayP: Position!
 	var displayP2: Position!
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {
@@ -53,14 +53,14 @@ class Player: Mappable {
 	var displayPos: Position!
 
 	var displayName: String {
-		return String(format: "[%02d]", Int(controllerID.componentsSeparatedByString(":")[1])!)
+		return String(format: "[%02d]", Int(controllerID.components(separatedBy: ":")[1])!)
 	}
 
 	var displayID: String {
-		return String(format: "%02d", Int(controllerID.componentsSeparatedByString(":")[1])!)
+		return String(format: "%02d", Int(controllerID.components(separatedBy: ":")[1])!)
 	}
 
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {
@@ -99,7 +99,7 @@ class Match: Mappable {
 	var isSimulator: Int!
 	var lasers: [Laser]?
 
-	required init?(_ map: Map) {
+	required init?(map: Map) {
 	}
 
 	func mapping(map: Map) {

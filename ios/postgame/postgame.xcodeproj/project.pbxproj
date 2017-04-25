@@ -198,12 +198,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 709E97A71CAA850B00A6F1F2 /* Build configuration list for PBXNativeTarget "postgame" */;
 			buildPhases = (
-				BD8B84D1F9917B1D006094BD /* 📦 Check Pods Manifest.lock */,
+				BD8B84D1F9917B1D006094BD /* [CP] Check Pods Manifest.lock */,
 				709E97911CAA850B00A6F1F2 /* Sources */,
 				709E97921CAA850B00A6F1F2 /* Frameworks */,
 				709E97931CAA850B00A6F1F2 /* Resources */,
-				2DD472F98685192DB2477A8A /* 📦 Embed Pods Frameworks */,
-				14BC41F1DC69A306E4997CF3 /* 📦 Copy Pods Resources */,
+				2DD472F98685192DB2477A8A /* [CP] Embed Pods Frameworks */,
+				14BC41F1DC69A306E4997CF3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -227,6 +227,7 @@
 					709E97941CAA850B00A6F1F2 = {
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = 96HSW2ZXJP;
+						LastSwiftMigration = 0830;
 					};
 				};
 			};
@@ -265,14 +266,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		14BC41F1DC69A306E4997CF3 /* 📦 Copy Pods Resources */ = {
+		14BC41F1DC69A306E4997CF3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,14 +281,14 @@
 			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-postgame/Pods-postgame-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2DD472F98685192DB2477A8A /* 📦 Embed Pods Frameworks */ = {
+		2DD472F98685192DB2477A8A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,19 +296,19 @@
 			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-postgame/Pods-postgame-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BD8B84D1F9917B1D006094BD /* 📦 Check Pods Manifest.lock */ = {
+		BD8B84D1F9917B1D006094BD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -450,6 +451,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 472ED4E913FF918F0E347E60 /* Pods-postgame.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer: xin xu (9YZZUBJ3ZD)";
@@ -460,6 +462,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.postgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -467,6 +470,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3F1CED146C3899622F044FF1 /* Pods-postgame.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: xin xu (96HSW2ZXJP)";
@@ -478,6 +482,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.postgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

@@ -11,7 +11,7 @@ import Starscream
 import SwiftyJSON
 
 public protocol DataReceiver: class {
-	func onReceivedData(json: [String: AnyObject], type: DataType)
+	func onReceivedData(_ json: [String: Any], type: DataType)
 }
 
 public enum DataType: String {
@@ -35,20 +35,20 @@ public enum DataType: String {
 
 	var shouldQuery: Bool {
 		let first: String = self.rawValue[0]
-		return first.uppercaseString == first
+		return first.uppercased() == first
 	}
 }
 
-public class DataManager {
+open class DataManager {
 
-	private var receiversMap: [DataType: [DataReceiver]] = [:]
+	fileprivate var receiversMap: [DataType: [DataReceiver]] = [:]
 
-	public static let singleton = DataManager()
+	open static let singleton = DataManager()
 
-	public func subscribeData(types: [DataType], receiver: DataReceiver) {
+	open func subscribeData(_ types: [DataType], receiver: DataReceiver) {
 		for type in types {
 			var list = receiversMap[type] ?? [DataReceiver]()
-			if !list.contains({ (rcv) -> Bool in rcv === receiver }) {
+			if !list.contains(where: { (rcv) -> Bool in rcv === receiver }) {
 				list.append(receiver)
 				receiversMap[type] = list
 			}
@@ -58,7 +58,7 @@ public class DataManager {
 		}
 	}
 
-	public func unsubscribe(receiver: DataReceiver) {
+	open func unsubscribe(_ receiver: DataReceiver) {
 		for (t, l) in receiversMap {
 			var nl = [DataReceiver]()
 			for r in l {
@@ -69,7 +69,7 @@ public class DataManager {
 			receiversMap[t] = nl
 		}
 	}
-	public func unsubscribe(receiver: DataReceiver, type: DataType) {
+	open func unsubscribe(_ receiver: DataReceiver, type: DataType) {
 		for (t, l) in receiversMap {
 			if t != type {
 				continue
@@ -84,14 +84,14 @@ public class DataManager {
 		}
 	}
 
-	public func queryData(type: DataType) {
+	open func queryData(_ type: DataType) {
 		WsClient.singleton.sendCmd(type.queryCmd)
 	}
 
-	private func dispatch() {
+	fileprivate func dispatch() {
 	}
 
-	private init() {
+	fileprivate init() {
 		WsClient.singleton.delegate = self
 	}
 }
@@ -99,16 +99,16 @@ public class DataManager {
 // MARK: websocket notificaiton
 extension DataManager: WsClientDelegate {
 
-	public func wsClientDidInit(client: WsClient, data: [String: AnyObject]) {
+	public func wsClientDidInit(_ client: WsClient, data: [String: Any]) {
 		for (type, _) in receiversMap {
 			WsClient.singleton.sendCmd(type.queryCmd)
 		}
 	}
 
-	public func wsClientDidDisconnect(client: WsClient, error: NSError?) {
+	public func wsClientDidDisconnect(_ client: WsClient, error: NSError?) {
 	}
 
-	public func wsClientDidReceiveMessage(client: WsClient, cmd: String, data: [String: AnyObject]) {
+	public func wsClientDidReceiveMessage(_ client: WsClient, cmd: String, data: [String: Any]) {
 		for (type, receivers) in receiversMap {
 			if type.rawValue == cmd {
 				for receiver in receivers {

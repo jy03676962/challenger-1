@@ -19,14 +19,14 @@ class MatchResultCell: UITableViewCell {
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		backgroundColor = UIColor.clearColor()
+		backgroundColor = UIColor.clear
 	}
 
-	func setData(data: PlayerData?, current: Bool) {
+	func setData(_ data: PlayerData?, current: Bool) {
 		var c: UIColor
 		if current {
 			energyIcon.image = UIImage(named: "PowerIcon")
-			c = UIColor.whiteColor()
+			c = UIColor.white
 		} else {
 			energyIcon.image = UIImage(named: "PowerIconOff")
 			c = UIColor(red: 113 / 255.0, green: 146 / 255.0, blue: 191 / 255.0, alpha: 1)
@@ -44,7 +44,7 @@ class MatchResultCell: UITableViewCell {
 			} else {
 				levelLabel.text = "--"
 			}
-			gradeLabel.text = d.grade.characters.count > 0 ? d.grade.uppercaseString : "-"
+			gradeLabel.text = d.grade.characters.count > 0 ? d.grade.uppercased() : "-"
 			goldLabel.text = "\(d.gold)/\(d.lostGold)"
 			energyLabel.text = "\(Int(d.energy))"
 			comboLabel.text = "\(d.combo)"

@@ -13,7 +13,7 @@ import ObjectMapper
 import PKHUD
 
 class HallController: PLViewController {
-	private static let controllerButtonTagStart = 100
+	fileprivate static let controllerButtonTagStart = 100
 
 	@IBOutlet weak var teamtableView: UITableView!
 	@IBOutlet weak var teamIDLabel: UILabel!
@@ -39,15 +39,15 @@ class HallController: PLViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		refreshControl = UIRefreshControl()
-		refreshControl.addTarget(self, action: #selector(HallController.refreshTeamData), forControlEvents: UIControlEvents.ValueChanged)
+		refreshControl.addTarget(self, action: #selector(HallController.refreshTeamData), for: UIControlEvents.valueChanged)
 		teamtableView.addSubview(refreshControl)
 	}
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		DataManager.singleton.subscribeData([.HallData, .ControllerData, .NewMatch, .Error], receiver: self)
 	}
 
-	override func viewDidDisappear(animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		DataManager.singleton.unsubscribe(self)
 	}
@@ -66,7 +66,7 @@ class HallController: PLViewController {
 		])
 		WsClient.singleton.sendJSON(json)
 	}
-	@IBAction func callTeam(sender: UIButton) {
+	@IBAction func callTeam(_ sender: UIButton) {
 		guard let team = topTeam else {
 			return
 		}
@@ -76,11 +76,11 @@ class HallController: PLViewController {
 		])
 		WsClient.singleton.sendJSON(json)
 	}
-	@IBAction func delayTeam(sender: UIButton) {
+	@IBAction func delayTeam(_ sender: UIButton) {
 		guard let team = topTeam else {
 			return
 		}
-		guard team.status == .Waiting else {
+		guard team.status == .waiting else {
 			return
 		}
 		let json = JSON([
@@ -89,8 +89,8 @@ class HallController: PLViewController {
 		])
 		WsClient.singleton.sendJSON(json)
 	}
-	@IBAction func addPlayer(sender: UIButton) {
-		guard let team = topTeam where team.size < PLConstants.maxTeamSize else {
+	@IBAction func addPlayer(_ sender: UIButton) {
+		guard let team = topTeam, team.size < PLConstants.maxTeamSize else {
 			return
 		}
 		let json = JSON([
@@ -98,9 +98,9 @@ class HallController: PLViewController {
 			"teamID": team.id,
 		])
 		WsClient.singleton.sendJSON(json)
-		sender.enabled = false
+		sender.isEnabled = false
 	}
-	@IBAction func removePlayer(sender: UIButton) {
+	@IBAction func removePlayer(_ sender: UIButton) {
 		guard topTeam != nil && topTeam!.size > 1 else {
 			return
 		}
@@ -109,13 +109,13 @@ class HallController: PLViewController {
 			"teamID": topTeam!.id,
 		])
 		WsClient.singleton.sendJSON(json)
-		sender.enabled = false
+		sender.isEnabled = false
 	}
-	@IBAction func ready(sender: UIButton) {
+	@IBAction func ready(_ sender: UIButton) {
 		guard topTeam != nil else {
 			return
 		}
-		if topTeam!.status == .Prepare {
+		if topTeam!.status == .prepare {
 			let json = JSON([
 				"cmd": "teamCancelPrepare",
 				"teamID": topTeam!.id,
@@ -129,13 +129,13 @@ class HallController: PLViewController {
 			WsClient.singleton.sendJSON(json)
 		}
 	}
-	@IBAction func start(sender: AnyObject) {
+	@IBAction func start(_ sender: AnyObject) {
 		guard topTeam != nil else {
 			return
 		}
 		var selectedControllerIds = [String]()
 		for btn in controllerButtons {
-			guard let pc = btn.controller where btn.selected else {
+			guard let pc = btn.controller, btn.isSelected else {
 				continue
 			}
 			selectedControllerIds.append(pc.id)
@@ -145,29 +145,29 @@ class HallController: PLViewController {
 			"cmd": "teamStart",
 			"teamID": topTeam!.id,
 			"mode": topTeam!.mode,
-			"ids": selectedControllerIds.joinWithSeparator(",")
+			"ids": selectedControllerIds.joined(separator: ",")
 		])
 		WsClient.singleton.sendJSON(json)
-		HUD.show(.Progress)
+		HUD.show(.progress)
 	}
 
-	@IBAction func toggleControllerButton(sender: UIButton) {
-		sender.selected = !sender.selected
-		startButton.enabled = canStart()
+	@IBAction func toggleControllerButton(_ sender: UIButton) {
+		sender.isSelected = !sender.isSelected
+		startButton.isEnabled = canStart()
 	}
 
-	private func renderTopWaitingTeam() {
+	fileprivate func renderTopWaitingTeam() {
 		guard topTeam != nil else {
-			callButton.enabled = false
-			delayButton.enabled = false
-			changeModeTGR.enabled = false
-			addPlayerButton.enabled = false
-			removePlayerButton.enabled = false
-			startButton.enabled = false
-			readyButton.enabled = false
+			callButton.isEnabled = false
+			delayButton.isEnabled = false
+			changeModeTGR.isEnabled = false
+			addPlayerButton.isEnabled = false
+			removePlayerButton.isEnabled = false
+			startButton.isEnabled = false
+			readyButton.isEnabled = false
 			return
 		}
-		readyButton.enabled = true
+		readyButton.isEnabled = true
 		teamIDLabel.text = topTeam!.id
 		playerNumberLabel.text = "\(topTeam!.size)"
 		if topTeam!.mode == "g" {
@@ -177,53 +177,53 @@ class HallController: PLViewController {
 			modeImageView.image = UIImage(named: "SurvivalIcon")
 			modeLabel.text = "[生存模式]"
 		}
-		if topTeam!.status == .Waiting {
-			readyButton.setBackgroundImage(UIImage(named: "PrepareButton"), forState: .Normal)
-			callButton.enabled = true
-			delayButton.enabled = true
-			changeModeTGR.enabled = true
-			addPlayerButton.enabled = topTeam!.size < PLConstants.maxTeamSize
-			removePlayerButton.enabled = topTeam!.size > 1
-		} else if topTeam!.status == .Prepare {
-			readyButton.setBackgroundImage(UIImage(named: "CancelPrepare"), forState: .Normal)
-			callButton.enabled = false
-			delayButton.enabled = false
-			changeModeTGR.enabled = false
-			addPlayerButton.enabled = false
-			removePlayerButton.enabled = false
+		if topTeam!.status == .waiting {
+			readyButton.setBackgroundImage(UIImage(named: "PrepareButton"), for: UIControlState())
+			callButton.isEnabled = true
+			delayButton.isEnabled = true
+			changeModeTGR.isEnabled = true
+			addPlayerButton.isEnabled = topTeam!.size < PLConstants.maxTeamSize
+			removePlayerButton.isEnabled = topTeam!.size > 1
+		} else if topTeam!.status == .prepare {
+			readyButton.setBackgroundImage(UIImage(named: "CancelPrepare"), for: UIControlState())
+			callButton.isEnabled = false
+			delayButton.isEnabled = false
+			changeModeTGR.isEnabled = false
+			addPlayerButton.isEnabled = false
+			removePlayerButton.isEnabled = false
 		}
-		startButton.enabled = canStart()
+		startButton.isEnabled = canStart()
 	}
 
-	private func canStart() -> Bool {
+	fileprivate func canStart() -> Bool {
 		var count = 0
 		for btn in controllerButtons {
-			if btn.selected {
+			if btn.isSelected {
 				count += 1
 			}
 		}
-		return topTeam != nil && topTeam!.status == .Prepare && topTeam!.size == count && !hasPlayingTeam
+		return topTeam != nil && topTeam!.status == .prepare && topTeam!.size == count && !hasPlayingTeam
 	}
 
-	private func getBtn(idx: Int) -> UIButton {
+	fileprivate func getBtn(_ idx: Int) -> UIButton {
 		return view.viewWithTag(idx + HallController.controllerButtonTagStart) as! UIButton
 	}
 }
 
 extension HallController: DataReceiver {
-	func onReceivedData(json: [String: AnyObject], type: DataType) {
+	func onReceivedData(_ json: [String: Any], type: DataType) {
 		if type == .HallData {
 			topTeam = nil
-			teams = Mapper<Team>().mapArray(json["data"])
+            teams = Mapper<Team>().mapArray(JSONObject: json["data"])
 			if teams != nil {
 				var topTeamSet = false
 				hasPlayingTeam = false
 				for team in teams! {
-					if (team.status == .Waiting || team.status == .Prepare) && !topTeamSet {
+					if (team.status == .waiting || team.status == .prepare) && !topTeamSet {
 						topTeam = team
 						topTeamSet = true
 					}
-					if team.status == .Playing {
+					if team.status == .playing {
 						hasPlayingTeam = true
 					}
 				}
@@ -232,7 +232,7 @@ extension HallController: DataReceiver {
 			teamtableView.reloadData()
 			refreshControl.endRefreshing()
 		} else if type == .ControllerData {
-			guard let controllers = Mapper<PlayerController>().mapArray(json["data"]) else {
+            guard let controllers = Mapper<PlayerController>().mapArray(JSONObject: json["data"]) else {
 				return
 			}
 			var controllerMap = [String: PlayerController]()
@@ -247,7 +247,7 @@ extension HallController: DataReceiver {
 					continue
 				}
 				btn.controller = c
-				controllerMap.removeValueForKey(btnC.id)
+				controllerMap.removeValue(forKey: btnC.id)
 			}
 			for (_, v) in controllerMap {
 				for btn in controllerButtons {
@@ -261,27 +261,27 @@ extension HallController: DataReceiver {
 		} else if type == .NewMatch {
 			HUD.hide()
 			for btn in controllerButtons {
-				btn.selected = false
+				btn.isSelected = false
 			}
 		} else if type == .Error {
-			HUD.flash(.LabeledError(title: json["msg"] as? String, subtitle: nil), delay: 1)
+			HUD.flash(.labeledError(title: json["msg"] as? String, subtitle: nil), delay: 1)
 		}
 	}
 }
 
 // MARK: swipe function
 extension HallController: SWTableViewCellDelegate {
-	private var rightButtons: [AnyObject] {
+	fileprivate var rightButtons: [AnyObject] {
 		let jumpButton = UIButton()
-		jumpButton.setImage(UIImage(named: "CutLineButton"), forState: .Normal)
-		jumpButton.backgroundColor = UIColor.clearColor()
+		jumpButton.setImage(UIImage(named: "CutLineButton"), for: UIControlState())
+		jumpButton.backgroundColor = UIColor.clear
 		let removeButton = UIButton()
-		removeButton.setImage(UIImage(named: "RemoveTeamButton"), forState: .Normal)
-		removeButton.backgroundColor = UIColor.clearColor()
+		removeButton.setImage(UIImage(named: "RemoveTeamButton"), for: UIControlState())
+		removeButton.backgroundColor = UIColor.clear
 		return [jumpButton, removeButton]
 	}
 
-	func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerRightUtilityButtonWithIndex index: Int) {
+	func swipeableTableViewCell(_ cell: SWTableViewCell!, didTriggerRightUtilityButtonWith index: Int) {
 		guard let team = teamFromCell(cell) else {
 			return
 		}
@@ -299,21 +299,21 @@ extension HallController: SWTableViewCellDelegate {
 			WsClient.singleton.sendJSON(json)
 		}
 	}
-	func swipeableTableViewCellShouldHideUtilityButtonsOnSwipe(cell: SWTableViewCell!) -> Bool {
+	func swipeableTableViewCellShouldHideUtilityButtons(onSwipe cell: SWTableViewCell!) -> Bool {
 		return true
 	}
-	func swipeableTableViewCell(cell: SWTableViewCell!, canSwipeToState state: SWCellState) -> Bool {
+	func swipeableTableViewCell(_ cell: SWTableViewCell!, canSwipeTo state: SWCellState) -> Bool {
 		guard let team = teamFromCell(cell) else {
 			return false
 		}
-		if team.status != .Waiting {
+		if team.status != .waiting {
 			return false
 		}
 		return true
 	}
 
-	private func teamFromCell(cell: SWTableViewCell) -> Team? {
-		if let cellIndex = teamtableView.indexPathForCell(cell), let tms = self.teams {
+	fileprivate func teamFromCell(_ cell: SWTableViewCell) -> Team? {
+		if let cellIndex = teamtableView.indexPath(for: cell), let tms = self.teams {
 			return tms[cellIndex.row]
 		}
 		return nil
@@ -321,14 +321,14 @@ extension HallController: SWTableViewCellDelegate {
 }
 
 extension HallController: UITableViewDataSource, UITableViewDelegate {
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return teams != nil ? teams!.count : 0
 	}
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("HallTableViewCell")! as! HallTableViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "HallTableViewCell")! as! HallTableViewCell
 		let team = teams![indexPath.row]
 		cell.setData(team, number: indexPath.row, active: team.id == topTeam?.id)
 		cell.delegate = self

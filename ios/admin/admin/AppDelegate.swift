@@ -10,21 +10,21 @@ import UIKit
 import XCGLogger
 import SwiftyUserDefaults
 
-let log = XCGLogger.defaultInstance()
+let log = XCGLogger.default
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		Instabug.startWithToken("c22cb54ceb917a9b8c01418b3ce3b9a5", invocationEvent: IBGInvocationEvent.None)
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+		Instabug.start(withToken: "c22cb54ceb917a9b8c01418b3ce3b9a5", invocationEvent: IBGInvocationEvent.none)
 		#if DEBUG
-			log.setup(.Debug, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
+			log.setup(level: .debug, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#else
-			log.setup(.Severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
+			log.setup(.severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
-		UITabBar.appearance().barTintColor = UIColor.clearColor()
+		UITabBar.appearance().barTintColor = UIColor.clear
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
 		if Defaults[.host] == "" {
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate: DataReceiver {
-	func onReceivedData(json: [String: AnyObject], type: DataType) {
+	func onReceivedData(_ json: [String: Any], type: DataType) {
 		if type == .NewMatch {
 			Defaults[.matchID] = json["data"] as! Int
 		} else if type == .QuestionCount {

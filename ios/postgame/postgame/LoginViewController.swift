@@ -14,6 +14,30 @@ import SVProgressHUD
 import EasyPeasy
 import SwiftyUserDefaults
 import PKHUD
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 let SegueIDShowMatchResult = "ShowMatchResult"
 
@@ -32,73 +56,73 @@ class LoginViewController: PLViewController {
 	/**
 	 双击登陆界面右上角出现配置窗口
 	 */
-	@IBAction func showConfig(sender: UITapGestureRecognizer) {
-		let alert = UIAlertController(title: "设置", message: nil, preferredStyle: .Alert)
-		alert.addTextFieldWithConfigurationHandler { (textfield) in
+	@IBAction func showConfig(_ sender: UITapGestureRecognizer) {
+		let alert = UIAlertController(title: "设置", message: nil, preferredStyle: .alert)
+		alert.addTextField { (textfield) in
 			textfield.placeholder = Defaults[.host]
 		}
-		alert.addTextFieldWithConfigurationHandler { textfield in
+		alert.addTextField { textfield in
 			textfield.placeholder = Defaults[.deviceID]
 		}
-		alert.addTextFieldWithConfigurationHandler { textfield in
+		alert.addTextField { textfield in
 			textfield.placeholder = Defaults[.websiteHost]
 		}
-		let cancelAction = UIAlertAction(title: "取消", style: .Cancel, handler: nil)
+		let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
 		alert.addAction(cancelAction)
 		weak var weakAlert = alert
-		let doneAction = UIAlertAction(title: "确定", style: .Default) { (action) in
-			if let host = weakAlert?.textFields![0].text where host != "" {
+		let doneAction = UIAlertAction(title: "确定", style: .default) { (action) in
+			if let host = weakAlert?.textFields![0].text, host != "" {
 				Defaults[.host] = host
 				WsClient.singleton.connect(PLConstants.getWsAddress())
 			}
-			if let num = weakAlert?.textFields![1].text where num != "" {
+			if let num = weakAlert?.textFields![1].text, num != "" {
 				Defaults[.deviceID] = num
 			}
-			if let host = weakAlert?.textFields![2].text where host != "" {
+			if let host = weakAlert?.textFields![2].text, host != "" {
 				Defaults[.websiteHost] = host
 			}
 		}
 		alert.addAction(doneAction)
-		presentViewController(alert, animated: true, completion: nil)
+		present(alert, animated: true, completion: nil)
 	}
 
-	@IBAction func textFieldValueChanged(sender: UITextField) {
+	@IBAction func textFieldValueChanged(_ sender: UITextField) {
 		if usernameTextField.text?.characters.count > 0 && passwordTextField.text?.characters.count > 0 && deviceIDTextField.text?.characters.count > 0 {
-			self.loginButton.enabled = true
+			self.loginButton.isEnabled = true
 		} else {
-			self.loginButton.enabled = false
+			self.loginButton.isEnabled = false
 		}
 	}
 
 	@IBAction func login() {
-		HUD.show(.Progress)
+		HUD.show(.progress)
 		let p = [
 			"username": self.usernameTextField.text!,
 			"password": self.passwordTextField.text!,
 		]
-		Alamofire.request(.POST, PLConstants.getWebsiteAddress("user/login"), parameters: p, encoding: .URL, headers: nil)
+        request(PLConstants.getWebsiteAddress("user/login"), method: .post, parameters: p, encoding: URLEncoding.default, headers: nil)
 			.validate()
-			.responseObject(completionHandler: { (resp: Response<LoginResult, NSError>) in
+            .responseObject(completionHandler: { (resp: DataResponse<LoginResult>) in
 				HUD.hide()
 				if let _ = resp.result.error {
-					HUD.flash(.Error, delay: 2)
+					HUD.flash(.error, delay: 2)
 				} else {
 					let m = resp.result.value!
 					if m.code != nil && m.code == 0 {
-						self.performSegueWithIdentifier(SegueIDShowMatchResult, sender: m)
+						self.performSegue(withIdentifier: SegueIDShowMatchResult, sender: m)
 					} else {
-						HUD.flash(.LabeledError(title: m.error, subtitle: nil), delay: 2)
+						HUD.flash(.labeledError(title: m.error, subtitle: nil), delay: 2)
 					}
 				}
 		})
 	}
 	@IBAction func skip() {
-		performSegueWithIdentifier(SegueIDShowMatchResult, sender: nil)
+		performSegue(withIdentifier: SegueIDShowMatchResult, sender: nil)
 	}
 
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == SegueIDShowMatchResult {
-			let vc = segue.destinationViewController as! MatchResultController
+			let vc = segue.destination as! MatchResultController
 			vc.isAdmin = false
 			vc.loginInfo = sender as? LoginResult
 		}
@@ -115,9 +139,9 @@ extension LoginViewController {
 		wrapperView.removeFromSuperview()
 		scrollView.contentView.addSubview(wrapperView)
 		scrollView.backgroundColor = wrapperView.backgroundColor
-		scrollView.userInteractionEnabled = true
+		scrollView.isUserInteractionEnabled = true
 		scrollView.bounces = true
-		scrollView.scrollEnabled = true
+		scrollView.isScrollEnabled = true
 		scrollView <- Edges()
 		wrapperView <- Edges()
 		scrollView.setTextMargin(175, forTextField: usernameTextField)

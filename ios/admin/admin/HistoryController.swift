@@ -24,8 +24,8 @@ class HistoryController: PLViewController {
 		guard let d = data else {
 			return nil
 		}
-		for (i, m) in d.enumerate() {
-			if m.answerType == .Answering {
+		for (i, m) in d.enumerated() {
+			if m.answerType == .answering {
 				return i
 			}
 		}
@@ -33,12 +33,12 @@ class HistoryController: PLViewController {
 	}
 
 	@IBAction func startAnswer() {
-		guard let data = self.data, let indexPaths = tableView.indexPathsForSelectedRows where indexPaths.count == 1 else {
+		guard let data = self.data, let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count == 1 else {
 			return
 		}
 		if let ing = isAnswering {
 			if ing != indexPaths[0].row {
-				HUD.flash(.LabeledError(title: "有其他正在答题的队伍", subtitle: "请先结束该组答题后重试"), delay: 1)
+				HUD.flash(.labeledError(title: "有其他正在答题的队伍", subtitle: "请先结束该组答题后重试"), delay: 1)
 				return
 			}
 		}
@@ -46,10 +46,10 @@ class HistoryController: PLViewController {
 		if matchData.eid != nil && matchData.eid != "" {
 			self.startAnswerAfterAdd(matchData)
 		} else {
-			HUD.show(.Progress)
-			var playerDataList: [AnyObject] = []
+			HUD.show(.progress)
+			var playerDataList: [Any] = []
 			for player in matchData.member {
-				let pd: [String: AnyObject] = [
+				let pd: [String: Any] = [
 					"player_id": player.cid,
 					"player_score": String(player.gold - player.lostGold),
 					"player_catch": String(player.hitCount),
@@ -57,7 +57,7 @@ class HistoryController: PLViewController {
 				]
 				playerDataList.append(pd)
 			}
-			let p: [String: AnyObject] = [
+			let p: [String: Any] = [
 				"mode": matchData.mode == "g" ? "0" : "1",
 				"time": String(Int(matchData.elasped * 1000)),
 				"gold": String(matchData.gold),
@@ -66,15 +66,15 @@ class HistoryController: PLViewController {
 				"team_rank": matchData.grade,
 				"player_data": JSON(playerDataList).rawString()!,
 			]
-			Alamofire.request(.POST, PLConstants.getWebsiteAddress("challenger/match"), parameters: p, encoding: .URL, headers: nil)
+            request(PLConstants.getWebsiteAddress("challenger/match"), method: .post, parameters: p, encoding: URLEncoding.default, headers: nil)
 				.validate()
-				.responseObject(completionHandler: { (response: Response<AddMatchResult, NSError>) in
+                .responseObject(completionHandler: { (response: DataResponse<AddMatchResult>) in
 					HUD.hide()
 					if let err = response.result.error {
-						HUD.flash(.LabeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
+						HUD.flash(.labeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
 					} else {
 						if response.result.value?.code != 0 {
-							HUD.flash(.LabeledError(title: response.result.value?.error, subtitle: nil), delay: 2)
+							HUD.flash(.labeledError(title: response.result.value?.error, subtitle: nil), delay: 2)
 						} else {
 							matchData.eid = String(response.result.value!.matchID)
 							self.startAnswerAfterAdd(matchData)
@@ -87,19 +87,19 @@ class HistoryController: PLViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		refreshControl = UIRefreshControl()
-		refreshControl.addTarget(self, action: #selector(refreshHistory), forControlEvents: .ValueChanged)
+		refreshControl.addTarget(self, action: #selector(refreshHistory), for: .valueChanged)
 		tableView.addSubview(refreshControl)
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		refreshHistory()
 	}
 
 	func refreshHistory() {
-		Alamofire.request(.GET, PLConstants.getHttpAddress("api/history"))
+        request(PLConstants.getHttpAddress("api/history"))
 			.validate()
-			.responseArray(completionHandler: { (response: Response<[MatchData], NSError>) in
+            .responseArray(completionHandler: { (response: DataResponse<[MatchData]>) in
 				self.data = response.result.value
 				if self.data != nil {
 					self.tableView.reloadData()
@@ -108,23 +108,27 @@ class HistoryController: PLViewController {
 		})
 	}
 
-	func startAnswerAfterAdd(matchData: MatchData) {
-		HUD.show(.Progress)
-		Alamofire.request(.POST, PLConstants.getHttpAddress("api/start_answer"), parameters: ["mid": matchData.id, "eid": matchData.eid!], encoding: .URL, headers: nil)
+	func startAnswerAfterAdd(_ matchData: MatchData) {
+		HUD.show(.progress)
+        let p: [String: Any] = [
+            "mid": matchData.id,
+            "eid": matchData.eid!
+        ]
+        request(PLConstants.getHttpAddress("api/start_answer"), method: .post, parameters: p, encoding: URLEncoding.default, headers: nil)
 			.validate()
-			.responseObject(completionHandler: { (response: Response<MatchData, NSError>) in
+            .responseObject(completionHandler: { (response: DataResponse<MatchData>) in
 				HUD.hide()
 				if let err = response.result.error {
-					HUD.flash(.LabeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
+					HUD.flash(.labeledError(title: err.localizedDescription, subtitle: nil), delay: 2)
 				} else {
-					self.performSegueWithIdentifier(segueIDPresentMatchResult, sender: matchData)
+					self.performSegue(withIdentifier: segueIDPresentMatchResult, sender: matchData)
 				}
 		})
 	}
 
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == segueIDPresentMatchResult {
-			let vc = segue.destinationViewController as! MatchResultController
+			let vc = segue.destination as! MatchResultController
 			vc.isAdmin = true
 			vc.matchData = sender as? MatchData
 		}
@@ -132,21 +136,21 @@ class HistoryController: PLViewController {
 }
 
 extension HistoryController: UITableViewDelegate, UITableViewDataSource {
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.data == nil ? 0 : self.data!.count
 	}
-	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("HistoryTableViewCell") as! HistoryTableViewCell
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell") as! HistoryTableViewCell
 		cell.setData(data![indexPath.row])
 		return cell
 	}
-	func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		startAnswerButton.enabled = true
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		startAnswerButton.isEnabled = true
 	}
-	func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-		startAnswerButton.enabled = false
+	func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		startAnswerButton.isEnabled = false
 	}
 }

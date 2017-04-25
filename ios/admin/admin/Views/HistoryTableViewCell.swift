@@ -15,23 +15,23 @@ class HistoryTableViewCell: UITableViewCell {
 	@IBOutlet weak var backgroundImageView: UIImageView!
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		backgroundColor = UIColor.clearColor()
+		backgroundColor = UIColor.clear
 	}
-	func setData(data: MatchData) {
+	func setData(_ data: MatchData) {
 		teamIDLabel.text = data.teamID
 		playerCountLabel.text = "\(data.member.count)"
 		var txt: String
 		switch data.answerType! {
-		case .NotAnswer:
+		case .notAnswer:
 			txt = "尚未答题"
-		case .Answering:
+		case .answering:
 			txt = "答题中"
-		case .Answered:
+		case .answered:
 			txt = "已答题"
 		}
 		statusLabel.text = txt
 	}
-	override func setSelected(selected: Bool, animated: Bool) {
-		backgroundImageView.hidden = !selected
+	override func setSelected(_ selected: Bool, animated: Bool) {
+		backgroundImageView.isHidden = !selected
 	}
 }

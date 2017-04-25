@@ -11,11 +11,11 @@ import UIKit
 class ReplaceSeuge: UIStoryboardSegue {
 
 	override func perform() {
-		let navigationController: UINavigationController = sourceViewController.navigationController!;
+		let navigationController: UINavigationController = source.navigationController!;
 
 		var controllerStack = navigationController.viewControllers;
-		let index = controllerStack.indexOf(sourceViewController);
-		controllerStack[index!] = destinationViewController
+		let index = controllerStack.index(of: source);
+		controllerStack[index!] = destination
 
 		navigationController.setViewControllers(controllerStack, animated: true);
 	}

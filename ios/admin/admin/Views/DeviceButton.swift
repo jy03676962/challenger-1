@@ -13,25 +13,25 @@ class DeviceButton: UIButton {
 	var controller: PlayerController? {
 		didSet {
 			if let c = controller {
-				enabled = true
+				isEnabled = true
 				if c.matchID == 0 {
-					setBackgroundImage(UIImage(named: "PCAvailable"), forState: .Normal)
+					setBackgroundImage(UIImage(named: "PCAvailable"), for: UIControlState())
 				} else {
-					setBackgroundImage(UIImage(named: "PCGaming"), forState: .Normal)
+					setBackgroundImage(UIImage(named: "PCGaming"), for: UIControlState())
 				}
 				let id: String = c.address.id
 				var title: String?
-				if c.address.type == .Simulator {
+				if c.address.type == .simulator {
 					title = id[0]
-				} else if c.address.type == .Wearable {
+				} else if c.address.type == .wearable {
 					title = id.last()
 				}
-				setTitle(title, forState: .Normal)
-				setTitle(title, forState: .Selected)
+				setTitle(title, for: UIControlState())
+				setTitle(title, for: .selected)
 			} else {
-				enabled = false
-				selected = false
-				setTitle(nil, forState: .Normal)
+				isEnabled = false
+				isSelected = false
+				setTitle(nil, for: UIControlState())
 			}
 		}
 	}
