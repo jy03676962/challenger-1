@@ -154,12 +154,12 @@ class MatchController: PLViewController {
 extension MatchController: DataReceiver {
 	func onReceivedData(_ json: [String: Any], type: DataType) {
 		if type == .UpdateMatch {
-            match = Mapper<Match>().map(JSONString: json["data"] as! String)
+            match = Mapper<Match>().map(JSONObject: json["data"])
 			if match != nil && match?.id == Defaults[.matchID] {
 				renderMatch()
 			}
 		} else if type == .MatchStop {
-			let matchResult = Mapper<MatchResult>().map(JSONString: json["data"] as! String)
+			let matchResult = Mapper<MatchResult>().map(JSONObject: json["data"])
 			if matchResult != nil {
 				if matchResult?.matchID == Defaults[.matchID] {
 					match = nil

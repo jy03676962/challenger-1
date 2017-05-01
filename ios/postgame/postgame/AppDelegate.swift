@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		#if DEBUG
 			log.setup(level: .debug, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#else
-            log.setup(level: .severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
+            log.setup(level: .severe, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
 		if Defaults[.host] == "" {
 			Defaults[.host] = "192.168.1.5:3000"

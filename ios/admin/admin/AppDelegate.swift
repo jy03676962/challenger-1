@@ -22,13 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		#if DEBUG
 			log.setup(level: .debug, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#else
-			log.setup(.severe, showThreadName: true, showLogLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
+			log.setup(level: .severe, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, writeToFile: nil)
 		#endif
 		UITabBar.appearance().barTintColor = UIColor.clear
 		UITabBar.appearance().backgroundImage = UIImage()
 		UITabBar.appearance().shadowImage = UIImage()
 		if Defaults[.host] == "" {
-			Defaults[.host] = "192.168.1.5:3000"
+			Defaults[.host] = "10.0.0.11:3000"
 		}
 		if Defaults[.deviceID] == "" {
 			Defaults[.deviceID] = "admin"

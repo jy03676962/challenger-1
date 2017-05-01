@@ -53,6 +53,22 @@ class LoginViewController: PLViewController {
 	@IBOutlet weak var deviceIDTextField: LoginTextField!
 	@IBOutlet weak var loginButton: UIButton!
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		let scrollView = AutoKeyboardScrollView()
+		view.addSubview(scrollView)
+		wrapperView.removeFromSuperview()
+		scrollView.contentView.addSubview(wrapperView)
+		scrollView.backgroundColor = wrapperView.backgroundColor
+		scrollView.isUserInteractionEnabled = true
+		scrollView.bounces = true
+		scrollView.isScrollEnabled = true
+		scrollView <- Edges()
+		wrapperView <- Edges()
+		scrollView.setTextMargin(175, forTextField: usernameTextField)
+		scrollView.setTextMargin(140, forTextField: passwordTextField)
+	}
+
 	/**
 	 双击登陆界面右上角出现配置窗口
 	 */
@@ -126,25 +142,5 @@ class LoginViewController: PLViewController {
 			vc.isAdmin = false
 			vc.loginInfo = sender as? LoginResult
 		}
-	}
-}
-
-// MARK: UIViewController
-extension LoginViewController {
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		let scrollView = AutoKeyboardScrollView()
-		view.addSubview(scrollView)
-		wrapperView.removeFromSuperview()
-		scrollView.contentView.addSubview(wrapperView)
-		scrollView.backgroundColor = wrapperView.backgroundColor
-		scrollView.isUserInteractionEnabled = true
-		scrollView.bounces = true
-		scrollView.isScrollEnabled = true
-		scrollView <- Edges()
-		wrapperView <- Edges()
-		scrollView.setTextMargin(175, forTextField: usernameTextField)
-		scrollView.setTextMargin(140, forTextField: passwordTextField)
 	}
 }

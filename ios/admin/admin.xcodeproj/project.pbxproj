@@ -276,8 +276,9 @@
 				TargetAttributes = {
 					70B4DAC01CC7B10A00159C81 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = 96HSW2ZXJP;
+						DevelopmentTeam = 23BHSQTNEA;
 						LastSwiftMigration = 0830;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -528,12 +529,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer: xin xu (9YZZUBJ3ZD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 23BHSQTNEA;
 				INFOPLIST_FILE = admin/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.admin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2abdb1e2-668c-46bb-89e6-0f6aa1268db1";
+				PROVISIONING_PROFILE_SPECIFIER = "challenger adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 				SWIFT_VERSION = 3.0;
 			};
@@ -547,11 +552,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: xin xu (96HSW2ZXJP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 23BHSQTNEA;
 				INFOPLIST_FILE = admin/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.admin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2abdb1e2-668c-46bb-89e6-0f6aa1268db1";
+				PROVISIONING_PROFILE_SPECIFIER = "challenger adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 				SWIFT_VERSION = 3.0;
 			};
