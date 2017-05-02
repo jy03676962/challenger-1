@@ -17,6 +17,7 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+	_ "net/http/pprof"
 )
 
 const (
@@ -71,6 +72,7 @@ func main() {
 	}
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 	log.Println("setup log system done")
+	go http.ListenAndServe(":8081", http.DefaultServeMux)
 
 	defer func() {
 		if err := recover(); err != nil { //catch
