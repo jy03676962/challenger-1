@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	host        = "192.168.1.5"
+	host        = "10.0.0.11"
 	httpAddr    = host + ":3000"
 	tcpAddr     = host + ":4000"
 	udpAddr     = host + ":5000"
