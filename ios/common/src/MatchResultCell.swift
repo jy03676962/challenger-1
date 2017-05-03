@@ -45,9 +45,9 @@ class MatchResultCell: UITableViewCell {
 				levelLabel.text = "--"
 			}
 			gradeLabel.text = d.grade.characters.count > 0 ? d.grade.uppercased() : "-"
-			goldLabel.text = "\(d.gold)/\(d.lostGold)"
-			energyLabel.text = "\(Int(d.energy))"
-			comboLabel.text = "\(d.combo)"
+			goldLabel.text = "\(d.gold!)/\(d.lostGold!)"
+			energyLabel.text = "\(Int(d.energy!))"
+			comboLabel.text = "\(d.combo!)"
 		} else {
 			idLabel.text = "--"
 			levelLabel.text = "--"

@@ -189,7 +189,7 @@ class MatchResultController: PLViewController {
 			if data.mode == "g" {
 				headerImageView.image = UIImage(named: "FunImage")
 				tableHeaderImageView.image = UIImage(named: "MatchGoldResultHeader")
-				scoreLabel.text = "\(data.gold)G"
+				scoreLabel.text = "\(data.gold!)G"
 			} else {
 				headerImageView.image = UIImage(named: "SurvivalImage")
 				tableHeaderImageView.image = UIImage(named: "MatchResultHeader")
@@ -201,7 +201,7 @@ class MatchResultController: PLViewController {
 				for (i, label) in self.playersLabel.enumerated() {
 					if i < data.member.count {
 						let pd = data.member[i]
-						label.text = "\(pd.getName()): \(pd.answered) / \(Defaults[.qCount]) "
+						label.text = "\(pd.getName()): \(pd.answered!) / \(Defaults[.qCount]) "
 						label.isHidden = false
 					} else {
 						label.isHidden = true
@@ -212,7 +212,7 @@ class MatchResultController: PLViewController {
 			} else if let pd = self.playerData {
 				self.personalScoreLabel.isHidden = false
 				self.personalScoreHeader.isHidden = false
-				self.personalScoreLabel.text = "\(pd.gold - pd.lostGold)G"
+				self.personalScoreLabel.text = "\(pd.gold! - pd.lostGold!)G"
 				guard let url = pd.url else {
 					return
 				}
@@ -264,7 +264,7 @@ extension MatchResultController: DataReceiver {
 				for (i, pd) in data.member.enumerated() {
 					if pd.id == playerData.id {
 						if showAnswerStatus {
-							self.playersLabel[i].text = "\(playerData.getName()): \(playerData.answered) / \(Defaults[.qCount]) "
+							self.playersLabel[i].text = "\(playerData.getName()): \(playerData.answered!) / \(Defaults[.qCount]) "
 						}
 						data.member[i] = playerData
 						break

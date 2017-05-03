@@ -21,8 +21,8 @@ class PlayerTableViewCell: UITableViewCell {
 
 	func setData(_ player: Player) {
 		playerIDLabel.text = player.displayName
-		goldLabel.text = "\(player.gold)/\(player.lostGold)"
-		energyLabel.text = String(format: "%.f", player.energy)
-		comboLabel.text = "\(player.combo)"
+		goldLabel.text = "\(player.gold!)/\(player.lostGold!)"
+		energyLabel.text = String(format: "%.f", player.energy!)
+		comboLabel.text = "\(player.combo!)"
 	}
 }

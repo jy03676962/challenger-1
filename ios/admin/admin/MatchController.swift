@@ -92,7 +92,7 @@ class MatchController: PLViewController {
 			matchTimeLabel.text = String(format: "%02d:%02d", min, sec)
 			matchStatusLabel.text = "实时状态: 进行中"
 			playerCountLabel.text = "玩家人数:\(match!.member.count)"
-			totalCoinLabel.text = "总金币:\(match!.gold)G"
+			totalCoinLabel.text = "总金币:\(match!.gold!)G"
 			energyLabel.text = String(format: "%.1f/%d", match!.energy, match!.maxEnergy)
 			playerTableView.reloadData()
 			if match!.isSimulator == 0 {
@@ -154,7 +154,7 @@ class MatchController: PLViewController {
 extension MatchController: DataReceiver {
 	func onReceivedData(_ json: [String: Any], type: DataType) {
 		if type == .UpdateMatch {
-            match = Mapper<Match>().map(JSONObject: json["data"])
+            match = Mapper<Match>().map(JSONString: json["data"] as! String)
 			if match != nil && match?.id == Defaults[.matchID] {
 				renderMatch()
 			}
