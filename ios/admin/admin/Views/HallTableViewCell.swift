@@ -33,7 +33,7 @@ class HallTableViewCell: SWTableViewCell {
 	func setData(_ team: Team, number: Int, active: Bool) {
 		teamIDLabel.text = team.id
 		teamSizeLabel.text = String(team.size)
-		delayCountLabel.text = "- \(team.delayCount) -"
+		delayCountLabel.text = "- \(team.delayCount!) -"
 		if team.status == .prepare {
 			waitTimeLabel.text = "准备中..."
 		} else if team.status == .playing {

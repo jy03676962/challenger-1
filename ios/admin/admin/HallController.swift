@@ -169,7 +169,7 @@ class HallController: PLViewController {
 		}
 		readyButton.isEnabled = true
 		teamIDLabel.text = topTeam!.id
-		playerNumberLabel.text = "\(topTeam!.size)"
+		playerNumberLabel.text = "\(topTeam!.size!)"
 		if topTeam!.mode == "g" {
 			modeImageView.image = UIImage(named: "FunIcon")
 			modeLabel.text = "[赏金模式]"
