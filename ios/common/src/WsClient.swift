@@ -137,20 +137,23 @@ extension WsClient: WebSocketDelegate {
 		guard dataFromString != nil else {
 			return
 		}
-		let json = JSON(data: dataFromString!)
-        guard json.type == .dictionary else {
+		let json = try? JSON(data: dataFromString!)
+        guard json != nil else {
+            return;
+        }
+        guard json!.type == .dictionary else {
             return
         }
-		let cmd = json["cmd"].string
+		let cmd = json!["cmd"].string
 		guard cmd != nil else {
 			return
 		}
 		if cmd == "init" {
 			self.didInit = true
 			NotificationCenter.default.post(name: Notification.Name(rawValue: WsClient.WsInitedNotification), object: nil)
-			self.delegate?.wsClientDidInit(self, data: json.dictionaryObject!)
+			self.delegate?.wsClientDidInit(self, data: json!.dictionaryObject!)
 		} else if self.didInit {
-			self.delegate?.wsClientDidReceiveMessage(self, cmd: cmd!, data: json.dictionaryObject!)
+			self.delegate?.wsClientDidReceiveMessage(self, cmd: cmd!, data: json!.dictionaryObject!)
 		}
 	}
 }

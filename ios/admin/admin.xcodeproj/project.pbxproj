@@ -537,7 +537,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.admin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2abdb1e2-668c-46bb-89e6-0f6aa1268db1";
+				PROVISIONING_PROFILE = "02d7536e-c9a8-4b29-8c80-0baccfe0be83";
 				PROVISIONING_PROFILE_SPECIFIER = "challenger adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 				SWIFT_VERSION = 3.0;
@@ -559,7 +559,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pulupulu.challenger.admin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2abdb1e2-668c-46bb-89e6-0f6aa1268db1";
+				PROVISIONING_PROFILE = "02d7536e-c9a8-4b29-8c80-0baccfe0be83";
 				PROVISIONING_PROFILE_SPECIFIER = "challenger adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/../common/src/bridging-header.h";
 				SWIFT_VERSION = 3.0;
